@@ -1,0 +1,16 @@
+# .vscode
+.vscode
+
+# plugins
+*.md
+!README.md
+
+# output
+bin
+obj
+
+#test
+**/test.lig
+
+#build
+*.bat

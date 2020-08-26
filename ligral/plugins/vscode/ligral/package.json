@@ -1,0 +1,25 @@
+{
+    "name": "ligral",
+    "displayName": "Ligral",
+    "description": "A language support for Ligral, a literal graphic language.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.41.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "lig",
+            "aliases": ["Ligral", "lig"],
+            "extensions": [".lig"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "lig",
+            "scopeName": "source.lig",
+            "path": "./syntaxes/lig.tmLanguage.json"
+        }]
+    }
+}

@@ -1,0 +1,113 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Ligral",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#single-strings"
+		},
+		{
+			"include": "#digits"
+		},
+		{
+			"include": "#block-comments"
+		},
+		{
+			"include": "#inline-comments"
+		},
+		{
+			"include": "#line-comments"
+		},
+		{
+			"include": "#parameters"
+		},
+		{
+			"include": "#models"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.lig",
+				"match": "\\b(digit|import|using)\\b"
+			}]
+		},
+		"digits": {
+			"patterns": [{
+				"name": "constant.numeric.lig",
+				"match": "\\b\\d+(\\.\\d+)?\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.lig",
+			"begin": "\"",
+			"end": "\""
+		},
+		"single-strings": {
+			"name": "string.quoted.single.lig",
+			"begin": "'",
+			"end": "'"
+		},
+		"line-comments": {
+			"name": "comment.line.number-sign.lig",
+			"begin": "#",
+			"end": "$"
+		},
+		"inline-comments": {
+			"name": "comment.line.percentage.lig",
+			"begin": "##",
+			"end": "##|$"
+		},
+		"block-comments": {
+			"name": "comment.block.documentation.lig",
+			"begin": "###",
+			"end": "###"
+		},
+		"var-name": {
+			"begin": "\\[",
+			"end": "\\]",
+			"patterns": [
+				{
+					"match": "\\b([_\\w][_\\w\\d]*)\\s*"
+				}
+			]
+		},
+		"parameters": {
+			"begin": "\\{",
+			"end": "\\}",
+			"patterns": [
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#single-strings"
+				},
+				{
+					"include": "#digits"
+				},
+				{
+					"match": "\\b([_\\w][_\\w\\d]*)\\s*:",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag.lig"
+						}
+					}
+				}
+			]
+		},
+		"models": {
+			"patterns": [
+				{
+				"match": "\\bNode|Gain|SineWave|Step|Playback|Integrator|Scope|PhaseDiagram|Print|Constant|Calculator|Absolute|Input|Output|Memory|Clock|Deadzone|Saturation|Sin|Cos|Tan|Sinh|Cosh|Tanh|Asin|Acos|Atan|Atan2|Asinh|Acosh|Atanh|Exp|Pow|Pow2|Log|Log2\\b",
+				"name": "entity.name.class.lig"
+				}
+			]
+		}
+	},
+	"scopeName": "source.lig"
+}
