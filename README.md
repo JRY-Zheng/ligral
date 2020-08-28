@@ -107,6 +107,10 @@ ligral path/file.lig
 |  --help        | 展示帮助 |
 |  --version     | 展示版本信息 |
 
+## 依赖
+
+绘图模块`Scope`和`PhaseDiagram`需要 python 3 支持，且需要numpy、matplotlib、pandas包。
+
 ## 示例
 
 以下是一个弹簧阻尼质量块系统的仿真。
