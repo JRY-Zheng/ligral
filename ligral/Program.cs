@@ -54,39 +54,32 @@ namespace Ligral
             }
             else if (options.InputFile!=null)
             {
-                try
+                if (options.OutputFolder!=null)
                 {
-                    if (options.OutputFolder!=null)
-                    {
-                        OutputFolder = options.OutputFolder;
-                    }
-                    else
-                    {
-                        OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
-                    }
-                    if (!Directory.Exists(OutputFolder))
-                    {
-                        Directory.CreateDirectory(OutputFolder);
-                    }
-                    string text = File.ReadAllText(options.InputFile);
-                    Parser parser = new Parser();
-                    parser.Load(text);
-                    ProgramAST p = parser.Parse();
-                    Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
-                    interpreter.Interpret(p);
-                    Inspector inspector = new Inspector();
-                    List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                    Wanderer wanderer = new Wanderer();
-                    if (options.StepSize!=null || options.StopTime!=null)
-                    {
-                        wanderer.Configure(options.StepSize??0.01, options.StopTime??100);
-                    }
-                    wanderer.Wander(routine);
+                    OutputFolder = options.OutputFolder;
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine(e.Message);
+                    OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
                 }
+                if (!Directory.Exists(OutputFolder))
+                {
+                    Directory.CreateDirectory(OutputFolder);
+                }
+                string text = File.ReadAllText(options.InputFile);
+                Parser parser = new Parser();
+                parser.Load(text);
+                ProgramAST p = parser.Parse();
+                Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
+                interpreter.Interpret(p);
+                Inspector inspector = new Inspector();
+                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
+                Wanderer wanderer = new Wanderer();
+                if (options.StepSize!=null || options.StopTime!=null)
+                {
+                    wanderer.Configure(options.StepSize??0.01, options.StopTime??100);
+                }
+                wanderer.Wander(routine);
             }
             else
             {
