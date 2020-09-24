@@ -46,10 +46,47 @@ namespace Ligral
                 }
                 else
                 {
+                    List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
+                    System.Console.WriteLine("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.Name)));
                     throw new LigralException("Schematic Error: Algebraic loop exists.");
                 }
             }
             return routine;
         }
+        private void DirectFeedThroughAdvance(Model root, Model node, List<Model> loop)
+        {
+            loop.Add(node);
+            // System.Console.WriteLine(string.Join(".", loop.ConvertAll(node=>"")) + node.Name);
+            if (root == node)
+            {
+                throw new AlgebraicLoopException();
+            }
+            else if (!node.Initializeable)
+            {
+                node.Inspect().ForEach(subNode=>DirectFeedThroughAdvance(root, subNode, loop));
+            }
+            loop.Remove(node);
+        }
+        private List<Model> AlgebraicLoopDetect(List<Model> unsolvedNodes)
+        {
+            List<Model> algebraicLoop = new List<Model>();
+            foreach(Model node in unsolvedNodes)
+            {
+                algebraicLoop.Add(node);
+                // System.Console.WriteLine(node.Name);
+                try
+                {
+                    node.Inspect().ForEach(subNode=>DirectFeedThroughAdvance(node, subNode, algebraicLoop));
+                }
+                catch (AlgebraicLoopException)
+                {
+                    return algebraicLoop;
+                }
+                algebraicLoop.Remove(node);
+            }
+            return algebraicLoop;
+        }
     }
+    class AlgebraicLoopException : System.Exception
+    {}
 }
