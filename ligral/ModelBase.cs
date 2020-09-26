@@ -162,11 +162,44 @@ namespace Ligral
                 return (left as Model)/right;
             }
         }
+        public static Group operator^(ModelBase left, ModelBase right)
+        {
+            if (right.GetType().Name=="Group")
+            {
+                return left^(right as Group);
+            }
+            else
+            {
+                return left^(right as Model);
+            }
+        }
+        public static Group operator^(ModelBase left, Group right)
+        {
+            if (left.GetType().Name=="Group")
+            {
+                return (left as Group)^right;
+            }
+            else
+            {
+                return (left as Model)^right;
+            }
+        }
+        public static Group operator^(ModelBase left, Model right)
+        {
+            if (left.GetType().Name=="Group")
+            {
+                return (left as Group)^right;
+            }
+            else
+            {
+                return (left as Model)^right;
+            }
+        }
         public static Group operator+(ModelBase modelBase)
         {
             if (modelBase.GetType().Name=="Group")
             {
-                return modelBase as Group;
+                return +(modelBase as Group);
             }
             else
             {

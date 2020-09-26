@@ -213,20 +213,20 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        public static Group operator+(Model left, double right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",right}};
-            constant.Configure(dictionary);
-            return left+constant;
-        }
-        public static Group operator+(double left, Model right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",left}};
-            constant.Configure(dictionary);
-            return constant+right;
-        }
+        // public static Group operator+(Model left, double right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",right}};
+        //     constant.Configure(dictionary);
+        //     return left+constant;
+        // }
+        // public static Group operator+(double left, Model right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",left}};
+        //     constant.Configure(dictionary);
+        //     return constant+right;
+        // }
         public static Group operator+(Model model)
         {
             Group group = new Group();
@@ -251,20 +251,20 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        public static Group operator-(Model left, double right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",right}};
-            constant.Configure(dictionary);
-            return left-constant;
-        }
-        public static Group operator-(double left, Model right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",left}};
-            constant.Configure(dictionary);
-            return constant-right;
-        }
+        // public static Group operator-(Model left, double right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",right}};
+        //     constant.Configure(dictionary);
+        //     return left-constant;
+        // }
+        // public static Group operator-(double left, Model right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",left}};
+        //     constant.Configure(dictionary);
+        //     return constant-right;
+        // }
         public static Group operator-(Model model)
         {
             Gain gain = ModelManager.Create("Gain") as Gain;
@@ -293,25 +293,25 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        public static Group operator*(Model left, double right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",right}};
-            constant.Configure(dictionary);
-            return left*constant;
-        }
-        public static Group operator*(double left, Model right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",left}};
-            constant.Configure(dictionary);
-            return constant*right;
-        }
+        // public static Group operator*(Model left, double right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",right}};
+        //     constant.Configure(dictionary);
+        //     return left*constant;
+        // }
+        // public static Group operator*(double left, Model right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",left}};
+        //     constant.Configure(dictionary);
+        //     return constant*right;
+        // }
         public static Group operator/(Model left, Model right)
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when adding dividing");
+                throw new LigralException("Out port number should be 1 when dividing");
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '/'}};
@@ -324,19 +324,36 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        public static Group operator/(Model left, double right)
+        // public static Group operator/(Model left, double right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",right}};
+        //     constant.Configure(dictionary);
+        //     return left/constant;
+        // }
+        // public static Group operator/(double left, Model right)
+        // {
+        //     Constant constant = ModelManager.Create("Constant") as Constant;
+        //     Dict dictionary = new Dict(){{"value",left}};
+        //     constant.Configure(dictionary);
+        //     return constant/right;
+        // }
+        public static Group operator^(Model left, Model right)
         {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",right}};
-            constant.Configure(dictionary);
-            return left/constant;
-        }
-        public static Group operator/(double left, Model right)
-        {
-            Constant constant = ModelManager.Create("Constant") as Constant;
-            Dict dictionary = new Dict(){{"value",left}};
-            constant.Configure(dictionary);
-            return constant/right;
+            if (left.OutPortCount()!=1||right.OutPortCount()!=1)
+            {
+                throw new LigralException("Out port number should be 1 when powering");
+            }
+            Calculator calculator = ModelManager.Create("Calculator") as Calculator;
+            Dict dictionary = new Dict(){{"type", '^'}};
+            calculator.Configure(dictionary);
+            left.Connect(0, calculator.Expose(0));
+            right.Connect(0, calculator.Expose(1));
+            Group group = new Group();
+            group.AddInputModel(left);
+            group.AddInputModel(right);
+            group.AddOutputModel(calculator);
+            return group;
         }
     }
 }

@@ -1176,7 +1176,7 @@ namespace Ligral
                 {"type", new Parameter(value=>
                 {
                     char operType = System.Convert.ToChar(value);
-                    if (operType=='+'||operType=='-'||operType=='*'||operType=='/')
+                    if (operType=='+'||operType=='-'||operType=='*'||operType=='/'||operType=='^')
                     {
                         type = operType;
                     }
@@ -1203,6 +1203,9 @@ namespace Ligral
             }else if (type=='/')
             {
                 Results.Add(values[0]/values[1]);
+            }else if (type=='^')
+            {
+                Results.Add(Math.Pow(values[0], values[1]));
             }// validation of operator is done in configure
             return Results;
         }

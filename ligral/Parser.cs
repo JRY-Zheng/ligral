@@ -108,8 +108,18 @@ namespace Ligral
         }
         private AST ValueFactor()
         {
-            AST valueAST = Value();
+            AST valueAST = ValueEntity();
             while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV)
+            {
+                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                valueAST = new ValBinOpAST(valueAST, binOpToken, ValueEntity());
+            }
+            return valueAST;
+        }
+        private AST ValueEntity()
+        {
+            AST valueAST = Value();
+            while (currentToken.Type==TokenType.CARET)
             {
                 CharToken binOpToken = Eat(currentToken.Type) as CharToken;
                 valueAST = new ValBinOpAST(valueAST, binOpToken, Value());
@@ -193,8 +203,18 @@ namespace Ligral
         }
         private AST NodeFactor()
         {
-            AST nodeAST = Node();
+            AST nodeAST = NodeEntity();
             while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV)
+            {
+                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                nodeAST = new BinOpAST(nodeAST, binOpToken, NodeEntity());
+            }
+            return nodeAST;
+        }
+        private AST NodeEntity()
+        {
+            AST nodeAST = Node();
+            while (currentToken.Type==TokenType.CARET)
             {
                 CharToken binOpToken = Eat(currentToken.Type) as CharToken;
                 nodeAST = new BinOpAST(nodeAST, binOpToken, Node());

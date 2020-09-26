@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using System.IO;
+using System;
 
 namespace Ligral
 {
@@ -245,6 +246,8 @@ namespace Ligral
                     return left*right;
                 case '/':
                     return left/right;
+                case '^':
+                    return left^right;
                 default:
                     throw new SemanticException(binOpAST.FindToken(), "Invalid operator");
             }
@@ -280,6 +283,8 @@ namespace Ligral
                         throw new SemanticException(valBinOpAST.Right.FindToken(), "0 Division");
                     }
                     return left/right;
+                case '^':
+                    return Math.Pow(left, right);
                 default:
                     throw new SemanticException(valBinOpAST.FindToken(), "Invalid operator");
             }

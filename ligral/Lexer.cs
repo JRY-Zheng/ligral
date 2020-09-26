@@ -72,7 +72,7 @@ namespace Ligral
                 return '\0';
             }
         }
-        private void SkipWhatspace()
+        private void SkipWhitespace()
         {
             while (char.IsWhiteSpace(currentChar))
             {
@@ -165,7 +165,7 @@ namespace Ligral
         {
             while (char.IsWhiteSpace(currentChar)||currentChar=='#')
             {
-                SkipWhatspace();
+                SkipWhitespace();
                 SkipComment();
             }
             if (char.IsDigit(currentChar))
@@ -274,6 +274,11 @@ namespace Ligral
             {
                 Advance();
                 return new CharToken(TokenType.DOT, '.', lineNO, columnNO);
+            }
+            else if (currentChar=='^')
+            {
+                Advance();
+                return new CharToken(TokenType.CARET, '^', lineNO, columnNO);
             }
             else if (currentChar=='\0')
             {
