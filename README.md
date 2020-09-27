@@ -10,25 +10,25 @@ Ligral是一个基于文本的仿真框图语言，旨在替代Simulink，编写
 
 新建一个节点`Node`，`[ ]`内可选地定义节点的变量名。
 
-~~~
+~~~ lig
 Node | Node[node1]
 ~~~
 
 为节点`Gain`添加参数`value`，多个参数可用“`,`”隔开。
 
-~~~
+~~~ lig
 Gain{value:1}
 ~~~
 
 连接节点的输入输出，使用连接语句（chain）。支持顺序多次连接，行末需要加“`;`”。已经定义的节点可以通过变量名来引用。
 
-~~~
+~~~ lig
 node1 -> Gain{value:1} -> Integrator;
 ~~~
 
 多输入输出节点的连接，可以使用“chain list”表达式：
 
-~~~
+~~~ lig
 (Constant{value:1}, Constant{value:2}) -> Calculator{type:'+'}
 ~~~
 
@@ -36,7 +36,7 @@ node1 -> Gain{value:1} -> Integrator;
 
 连接语句还可以基于端口（port），例如`ThresholdSwitch`的输入有三个端口，可以写作：
 
-~~~
+~~~ lig
 node1 -> ThresholdSwitch[switch]:condition;
 1 -> switch:first; 
 2 -> switch:second;
@@ -46,13 +46,13 @@ node1 -> ThresholdSwitch[switch]:condition;
 
 常量定义由以下语句完成（*注意：`digit` 关键字可能于近期替换*），目前仅支持scalar，后期会增加vector和matrix。
 
-~~~
+~~~ lig
 digit var_name <- 1;
 ~~~
 
 节点定义由以下语句完成：
 
-~~~
+~~~ lig
 route NodeName(parameters;in_ports;out_ports)
     some_chains;
 end
@@ -60,14 +60,14 @@ end
 
 其中`parameters`是该节点所需的参数，参数之间由“`,`”分隔。如果参数有默认值，则其为可选参数，否则是必选参数。若参数未指定类型，则参数是scalar，否则该参数必须是指定类型或其继承类型。
 
-~~~
+~~~ lig
 # parameters:
 param1, param2:Node, param3<-2
 ~~~
 
 如果指定一个类型继承另一个类型，可以写作：
 
-~~~
+~~~ lig
 route NodeName:Gain(parameters;input;output)...
 ~~~
 
@@ -77,22 +77,33 @@ route NodeName:Gain(parameters;input;output)...
 
 导入另一个`.lig`文件的全部内容，使用`import`语句：
 
-~~~
+~~~ lig
 import module;
 ~~~
 
 以命名空间的方式引用，使用`using`语句：
 
-~~~
+~~~ lig
 using module;
 module.MyNode -> Scope;
+~~~
+
+### 设置语句
+
+可以在脚本中对求解器进行配置。目前支持的字段如下所示：
+
+~~~ lig
+conf step_size <- 0.01;
+conf stop_time <- 10;
+conf varible_step <- false;
+conf output_folder <- 'output';
 ~~~
 
 ## 用法
 
 使用以下语句运行`.lig`文件：
 
-~~~
+~~~ sh
 ligral path/file.lig
 ~~~
 
