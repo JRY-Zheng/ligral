@@ -182,6 +182,10 @@ namespace Ligral
                 switch (word)
                 {
                     case "digit":
+                    // supported in v0.2.0, unsupported in higher version
+                    // replaced by `let`
+                    return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
+                    case "let":
                     return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
                     case "route":
                     return new StringToken(TokenType.ROUTE, word, lineNO, columnNO);
@@ -208,8 +212,16 @@ namespace Ligral
             }
             else if (currentChar=='<'&&Peek()=='-')
             {
+                // supported in v0.2.0, unsupported in higher version
+                // replaced by `=`
+                // in v0.3.0 or higher logic expression will be supported
                 Advance(2);
                 return new StringToken(TokenType.FROM, "<-", lineNO, columnNO);
+            }
+            else if (currentChar=='=')
+            {
+                Advance();
+                return new CharToken(TokenType.FROM, '=', lineNO, columnNO);
             }
             else if (currentChar=='(')
             {

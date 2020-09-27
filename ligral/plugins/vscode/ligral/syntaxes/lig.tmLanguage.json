@@ -37,7 +37,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.lig",
-				"match": "\\b(digit|route|end|import|using|conf)\\b"
+				"match": "\\b(digit|route|end|import|using|conf|let)\\b"
 			}]
 		},
 		"digits": {
