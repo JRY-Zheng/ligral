@@ -37,12 +37,24 @@ namespace Ligral
     class SemanticException : LigralException
     {
         private Token ErrorToken;
-        private string errorMessage;
+        // private string errorMessage;
         public SemanticException(Token token, string message="") : base(message)
         {
             ErrorToken = token;
-            errorMessage = message;
-            this.Data.Add("Token", $"Invalid Semantics at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value})");
+            // errorMessage = message;
+            // this.Data.Add("Token", $"Invalid Semantics at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value})");
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Invalid Semantics at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value})";
+            if (Message!="")
+            {
+                return $"{errorMessage}\n{Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
         }
     }
 }

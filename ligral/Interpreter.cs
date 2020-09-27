@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using System.IO;
 using System;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Ligral
 {
@@ -59,6 +61,12 @@ namespace Ligral
                     return Visit(ast as WordAST);
                 case "BoolAST":
                     return Visit(ast as BoolAST);
+                case "RowAST":
+                    return Visit(ast as RowAST);
+                case "MatrixAST":
+                    return Visit(ast as MatrixAST);
+                case "MatrixBlockAST":
+                    return Visit(ast as MatrixBlockAST);
                 case "DigitAST":
                     return Visit(ast as DigitAST);
                 case "DigitBlockAST":
@@ -145,6 +153,52 @@ namespace Ligral
         private bool Visit(BoolAST boolAST)
         {
             return boolAST.Bool;
+        }
+        private Matrix<double> Visit(RowAST rowAST)
+        {
+            Matrix<double> matrix;
+            if (rowAST.Items.Count>0)
+            {
+                object obj = Visit(rowAST.Items[0]);
+                matrix = obj as Matrix<double>;
+                if (matrix==null)
+                {
+                    matrix = DenseMatrix.Create(1, 1, (double)obj);
+                }
+            }
+            else
+            {
+                throw new SemanticException(rowAST.FindToken(), "Null matrix.");
+            }
+            foreach(AST item in rowAST.Items.GetRange(1, rowAST.Items.Count-1))
+            {
+                Matrix<double> _matrix;
+                object obj = Visit(item);
+                _matrix = obj as Matrix<double>;
+                if (_matrix==null)
+                {
+                    _matrix = DenseMatrix.Create(1, 1, (double)obj);
+                }
+                matrix = matrix.Append(_matrix);
+            }
+            return matrix;
+        }
+        private Matrix<double> Visit(MatrixAST matrixAST)
+        {
+            Matrix<double> matrix;
+            if (matrixAST.Rows.Count>0)
+            {
+                matrix = Visit(matrixAST.Rows[0]);
+            }
+            else
+            {
+                throw new SemanticException(matrixAST.FindToken(), "Null matrix.");
+            }
+            foreach(RowAST row in matrixAST.Rows.GetRange(1, matrixAST.Rows.Count-1))
+            {
+                matrix = matrix.Stack(Visit(row));
+            }
+            return matrix;
         }
         private double Visit(DigitAST digitAST)
         {
