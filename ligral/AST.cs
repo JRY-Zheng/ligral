@@ -141,6 +141,32 @@ namespace Ligral
             return ReferenceToken;
         }
     }
+    
+    class RowAST : AST
+    {
+        public List<AST> Items;
+        public RowAST(List<AST> items)
+        {
+            Items = items;
+        }
+        public override Token FindToken()
+        {
+            return Items[0].FindToken();
+        }
+    }
+
+    class MatrixAST : AST
+    {
+        public List<RowAST> Rows;
+        public MatrixAST(List<RowAST> rows)
+        {
+            Rows = rows;
+        }
+        public override Token FindToken()
+        {
+            return Rows[0].FindToken();
+        }
+    }
 
     class BusAST : AST
     {
