@@ -298,6 +298,10 @@ namespace Ligral
                 DigitToken digitToken = Eat(TokenType.DIGIT) as DigitToken;
                 return new DigitBlockAST(digitToken);
             }
+            else if (currentToken.Type==TokenType.LBRK)
+            {
+                return Matrix(true);
+            }
             else
             {
                 return Selector();
