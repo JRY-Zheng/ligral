@@ -30,7 +30,7 @@ namespace Ligral
         public double StepSize = 0.01;
         public double StopTime = 10;
         public bool VariableStep = false;
-        public string OutputFolder = "output";
+        public string OutputFolder = null;
         private bool needOutput = false;
         public bool NeedOutput 
         {

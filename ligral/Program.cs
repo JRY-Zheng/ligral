@@ -55,12 +55,18 @@ namespace Ligral
             {
                 try
                 {
+                    string text = File.ReadAllText(options.InputFile);
+                    Parser parser = new Parser();
+                    parser.Load(text);
+                    ProgramAST p = parser.Parse();
+                    Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
+                    interpreter.Interpret(p);
                     Settings settings = Settings.GetInstance();
                     if (options.OutputFolder!=null)
                     {
                         settings.OutputFolder = options.OutputFolder;
                     }
-                    else
+                    else if (settings.OutputFolder==null)
                     {
                         settings.OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
                     }
@@ -72,16 +78,6 @@ namespace Ligral
                     {
                         settings.StopTime = (double) options.StopTime;
                     }
-                    // if (!Directory.Exists(settings.OutputFolder))
-                    // {
-                    //     Directory.CreateDirectory(settings.OutputFolder);
-                    // }
-                    string text = File.ReadAllText(options.InputFile);
-                    Parser parser = new Parser();
-                    parser.Load(text);
-                    ProgramAST p = parser.Parse();
-                    Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
-                    interpreter.Interpret(p);
                     Inspector inspector = new Inspector();
                     List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                     Wanderer wanderer = new Wanderer();
