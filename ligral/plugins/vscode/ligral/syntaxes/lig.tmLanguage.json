@@ -24,7 +24,10 @@
 			"include": "#line-comments"
 		},
 		{
-			"include": "#parameters"
+			"include": "#var-name"
+		},
+		{
+			"include": "#digit-name"
 		},
 		{
 			"include": "#models"
@@ -34,7 +37,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.lig",
-				"match": "\\b(digit|import|using)\\b"
+				"match": "\\b(digit|route|end|import|using|conf)\\b"
 			}]
 		},
 		"digits": {
@@ -77,7 +80,7 @@
 				}
 			]
 		},
-		"parameters": {
+		"digit-name": {
 			"begin": "\\{",
 			"end": "\\}",
 			"patterns": [
@@ -101,12 +104,12 @@
 			]
 		},
 		"models": {
-			"patterns": [
-				{
-				"match": "\\bNode|Gain|SineWave|Step|Playback|Integrator|Scope|PhaseDiagram|Print|Constant|Calculator|Absolute|Input|Output|Memory|Clock|Deadzone|Saturation|Sin|Cos|Tan|Sinh|Cosh|Tanh|Asin|Acos|Atan|Atan2|Asinh|Acosh|Atanh|Exp|Pow|Pow2|Log|Log2\\b",
-				"name": "entity.name.class.lig"
+			"match": "\\b([_\\w][_\\w\\d]*)\\s*",
+			"captures": {
+				"1": {
+					"name": "entity.name.class.lig"
 				}
-			]
+			}
 		}
 	},
 	"scopeName": "source.lig"
