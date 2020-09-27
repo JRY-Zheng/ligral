@@ -82,6 +82,21 @@ namespace Ligral
         }
     }
 
+    class BoolAST : AST
+    {
+        public BoolToken ReferenceToken;
+        public bool Bool;
+        public BoolAST(BoolToken token)
+        {
+            ReferenceToken = token;
+            Bool = (bool) token.Value;
+        }
+        public override Token FindToken()
+        {
+            return ReferenceToken;
+        }
+    }
+
     class DigitAST : AST
     {
         public DigitToken ReferenceToken;
@@ -259,6 +274,21 @@ namespace Ligral
         public override Token FindToken()
         {
             return Operator;
+        }
+    }
+
+    class ConfAST : AST
+    {
+        public WordAST Id;
+        public AST Expression;
+        public ConfAST(WordAST id, AST expression)
+        {
+            Id = id;
+            Expression = expression;
+        }
+        public override Token FindToken()
+        {
+            return Id.FindToken();
         }
     }
 

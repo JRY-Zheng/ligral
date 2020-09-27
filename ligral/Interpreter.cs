@@ -57,6 +57,8 @@ namespace Ligral
                     return Visit(ast as IdAST);
                 case "WordAST":
                     return Visit(ast as WordAST);
+                case "BoolAST":
+                    return Visit(ast as BoolAST);
                 case "DigitAST":
                     return Visit(ast as DigitAST);
                 case "DigitBlockAST":
@@ -81,6 +83,8 @@ namespace Ligral
                     return Visit(ast as ValBinOpAST);
                 case "ValUnaryOpAST":
                     return Visit(ast as ValUnaryOpAST);
+                case "ConfAST":
+                    return Visit(ast as ConfAST);
                 case "FromOpAST":
                     return Visit(ast as FromOpAST);
                 case "GotoOpAST":
@@ -137,6 +141,10 @@ namespace Ligral
         private string Visit(WordAST wordAST)
         {
             return wordAST.Word;
+        }
+        private bool Visit(BoolAST boolAST)
+        {
+            return boolAST.Bool;
         }
         private double Visit(DigitAST digitAST)
         {
@@ -301,6 +309,22 @@ namespace Ligral
                 default:
                     throw new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator");
             }
+        }
+        private object Visit(ConfAST confAST)
+        {
+            string id = Visit(confAST.Id);
+            object value;
+            try
+            {
+                value = Visit(confAST.Expression);
+            }
+            catch 
+            {
+                throw new SemanticException(confAST.FindToken(), "Only digit, boolean and string are accepted");
+            }
+            Settings settings = Settings.GetInstance();
+            settings.AddSetting(id, value);
+            return null;
         }
         private double Visit(FromOpAST fromOpAST)
         {

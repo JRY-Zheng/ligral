@@ -58,7 +58,13 @@ namespace Ligral
         }
         private AST Statement()
         {
-            if (currentToken.Type==TokenType.ASSIGN)
+            if (currentToken.Type==TokenType.CONF)
+            {
+                ConfAST confAST = ProgramConfig();
+                Eat(TokenType.SEMIC);
+                return confAST;
+            }
+            else if (currentToken.Type==TokenType.ASSIGN)
             {
                 FromOpAST fromOpAST = Define();
                 Eat(TokenType.SEMIC);
@@ -86,6 +92,30 @@ namespace Ligral
                 Eat(TokenType.SEMIC);
                 return chainAST;
             }
+        }
+        private ConfAST ProgramConfig()
+        {
+            Eat(TokenType.CONF);
+            StringToken idToken = Eat(TokenType.ID) as StringToken;
+            WordAST wordAST = new WordAST(idToken);
+            Eat(TokenType.FROM);
+            AST valueAST;
+            if (currentToken.Type == TokenType.TRUE || currentToken.Type == TokenType.FALSE)
+            {
+                BoolToken valueToken = Eat(currentToken.Type) as BoolToken;
+                valueAST = new BoolAST(valueToken);
+            }
+            else if (currentToken.Type == TokenType.STRING)
+            {
+                StringToken valueToken = Eat(TokenType.STRING) as StringToken;
+                valueAST = new StringAST(valueToken);
+            }
+            else
+            {
+                valueAST = ValueExpr();
+            }
+            
+            return new ConfAST(wordAST, valueAST);
         }
         private FromOpAST Define()
         {
@@ -295,7 +325,7 @@ namespace Ligral
             {
                 Backup();
                 KeyValuePairAST keyValuePairAST = Parameter();
-                if (currentToken.Type!=TokenType.COMMA&&currentToken.Type!=TokenType.RBRC)
+                if (currentToken.Type!=TokenType.COMMA && currentToken.Type!=TokenType.RBRC)
                 {
                     Restore();
                     keyValuePairAST = BlockParameter();

@@ -191,6 +191,12 @@ namespace Ligral
                     return new StringToken(TokenType.IMPORT, word, lineNO, columnNO);
                     case "using":
                     return new StringToken(TokenType.USING, word, lineNO, columnNO);
+                    case "conf":
+                    return new StringToken(TokenType.CONF, word, lineNO, columnNO);
+                    case "true":
+                    return new BoolToken(TokenType.CONF, true, lineNO, columnNO);
+                    case "false":
+                    return new BoolToken(TokenType.CONF, false, lineNO, columnNO);
                     default:
                     return new StringToken(TokenType.ID, word, lineNO, columnNO);
                 }

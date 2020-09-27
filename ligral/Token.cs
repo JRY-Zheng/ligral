@@ -5,7 +5,8 @@ namespace Ligral
         STRING,DIGIT,PLUS,MINUS,MUL,DIV,
         FROM,GOTO,LPAR,RPAR,LBRC,RBRC,LBRK,RBRK,
         COMMA,COLON,SEMIC,DOT,CARET,
-        ID,EOF,ASSIGN,ROUTE,END,USING,IMPORT
+        ID,EOF,ASSIGN,ROUTE,END,USING,IMPORT,CONF,
+        TRUE,FALSE
     }
 
     class Token
@@ -44,6 +45,13 @@ namespace Ligral
     class CharToken : Token
     {
         public CharToken(TokenType type, char value, int line, int column) : base(type, value, line, column)
+        {
+        }
+    }
+
+    class BoolToken : Token
+    {
+        public BoolToken(TokenType type, bool value, int line, int column) : base(type, value, line, column)
         {
         }
     }
