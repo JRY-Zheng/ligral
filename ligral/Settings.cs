@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Ligral
 {
     class Settings
@@ -8,7 +10,7 @@ namespace Ligral
         private Settings()
         { }
 
-        public Settings GetInstance()
+        public static Settings GetInstance()
         {
             if (settingsInstance==null)
             {
@@ -25,23 +27,45 @@ namespace Ligral
         #endregion
         
         #region Settings
-        private double stepTime = 0.01;
-        public double StepTime {get {return stepTime;}}
-        private double stopTime = 10;
-        public double StopTime {get {return stopTime;}}
-        private bool variableStep = false;
-        public bool VariableStep {get {return variableStep;}}
+        public double StepSize = 0.01;
+        public double StopTime = 10;
+        public bool VariableStep = false;
+        public string OutputFolder = "output";
+        private bool needOutput = false;
+        public bool NeedOutput 
+        {
+            get
+            {
+                return needOutput;
+            }
+            set
+            {
+                if (value)
+                {
+                    if (!Directory.Exists(OutputFolder))
+                    {
+                        Directory.CreateDirectory(OutputFolder);
+                    }
+                }
+                needOutput = value;
+            }
+        }
         
         public void AddSetting(string item, object val)
         {
             switch (item)
             {
-                case "step_time":
-                    stepTime = (double) val; break;
+                case "step_size":
+                    StepSize = (double) val;
+                    VariableStep = false; break;
                 case "stop_time":
-                    stopTime = (double) val; break;
+                    StopTime = (double) val; break;
                 case "variable_step":
-                    variableStep = (bool) val; break;
+                    VariableStep = (bool) val; break;
+                case "output_folder":
+                    OutputFolder = (string) val; break;
+                default:
+                    throw new LigralException($"Unsupported setting {item}");
             }
         }
         #endregion

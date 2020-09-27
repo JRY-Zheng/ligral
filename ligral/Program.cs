@@ -9,7 +9,6 @@ namespace Ligral
 {
     class Program
     {
-        public static string OutputFolder;
         static void Main(string[] args)
         {
             ParserResult<Options> result = CommandLine.Parser.Default.ParseArguments<Options>(args).MapResult<Options, ParserResult<Options>>((opts) => DoParse(opts), //in case parser sucess
@@ -56,18 +55,27 @@ namespace Ligral
             {
                 try
                 {
+                    Settings settings = Settings.GetInstance();
                     if (options.OutputFolder!=null)
                     {
-                        OutputFolder = options.OutputFolder;
+                        settings.OutputFolder = options.OutputFolder;
                     }
                     else
                     {
-                        OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
+                        settings.OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
                     }
-                    if (!Directory.Exists(OutputFolder))
+                    if (options.StepSize!=null)
                     {
-                        Directory.CreateDirectory(OutputFolder);
+                        settings.StepSize = (double) options.StepSize;
                     }
+                    if (options.StopTime!=null)
+                    {
+                        settings.StopTime = (double) options.StopTime;
+                    }
+                    // if (!Directory.Exists(settings.OutputFolder))
+                    // {
+                    //     Directory.CreateDirectory(settings.OutputFolder);
+                    // }
                     string text = File.ReadAllText(options.InputFile);
                     Parser parser = new Parser();
                     parser.Load(text);
@@ -77,10 +85,6 @@ namespace Ligral
                     Inspector inspector = new Inspector();
                     List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                     Wanderer wanderer = new Wanderer();
-                    if (options.StepSize!=null || options.StopTime!=null)
-                    {
-                        wanderer.Configure(options.StepSize??0.01, options.StopTime??100);
-                    }
                     wanderer.Wander(routine);
                 }
                 catch (Exception e)
