@@ -4,6 +4,8 @@
 
 Ligral是一个基于文本的仿真框图语言，旨在替代Simulink，编写、运行仿真程序。
 
+**版本**：v0.2.0
+
 ## 语法
 
 ### 节点与连接
@@ -44,10 +46,10 @@ node1 -> ThresholdSwitch[switch]:condition;
 
 ### 定义语句
 
-常量定义由以下语句完成（*注意：`digit` 关键字可能于近期替换*），目前仅支持scalar，后期会增加vector和matrix。
+常量定义由以下语句完成（*注意：`digit` 关键字和 `<-` 符号将于下个版本废弃*），目前仅支持scalar，后期会增加二维的 matrix。
 
 ~~~ lig
-digit var_name <- 1;
+let var_name = 1;
 ~~~
 
 节点定义由以下语句完成：
@@ -62,7 +64,7 @@ end
 
 ~~~ lig
 # parameters:
-param1, param2:Node, param3<-2
+param1, param2:Node, param3=2
 ~~~
 
 如果指定一个类型继承另一个类型，可以写作：
@@ -93,10 +95,10 @@ module.MyNode -> Scope;
 可以在脚本中对求解器进行配置。目前支持的字段如下所示：
 
 ~~~ lig
-conf step_size <- 0.01;
-conf stop_time <- 10;
-conf varible_step <- false;
-conf output_folder <- 'output';
+conf step_size = 0.01;
+conf stop_time = 10;
+conf varible_step = false;
+conf output_folder = 'output';
 ~~~
 
 ## 用法
