@@ -2,7 +2,7 @@
 .vscode
 
 # plugins
-*.md
+plugins/**/*.md
 !README.md
 
 # output

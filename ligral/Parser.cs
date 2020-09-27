@@ -174,10 +174,49 @@ namespace Ligral
             {
                 return new DigitAST(Eat(TokenType.DIGIT) as DigitToken);
             }
+            else if (currentToken.Type==TokenType.LBRK)
+            {
+                return Matrix();
+            }
             else
             {
                 return Pointer();
             }
+        }
+        private AST Matrix(bool isBlock=false)
+        {
+            List<RowAST> rows = new List<RowAST>();
+            Eat(TokenType.LBRK);
+            while (currentToken.Type!=TokenType.RBRK)
+            {
+                rows.Add(Row());
+                if (currentToken.Type==TokenType.SEMIC)
+                {
+                    Eat(TokenType.SEMIC);
+                }
+            }
+            Eat(TokenType.RBRK);
+            if (isBlock)
+            {
+                return new MatrixBlockAST(rows);
+            }
+            else
+            {
+                return new MatrixAST(rows);
+            }
+        }
+        private RowAST Row()
+        {
+            List<AST> items = new List<AST>();
+            while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
+            {
+                items.Add(ValueExpr());
+                if (currentToken.Type==TokenType.COMMA)
+                {
+                    Eat(TokenType.COMMA);
+                }
+            }
+            return new RowAST(items);
         }
         private AST Pointer()
         {
@@ -219,17 +258,6 @@ namespace Ligral
                 nodeFactorAST = new BinOpAST(nodeFactorAST, binOpToken, NodeFactor());
             }
             return nodeFactorAST;
-        }
-        private BusAST Bus()
-        {
-            List<ChainAST> chains = new List<ChainAST>();
-            chains.Add(Chain());
-            while (currentToken.Type==TokenType.COMMA)
-            {
-                Eat(TokenType.COMMA);
-                chains.Add(Chain());
-            }
-            return new BusAST(chains);
         }
         private AST NodeFactor()
         {
@@ -274,6 +302,17 @@ namespace Ligral
             {
                 return Selector();
             }
+        }
+        private BusAST Bus()
+        {
+            List<ChainAST> chains = new List<ChainAST>();
+            chains.Add(Chain());
+            while (currentToken.Type==TokenType.COMMA)
+            {
+                Eat(TokenType.COMMA);
+                chains.Add(Chain());
+            }
+            return new BusAST(chains);
         }
         private AST Selector()
         {
@@ -386,7 +425,7 @@ namespace Ligral
             RoutePortAST inPortAST;
             if (currentToken.Type!=TokenType.SEMIC)
             {
-                inPortAST = RoutePort();
+                inPortAST = RoutePorts();
             }
             else
             {
@@ -396,7 +435,7 @@ namespace Ligral
             RoutePortAST outPortAST;
             if (currentToken.Type!=TokenType.RPAR)
             {
-                outPortAST = RoutePort();
+                outPortAST = RoutePorts();
             }
             else
             {
@@ -458,7 +497,7 @@ namespace Ligral
                 return new RouteParamAST(nameAST, typeAST);
             }
         }
-        private RoutePortAST RoutePort()
+        private RoutePortAST RoutePorts()
         {
             List<WordAST> ports = new List<WordAST>();
             while (true)

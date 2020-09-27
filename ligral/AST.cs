@@ -141,7 +141,7 @@ namespace Ligral
             return ReferenceToken;
         }
     }
-    
+
     class RowAST : AST
     {
         public List<AST> Items;
@@ -159,6 +159,19 @@ namespace Ligral
     {
         public List<RowAST> Rows;
         public MatrixAST(List<RowAST> rows)
+        {
+            Rows = rows;
+        }
+        public override Token FindToken()
+        {
+            return Rows[0].FindToken();
+        }
+    }
+
+    class MatrixBlockAST : AST
+    {
+        public List<RowAST> Rows;
+        public MatrixBlockAST(List<RowAST> rows)
         {
             Rows = rows;
         }
