@@ -1059,12 +1059,13 @@ namespace Ligral
                 return "This model outputs the value of the integral of its input signal with respect to time.";
             }
         }
-        private double lastTime = 0;
+        // private double lastTime = 0;
+        private State state;
+        private double init;
         protected override void SetUpPorts()
         {
             base.SetUpPorts();
             Initializeable = true;
-            // Results.Add(0);
         }
         protected override void SetUpParameters()
         {
@@ -1072,17 +1073,28 @@ namespace Ligral
             {
                 {"initial", new Parameter(false, value=>
                 {
-                    Results.Add((double)value);
+                    init = (double) value;
+                    Results.Add(init);
                 }, ()=>
                 {
-                    Results.Add(0);
+                    init = 0;
+                    Results.Add(init);
                 })},
             };
         }
+        protected override void AfterConfigured()
+        {
+            state = State.CreateState(init);
+            state.Config(1e-5, 10);
+            state.DerivativeReceived += (state)=>{};
+        }
         protected override List<double> Calculate(List<double> values)
         {
-            Results[0] += values[0]*(time-lastTime);
-            lastTime = time;
+            // Results[0] += values[0]*(time-lastTime);
+            // lastTime = time;
+            state.SetDerivative(values[0], time);
+            state.EulerPropagate();
+            Results[0] = state.StateVariable;
             return Results;
         }
         protected override void ConfigureAction(Dictionary<string, object> dictionary)

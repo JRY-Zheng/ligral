@@ -61,6 +61,7 @@ namespace Ligral
             InPortList.Add(new InPort("input", this));
             OutPortList.Add(new OutPort("output", this));
         }
+        protected virtual void AfterConfigured(){}
         public void Update(double time)
         {
             this.time = time;
@@ -107,6 +108,7 @@ namespace Ligral
                 object value = dictionary[parameterName];
                 parameter.OnSet(value);
             });
+            AfterConfigured();
         }
         protected virtual void ConfigureAction(Dict dictionary) {}
         public virtual void Release() { }
@@ -177,7 +179,7 @@ namespace Ligral
             List<double> outputs = Calculate(inputs);
             if(outputs.Count != OutPortList.Count)
             {
-                throw new LigralException("The number of outputs doesn't match that of the ports.");
+                throw new LigralException($"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}. in {Name}");
             }
             else
             {
