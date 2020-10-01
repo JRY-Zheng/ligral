@@ -12,9 +12,9 @@ namespace Ligral
             OnSet = onset;
             OnDefault = ()=>{};
         }
-        public Parameter(bool required, Action<object> onset, Action onDefault)
+        public Parameter(Action<object> onset, Action onDefault)
         {
-            Required = required;
+            Required = false;
             OnSet = onset;
             OnDefault = onDefault;
         }

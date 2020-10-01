@@ -6,7 +6,7 @@ namespace Ligral
     {
         public string Name;
         public Model FatherModel;
-        protected double Value;
+        protected Signal Value;
         public Port(string name, Model model)
         {
             Name = name;
@@ -23,11 +23,11 @@ namespace Ligral
         public bool Visited = false;
         public OutPort Source;
         public InPort(string name, Model model) : base(name, model) {}
-        public void Input(double value)
+        public void Input(Signal value)
         {
             Value = value;
         }
-        public double GetValue()
+        public Signal GetValue()
         {
             return Value;
         }
@@ -56,7 +56,7 @@ namespace Ligral
                 inPort.Source = this;
             }
         }
-        public void SetValue(double value)
+        public void SetValue(Signal value)
         {
             Value = value;
         }

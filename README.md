@@ -97,7 +97,7 @@ module.MyNode -> Scope;
 ~~~ lig
 conf step_size = 0.01;
 conf stop_time = 10;
-conf varible_step = false;
+conf variable_step = false;
 conf output_folder = 'output';
 ~~~
 

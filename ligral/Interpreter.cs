@@ -564,7 +564,7 @@ namespace Ligral
                     }
                     catch
                     {
-                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistence of {routeParam.Name}, digit expected");
+                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency of {routeParam.Name}, digit expected");
                     }
                 }
                 else
@@ -572,7 +572,7 @@ namespace Ligral
                     ModelBase modelBase = routeParam.DefaultValue as ModelBase;// validation in interpreter
                     if (modelBase==null || !currentScope.IsInheritFrom(modelBase.GetTypeName(), routeParam.Type))
                     {
-                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistence for {routeParam.Name}, {routeParam.Type} expected");
+                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency for {routeParam.Name}, {routeParam.Type} expected");
                     }
                 }
             }

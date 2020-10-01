@@ -11,7 +11,7 @@ namespace Ligral
     {
         static void Main(string[] args)
         {
-            ParserResult<Options> result = CommandLine.Parser.Default.ParseArguments<Options>(args).MapResult<Options, ParserResult<Options>>((opts) => DoParse(opts), //in case parser sucess
+            ParserResult<Options> result = CommandLine.Parser.Default.ParseArguments<Options>(args).MapResult<Options, ParserResult<Options>>((opts) => DoParse(opts), //in case parser success
  errs => DoError(errs));
             // helpInfo = HelpText.AutoBuild(result);
         }
@@ -53,8 +53,8 @@ namespace Ligral
             }
             else if (options.InputFile!=null)
             {
-                try
-                {
+                // try
+                // {
                     string text = File.ReadAllText(options.InputFile);
                     Parser parser = new Parser();
                     parser.Load(text);
@@ -82,11 +82,11 @@ namespace Ligral
                     List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                     Wanderer wanderer = new Wanderer();
                     wanderer.Wander(routine);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                // }
+                // catch (Exception e)
+                // {
+                //     Console.WriteLine(e.ToString());
+                // }
             }
             else
             {

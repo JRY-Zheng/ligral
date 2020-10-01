@@ -57,4 +57,29 @@ namespace Ligral
             }
         }
     }
+
+    [System.Serializable]
+    class ModelException : LigralException
+    {
+        private Model errorModel;
+        // private string errorMessage;
+        public ModelException(Model model, string message="") : base(message)
+        {
+            errorModel = model;
+            // errorMessage = message;
+            // this.Data.Add("Token", $"Invalid Semantics at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value})");
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Error occurred in {errorModel.Name}";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
 }

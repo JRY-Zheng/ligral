@@ -15,7 +15,7 @@ namespace Ligral
         protected List<OutPort> OutPortList;
         public bool Initializeable = false;
         protected bool Initialized = false;
-        public List<double> Results = new List<double>();
+        public List<Signal> Results;
         protected virtual string DocString 
         {
             get
@@ -31,6 +31,7 @@ namespace Ligral
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             SetUpPorts();
+            SetUpResults();
             SetUpParameters();
         }
         public string GetDoc()
@@ -61,6 +62,10 @@ namespace Ligral
             InPortList.Add(new InPort("input", this));
             OutPortList.Add(new OutPort("output", this));
         }
+        protected void SetUpResults()
+        {
+            Results = OutPortList.ConvertAll((outPort)=>{return new Signal();});
+        }
         protected virtual void AfterConfigured(){}
         public void Update(double time)
         {
@@ -70,7 +75,7 @@ namespace Ligral
         {
             if(Initializeable)
             {
-                InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(0));
+                InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(new Signal(0)));
                 Initialized = true;
             }
             else
@@ -106,7 +111,14 @@ namespace Ligral
             {
                 Parameter parameter = Parameters[parameterName];
                 object value = dictionary[parameterName];
-                parameter.OnSet(value);
+                // try
+                // {
+                    parameter.OnSet(value);
+                // }
+                // catch (System.Exception e)
+                // {
+                //     throw new LigralException($"type of {value} is unsupported for {parameterName} of {Name}\n{e}");
+                // }
             });
             AfterConfigured();
         }
@@ -169,14 +181,14 @@ namespace Ligral
             }
             return destinationList;
         }
-        protected virtual List<double> Calculate(List<double> values)
+        protected virtual List<Signal> Calculate(List<Signal> values)
         {
             return values;
         }
         public void Propagate()
         {
-            List<double> inputs = InPortList.ConvertAll(inPort=>inPort.GetValue());
-            List<double> outputs = Calculate(inputs);
+            List<Signal> inputs = InPortList.ConvertAll(inPort=>inPort.GetValue());
+            List<Signal> outputs = Calculate(inputs);
             if(outputs.Count != OutPortList.Count)
             {
                 throw new LigralException($"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}. in {Name}");
