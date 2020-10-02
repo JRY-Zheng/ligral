@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral
 {
@@ -27,6 +28,11 @@ namespace Ligral
     class DigitSymbol : Symbol
     {
         public DigitSymbol(string name, TypeSymbol type, double value) : base(name, type, value) {}
+    }
+
+    class MatrixSymbol : Symbol
+    {
+        public MatrixSymbol(string name, TypeSymbol type, Matrix<double> value) : base(name, type, value) {}
     }
 
     class ModelSymbol : Symbol
@@ -72,6 +78,7 @@ namespace Ligral
         private void InitBuiltins()
         {
             Insert(new TypeSymbol("DIGIT", null, null));
+            Insert(new TypeSymbol("MATRIX", null, null));
             Insert(new TypeSymbol("SCOPE", null, null));
             Insert(new TypeSymbol("MODEL", null, null));
             Insert(new TypeSymbol("ROUTE", null, null));

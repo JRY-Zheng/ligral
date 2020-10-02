@@ -1,10 +1,11 @@
 using MathNet.Numerics.LinearAlgebra;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Ligral
 {
-    class Signal
+    class Signal : IEnumerable<double>, IEnumerator<double>
     {
         protected static int id = 0;
         public string Name;
@@ -12,6 +13,29 @@ namespace Ligral
         private Matrix<double> matrixValue;
         public bool IsMatrix {get; private set;} = false;
         public bool Packed {get; private set;} = false;
+        private int currentRow = 0;
+        private int currentCol = -1;
+        public double Current 
+        {
+            get
+            {
+                if (!Packed)
+                {
+                    throw new LigralException("Signal is unpacked");
+                }
+                if (IsMatrix)
+                {
+                    return matrixValue[currentRow, currentCol];
+                }
+                else
+                {
+                    return doubleValue;
+                }
+            }
+        }
+
+        object IEnumerator.Current => throw new System.NotImplementedException();
+
         public Signal()
         {
             id += 1;
@@ -65,6 +89,37 @@ namespace Ligral
         public void Clone(Signal signal)
         {
             Pack(signal.Unpack());
+        }
+        public IEnumerator<double> GetEnumerator()
+        {
+            return this;
+        }
+        public bool MoveNext()
+        {
+            if (IsMatrix)
+            {
+                currentCol ++;
+                if (currentCol >= matrixValue.ColumnCount)
+                {
+                    currentCol = 0;
+                    currentRow ++;
+                }
+                if (currentRow >= matrixValue.RowCount)
+                {
+                    Reset();
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void Reset()
+        {
+            currentCol = -1;
+            currentRow = 0;
         }
         public static Signal operator+(Signal left, Signal right)
         {
@@ -318,7 +373,7 @@ namespace Ligral
         {
             if (IsMatrix)
             {
-                return other.Zip<TOther, double>(matrixValue as IEnumerable<double>).ToList()
+                return other.Zip<TOther, double>(this).ToList()
                     .ConvertAll(pair => func(pair.Second, pair.First));                
             }
             else
@@ -339,15 +394,8 @@ namespace Ligral
         }
         public List<double> ToList()
         {
-            List<double> list = new List<double>();
-            if (IsMatrix)
-            {
-                matrixValue.Transpose().Map(item => {list.Add(item); return 0;});
-            }
-            else
-            {
-                list.Add(doubleValue);
-            }
+            Reset();
+            List<double> list = new List<double>(this);
             return list;
         }
         public (int, int) Shape()
@@ -363,6 +411,16 @@ namespace Ligral
                 return rowNo == matrixValue.RowCount && colNo == matrixValue.ColumnCount;
             else
                 return rowNo == 0 && colNo == 0;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

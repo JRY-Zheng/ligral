@@ -279,7 +279,7 @@ namespace Ligral
             if (modelBase==null)
             {
                 modelBase = ModelManager.Create("Constant");
-                Dict dictionary = new Dict(){{"value", (double)modelObject}};
+                Dict dictionary = new Dict(){{"value", modelObject}};
                 modelBase.Configure(dictionary);
             }
             try
@@ -380,13 +380,22 @@ namespace Ligral
             settings.AddSetting(id, value);
             return null;
         }
-        private double Visit(FromOpAST fromOpAST)
+        private object Visit(FromOpAST fromOpAST)
         {
             string id = Visit(fromOpAST.Id);
-            double value;
+            object value;
+            TypeSymbol typeSymbol;
             try
             {
-                value = (double) Visit(fromOpAST.Expression);
+                value = Visit(fromOpAST.Expression);
+                if ((value  as Matrix<double> != null))
+                {
+                    typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
+                }
+                else
+                {
+                    typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
+                }
             }
             catch 
             {
@@ -399,9 +408,16 @@ namespace Ligral
             }
             else
             {
-                TypeSymbol digitType = currentScope.Lookup("DIGIT") as TypeSymbol;
-                DigitSymbol digitSymbol = new DigitSymbol(id, digitType, value);
-                currentScope.Insert(digitSymbol);
+                if (typeSymbol.Name == "MATRIX")
+                {
+                    MatrixSymbol matrixSymbol = new MatrixSymbol(id, typeSymbol, value as Matrix<double>);
+                    currentScope.Insert(matrixSymbol);
+                }
+                else
+                {
+                    DigitSymbol digitSymbol = new DigitSymbol(id, typeSymbol, (double) value);
+                    currentScope.Insert(digitSymbol);
+                }
                 return value;
             }
         }

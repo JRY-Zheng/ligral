@@ -937,7 +937,7 @@ namespace Ligral
                 }, ()=>{})}
             };
         }
-        private List<double> interpolate()
+        private List<double> Interpolate()
         {
             List<double> before = table.Data.FindLast(row => row[0] < time);
             List<double> after = table.Data.Find(row => row[0] > time);
@@ -970,7 +970,7 @@ namespace Ligral
         {
             // Results.Clear();
             Signal outputSignal = Results[0];
-            List<double> playback = interpolate();
+            List<double> playback = Interpolate();
             if (colNo == 0 && rowNo == 0 && playback.Count == 2)
             {
                 outputSignal.Pack(playback[1]);
@@ -1159,11 +1159,7 @@ namespace Ligral
                 {
                     initial.Pack(value);
                     Results[0].Clone(initial);
-                }, ()=>
-                {
-                    initial.Pack(0);
-                    Results[0].Clone(initial);
-                })},
+                }, ()=>{})},
                 {"col", new Parameter(value=>
                 {
                     colNo = Convert.ToInt32(value);
@@ -1188,6 +1184,7 @@ namespace Ligral
                     MatrixBuilder<double> m = Matrix<double>.Build;
                     initialMatrix = m.Dense(rowNo, colNo, 0);
                     initial.Pack(initialMatrix);
+                    Results[0].Clone(initial);
                 }
                 else
                 {
@@ -1209,6 +1206,7 @@ namespace Ligral
                 if (!initial.Packed)
                 {
                     initial.Pack(0);
+                    Results[0].Clone(initial);
                 }
                 else if (initial.IsMatrix)
                 {
@@ -1240,7 +1238,7 @@ namespace Ligral
             // lastTime = time;
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];
-            if (isMatrix)
+            if (isMatrix && inputSignal.IsMatrix)
             {
                 inputSignal.ZipApply<State, int>(states, (deriv, state) => {
                     StateCalculate(state, deriv);
@@ -1248,12 +1246,17 @@ namespace Ligral
                 });
                 MatrixBuilder<double> m = Matrix<double>.Build;
                 Matrix<double> matrix = m.Dense(colNo, rowNo, states.ConvertAll(state => state.StateVariable).ToArray()).Transpose();
+                outputSignal.Pack(matrix);
             }
-            else
+            else if (!isMatrix && !inputSignal.IsMatrix)
             {
                 State state = states[0];
                 StateCalculate(state, (double) inputSignal.Unpack());
                 outputSignal.Pack(state.StateVariable);
+            }
+            else
+            {
+                throw new ModelException(this, "Type conflict");
             }
             return Results;
         }
@@ -1518,7 +1521,7 @@ namespace Ligral
             else
             {
                 scripts.Add("for i, col in enumerate(data.T[1:]):");
-                scripts.Add($"    plt.subplot({rowNo}, {colNo}, i)");
+                scripts.Add($"    plt.subplot({rowNo}, {colNo}, i+1)");
                 scripts.Add("    plt.plot(time, col)");
                 scripts.Add("    plt.xlabel('time (s)')");
                 scripts.Add("    plt.ylabel(frame.columns[i+1])");
@@ -1680,7 +1683,7 @@ namespace Ligral
                     scripts.Add("x = data.T[1]");
                     scripts.Add("y = data.T[2:]");
                     scripts.Add("for i, col in enumerate(y):");
-                    scripts.Add($"    plt.subplot({rowNo}, {colNo}, i)");
+                    scripts.Add($"    plt.subplot({rowNo}, {colNo}, i+1)");
                     scripts.Add("    plt.plot(x, col)");
                     scripts.Add("    plt.xlabel('x')");
                     scripts.Add("    plt.ylabel(f'y{i}')");
@@ -1690,7 +1693,7 @@ namespace Ligral
                     scripts.Add("x = data.T[1:-1]");
                     scripts.Add("y = data.T[-1]");
                     scripts.Add("for i, col in enumerate(x):");
-                    scripts.Add($"    plt.subplot({rowNo}, {colNo}, i)");
+                    scripts.Add($"    plt.subplot({rowNo}, {colNo}, i+1)");
                     scripts.Add("    plt.plot(col, y)");
                     scripts.Add("    plt.xlabel(f'x{i}')");
                     scripts.Add("    plt.ylabel('y')");
@@ -1701,7 +1704,7 @@ namespace Ligral
                     scripts.Add($"y = data.T[{colNo+1}:]");
                     scripts.Add("for i, col in enumerate(y):");
                     scripts.Add("    for j, row in enumerate(x):");
-                    scripts.Add($"        plt.subplot({rowNo}, {colNo}, i*{rowNo}+j)");
+                    scripts.Add($"        plt.subplot({rowNo}, {colNo}, i*{rowNo}+j+1)");
                     scripts.Add("        plt.plot(row, col)");
                     scripts.Add("        plt.xlabel(f'x{j}')");
                     scripts.Add("        plt.ylabel(f'y{i}')");
@@ -1712,7 +1715,7 @@ namespace Ligral
                     scripts.Add($"y = data.T[{rowNo+1}:]");
                     scripts.Add("for i, col in enumerate(x):");
                     scripts.Add("    for j, row in enumerate(y):");
-                    scripts.Add($"        plt.subplot({rowNo}, {colNo}, i*{rowNo}+j)");
+                    scripts.Add($"        plt.subplot({rowNo}, {colNo}, i*{rowNo}+j+1)");
                     scripts.Add("        plt.plot(col, row)");
                     scripts.Add("        plt.xlabel(f'x{i}')");
                     scripts.Add("        plt.ylabel(f'y{j}')");
