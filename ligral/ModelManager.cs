@@ -53,6 +53,7 @@ namespace Ligral
             {"Max", ()=>new Max()},
             {"Min", ()=>new Min()},
             {"Rand", ()=>new Rand()},
+            {"_", ()=>new Terminal()},
         };
 
         public static Model Create(string modelType)
