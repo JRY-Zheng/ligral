@@ -386,7 +386,7 @@ namespace Ligral
         {
             if (IsMatrix)
             {
-                return string.Join(", ", matrixValue.Transpose());
+                return $"({matrixValue.RowCount}x{matrixValue.ColumnCount})  " + string.Join(" ", ToList());
             }
             else
             {

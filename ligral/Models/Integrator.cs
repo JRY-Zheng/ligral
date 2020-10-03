@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Models
 {
-    class Integrator : Model
+    class Integrator : InitializeableModel
     {
         protected override string DocString
         {
@@ -16,88 +16,16 @@ namespace Ligral.Models
         }
         // private double lastTime = 0;
         protected List<State> states = new List<State>();
-        protected Signal initial = new Signal();
-        protected bool isMatrix {get {return initial.IsMatrix;}}
-        protected int colNo = 0;
-        protected int rowNo = 0;
-        protected override void SetUpPorts()
-        {
-            base.SetUpPorts();
-            Initializeable = true;
-        }
-        protected override void SetUpParameters()
-        {
-            Parameters = new ParameterDictionary()
-            {
-                {"initial", new Parameter(value=>
-                {
-                    initial.Pack(value);
-                    Results[0].Clone(initial);
-                }, ()=>{})},
-                {"col", new Parameter(value=>
-                {
-                    colNo = Convert.ToInt32(value);
-                }, ()=>{})},
-                {"row", new Parameter(value=>
-                {
-                    rowNo = Convert.ToInt32(value);
-                }, ()=>{})}
-            };
-        }
         protected override void AfterConfigured()
         {
-            if (colNo > 0 && rowNo > 0)
+            base.AfterConfigured();
+            Results[0].Clone(initial);
+            foreach (double initialValue in initial.ToList())
             {
-                if (initial.Packed && !initial.IsMatrix)
-                {
-                    throw new ModelException(this, $"Inconsistency between initial value and shape");
-                }
-                Matrix<double> initialMatrix = initial.Unpack() as Matrix<double>;
-                if (initialMatrix == null) // unpacked
-                {
-                    MatrixBuilder<double> m = Matrix<double>.Build;
-                    initialMatrix = m.Dense(rowNo, colNo, 0);
-                    initial.Pack(initialMatrix);
-                    Results[0].Clone(initial);
-                }
-                else
-                {
-                    if (colNo != initialMatrix.ColumnCount || rowNo != initialMatrix.RowCount)
-                    {
-                        throw new ModelException(this, $"Inconsistency between initial value and shape");
-                    }
-                }
-                foreach (double initialValue in initialMatrix.Transpose().ToArray())
-                {
-                    State state = State.CreateState(initialValue, $"{Name}{states.Count+1}");
-                    state.Config(1e-5, 10);
-                    state.DerivativeReceived += s=>{};
-                    states.Add(state);
-                }
-            }
-            else if (colNo == 0 && rowNo == 0)
-            {
-                if (!initial.Packed)
-                {
-                    initial.Pack(0);
-                    Results[0].Clone(initial);
-                }
-                else if (initial.IsMatrix)
-                {
-                    Matrix<double> matrix = initial.Unpack() as Matrix<double>;
-                    colNo = matrix.ColumnCount;
-                    rowNo = matrix.RowCount;
-                    AfterConfigured();
-                    return;
-                }
-                State state = State.CreateState((double) initial.Unpack(), Name);
+                State state = State.CreateState(initialValue, $"{Name}{states.Count+1}");
                 state.Config(1e-5, 10);
                 state.DerivativeReceived += s=>{};
                 states.Add(state);
-            }
-            else
-            {
-                throw new ModelException(this, $"Matrix row and col should be positive non-zero: {colNo}x{rowNo}");
             }
         }
         // protected override void AfterConfigured()

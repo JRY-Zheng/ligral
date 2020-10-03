@@ -20,10 +20,10 @@ namespace Ligral
                     node.Inspect().ForEach(subNode=>Visit(subNode));
                 }
             }
-            else if (node.Initializeable)
+            else if (node is InitializeableModel initializeableModel)
             {
-                node.Initialize();
-                Visit(node);
+                initializeableModel.Initialize();
+                Visit(initializeableModel);
             }
         }
         public List<Model> Inspect(List<Model> nodes)
@@ -61,7 +61,7 @@ namespace Ligral
             {
                 throw new AlgebraicLoopException();
             }
-            else if (!node.Initializeable)
+            else if (!(node is InitializeableModel))
             {
                 node.Inspect().ForEach(subNode=>DirectFeedThroughAdvance(root, subNode, loop));
             }

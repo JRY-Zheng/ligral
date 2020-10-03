@@ -14,8 +14,8 @@ namespace Ligral
         public string Name;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
-        public bool Initializeable = false;
-        protected bool Initialized = false;
+        // public bool Initializeable = false;
+        // protected bool Initialized = false;
         public List<Signal> Results;
         protected virtual string DocString 
         {
@@ -71,19 +71,6 @@ namespace Ligral
         public void Update(double time)
         {
             this.time = time;
-        }
-        public virtual void Initialize()
-        {
-            // [TODO] implement class InitialiseableModel
-            if(Initializeable)
-            {
-                InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(new Signal(0)));
-                Initialized = true;
-            }
-            else
-            {
-                throw new LigralException("This model cannot be initialized.");
-            }
         }
         public override void Configure(Dict dictionary) 
         {
@@ -166,9 +153,9 @@ namespace Ligral
         {
             return OutPortList.Count;
         }
-        public bool IsReady()
+        public virtual bool IsReady()
         {
-            return Initialized || InPortList.All(inPort=>inPort.Visited);
+            return InPortList.All(inPort=>inPort.Visited);
         }
         public bool IsConnected()
         {

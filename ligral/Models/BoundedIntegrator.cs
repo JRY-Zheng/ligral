@@ -11,12 +11,6 @@ namespace Ligral.Models
         }
         private double upper;
         private double lower;
-        protected override void SetUpPorts()
-        {
-            base.SetUpPorts();
-            Initializeable = true;
-            // Results.Add(0);
-        }
         protected override void SetUpParameters()
         {
             base.SetUpParameters();

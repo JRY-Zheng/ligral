@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Models
 {
-    class Memory : Model
+    class Memory : InitializeableModel
     {
         protected override string DocString
         {
@@ -14,82 +14,30 @@ namespace Ligral.Models
                 return "This model outputs its input from the previous time step.";
             }
         }
-        private Signal initial = new Signal();
         private List<Signal> stack = new List<Signal>();
-        private int colNo = 0;
-        private int rowNo = 0;
-        protected override void SetUpPorts()
-        {
-            base.SetUpPorts();
-            Initializeable = true;
-        }
         protected override void SetUpParameters()
         {
-            Parameters = new ParameterDictionary()
+            base.SetUpParameters();
+            Parameters["delay"] = new Parameter(value =>
             {
-                {"initial", new Parameter(value=>
+                int delayedFrame = Convert.ToInt32(value);
+                if (delayedFrame < 1)
                 {
-                    initial.Pack(value);
-                }, ()=>{})},
-                {"delay", new Parameter(value=>
-                {
-                    int delayedFrame = Convert.ToInt32(value);
-                    if (delayedFrame < 1)
-                    {
-                        throw new ModelException(this, "Delay should be greater than 1");
-                    }
-                    for (int i = 0; i <= delayedFrame; i++)
-                    {
-                        stack.Add(new Signal());
-                    }
-                }, ()=>
+                    throw new ModelException(this, "Delay should be greater than 1");
+                }
+                for (int i = 0; i <= delayedFrame; i++)
                 {
                     stack.Add(new Signal());
-                    stack.Add(new Signal());
-                })},
-                {"col", new Parameter(value=>
-                {
-                    colNo = Convert.ToInt32(value);
-                }, ()=>{})},
-                {"row", new Parameter(value=>
-                {
-                    rowNo = Convert.ToInt32(value);
-                }, ()=>{})}
-            };
+                }
+            }, ()=>
+            {
+                stack.Add(new Signal());
+                stack.Add(new Signal());
+            });
         }
         protected override void AfterConfigured()
         {
-            if (colNo > 0 && rowNo > 0)
-            {
-                if (initial.Packed && !initial.IsMatrix)
-                {
-                    throw new ModelException(this, $"Inconsistency between initial value and shape");
-                }
-                Matrix<double> initialMatrix = initial.Unpack() as Matrix<double>;
-                if (initialMatrix == null) // unpacked
-                {
-                    MatrixBuilder<double> m = Matrix<double>.Build;
-                    initial.Pack(m.Dense(rowNo, colNo, 0));
-                }
-                else
-                {
-                    if (colNo != initialMatrix.ColumnCount || rowNo != initialMatrix.RowCount)
-                    {
-                        throw new ModelException(this, $"Inconsistency between initial value and shape");
-                    }
-                }
-            }
-            else if (colNo == 0 && rowNo == 0)
-            {
-                if (!initial.Packed)
-                {
-                    initial.Pack(0);
-                }
-            }
-            else
-            {
-                throw new ModelException(this, $"Matrix row and col should be positive non-zero: {colNo}x{rowNo}");
-            }
+            base.AfterConfigured();
             stack.ForEach(signal => signal.Clone(initial));
         }
         public override void Initialize()
