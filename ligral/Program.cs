@@ -4,6 +4,7 @@ using CommandLine;
 using System.Text;
 using System.Linq;
 using System;
+using Ligral.ASTs;
 
 namespace Ligral
 {
