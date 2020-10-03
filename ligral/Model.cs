@@ -3,6 +3,7 @@ using System.Linq;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Parameter>;
 using System.Text;
+using Ligral.Models;
 
 namespace Ligral
 {
