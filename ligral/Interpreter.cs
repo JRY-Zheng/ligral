@@ -51,74 +51,74 @@ namespace Ligral
         }
         private object Visit(AST ast)
         {
-            switch (ast.GetType().Name)
+            switch (ast)
             {
-                case "ProgramAST":
-                    return Visit(ast as ProgramAST);
-                case "StatementsAST":
-                    return Visit(ast as StatementsAST);
-                case "IdAST":
-                    return Visit(ast as IdAST);
-                case "WordAST":
-                    return Visit(ast as WordAST);
-                case "BoolAST":
-                    return Visit(ast as BoolAST);
-                case "RowAST":
-                    return Visit(ast as RowAST);
-                case "MatrixAST":
-                    return Visit(ast as MatrixAST);
-                case "MatrixBlockAST":
-                    return Visit(ast as MatrixBlockAST);
-                case "DigitAST":
-                    return Visit(ast as DigitAST);
-                case "DigitBlockAST":
-                    return Visit(ast as DigitBlockAST);
-                case "StringAST":
-                    return Visit(ast as StringAST);
-                case "BusAST":
-                    return Visit(ast as BusAST);
-                case "DictAST":
-                    return Visit(ast as DictAST);
-                case "KeyValuePairAST":
-                    return Visit(ast as KeyValuePairAST);
-                case "DeclareAST":
-                    return Visit(ast as DeclareAST);
-                case "ConfigureAST":
-                    return Visit(ast as ConfigureAST);
-                case "BinOpAST":
-                    return Visit(ast as BinOpAST);
-                case "UnaryOpAST":
-                    return Visit(ast as UnaryOpAST);
-                case "ValBinOpAST":
-                    return Visit(ast as ValBinOpAST);
-                case "ValUnaryOpAST":
-                    return Visit(ast as ValUnaryOpAST);
-                case "ConfAST":
-                    return Visit(ast as ConfAST);
-                case "FromOpAST":
-                    return Visit(ast as FromOpAST);
-                case "GotoOpAST":
-                    return Visit(ast as GotoOpAST);
-                case "ImportAST":
-                    return Visit(ast as ImportAST);
-                case "UsingAST":
-                    return Visit(ast as UsingAST);
-                case "PointerAST":
-                    return Visit(ast as PointerAST);
-                case "SelectAST":
-                    return Visit(ast as SelectAST);
-                case "ChainAST":
-                    return Visit(ast as ChainAST);
-                case "InheritAST":
-                    return Visit(ast as InheritAST);
-                case "RouteParamAST":
-                    return Visit(ast as RouteParamAST);
-                case "RouteParamsAST":
-                    return Visit(ast as RouteParamsAST);
-                case "RoutePortAST":
-                    return Visit(ast as RoutePortAST);
-                case "RouteAST":
-                    return Visit(ast as RouteAST);
+                case ProgramAST programAST:
+                    return Visit(programAST);
+                case StatementsAST statementsAST:
+                    return Visit(statementsAST);
+                case IdAST idAST:
+                    return Visit(idAST);
+                case WordAST wordAST:
+                    return Visit(wordAST);
+                case BoolAST boolAST:
+                    return Visit(boolAST);
+                case RowAST rowAST:
+                    return Visit(rowAST);
+                case MatrixAST matrixAST:
+                    return Visit(matrixAST);
+                case MatrixBlockAST matrixBlockAST:
+                    return Visit(matrixBlockAST);
+                case DigitAST digitAST:
+                    return Visit(digitAST);
+                case DigitBlockAST digitBlockAST:
+                    return Visit(digitBlockAST);
+                case StringAST stringAST:
+                    return Visit(stringAST);
+                case BusAST busAST:
+                    return Visit(busAST);
+                case DictAST dictAST:
+                    return Visit(dictAST);
+                case KeyValuePairAST keyValuePairAST:
+                    return Visit(keyValuePairAST);
+                case DeclareAST declareAST:
+                    return Visit(declareAST);
+                case ConfigureAST configureAST:
+                    return Visit(configureAST);
+                case BinOpAST binOpAST:
+                    return Visit(binOpAST);
+                case UnaryOpAST unaryOpAST:
+                    return Visit(unaryOpAST);
+                case ValBinOpAST valBinOpAST:
+                    return Visit(valBinOpAST);
+                case ValUnaryOpAST valUnaryOpAST:
+                    return Visit(valUnaryOpAST);
+                case ConfAST confAST:
+                    return Visit(confAST);
+                case FromOpAST fromOpAST:
+                    return Visit(fromOpAST);
+                case GotoOpAST gotoOpAST:
+                    return Visit(gotoOpAST);
+                case ImportAST importAST:
+                    return Visit(importAST);
+                case UsingAST usingAST:
+                    return Visit(usingAST);
+                case PointerAST pointerAST:
+                    return Visit(pointerAST);
+                case SelectAST selectAST:
+                    return Visit(selectAST);
+                case ChainAST chainAST:
+                    return Visit(chainAST);
+                case InheritAST inheritAST:
+                    return Visit(inheritAST);
+                case RouteParamAST routeParamAST:
+                    return Visit(routeParamAST);
+                case RouteParamsAST routeParamsAST:
+                    return Visit(routeParamsAST);
+                case RoutePortAST routePortAST:
+                    return Visit(routePortAST);
+                case RouteAST routeAST:
+                    return Visit(routeAST);
                 default:
                     throw new LigralException($"Unknown AST {ast.GetType().Name}");
             }
