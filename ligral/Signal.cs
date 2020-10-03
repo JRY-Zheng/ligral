@@ -371,6 +371,7 @@ namespace Ligral
         }
         public List<TResult> ZipApply<TOther, TResult>(List<TOther> other, System.Func<double, TOther, TResult> func)
         {
+            Reset();
             if (IsMatrix)
             {
                 return other.Zip<TOther, double>(this).ToList()

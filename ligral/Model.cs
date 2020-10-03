@@ -73,6 +73,7 @@ namespace Ligral
         }
         public virtual void Initialize()
         {
+            // [TODO] implement class InitialiseableModel
             if(Initializeable)
             {
                 InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(new Signal(0)));

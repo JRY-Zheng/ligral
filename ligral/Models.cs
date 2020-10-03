@@ -1053,17 +1053,18 @@ namespace Ligral
                 }, ()=>{})},
                 {"delay", new Parameter(value=>
                 {
-                    double delayedFrame = Convert.ToInt32(value);
+                    int delayedFrame = Convert.ToInt32(value);
                     if (delayedFrame < 1)
                     {
                         throw new ModelException(this, "Delay should be greater than 1");
                     }
-                    for (int i = 0; i < delayedFrame; i++)
+                    for (int i = 0; i <= delayedFrame; i++)
                     {
                         stack.Add(new Signal());
                     }
                 }, ()=>
                 {
+                    stack.Add(new Signal());
                     stack.Add(new Signal());
                 })},
                 {"col", new Parameter(value=>

@@ -46,10 +46,11 @@ node1 -> ThresholdSwitch[switch]:condition;
 
 ### 定义语句
 
-常量定义由以下语句完成（*注意：`digit` 关键字和 `<-` 符号将于下个版本废弃*），目前仅支持scalar，后期会增加二维的 matrix。
+常量定义由以下语句完成（*注意：`digit` 关键字和 `<-` 符号将于下个版本废弃*），目前支持 scalar 和二维的 matrix。
 
 ~~~ lig
-let var_name = 1;
+let a = 1;
+let mat = [a 2;-a 0];
 ~~~
 
 节点定义由以下语句完成：

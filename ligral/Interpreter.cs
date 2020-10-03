@@ -385,19 +385,16 @@ namespace Ligral
             string id = Visit(fromOpAST.Id);
             object value;
             TypeSymbol typeSymbol;
-            try
+            value = Visit(fromOpAST.Expression);
+            if ((value  as Matrix<double> != null))
             {
-                value = Visit(fromOpAST.Expression);
-                if ((value  as Matrix<double> != null))
-                {
-                    typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
-                }
-                else
-                {
-                    typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
-                }
+                typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
             }
-            catch 
+            else if (value is double)
+            {
+                typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
+            }
+            else 
             {
                 throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
             }
