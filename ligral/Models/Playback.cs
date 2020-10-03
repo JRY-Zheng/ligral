@@ -30,7 +30,7 @@ namespace Ligral.Models
                 {"file", new Parameter(value=>
                 {
                     table = new CsvTable((string)value, true);
-                    if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time" || table.GetColumnName(0) != "time")
+                    if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")
                     {
                         throw new ModelException(this,"Invalid playback file");
                     }

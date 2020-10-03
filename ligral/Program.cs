@@ -56,33 +56,33 @@ namespace Ligral
             {
                 // try
                 // {
-                    string text = File.ReadAllText(options.InputFile);
-                    Parser parser = new Parser();
-                    parser.Load(text);
-                    ProgramAST p = parser.Parse();
-                    Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
-                    interpreter.Interpret(p);
-                    Settings settings = Settings.GetInstance();
-                    if (options.OutputFolder!=null)
-                    {
-                        settings.OutputFolder = options.OutputFolder;
-                    }
-                    else if (settings.OutputFolder==null)
-                    {
-                        settings.OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
-                    }
-                    if (options.StepSize!=null)
-                    {
-                        settings.StepSize = (double) options.StepSize;
-                    }
-                    if (options.StopTime!=null)
-                    {
-                        settings.StopTime = (double) options.StopTime;
-                    }
-                    Inspector inspector = new Inspector();
-                    List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                    Wanderer wanderer = new Wanderer();
-                    wanderer.Wander(routine);
+                string text = File.ReadAllText(options.InputFile);
+                Parser parser = new Parser();
+                parser.Load(text);
+                ProgramAST p = parser.Parse();
+                Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
+                interpreter.Interpret(p);
+                Settings settings = Settings.GetInstance();
+                if (options.OutputFolder!=null)
+                {
+                    settings.OutputFolder = options.OutputFolder;
+                }
+                else if (settings.OutputFolder==null)
+                {
+                    settings.OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
+                }
+                if (options.StepSize!=null)
+                {
+                    settings.StepSize = (double) options.StepSize;
+                }
+                if (options.StopTime!=null)
+                {
+                    settings.StopTime = (double) options.StopTime;
+                }
+                Inspector inspector = new Inspector();
+                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
+                Wanderer wanderer = new Wanderer();
+                wanderer.Wander(routine);
                 // }
                 // catch (Exception e)
                 // {
