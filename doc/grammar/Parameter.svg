@@ -1,0 +1,41 @@
+<svg class="railroad-diagram" height="92" viewBox="0 0 432.5 92" width="432.5" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(.5 .5)">
+<style>/* <![CDATA[ */
+	svg.railroad-diagram {
+		background-color:hsl(30,20%,95%);
+	}
+	svg.railroad-diagram path {
+		stroke-width:3;
+		stroke:black;
+		fill:rgba(0,0,0,0);
+	}
+	svg.railroad-diagram text {
+		font:bold 14px monospace;
+		text-anchor:middle;
+	}
+	svg.railroad-diagram text.label{
+		text-anchor:start;
+	}
+	svg.railroad-diagram text.comment{
+		font:italic 12px monospace;
+	}
+	svg.railroad-diagram rect{
+		stroke-width:3;
+		stroke:black;
+		fill:hsl(120,100%,90%);
+	}
+	svg.railroad-diagram rect.group-box {
+		stroke: gray;
+		stroke-dasharray: 10 5;
+		fill: none;
+	}
+
+/* ]]> */
+</style><g>
+<path d="M20 51v20m10 -20v20m-10 -10h86.5"></path><text style="text-anchor:start" x="20" y="46">Parameter</text></g><path d="M106.5 61h10"></path><g>
+<path d="M116.5 61h0.0"></path><path d="M382.5 61h0.0"></path><g class="terminal ">
+<path d="M116.5 61h0.0"></path><path d="M153.5 61h0.0"></path><rect height="22" rx="10" ry="10" width="37.0" x="116.5" y="50"></rect><text x="135.0" y="65">ID</text></g><path d="M153.5 61h10"></path><path d="M163.5 61h10"></path><g class="terminal ">
+<path d="M173.5 61h0.0"></path><path d="M236.0 61h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="173.5" y="50"></rect><text x="204.75" y="65">COLON</text></g><path d="M236.0 61h10"></path><g>
+<path d="M246.0 61h0.0"></path><path d="M382.5 61h0.0"></path><path d="M246.0 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><g class="terminal ">
+<path d="M266.0 31h12.75"></path><path d="M349.75 31h12.75"></path><rect height="22" rx="10" ry="10" width="71.0" x="278.75" y="20"></rect><text x="314.25" y="35">STRING</text></g><path d="M362.5 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><path d="M246.0 61h20"></path><g class="non-terminal ">
+<path d="M266.0 61h0.0"></path><path d="M362.5 61h0.0"></path><rect height="22" width="96.5" x="266.0" y="50"></rect><text x="314.25" y="65">ValueExpr</text></g><path d="M362.5 61h20"></path></g></g><path d="M382.5 61h10"></path><path d="M 392.5 61 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>

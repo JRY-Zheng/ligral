@@ -1,0 +1,57 @@
+<svg class="railroad-diagram" height="246" viewBox="0 0 432.5 246" width="432.5" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(.5 .5)">
+<style>/* <![CDATA[ */
+	svg.railroad-diagram {
+		background-color:hsl(30,20%,95%);
+	}
+	svg.railroad-diagram path {
+		stroke-width:3;
+		stroke:black;
+		fill:rgba(0,0,0,0);
+	}
+	svg.railroad-diagram text {
+		font:bold 14px monospace;
+		text-anchor:middle;
+	}
+	svg.railroad-diagram text.label{
+		text-anchor:start;
+	}
+	svg.railroad-diagram text.comment{
+		font:italic 12px monospace;
+	}
+	svg.railroad-diagram rect{
+		stroke-width:3;
+		stroke:black;
+		fill:hsl(120,100%,90%);
+	}
+	svg.railroad-diagram rect.group-box {
+		stroke: gray;
+		stroke-dasharray: 10 5;
+		fill: none;
+	}
+
+/* ]]> */
+</style><g>
+<path d="M20 21v20m10 -20v20m-10 -10h52.5"></path><text style="text-anchor:start" x="20" y="16">Route</text></g><path d="M72.5 31h10"></path><g>
+<path d="M82.5 31h0.0"></path><path d="M82.5 31h10"></path><g>
+<path d="M92.5 31h22.0"></path><path d="M350.5 31h22.0"></path><g class="terminal ">
+<path d="M114.5 31h0.0"></path><path d="M177.0 31h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="114.5" y="20"></rect><text x="145.75" y="35">ROUTE</text></g><path d="M177.0 31h10"></path><path d="M187.0 31h10"></path><g class="non-terminal ">
+<path d="M197.0 31h0.0"></path><path d="M276.5 31h0.0"></path><rect height="22" width="79.5" x="197.0" y="20"></rect><text x="236.75" y="35">Inherit</text></g><path d="M276.5 31h10"></path><path d="M286.5 31h10"></path><g class="terminal ">
+<path d="M296.5 31h0.0"></path><path d="M350.5 31h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="296.5" y="20"></rect><text x="323.5" y="35">LPAR</text></g></g><path d="M372.5 31a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-280.0a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path><g>
+<path d="M92.5 79h10.0"></path><path d="M362.5 79h10.0"></path><g>
+<path d="M102.5 79h0.0"></path><path d="M290.0 79h0.0"></path><path d="M102.5 79a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
+<path d="M122.5 59h147.5"></path></g><path d="M270.0 59a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M102.5 79h20"></path><g class="non-terminal ">
+<path d="M122.5 79h0.0"></path><path d="M270.0 79h0.0"></path><rect height="22" width="147.5" x="122.5" y="68"></rect><text x="196.25" y="83">RouteParameters</text></g><path d="M270.0 79h20"></path></g><path d="M290.0 79h10"></path><g class="terminal ">
+<path d="M300.0 79h0.0"></path><path d="M362.5 79h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="300.0" y="68"></rect><text x="331.25" y="83">SEMIC</text></g></g><path d="M372.5 79a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-280.0a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path><g>
+<path d="M92.5 127h31.25"></path><path d="M341.25 127h31.25"></path><g>
+<path d="M123.75 127h0.0"></path><path d="M268.75 127h0.0"></path><path d="M123.75 127a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
+<path d="M143.75 107h105.0"></path></g><path d="M248.75 107a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M123.75 127h20"></path><g class="non-terminal ">
+<path d="M143.75 127h0.0"></path><path d="M248.75 127h0.0"></path><rect height="22" width="105.0" x="143.75" y="116"></rect><text x="196.25" y="131">RoutePorts</text></g><path d="M248.75 127h20"></path></g><path d="M268.75 127h10"></path><g class="terminal ">
+<path d="M278.75 127h0.0"></path><path d="M341.25 127h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="278.75" y="116"></rect><text x="310.0" y="131">SEMIC</text></g></g><path d="M372.5 127a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-280.0a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path><g>
+<path d="M92.5 175h67.5"></path><path d="M305.0 175h67.5"></path><path d="M160.0 175a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
+<path d="M180.0 155h105.0"></path></g><path d="M285.0 155a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M160.0 175h20"></path><g class="non-terminal ">
+<path d="M180.0 175h0.0"></path><path d="M285.0 175h0.0"></path><rect height="22" width="105.0" x="180.0" y="164"></rect><text x="232.5" y="179">RoutePorts</text></g><path d="M285.0 175h20"></path></g><path d="M372.5 175a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-280.0a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g>
+<path d="M92.5 215h17.75"></path><path d="M354.75 215h17.75"></path><g class="terminal ">
+<path d="M110.25 215h0.0"></path><path d="M164.25 215h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="110.25" y="204"></rect><text x="137.25" y="219">RPAR</text></g><path d="M164.25 215h10"></path><path d="M174.25 215h10"></path><g class="non-terminal ">
+<path d="M184.25 215h0.0"></path><path d="M289.25 215h0.0"></path><rect height="22" width="105.0" x="184.25" y="204"></rect><text x="236.75" y="219">Statements</text></g><path d="M289.25 215h10"></path><path d="M299.25 215h10"></path><g class="terminal ">
+<path d="M309.25 215h0.0"></path><path d="M354.75 215h0.0"></path><rect height="22" rx="10" ry="10" width="45.5" x="309.25" y="204"></rect><text x="332.0" y="219">END</text></g></g><path d="M372.5 215h10"></path><path d="M382.5 215h0.0"></path></g><path d="M382.5 215h10"></path><path d="M 392.5 215 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>

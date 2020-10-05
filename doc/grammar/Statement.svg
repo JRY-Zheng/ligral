@@ -1,0 +1,45 @@
+<svg class="railroad-diagram" height="212" viewBox="0 0 429.5 212" width="429.5" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(.5 .5)">
+<style>/* <![CDATA[ */
+	svg.railroad-diagram {
+		background-color:hsl(30,20%,95%);
+	}
+	svg.railroad-diagram path {
+		stroke-width:3;
+		stroke:black;
+		fill:rgba(0,0,0,0);
+	}
+	svg.railroad-diagram text {
+		font:bold 14px monospace;
+		text-anchor:middle;
+	}
+	svg.railroad-diagram text.label{
+		text-anchor:start;
+	}
+	svg.railroad-diagram text.comment{
+		font:italic 12px monospace;
+	}
+	svg.railroad-diagram rect{
+		stroke-width:3;
+		stroke:black;
+		fill:hsl(120,100%,90%);
+	}
+	svg.railroad-diagram rect.group-box {
+		stroke: gray;
+		stroke-dasharray: 10 5;
+		fill: none;
+	}
+
+/* ]]> */
+</style><g>
+<path d="M20 141v20m10 -20v20m-10 -10h86.5"></path><text style="text-anchor:start" x="20" y="136">Statement</text></g><g>
+<path d="M106.5 151h0.0"></path><path d="M389.5 151h0.0"></path><path d="M106.5 151h20"></path><g>
+<path d="M126.5 151h0.0"></path><path d="M369.5 151h0.0"></path><g>
+<path d="M126.5 151h0.0"></path><path d="M297.0 151h0.0"></path><path d="M126.5 151a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><g class="non-terminal ">
+<path d="M146.5 121h29.75"></path><path d="M247.25 121h29.75"></path><rect height="22" width="71.0" x="176.25" y="110"></rect><text x="211.75" y="125">Import</text></g><path d="M277.0 121a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><path d="M126.5 151a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><g class="non-terminal ">
+<path d="M146.5 91h34.0"></path><path d="M243.0 91h34.0"></path><rect height="22" width="62.5" x="180.5" y="80"></rect><text x="211.75" y="95">Using</text></g><path d="M277.0 91a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><path d="M126.5 151a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><g class="non-terminal ">
+<path d="M146.5 61h29.75"></path><path d="M247.25 61h29.75"></path><rect height="22" width="71.0" x="176.25" y="50"></rect><text x="211.75" y="65">Define</text></g><path d="M277.0 61a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><path d="M126.5 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><g class="non-terminal ">
+<path d="M146.5 31h0.0"></path><path d="M277.0 31h0.0"></path><rect height="22" width="130.5" x="146.5" y="20"></rect><text x="211.75" y="35">ProgramConfig</text></g><path d="M277.0 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><path d="M126.5 151h20"></path><g class="non-terminal ">
+<path d="M146.5 151h34.0"></path><path d="M243.0 151h34.0"></path><rect height="22" width="62.5" x="180.5" y="140"></rect><text x="211.75" y="155">Chain</text></g><path d="M277.0 151h20"></path></g><path d="M297.0 151h10"></path><g class="terminal ">
+<path d="M307.0 151h0.0"></path><path d="M369.5 151h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="307.0" y="140"></rect><text x="338.25" y="155">SEMIC</text></g></g><path d="M369.5 151h20"></path><path d="M106.5 151a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal ">
+<path d="M126.5 181h90.25"></path><path d="M279.25 181h90.25"></path><rect height="22" width="62.5" x="216.75" y="170"></rect><text x="248.0" y="185">Route</text></g><path d="M369.5 181a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 389.5 151 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>

@@ -1,0 +1,48 @@
+<svg class="railroad-diagram" height="119" viewBox="0 0 496.5 119" width="496.5" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(.5 .5)">
+<style>/* <![CDATA[ */
+	svg.railroad-diagram {
+		background-color:hsl(30,20%,95%);
+	}
+	svg.railroad-diagram path {
+		stroke-width:3;
+		stroke:black;
+		fill:rgba(0,0,0,0);
+	}
+	svg.railroad-diagram text {
+		font:bold 14px monospace;
+		text-anchor:middle;
+	}
+	svg.railroad-diagram text.label{
+		text-anchor:start;
+	}
+	svg.railroad-diagram text.comment{
+		font:italic 12px monospace;
+	}
+	svg.railroad-diagram rect{
+		stroke-width:3;
+		stroke:black;
+		fill:hsl(120,100%,90%);
+	}
+	svg.railroad-diagram rect.group-box {
+		stroke: gray;
+		stroke-dasharray: 10 5;
+		fill: none;
+	}
+
+/* ]]> */
+</style><g>
+<path d="M20 30v20m10 -20v20m-10 -10h129.0"></path><text style="text-anchor:start" x="20" y="25">RouteParameter</text></g><path d="M149.0 40h10"></path><g>
+<path d="M159.0 40h0.0"></path><path d="M446.5 88h0.0"></path><g class="terminal ">
+<path d="M159.0 40h0.0"></path><path d="M196.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="37.0" x="159.0" y="29"></rect><text x="177.5" y="44">ID</text></g><path d="M196.0 40h10"></path><path d="M206.0 40h10"></path><g>
+<path d="M216.0 40h0.0"></path><path d="M216.0 40h10"></path><g>
+<path d="M226.0 40h25.5"></path><path d="M411.0 40h25.5"></path><path d="M251.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
+<path d="M271.5 20h119.5"></path></g><path d="M391.0 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M251.5 40h20"></path><g>
+<path d="M271.5 40h0.0"></path><path d="M391.0 40h0.0"></path><g class="terminal ">
+<path d="M271.5 40h0.0"></path><path d="M334.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="271.5" y="29"></rect><text x="302.75" y="44">COLON</text></g><path d="M334.0 40h10"></path><path d="M344.0 40h10"></path><g class="terminal ">
+<path d="M354.0 40h0.0"></path><path d="M391.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="37.0" x="354.0" y="29"></rect><text x="372.5" y="44">ID</text></g></g><path d="M391.0 40h20"></path></g><path d="M436.5 40a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-210.5a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path><g>
+<path d="M226.0 88h0.0"></path><path d="M436.5 88h0.0"></path><path d="M226.0 88a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
+<path d="M246.0 68h170.5"></path></g><path d="M416.5 68a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M226.0 88h20"></path><g>
+<path d="M246.0 88h0.0"></path><path d="M416.5 88h0.0"></path><g class="terminal ">
+<path d="M246.0 88h0.0"></path><path d="M300.0 88h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="246.0" y="77"></rect><text x="273.0" y="92">FROM</text></g><path d="M300.0 88h10"></path><path d="M310.0 88h10"></path><g class="non-terminal ">
+<path d="M320.0 88h0.0"></path><path d="M416.5 88h0.0"></path><rect height="22" width="96.5" x="320.0" y="77"></rect><text x="368.25" y="92">ValueExpr</text></g></g><path d="M416.5 88h20"></path></g><path d="M436.5 88h10"></path><path d="M446.5 88h0.0"></path></g></g><path d="M446.5 88h10"></path><path d="M 456.5 88 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
