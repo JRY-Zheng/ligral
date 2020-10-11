@@ -308,17 +308,68 @@ namespace Ligral
                 return Selector();
             }
         }
-        private MatrixBlockAST MatrixMux()
+        private MatrixMuxAST MatrixMux()
         {
-            throw new System.NotImplementedException();
+            List<RowBlockAST> rows = new List<RowBlockAST>();
+            Eat(TokenType.LBRK);
+            while (currentToken.Type!=TokenType.RBRK)
+            {
+                rows.Add(RowMux());
+                if (currentToken.Type==TokenType.SEMIC)
+                {
+                    Eat(TokenType.SEMIC);
+                }
+            }
+            Eat(TokenType.RBRK);
+            return new MatrixMuxAST(rows);
         }
-        private MatrixBlockAST MatrixDeMux()
+        private MatrixDeMuxAST MatrixDeMux()
         {
-            throw new System.NotImplementedException();
+            int? columnNumber = null;
+            List<RowBlockAST> rows = new List<RowBlockAST>();
+            Eat(TokenType.LBRK);
+            while (currentToken.Type!=TokenType.RBRK)
+            {
+                rows.Add(RowDeMux(columnNumber, out int parsedColumnNumber));
+                columnNumber = parsedColumnNumber;
+                if (currentToken.Type==TokenType.SEMIC)
+                {
+                    Eat(TokenType.SEMIC);
+                }
+            }
+            Eat(TokenType.RBRK);
+            return new MatrixDeMuxAST(rows, (int)columnNumber);
         }
-        private MatrixBlockAST BlockRow()
+        private RowBlockAST RowMux()
         {
-            throw new System.NotImplementedException();
+            List<AST> items = new List<AST>();
+            while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
+            {
+                items.Add(NodeExpr(true));
+                if (currentToken.Type==TokenType.COMMA)
+                {
+                    Eat(TokenType.COMMA);
+                }
+            }
+            return new RowBlockAST(items);
+        }
+        private RowBlockAST RowDeMux(int? numberRequired, out int numberParsed)
+        {
+            List<AST> items = new List<AST>();
+            while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
+            {
+                items.Add(Selector());
+                if (currentToken.Type==TokenType.COMMA)
+                {
+                    Eat(TokenType.COMMA);
+                }
+            }
+            numberParsed = items.Count;
+            if (numberRequired != null && numberRequired != numberParsed)
+            {
+                throw new SyntaxException(currentToken, "Inconsistency rows of a DeMux block");
+            }
+            return new RowBlockAST(items);
         }
         private BusAST Bus()
         {

@@ -12,8 +12,10 @@ namespace Ligral
     {
         static void Main(string[] args)
         {
-            ParserResult<Options> result = CommandLine.Parser.Default.ParseArguments<Options>(args).MapResult<Options, ParserResult<Options>>((opts) => DoParse(opts), //in case parser success
- errs => DoError(errs));
+            ParserResult<Options> result = CommandLine.Parser.Default.ParseArguments<Options>(args)
+                .MapResult<Options, ParserResult<Options>>(
+                    opts => DoParse(opts), //in case parser success
+                    errs => DoError(errs));
             // helpInfo = HelpText.AutoBuild(result);
         }
         static ParserResult<Options> DoError(IEnumerable<Error> errs)

@@ -4,8 +4,8 @@ namespace Ligral.ASTs
 {
     class MatrixMuxAST : AST
     {
-        public List<RowAST> Rows;
-        public MatrixMuxAST(List<RowAST> rows)
+        public List<RowBlockAST> Rows;
+        public MatrixMuxAST(List<RowBlockAST> rows)
         {
             Rows = rows;
         }
