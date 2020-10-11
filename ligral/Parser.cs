@@ -184,7 +184,7 @@ namespace Ligral
                 return Pointer();
             }
         }
-        private AST Matrix(bool isBlock=false)
+        private AST Matrix()
         {
             List<RowAST> rows = new List<RowAST>();
             Eat(TokenType.LBRK);
@@ -197,14 +197,7 @@ namespace Ligral
                 }
             }
             Eat(TokenType.RBRK);
-            if (isBlock)
-            {
-                return new MatrixBlockAST(rows);
-            }
-            else
-            {
-                return new MatrixAST(rows);
-            }
+            return new MatrixAST(rows);
         }
         private RowAST Row()
         {
@@ -242,50 +235,50 @@ namespace Ligral
         }
         private ChainAST Chain()
         {
-            AST nodeExprAST = NodeExpr();
+            AST nodeExprAST = NodeExpr(true);
             while (currentToken.Type==TokenType.GOTO)
             {
                 Eat(TokenType.GOTO);
-                nodeExprAST = new GotoOpAST(nodeExprAST, NodeExpr());
+                nodeExprAST = new GotoOpAST(nodeExprAST, NodeExpr(false));
             }
             return new ChainAST(nodeExprAST);
         }
-        private AST NodeExpr()
+        private AST NodeExpr(bool isFirstNode)
         {
-            AST nodeFactorAST = NodeFactor();
+            AST nodeFactorAST = NodeFactor(isFirstNode);
             while (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
                 CharToken binOpToken = Eat(currentToken.Type) as CharToken;
-                nodeFactorAST = new BinOpAST(nodeFactorAST, binOpToken, NodeFactor());
+                nodeFactorAST = new BinOpAST(nodeFactorAST, binOpToken, NodeFactor(isFirstNode));
             }
             return nodeFactorAST;
         }
-        private AST NodeFactor()
+        private AST NodeFactor(bool isFirstNode)
         {
-            AST nodeAST = NodeEntity();
+            AST nodeAST = NodeEntity(isFirstNode);
             while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV)
             {
                 CharToken binOpToken = Eat(currentToken.Type) as CharToken;
-                nodeAST = new BinOpAST(nodeAST, binOpToken, NodeEntity());
+                nodeAST = new BinOpAST(nodeAST, binOpToken, NodeEntity(isFirstNode));
             }
             return nodeAST;
         }
-        private AST NodeEntity()
+        private AST NodeEntity(bool isFirstNode)
         {
-            AST nodeAST = Node();
+            AST nodeAST = Node(isFirstNode);
             while (currentToken.Type==TokenType.CARET)
             {
                 CharToken binOpToken = Eat(currentToken.Type) as CharToken;
-                nodeAST = new BinOpAST(nodeAST, binOpToken, Node());
+                nodeAST = new BinOpAST(nodeAST, binOpToken, Node(isFirstNode));
             }
             return nodeAST;
         }
-        private AST Node()
+        private AST Node(bool isFirstNode)
         {
             if (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
                 CharToken unaryOpToken = Eat(currentToken.Type) as CharToken;
-                return new UnaryOpAST(unaryOpToken, Node());
+                return new UnaryOpAST(unaryOpToken, Node(isFirstNode));
             }
             else if (currentToken.Type==TokenType.LPAR)
             {
@@ -301,12 +294,31 @@ namespace Ligral
             }
             else if (currentToken.Type==TokenType.LBRK)
             {
-                return Matrix(true);
+                if (isFirstNode)
+                {
+                    return MatrixMux();
+                }
+                else
+                {
+                    return MatrixDeMux();
+                }
             }
             else
             {
                 return Selector();
             }
+        }
+        private MatrixBlockAST MatrixMux()
+        {
+            throw new System.NotImplementedException();
+        }
+        private MatrixBlockAST MatrixDeMux()
+        {
+            throw new System.NotImplementedException();
+        }
+        private MatrixBlockAST BlockRow()
+        {
+            throw new System.NotImplementedException();
         }
         private BusAST Bus()
         {

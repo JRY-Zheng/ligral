@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace Ligral.ASTs
 {
-    class MatrixBlockAST : AST
+    class MatrixMuxAST : AST
     {
         public List<RowAST> Rows;
-        public MatrixBlockAST(List<RowAST> rows)
+        public MatrixMuxAST(List<RowAST> rows)
         {
             Rows = rows;
         }
