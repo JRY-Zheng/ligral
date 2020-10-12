@@ -4,10 +4,10 @@ namespace Ligral.ASTs
 {
     class MatrixDeMuxAST : AST
     {
-        public List<RowBlockAST> Rows;
+        public List<RowDeMuxAST> Rows;
         public int RowNumber;
         public int ColNumber;
-        public MatrixDeMuxAST(List<RowBlockAST> rows, int colNumber)
+        public MatrixDeMuxAST(List<RowDeMuxAST> rows, int colNumber)
         {
             Rows = rows;
             RowNumber = rows.Count;

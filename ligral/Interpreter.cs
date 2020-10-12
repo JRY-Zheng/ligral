@@ -71,8 +71,10 @@ namespace Ligral
                     return Visit(matrixMuxAST);
                 case MatrixDeMuxAST matrixDeMuxAST:
                     return Visit(matrixDeMuxAST);
-                case RowBlockAST rowBlockAST:
-                    return Visit(rowBlockAST);
+                case RowMuxAST rowMuxAST:
+                    return Visit(rowMuxAST);
+                case RowDeMuxAST rowDeMuxAST:
+                    return Visit(rowDeMuxAST);
                 case DigitAST digitAST:
                     return Visit(digitAST);
                 case DigitBlockAST digitBlockAST:

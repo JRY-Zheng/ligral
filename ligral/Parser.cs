@@ -310,7 +310,7 @@ namespace Ligral
         }
         private MatrixMuxAST MatrixMux()
         {
-            List<RowBlockAST> rows = new List<RowBlockAST>();
+            List<RowMuxAST> rows = new List<RowMuxAST>();
             Eat(TokenType.LBRK);
             while (currentToken.Type!=TokenType.RBRK)
             {
@@ -326,7 +326,7 @@ namespace Ligral
         private MatrixDeMuxAST MatrixDeMux()
         {
             int? columnNumber = null;
-            List<RowBlockAST> rows = new List<RowBlockAST>();
+            List<RowDeMuxAST> rows = new List<RowDeMuxAST>();
             Eat(TokenType.LBRK);
             while (currentToken.Type!=TokenType.RBRK)
             {
@@ -340,7 +340,7 @@ namespace Ligral
             Eat(TokenType.RBRK);
             return new MatrixDeMuxAST(rows, (int)columnNumber);
         }
-        private RowBlockAST RowMux()
+        private RowMuxAST RowMux()
         {
             List<AST> items = new List<AST>();
             while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
@@ -351,9 +351,9 @@ namespace Ligral
                     Eat(TokenType.COMMA);
                 }
             }
-            return new RowBlockAST(items);
+            return new RowMuxAST(items);
         }
-        private RowBlockAST RowDeMux(int? numberRequired, out int numberParsed)
+        private RowDeMuxAST RowDeMux(int? numberRequired, out int numberParsed)
         {
             List<AST> items = new List<AST>();
             while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
@@ -369,7 +369,7 @@ namespace Ligral
             {
                 throw new SyntaxException(currentToken, "Inconsistency rows of a DeMux block");
             }
-            return new RowBlockAST(items);
+            return new RowDeMuxAST(items);
         }
         private BusAST Bus()
         {

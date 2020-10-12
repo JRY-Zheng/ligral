@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace Ligral.ASTs
 {
-    class RowBlockAST : AST
+    class RowDeMuxAST : AST
     {
         public List<AST> Items;
-        public RowBlockAST(List<AST> items)
+        public RowDeMuxAST(List<AST> items)
         {
             Items = items;
         }
