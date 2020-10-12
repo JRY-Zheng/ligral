@@ -56,6 +56,7 @@ namespace Ligral
             {"_", ()=>new Terminal()},
             {"VStack", ()=>new VStack()},
             {"HStack", ()=>new HStack()},
+            {"Split", ()=>new Split()},
             {"VSplit", ()=>new VSplit()},
             {"HSplit", ()=>new HSplit()}
         };

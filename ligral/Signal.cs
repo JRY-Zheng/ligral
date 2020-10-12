@@ -369,6 +369,19 @@ namespace Ligral
                 return new Signal(func(doubleValue, other));
             }
         }
+        public void ZipApply<TOther>(List<TOther> other, System.Action<double, TOther> action)
+        {
+            Reset();
+            if (IsMatrix)
+            {
+                other.Zip<TOther, double>(this).ToList()
+                    .ForEach(pair => action(pair.Second, pair.First));                
+            }
+            else
+            {
+                other.ForEach(otherItem => action(doubleValue, otherItem));
+            }
+        }
         public List<TResult> ZipApply<TOther, TResult>(List<TOther> other, System.Func<double, TOther, TResult> func)
         {
             Reset();
@@ -413,7 +426,13 @@ namespace Ligral
             else
                 return rowNo == 0 && colNo == 0;
         }
-
+        public int Count()
+        {
+            if (IsMatrix)
+                return matrixValue.RowCount * matrixValue.ColumnCount;
+            else
+                return 1;
+        }
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new System.NotImplementedException();
