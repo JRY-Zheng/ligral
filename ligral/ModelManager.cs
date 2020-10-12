@@ -54,6 +54,7 @@ namespace Ligral
             {"Min", ()=>new Min()},
             {"Rand", ()=>new Rand()},
             {"_", ()=>new Terminal()},
+            {"VStack", ()=>new VStack()}
         };
 
         public static Model Create(string modelType)
