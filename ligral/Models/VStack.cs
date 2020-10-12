@@ -10,7 +10,7 @@ namespace Ligral.Models
         {
             get
             {
-                return "This model mixes input vectors to a matrix";
+                return "This model stacks inputs vertically to a matrix";
             }
         }
         protected override void SetUpPorts()
