@@ -255,6 +255,78 @@ namespace Ligral
             group.AddOutputModel(vStack);
             return group;
         }
+        private Group Visit(RowDeMuxAST rowDeMuxAST)
+        {
+            Model split = ModelManager.Create("Split");
+            var modelList = new List<ModelBase>();
+            bool canOutputMatrix = true;
+            for (int i = 0; i < rowDeMuxAST.Items.Count; i++)
+            {
+                switch (Visit(rowDeMuxAST.Items[i]))
+                {
+                    case ModelBase modelBase:
+                        modelList.Add(modelBase);
+                        if (modelBase.InPortCount() != 1)
+                        {
+                            throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port");
+                        }
+                        else
+                        {
+                            canOutputMatrix = canOutputMatrix && modelBase.OutPortCount() == 1;
+                            split.Connect(i, modelBase.Expose(0));
+                        }
+                        break;
+                    default:
+                        throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model expected");
+                } 
+            }
+            Group group = new Group();
+            group.AddInputModel(split);
+            if (canOutputMatrix)
+            {
+                Model hStack = ModelManager.Create("HStack");
+                for (int i = 0; i < modelList.Count; i++)
+                {
+                    ModelBase modelBase = modelList[i];
+                    modelBase.Connect(0, hStack.Expose(i));
+                }
+                group.AddOutputModel(hStack);
+            }
+            return group;
+        }
+        private Group Visit(MatrixDeMuxAST matrixDeMuxAST)
+        {
+            Model vSplit = ModelManager.Create("VSplit");
+            var groupList = new List<Group>();
+            bool canOutputMatrix = true;
+            for (int i = 0; i < matrixDeMuxAST.Rows.Count; i++)
+            {
+                Group rowGroup = Visit(matrixDeMuxAST.Rows[i]);
+                groupList.Add(rowGroup);
+                if (rowGroup.InPortCount() != 1)
+                {
+                    throw new SemanticException(matrixDeMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single in port");
+                }
+                else
+                {
+                    canOutputMatrix = canOutputMatrix && rowGroup.OutPortCount() == 1;
+                    vSplit.Connect(i, rowGroup.Expose(0));
+                }
+            }
+            Group group = new Group();
+            group.AddInputModel(vSplit);
+            if (canOutputMatrix)
+            {
+                Model vStack = ModelManager.Create("VStack");
+                for (int i = 0; i < groupList.Count; i++)
+                {
+                    Group rowGroup = groupList[i];
+                    rowGroup.Connect(0, vStack.Expose(i));
+                }
+                group.AddOutputModel(vStack);
+            }
+            return group;
+        }
         private double Visit(DigitAST digitAST)
         {
             return digitAST.Digit;
