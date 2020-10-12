@@ -113,7 +113,16 @@ namespace Ligral
             }
             else
             {
-                return false;
+                currentCol++;
+                if (currentCol > 0)
+                {
+                    Reset();
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
         public void Reset()
