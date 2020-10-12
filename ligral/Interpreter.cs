@@ -208,6 +208,53 @@ namespace Ligral
             }
             return matrix;
         }
+        private Group Visit(RowMuxAST rowMuxAST)
+        {
+            Model hStack = ModelManager.Create("HStack");
+            for (int i = 0; i < rowMuxAST.Items.Count; i++)
+            {
+                switch (Visit(rowMuxAST.Items[i]))
+                {
+                    case ModelBase modelBase:
+                        if (modelBase.OutPortCount() != 1)
+                        {
+                            throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port");
+                        }
+                        else
+                        {
+                            modelBase.Connect(0, hStack.Expose(i));
+                        }
+                        break;
+                    case OutPort outPort:
+                        outPort.Bind(hStack.Expose(i));
+                        break;
+                    default:
+                        throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected");
+                } 
+            }
+            Group group = new Group();
+            group.AddOutputModel(hStack);
+            return group;
+        }
+        private Group Visit(MatrixMuxAST matrixMuxAST)
+        {
+            Model vStack = ModelManager.Create("VStack");
+            for (int i = 0; i < matrixMuxAST.Rows.Count; i++)
+            {
+                Group rowGroup = Visit(matrixMuxAST.Rows[i]);
+                if (rowGroup.OutPortCount() != 1)
+                {
+                    throw new SemanticException(matrixMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single out port");
+                }
+                else
+                {
+                    rowGroup.Connect(0, vStack.Expose(i));
+                }
+            }
+            Group group = new Group();
+            group.AddOutputModel(vStack);
+            return group;
+        }
         private double Visit(DigitAST digitAST)
         {
             return digitAST.Digit;
