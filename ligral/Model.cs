@@ -216,20 +216,6 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        // public static Group operator+(Model left, double right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",right}};
-        //     constant.Configure(dictionary);
-        //     return left+constant;
-        // }
-        // public static Group operator+(double left, Model right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",left}};
-        //     constant.Configure(dictionary);
-        //     return constant+right;
-        // }
         public static Group operator+(Model model)
         {
             Group group = new Group();
@@ -254,20 +240,6 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        // public static Group operator-(Model left, double right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",right}};
-        //     constant.Configure(dictionary);
-        //     return left-constant;
-        // }
-        // public static Group operator-(double left, Model right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",left}};
-        //     constant.Configure(dictionary);
-        //     return constant-right;
-        // }
         public static Group operator-(Model model)
         {
             Gain gain = ModelManager.Create("Gain") as Gain;
@@ -296,20 +268,6 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        // public static Group operator*(Model left, double right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",right}};
-        //     constant.Configure(dictionary);
-        //     return left*constant;
-        // }
-        // public static Group operator*(double left, Model right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",left}};
-        //     constant.Configure(dictionary);
-        //     return constant*right;
-        // }
         public static Group operator/(Model left, Model right)
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
@@ -327,20 +285,6 @@ namespace Ligral
             group.AddOutputModel(calculator);
             return group;
         }
-        // public static Group operator/(Model left, double right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",right}};
-        //     constant.Configure(dictionary);
-        //     return left/constant;
-        // }
-        // public static Group operator/(double left, Model right)
-        // {
-        //     Constant constant = ModelManager.Create("Constant") as Constant;
-        //     Dict dictionary = new Dict(){{"value",left}};
-        //     constant.Configure(dictionary);
-        //     return constant/right;
-        // }
         public static Group operator^(Model left, Model right)
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
