@@ -9,6 +9,19 @@ namespace Ligral
         protected LigralException(
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+
+        public override string ToString()
+        {
+            string errorMessage = $"Ligral Exception";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
     }
 
     [System.Serializable]
