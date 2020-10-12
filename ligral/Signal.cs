@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Ligral
 {
-    class Signal : IEnumerable<double>, IEnumerator<double>
+    class Signal : IEnumerable<double>, IEnumerator<double>, System.IComparable<Signal>
     {
         protected static int id = 0;
         public string Name;
@@ -422,6 +422,38 @@ namespace Ligral
         public void Dispose()
         {
             
+        }
+        private int Compare(double a, double b, double err=1e-5)
+        {
+            if (a - b > err)
+            {
+                return 1;
+            }
+            else if (b - a > err)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public int CompareTo(Signal signal)
+        {
+            if (signal.IsMatrix && IsMatrix)
+            {
+                Matrix<double> matrix = signal.Unpack() as Matrix<double>;
+                return Compare(matrixValue.Trace(), matrix.Trace());
+            }
+            else if (!signal.IsMatrix && !IsMatrix)
+            {
+                double value = (double) signal.Unpack();
+                return Compare(doubleValue, value);
+            }
+            else
+            {
+                throw new LigralException("Double cannot be compared with matrix");
+            }
         }
     }
 }
