@@ -115,7 +115,14 @@ namespace Ligral
         public virtual void Release() { }
         public override void Connect(int outPortNO, InPort inPort)
         {
-            OutPortList[outPortNO].Bind(inPort);
+            if (outPortNO >= OutPortCount())
+            {
+                throw new LigralException($"Out port number {outPortNO} exceed boundary");
+            }
+            else
+            {
+                OutPortList[outPortNO].Bind(inPort);
+            }
         }
         public override InPort Expose(int inPortNO)
         {

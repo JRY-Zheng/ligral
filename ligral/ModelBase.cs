@@ -7,7 +7,7 @@ namespace Ligral
         protected bool Configured = false;
         public void Connect(ModelBase modelBase)
         {
-            for (int i=0; i<OutPortCount(); i++)
+            for (int i=0; i<OutPortCount() || i<modelBase.InPortCount(); i++)
             {
                 Connect(i, modelBase.Expose(i));
             }

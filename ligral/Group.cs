@@ -34,16 +34,28 @@ namespace Ligral
         public override InPort Expose(int inPortNO)
         {
             int i = 0;
-            foreach (Model model in inputModels)
+            var inPortVariableModels = inputModels.FindAll(model => model is InPortVariableModel);
+            if (inputModels.Count == 1 && inPortVariableModels.Count == 1)
             {
-                int inPortCount = model.InPortCount();
-                if (i+inPortCount>inPortNO)
+                inputModels[0].Expose(inPortNO);
+            }
+            else if (inputModels.Count > 1 && inPortVariableModels.Count >= 1)
+            {
+                throw new ModelException(inPortVariableModels[0], "Ambiguity due to in port variable model");
+            }
+            else
+            {
+                foreach (Model model in inputModels)
                 {
-                    return model.Expose(inPortNO-i);
-                }
-                else
-                {
-                    i += inPortCount;
+                    int inPortCount = model.InPortCount();
+                    if (i+inPortCount>inPortNO)
+                    {
+                        return model.Expose(inPortNO-i);
+                    }
+                    else
+                    {
+                        i += inPortCount;
+                    }
                 }
             }
             throw new LigralException("In port number exceeds limit");
@@ -55,20 +67,32 @@ namespace Ligral
         public override void Connect(int outPortNO, InPort inPort)
         {
             int i = 0;
-            foreach (Model model in outputModels)
+            var outPortVariableModels = outputModels.FindAll(model => model is OutPortVariableModel);
+            if (outputModels.Count == 1 && outPortVariableModels.Count == 1)
             {
-                int outPortCount = model.OutPortCount();
-                if (i+outPortCount>outPortNO)
-                {
-                    model.Connect(outPortNO-i, inPort);
-                    return;
-                }
-                else
-                {
-                    i += outPortCount;
-                }
+                outputModels[0].Connect(outPortNO, inPort);
             }
-            throw new LigralException("Out port number exceeds limit");
+            else if (outputModels.Count > 1 && outPortVariableModels.Count >= 1)
+            {
+                throw new ModelException(outPortVariableModels[0], "Ambiguity due to out port variable model");
+            }
+            else // no out port variable model
+            {
+                foreach (Model model in outputModels)
+                {
+                    int outPortCount = model.OutPortCount();
+                    if (i+outPortCount>outPortNO)
+                    {
+                        model.Connect(outPortNO-i, inPort);
+                        return;
+                    }
+                    else
+                    {
+                        i += outPortCount;
+                    }
+                }
+                throw new LigralException("Out port number exceeds limit");
+            }
         }
         public override int InPortCount()
         {

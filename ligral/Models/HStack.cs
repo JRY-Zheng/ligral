@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Models
 {
-    class HStack : Model
+    class HStack : InPortVariableModel
     {
         protected override string DocString
         {
@@ -15,21 +15,8 @@ namespace Ligral.Models
         }
         protected override void SetUpPorts()
         {
-            InPortList.Add(new InPort("in0", this));
+            base.SetUpPorts();
             OutPortList.Add(new OutPort("matrix", this));
-        }
-        public override InPort Expose(int inPortNO)
-        {
-            if (inPortNO == InPortCount())
-            {
-                InPort inPort = new InPort($"in{inPortNO}", this);
-                InPortList.Add(inPort);
-                return inPort;
-            }
-            else
-            {
-                return base.Expose(inPortNO);
-            }
         }
         protected override List<Signal> Calculate(List<Signal> values)
         {
