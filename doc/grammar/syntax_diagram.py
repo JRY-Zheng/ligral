@@ -7,7 +7,7 @@ def draw(name, *args):
     d = Diagram(Start('simple', name), *args)
     with open(os.path.join(folder, f'{name}.svg'), 'w') as f:
         d.writeSvg(f.write)
-    # print(f'~~~\n\n~~~\n![{name}]({name}.svg)\n')
+    print(f'~~~\n\n~~~\n![{name}]({name}.svg)\n')
 
 draw("Program", NonTerminal("Statements"))
 draw("Statements", OneOrMore(Skip(), NonTerminal("Statement")))
@@ -43,9 +43,13 @@ draw("NodeEntity", OneOrMore(NonTerminal("Node"), "CARET"))
 draw("Node", Choice(1,
     Sequence(Choice(0, "PLUS", "MINUS"), NonTerminal("Node")),
     Sequence("LPAR", NonTerminal("Bus"), "RPAR"),
-    "DIGIT", NonTerminal("Matrix"), NonTerminal("Selector")
+    "DIGIT", NonTerminal("MatrixMux"), NonTerminal("MatrixDeMux"), NonTerminal("Selector")
 ))
 draw("Bus", OneOrMore(NonTerminal("Chain"), "COMMA"))
+draw("MatrixMux", Sequence("LBRK", OneOrMore(NonTerminal("RowMux"), "SEMIC"), Optional("SEMIC"), "RBRK"))
+draw("RowMux", OneOrMore(Sequence(NonTerminal("NodeExpr"), Optional("COMMA"))))
+draw("MatrixDeMux", Sequence("LBRK", OneOrMore(NonTerminal("RowDeMux"), "SEMIC"), Optional("SEMIC"), "RBRK"))
+draw("RowDeMux", OneOrMore(Sequence(NonTerminal("Selector"), Optional("COMMA"))))
 draw("Selector", Sequence(NonTerminal("Block"), Optional(Sequence("COLON", "ID"))))
 draw("Block", Sequence(NonTerminal("Declare"), Optional(NonTerminal("Configure"))))
 draw("Declare", Sequence(NonTerminal("Pointer"), Optional(
