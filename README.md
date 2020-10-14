@@ -31,10 +31,17 @@ node1 -> Gain{value:1} -> Integrator;
 多输入输出节点的连接，可以使用“chain list”表达式：
 
 ~~~ lig
-(Constant{value:1}, Constant{value:2}) -> Calculator{type:'+'}
+(Constant{value:1}, Constant{value:2}) -> Calculator{type:'+'};
 ~~~
 
-上述表达式亦可简写成`1+2`，四则运算符比`->`具有更高优先级。Chain list中每一项均可以是一个连接语句，但不需要以“`;`”结尾。
+Chain list中每一项均可以是一个连接语句，但不需要以“`;`”结尾，如下所示：
+
+~~~ lig
+(
+    Constant{value:1} -> Gain{value:2}, 
+    Constant{value:-2} -> Abs
+) -> Calculator{type:'+'};
+~~~
 
 连接语句还可以基于端口（port），例如`ThresholdSwitch`的输入有三个端口，可以写作：
 
@@ -50,7 +57,8 @@ node1 -> ThresholdSwitch[switch]:condition;
 
 ~~~ lig
 let a = 1;
-let mat = [a 2;-a 0];
+let vec = [1, 2]
+let mat = [-a, 2; vec];
 ~~~
 
 节点定义由以下语句完成：
@@ -90,6 +98,60 @@ import module;
 using module;
 module.MyNode -> Scope;
 ~~~
+
+### 自动装箱
+
+连接语句中的 `1` 会被自动装箱成 `Constant{value:1}`。此外，如果是一个符号，如
+
+~~~ lig
+let a = 1;
+a -> Print;
+~~~
+
+此处的 `a` 也会被自动装箱。除了数字以外，矩阵也会被自动装箱，但是只有矩阵符号会被装箱，如下两个表达是等价的。
+
+~~~ lig
+let a = [1, 2];
+a -> Print;
+Constant{value:a} -> Print;
+~~~
+
+### 运算符
+
+在常量定义语句中，支持 `+`, `-`, `*`, `/` 和 `^` 等常见的运算符。
+
+在连接语句中，这些运算符将被解析成以下结构：
+
+~~~ lig
+let a = 1;
+
+a + 1 -> Print;
+(a, 1) -> Calculate{type:'+'} -> Print;
+
+-a -> Print;
+(0, a) -> Calculate{type:'-'} -> Print;
+~~~
+
+### 矩阵构建解构器
+
+直接在连接语句中定义的“矩阵”则不会被直接装箱，因为该“矩阵”所包含的不一定是常数。通常，在连接语句中的“矩阵”我们称之为矩阵构建解构器，根据其位置（句首、句中、句尾）又分为构建器、构建解构器和解构器。以构建解构器为例，解释器将其解释成如下结构，提供了语法层面的便利。
+
+~~~ lig
+let vec = [1, -2];
+vec -> [Node, Abs] -> Print;
+vec -> VSplit -> Split -> (Node, Abs) -> HStack -> VStack -> Print;
+~~~
+
+其中 `VSplit` 将矩阵按行分解成单行的矩阵，`Split` 将矩阵分解成数字；`HStack` 将元素横向堆叠成矩阵，`VStack` 将元素纵向堆叠成矩阵。构建解构器的本质就是对一个矩阵信号结构后进行逐元素遍历，再重新构建成一个矩阵的过程，因此要求元素行列数与矩阵信号一致，且均为但输入输出的节点。
+
+位于句尾的解构器则允许出现非单输出的节点，即对输出节点数目不做限制，也不会自动构建 Stack 族的节点。位于句首的构建器则更加灵活，还允许出现表达式。
+
+~~~ lig
+let mat = [1, 2];
+[mat; 2*mat] -> [_, _; Print, _];
+~~~
+
+此处的 `_` 是弃元，解释器将其解释成一个特殊的节点，在运行过程中该节点不会执行任何语句，用于声明放弃使用一些信号。上述例子中，构建器内包含一些运算，嵌套了一些矩阵，输出的矩阵信号被解构器解析，并打印左下角的值。
 
 ### 设置语句
 
@@ -131,6 +193,21 @@ ligral path/file.lig
 
 以下是一个弹簧阻尼质量块系统的仿真。
 
-![code](https://pic4.zhimg.com/80/v2-a452963e3aa710b0aac72775deedc4ef_720w.jpg?source=c8b7c179)
+~~~ lig
+route MassSpringDamper(m,k,d,x0,v0; F; x,v)
+    F-k*x-d*v -> Gain{value:1/m} -> Integrator{initial:v0} -> v;
+    v -> Integrator{initial:x0} -> x;
+end
+
+SineWave[F]{ampl:10, omega:pi, phi:pi/4};
+MassSpringDamper[sys]{m:10, k:1, d:0.1, x0:0, v0: 0};
+
+F -> sys;
+sys:x -> Scope{name:'position'};
+(sys:x, sys:v) -> PhaseDiagram{name:'phase plot'};
+
+conf step_size = 0.001;
+conf stop_time = 10;
+~~~
 
 ![plots](https://pic4.zhimg.com/80/v2-b648e7e15562f2ccdc6fe87c21cbc873_720w.jpg?source=c8b7c179)
