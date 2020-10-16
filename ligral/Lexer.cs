@@ -149,6 +149,14 @@ namespace Ligral
                     Advance();
                 }
             }
+            if (currentChar=='e')
+            {
+                Advance();
+                while (char.IsDigit(currentChar))
+                {
+                    Advance();
+                }
+            }
             return System.Convert.ToDouble(text.Substring(startPosition,position-startPosition));
         }
         private string Word()
