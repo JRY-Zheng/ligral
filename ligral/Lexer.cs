@@ -152,7 +152,7 @@ namespace Ligral
             if (currentChar=='e')
             {
                 Advance();
-                if (currentChar=='-')
+                if (currentChar=='-' || currentChar=='+')
                 {
                     Advance();
                 }
