@@ -152,6 +152,10 @@ namespace Ligral
             if (currentChar=='e')
             {
                 Advance();
+                if (currentChar=='-')
+                {
+                    Advance();
+                }
                 while (char.IsDigit(currentChar))
                 {
                     Advance();
