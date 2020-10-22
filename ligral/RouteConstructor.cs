@@ -52,7 +52,7 @@ namespace Ligral
             Route route = new Route();
             foreach (string inPortName in inPortNameList)
             {
-                Model model = ModelManager.Create("Input");
+                Model model = ModelManager.Create("<Input>");
                 model.Name = inPortName;
                 route.inputModels.Add(model);
                 TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
@@ -61,7 +61,7 @@ namespace Ligral
             }
             foreach (string outPortName in outPortNameList)
             {
-                Model model = ModelManager.Create("Output");
+                Model model = ModelManager.Create("<Output>");
                 model.Name = outPortName;
                 route.outputModels.Add(model);
                 TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
