@@ -214,6 +214,12 @@ namespace Ligral.Syntax
         }
         private AST Pointer()
         {
+            if (currentToken.Type == TokenType.TILDE)
+            {
+                Eat(TokenType.TILDE);
+                StringToken nodeToken = new StringToken(TokenType.ID, "Node", currentToken.Line, currentToken.Column);
+                return new IdAST(nodeToken);
+            }
             // StringToken idToken = Eat(TokenType.ID) as StringToken;
             // StringToken scopeToken = null;
             // if (currentToken.Type==TokenType.DOT)

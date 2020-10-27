@@ -310,6 +310,11 @@ namespace Ligral.Syntax
                 Advance();
                 return new CharToken(TokenType.CARET, '^', lineNO, columnNO);
             }
+            else if (currentChar=='~')
+            {
+                Advance();
+                return new CharToken(TokenType.TILDE, '~', lineNO, columnNO);
+            }
             else if (currentChar=='\0')
             {
                 return new CharToken(TokenType.EOF, '\0', lineNO, columnNO);

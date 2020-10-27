@@ -6,7 +6,7 @@ namespace Ligral.Syntax
         FROM,GOTO,LPAR,RPAR,LBRC,RBRC,LBRK,RBRK,
         COMMA,COLON,SEMIC,DOT,CARET,
         ID,EOF,ASSIGN,ROUTE,END,USING,IMPORT,CONF,
-        TRUE,FALSE
+        TRUE,FALSE,TILDE
     }
 
     class Token
