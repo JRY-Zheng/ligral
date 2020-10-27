@@ -34,7 +34,7 @@ namespace Ligral.Models
         //     state.Config(1e-5, 10);
         //     state.DerivativeReceived += (state) => { };
         // }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             // Results[0] += values[0]*(time-lastTime);
             // lastTime = time;

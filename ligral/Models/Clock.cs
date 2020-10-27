@@ -16,7 +16,7 @@ namespace Ligral.Models
         {
             OutPortList.Add(new OutPort("time", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Results[0].Pack(time);
             return Results;

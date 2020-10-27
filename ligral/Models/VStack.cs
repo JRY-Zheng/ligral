@@ -19,7 +19,7 @@ namespace Ligral.Models
             base.SetUpPorts();
             OutPortList.Add(new OutPort("matrix", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal firstSignal = values[0];
             Matrix<double> firstMatrix;

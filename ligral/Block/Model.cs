@@ -17,6 +17,8 @@ namespace Ligral.Block
         // public bool Initializeable = false;
         // protected bool Initialized = false;
         public List<Signal> Results;
+        public delegate List<Signal> CalculateHandler(List<Signal> values);
+        public CalculateHandler Calculate;
         protected virtual string DocString 
         {
             get
@@ -31,6 +33,7 @@ namespace Ligral.Block
             Name = GetType().Name + id.ToString();
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
+            Calculate = DefaultCalculate;
             SetUpPorts();
             SetUpResults();
             SetUpParameters();
@@ -177,7 +180,7 @@ namespace Ligral.Block
             }
             return destinationList;
         }
-        protected virtual List<Signal> Calculate(List<Signal> values)
+        protected virtual List<Signal> DefaultCalculate(List<Signal> values)
         {
             return values;
         }

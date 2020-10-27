@@ -38,85 +38,89 @@ namespace Ligral.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal xSignal = values[0];
             Signal ySignal = values[1];
-            if (rowNo < 0 || colNo < 0)
+            (int xr, int xc) = xSignal.Shape();
+            (int yr, int yc) = xSignal.Shape();
+            List<string> columns = new List<string>() {"Time"};
+            if (!xSignal.IsMatrix && !ySignal.IsMatrix)
             {
-                (int xr, int xc) = xSignal.Shape();
-                (int yr, int yc) = xSignal.Shape();
-                List<string> columns = new List<string>() {"Time"};
-                if (!xSignal.IsMatrix && !ySignal.IsMatrix)
-                {
-                    colNo = 1;
-                    rowNo = 1;
-                    mode = Mode.X1Y1;
-                    columns.Add("Data:x");
-                    columns.Add("Data:y");
-                }
-                else if (!xSignal.IsMatrix)
-                {
-                    colNo = yc;
-                    rowNo = yr;
-                    mode = Mode.Ymn;
-                    columns.Add("Data:x");
-                    for(int i = 0; i < rowNo; i++)
-                    {
-                        for (int j = 0; j < colNo; j++)
-                        {
-                            columns.Add($"Data:y({i}-{j})");
-                        }
-                    }
-                }
-                else if (!ySignal.IsMatrix)
-                {
-                    colNo = xc;
-                    rowNo = xr;
-                    mode = Mode.Xmn;
-                    for(int i = 0; i < rowNo; i++)
-                    {
-                        for (int j = 0; j < colNo; j++)
-                        {
-                            columns.Add($"Data:x({i}-{j})");
-                        }
-                    }
-                    columns.Add("Data:y");
-                }
-                else if (xr == 1 && yc == 1)
-                {
-                    colNo = xc;
-                    rowNo = yr;
-                    mode = Mode.X1mYn1;
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        columns.Add($"Data:x({j})");
-                    }
-                    for(int i = 0; i < rowNo; i++)
-                    {
-                        columns.Add($"Data:y({i})");
-                    }
-                }
-                else if (xc == 1 && yr == 1)
-                {
-                    colNo = yc;
-                    rowNo = xr;
-                    mode = Mode.Xm1Y1n;
-                    for(int i = 0; i < rowNo; i++)
-                    {
-                        columns.Add($"Data:x({i})");
-                    }
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        columns.Add($"Data:y({j})");
-                    }
-                }
-                else
-                {
-                    throw new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa.");
-                }
-                table = new CsvTable(columns, new List<List<double>>());
+                colNo = 1;
+                rowNo = 1;
+                mode = Mode.X1Y1;
+                columns.Add("Data:x");
+                columns.Add("Data:y");
             }
+            else if (!xSignal.IsMatrix)
+            {
+                colNo = yc;
+                rowNo = yr;
+                mode = Mode.Ymn;
+                columns.Add("Data:x");
+                for(int i = 0; i < rowNo; i++)
+                {
+                    for (int j = 0; j < colNo; j++)
+                    {
+                        columns.Add($"Data:y({i}-{j})");
+                    }
+                }
+            }
+            else if (!ySignal.IsMatrix)
+            {
+                colNo = xc;
+                rowNo = xr;
+                mode = Mode.Xmn;
+                for(int i = 0; i < rowNo; i++)
+                {
+                    for (int j = 0; j < colNo; j++)
+                    {
+                        columns.Add($"Data:x({i}-{j})");
+                    }
+                }
+                columns.Add("Data:y");
+            }
+            else if (xr == 1 && yc == 1)
+            {
+                colNo = xc;
+                rowNo = yr;
+                mode = Mode.X1mYn1;
+                for (int j = 0; j < colNo; j++)
+                {
+                    columns.Add($"Data:x({j})");
+                }
+                for(int i = 0; i < rowNo; i++)
+                {
+                    columns.Add($"Data:y({i})");
+                }
+            }
+            else if (xc == 1 && yr == 1)
+            {
+                colNo = yc;
+                rowNo = xr;
+                mode = Mode.Xm1Y1n;
+                for(int i = 0; i < rowNo; i++)
+                {
+                    columns.Add($"Data:x({i})");
+                }
+                for (int j = 0; j < colNo; j++)
+                {
+                    columns.Add($"Data:y({j})");
+                }
+            }
+            else
+            {
+                throw new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa.");
+            }
+            table = new CsvTable(columns, new List<List<double>>());
+            Calculate = PostCalculate;
+            return Calculate(values);
+        }
+        private List<Signal> PostCalculate(List<Signal> values)
+        {
+            Signal xSignal = values[0];
+            Signal ySignal = values[1];
             List<double> row = xSignal.ToList();
             row.AddRange(ySignal.ToList());
             row.Insert(0, time);

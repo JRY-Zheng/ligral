@@ -35,7 +35,7 @@ namespace Ligral.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             if (rowNo < 0 || colNo < 0)
@@ -58,6 +58,12 @@ namespace Ligral.Models
                 }
                 table = new CsvTable(columns, new List<List<double>>());
             }
+            Calculate = PostCalculate;
+            return Calculate(values);
+        }
+        private List<Signal> PostCalculate(List<Signal> values)
+        {
+            Signal inputSignal = values[0];
             List<double> row = inputSignal.ToList();
             row.Insert(0, time);
             table.AddRow(row);

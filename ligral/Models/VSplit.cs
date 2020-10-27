@@ -19,7 +19,7 @@ namespace Ligral.Models
             InPortList.Add(new InPort("matrix", this));
             base.SetUpPorts();
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             Matrix<double> matrix = inputSignal.Unpack() as Matrix<double>;

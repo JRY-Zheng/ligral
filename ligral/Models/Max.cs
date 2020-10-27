@@ -19,7 +19,7 @@ namespace Ligral.Models
             InPortList.Add(new InPort("second", this));
             OutPortList.Add(new OutPort("max", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             // Results.Clear();
             Results[0].Clone(values.Max());

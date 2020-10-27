@@ -18,7 +18,7 @@ namespace Ligral.Models
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             // Results.Clear();
             // Results.Add(Math.Atanh(values[0]));

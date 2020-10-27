@@ -37,7 +37,7 @@ namespace Ligral.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             return Results;
         }
