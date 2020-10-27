@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Parameter>;
+using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
+using Ligral.Block;
 
 namespace Ligral.Models
 {

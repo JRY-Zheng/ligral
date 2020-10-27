@@ -6,8 +6,9 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Ligral.Models;
 using Ligral.ASTs;
+using Ligral.Block;
 
-namespace Ligral
+namespace Ligral.Syntax
 {
     class Interpreter
     {

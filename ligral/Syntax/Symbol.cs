@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Block;
 
-namespace Ligral
+namespace Ligral.Syntax
 {
     class Symbol
     {

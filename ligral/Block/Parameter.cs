@@ -1,6 +1,6 @@
 using System;
 
-namespace Ligral
+namespace Ligral.Block
 {
     class Parameter
     {

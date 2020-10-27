@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Parameter>;
-using System;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {

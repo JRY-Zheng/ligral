@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using Ligral.Block;
 
 namespace Ligral.Models
 {

@@ -1,4 +1,4 @@
-namespace Ligral
+namespace Ligral.Block
 {
     class OutPortVariableModel : Model
     {

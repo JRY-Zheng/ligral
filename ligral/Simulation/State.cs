@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Ligral
+namespace Ligral.Simulation
 {
     class State
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
-using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Parameter>;
+using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Block.Parameter>;
 using System.Text;
 using Ligral.Models;
 
-namespace Ligral
+namespace Ligral.Block
 {
     class Model : ModelBase
     {

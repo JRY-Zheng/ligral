@@ -5,6 +5,9 @@ using System.Text;
 using System.Linq;
 using System;
 using Ligral.ASTs;
+using Ligral.Syntax;
+using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral
 {
@@ -59,7 +62,7 @@ namespace Ligral
                 // try
                 // {
                 string text = File.ReadAllText(options.InputFile);
-                Parser parser = new Parser();
+                Syntax.Parser parser = new Syntax.Parser();
                 parser.Load(text);
                 ProgramAST p = parser.Parse();
                 Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
@@ -98,7 +101,7 @@ namespace Ligral
                 Console.WriteLine("*******************************************************");
                 Console.WriteLine("Type your ligral script below, and use 'run' command to execute.");
                 string lineInput = "";
-                Parser parser = new Parser();
+                Syntax.Parser parser = new Syntax.Parser();
                 Interpreter interpreter = new Interpreter(".");
                 while (lineInput.Trim()!="run")
                 {

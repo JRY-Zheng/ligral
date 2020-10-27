@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using Ligral.Models;
+using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral
 {

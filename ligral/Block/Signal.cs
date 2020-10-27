@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Ligral
+namespace Ligral.Block
 {
     class Signal : IEnumerable<double>, IEnumerator<double>, System.IComparable<Signal>
     {

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Ligral.ASTs;
+using Ligral.Syntax;
 
-namespace Ligral
+namespace Ligral.Block
 {
     struct RouteParam
     {

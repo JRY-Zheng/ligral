@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Ligral.ASTs;
 
-namespace Ligral
+namespace Ligral.Syntax
 {
     class Parser
     {

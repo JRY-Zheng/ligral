@@ -1,6 +1,6 @@
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 
-namespace Ligral
+namespace Ligral.Block
 {
     abstract class ModelBase
     {

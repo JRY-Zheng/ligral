@@ -1,3 +1,6 @@
+using Ligral.Syntax;
+using Ligral.Block;
+
 namespace Ligral
 {
     [System.Serializable]

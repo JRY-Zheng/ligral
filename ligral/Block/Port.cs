@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Ligral
+namespace Ligral.Block
 {
     class Port
     {

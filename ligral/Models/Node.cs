@@ -1,3 +1,5 @@
+using Ligral.Block;
+
 namespace Ligral.Models
 {
     class Node : Model

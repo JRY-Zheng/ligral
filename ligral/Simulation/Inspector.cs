@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Ligral.Block;
 
-namespace Ligral 
+namespace Ligral.Simulation 
 {
     class Inspector
     {

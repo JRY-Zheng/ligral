@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Ligral.Models;
 
-namespace Ligral
+namespace Ligral.Block
 {
     static class ModelManager
     {

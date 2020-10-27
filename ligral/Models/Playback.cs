@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Parameter>;
+using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using DoubleCsvTable;
+using Ligral.Block;
 
 namespace Ligral.Models
 {

@@ -1,8 +1,8 @@
-using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Parameter>;
+using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using System;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace Ligral
+namespace Ligral.Block
 {
     class InitializeableModel : Model
     {

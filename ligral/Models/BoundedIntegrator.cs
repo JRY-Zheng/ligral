@@ -1,3 +1,6 @@
+using Ligral.Block;
+using Ligral.Simulation;
+
 namespace Ligral.Models
 {
     class BoundedIntegrator : Integrator

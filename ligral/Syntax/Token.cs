@@ -1,4 +1,4 @@
-namespace Ligral
+namespace Ligral.Syntax
 {
     enum TokenType
     {
