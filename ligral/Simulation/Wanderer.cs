@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Ligral.Block;
+using Ligral.Component;
 
 namespace Ligral.Simulation
 {

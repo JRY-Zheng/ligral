@@ -4,9 +4,9 @@ using System.IO;
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using Ligral.Models;
-using Ligral.ASTs;
-using Ligral.Block;
+using Ligral.Component.Models;
+using Ligral.Syntax.ASTs;
+using Ligral.Component;
 
 namespace Ligral.Syntax
 {

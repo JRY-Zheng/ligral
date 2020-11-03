@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Block;
+using Ligral.Component;
 
 namespace Ligral.Syntax
 {

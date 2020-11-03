@@ -1,5 +1,5 @@
 using Ligral.Syntax;
-using Ligral.Block;
+using Ligral.Component;
 
 namespace Ligral
 {

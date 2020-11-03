@@ -4,9 +4,9 @@ using CommandLine;
 using System.Text;
 using System.Linq;
 using System;
-using Ligral.ASTs;
+using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
-using Ligral.Block;
+using Ligral.Component;
 using Ligral.Simulation;
 
 namespace Ligral

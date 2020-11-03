@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Ligral.ASTs;
+using Ligral.Syntax.ASTs;
 
 namespace Ligral.Syntax
 {
