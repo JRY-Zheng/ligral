@@ -37,7 +37,7 @@ namespace Ligral.Simulation
         }
         public void EulerPropagate()
         {
-            StateVariable += Derivative*(Wanderer.Time-timeCache[timeCache.Count-1]);
+            StateVariable += Derivative*(Solver.Time-timeCache[timeCache.Count-1]);
         }
     }
 }

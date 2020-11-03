@@ -10,17 +10,17 @@ namespace Ligral.Simulation.Solvers
             double lastTime = 0;
             List<double> states = problem.InitialValues();
             Settings settings = Settings.GetInstance();
-            for (double time=settings.StepSize; time<=settings.StopTime; time+=settings.StepSize)
+            for (Time=settings.StepSize; Time<=settings.StopTime; Time+=settings.StepSize)
             {
                 List<double> stateDerivatives = problem.SystemDynamicFunction(states);
                 states = states.Zip(stateDerivatives).ToList().ConvertAll(pair => 
                 {
                     var state = pair.First;
                     var deriv = pair.Second;
-                    state += deriv*(time - lastTime);
+                    state += deriv*(Time - lastTime);
                     return state;
                 });
-                lastTime = time;
+                lastTime = Time;
             }
         }
     }

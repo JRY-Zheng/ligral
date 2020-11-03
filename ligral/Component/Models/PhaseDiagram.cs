@@ -124,7 +124,7 @@ namespace Ligral.Component.Models
             Signal ySignal = values[1];
             List<double> row = xSignal.ToList();
             row.AddRange(ySignal.ToList());
-            row.Insert(0, Wanderer.Time);
+            row.Insert(0, Solver.Time);
             table.AddRow(row);
             return Results;
         }

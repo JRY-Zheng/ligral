@@ -19,7 +19,7 @@ namespace Ligral.Component.Models
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
-            Results[0].Pack(Wanderer.Time);
+            Results[0].Pack(Solver.Time);
             return Results;
         }
     }

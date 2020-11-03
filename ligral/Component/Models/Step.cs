@@ -44,7 +44,7 @@ namespace Ligral.Component.Models
         {
             // Results.Clear();
             Signal outputSignal = Results[0];
-            if (Wanderer.Time >= start)
+            if (Solver.Time >= start)
             {
                 outputSignal.Pack(level);
             }

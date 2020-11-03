@@ -49,9 +49,9 @@ namespace Ligral.Component.Models
         }
         private List<double> Interpolate()
         {
-            List<double> before = table.Data.FindLast(row => row[0] < Wanderer.Time);
-            List<double> after = table.Data.Find(row => row[0] > Wanderer.Time);
-            List<double> current = table.Data.Find(row => row[0] == Wanderer.Time);
+            List<double> before = table.Data.FindLast(row => row[0] < Solver.Time);
+            List<double> after = table.Data.Find(row => row[0] > Solver.Time);
+            List<double> current = table.Data.Find(row => row[0] == Solver.Time);
             if (current != null)
             {
                 return current;
@@ -61,7 +61,7 @@ namespace Ligral.Component.Models
                 // Results.Add(before.Data+(after.Data-before.Data)/(after.Time-before.Time)*(time-before.Time));
                 double tb = before[0];
                 double ta = after[0];
-                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (Wanderer.Time - tb)).ToList();
+                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (Solver.Time - tb)).ToList();
             }
             else if (before == null && after != null)
             {
@@ -73,7 +73,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, $"Invalid playback input at time {Wanderer.Time}");
+                throw new ModelException(this, $"Invalid playback input at time {Solver.Time}");
             }
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)

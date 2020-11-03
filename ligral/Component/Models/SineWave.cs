@@ -54,7 +54,7 @@ namespace Ligral.Component.Models
             // Results.Clear();
             // Results.Add(ampl*Math.Sin(omega*time+phi));
             Signal outputSignal = Results[0];
-            outputSignal.Pack(ampl * Math.Sin(omega * Wanderer.Time + phi));
+            outputSignal.Pack(ampl * Math.Sin(omega * Solver.Time + phi));
             return Results;
         }
     }

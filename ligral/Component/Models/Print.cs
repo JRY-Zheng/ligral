@@ -36,7 +36,7 @@ namespace Ligral.Component.Models
         {
             // Results.Clear();
             Signal inputSignal = values[0];
-            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Wanderer.Time, varName, inputSignal.ToStringInLine()));
+            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
             return Results;
         }
     }

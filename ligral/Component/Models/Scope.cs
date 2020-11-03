@@ -66,7 +66,7 @@ namespace Ligral.Component.Models
         {
             Signal inputSignal = values[0];
             List<double> row = inputSignal.ToList();
-            row.Insert(0, Wanderer.Time);
+            row.Insert(0, Solver.Time);
             table.AddRow(row);
             return Results;
         }
