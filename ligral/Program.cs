@@ -8,6 +8,7 @@ using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
 using Ligral.Component;
 using Ligral.Simulation;
+using Ligral.Simulation.Solvers;
 
 namespace Ligral
 {
@@ -86,8 +87,11 @@ namespace Ligral
                 }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                Wanderer wanderer = new Wanderer();
-                wanderer.Wander(routine);
+                // Wanderer wanderer = new Wanderer();
+                // wanderer.Wander(routine);
+                Problem problem = new Problem(routine);
+                Solver solver = new EulerSolver();
+                solver.Solve(problem);
                 // }
                 // catch (Exception e)
                 // {

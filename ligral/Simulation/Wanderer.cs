@@ -33,14 +33,14 @@ namespace Ligral.Simulation
                 {
                     node.Propagate();
                 }
+                foreach (State state in State.StatePool)
+                {
+                    state.EulerPropagate();
+                }
             }
             foreach(Model node in routine)
             {
                 node.Release();
-            }
-            foreach (State state in State.StatePool)
-            {
-                state.EulerPropagate();
             }
         }
     }
