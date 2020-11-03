@@ -5,6 +5,7 @@ using System;
 using MathNet.Numerics.LinearAlgebra;
 using DoubleCsvTable;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -48,9 +49,9 @@ namespace Ligral.Models
         }
         private List<double> Interpolate()
         {
-            List<double> before = table.Data.FindLast(row => row[0] < time);
-            List<double> after = table.Data.Find(row => row[0] > time);
-            List<double> current = table.Data.Find(row => row[0] == time);
+            List<double> before = table.Data.FindLast(row => row[0] < Wanderer.Time);
+            List<double> after = table.Data.Find(row => row[0] > Wanderer.Time);
+            List<double> current = table.Data.Find(row => row[0] == Wanderer.Time);
             if (current != null)
             {
                 return current;
@@ -60,7 +61,7 @@ namespace Ligral.Models
                 // Results.Add(before.Data+(after.Data-before.Data)/(after.Time-before.Time)*(time-before.Time));
                 double tb = before[0];
                 double ta = after[0];
-                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (time - tb)).ToList();
+                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (Wanderer.Time - tb)).ToList();
             }
             else if (before == null && after != null)
             {
@@ -72,7 +73,7 @@ namespace Ligral.Models
             }
             else
             {
-                throw new ModelException(this, $"Invalid playback input at time {time}");
+                throw new ModelException(this, $"Invalid playback input at time {Wanderer.Time}");
             }
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)

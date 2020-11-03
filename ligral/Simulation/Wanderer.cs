@@ -7,6 +7,7 @@ namespace Ligral.Simulation
     {
         private double stepSize = 0.01;
         private double stopTime = 100;
+        public static double Time = 0;
         public Wanderer()
         {
             Settings settings = Settings.GetInstance();
@@ -26,17 +27,20 @@ namespace Ligral.Simulation
         }
         public void Wander(List<Model> routine)
         {
-            for (double time=stepSize; time<=stopTime; time+=stepSize)
+            for (Time=stepSize; Time<=stopTime; Time+=stepSize)
             {
                 foreach(Model node in routine)
                 {
-                    node.Update(time);
                     node.Propagate();
                 }
             }
             foreach(Model node in routine)
             {
                 node.Release();
+            }
+            foreach (State state in State.StatePool)
+            {
+                state.EulerPropagate();
             }
         }
     }

@@ -26,17 +26,35 @@ namespace Ligral.Models
                     lower = (double)value;
                 });
         }
-        protected override void StateCalculate(State state, double deriv)
+        protected override void DerivativeUpdate(Signal inputSignal)
+        {
+            if (isMatrix && inputSignal.IsMatrix)
+            {
+                inputSignal.ZipApply<State>(states, (deriv, state) => {
+                    state.Derivative = GetBoundedDerivative(state, deriv);
+                });
+            }
+            else if (!isMatrix && !inputSignal.IsMatrix)
+            {
+                State state = states[0];
+                state.Derivative = GetBoundedDerivative(state, (double) inputSignal.Unpack());
+            }
+            else
+            {
+                throw new ModelException(this, "Type conflict");
+            }
+        }
+        private double GetBoundedDerivative(State state, double deriv)
         {
             if ((state.StateVariable < upper && state.StateVariable > lower) ||
                 (state.StateVariable >= upper && deriv < 0) ||
                 (state.StateVariable <= lower && deriv > 0))
             {
-                base.StateCalculate(state, deriv);
+                return deriv;
             }
             else
             {
-                base.StateCalculate(state, 0);
+                return 0;
             }
         }
         // protected override List<Signal> Calculate(List<Signal> values)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -35,7 +36,7 @@ namespace Ligral.Models
         {
             // Results.Clear();
             Signal inputSignal = values[0];
-            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", time, varName, inputSignal.ToStringInLine()));
+            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Wanderer.Time, varName, inputSignal.ToStringInLine()));
             return Results;
         }
     }

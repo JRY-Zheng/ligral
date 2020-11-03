@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using DoubleCsvTable;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -65,7 +66,7 @@ namespace Ligral.Models
         {
             Signal inputSignal = values[0];
             List<double> row = inputSignal.ToList();
-            row.Insert(0, time);
+            row.Insert(0, Wanderer.Time);
             table.AddRow(row);
             return Results;
         }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -43,7 +44,7 @@ namespace Ligral.Models
         {
             // Results.Clear();
             Signal outputSignal = Results[0];
-            if (time >= start)
+            if (Wanderer.Time >= start)
             {
                 outputSignal.Pack(level);
             }

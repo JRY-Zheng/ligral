@@ -22,10 +22,16 @@ namespace Ligral.Block
     {
         public bool Visited = false;
         public OutPort Source;
-        public InPort(string name, Model model) : base(name, model) {}
+        public delegate void InPortValueReceivedHandler(Signal value);
+        public event InPortValueReceivedHandler InPortValueReceived;
+        public InPort(string name, Model model) : base(name, model) 
+        {
+            InPortValueReceived += s => {};
+        }
         public void Input(Signal value)
         {
             Value = value;
+            InPortValueReceived(value);
         }
         public Signal GetValue()
         {

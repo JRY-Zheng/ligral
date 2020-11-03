@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -18,7 +19,7 @@ namespace Ligral.Models
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
-            Results[0].Pack(time);
+            Results[0].Pack(Wanderer.Time);
             return Results;
         }
     }

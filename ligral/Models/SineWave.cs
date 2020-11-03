@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Block.Parameter>;
 using System;
 using Ligral.Block;
+using Ligral.Simulation;
 
 namespace Ligral.Models
 {
@@ -53,7 +54,7 @@ namespace Ligral.Models
             // Results.Clear();
             // Results.Add(ampl*Math.Sin(omega*time+phi));
             Signal outputSignal = Results[0];
-            outputSignal.Pack(ampl * Math.Sin(omega * time + phi));
+            outputSignal.Pack(ampl * Math.Sin(omega * Wanderer.Time + phi));
             return Results;
         }
     }

@@ -10,7 +10,6 @@ namespace Ligral.Block
     class Model : ModelBase
     {
         protected static int id = 0;
-        protected double time = 0;
         public string Name;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
@@ -71,10 +70,6 @@ namespace Ligral.Block
             Results = OutPortList.ConvertAll((outPort)=>{return new Signal();});
         }
         protected virtual void AfterConfigured(){}
-        public void Update(double time)
-        {
-            this.time = time;
-        }
         public override void Configure(Dict dictionary) 
         {
             if (Configured)
