@@ -27,10 +27,44 @@ namespace Ligral
         #endregion
         
         #region Settings
-        public double StepSize = 0.01;
-        public double StopTime = 10;
-        public bool VariableStep = false;
-        public string OutputFolder = null;
+        private double stepSize = 0.01;
+        public double StepSize 
+        { 
+            get { return stepSize;} 
+            set 
+            { 
+                if (value <= 0)
+                {
+                    throw new SettingException("step_size", value, "step size must be positive nonzero.");
+                }
+                else if (value > stopTime)
+                {
+                    throw new SettingException("step_size", value, "step size must be small than stop time.");
+                }
+                stepSize = value;
+            }
+        }
+        private double stopTime = 10;
+        public double StopTime 
+        { 
+            get { return stopTime;} 
+            set 
+            { 
+                if (value <= 0)
+                {
+                    throw new SettingException("stop_time", value, "step size must be positive nonzero.");
+                }
+                else if (value < stepSize)
+                {
+                    throw new SettingException("stop_time", value, "step size must be larger than step size.");
+                }
+                stopTime = value;
+            }
+        }
+        private bool variableStep = false;
+        public bool VariableStep { get { return variableStep;} set { variableStep = value;}}
+        private string outputFolder = null;
+        public string OutputFolder { get { return outputFolder;} set { outputFolder = value;}}
         private bool needOutput = false;
         public bool NeedOutput 
         {

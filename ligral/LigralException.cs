@@ -98,4 +98,29 @@ namespace Ligral
             }
         }
     }
+
+    [System.Serializable]
+    class SettingException : LigralException
+    {
+        private string errorSetting;
+        private object errorValue;
+        // private string errorMessage;
+        public SettingException(string settingName, object value, string message="") : base(message)
+        {
+            errorSetting = settingName;
+            errorValue = value;
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Invalid setting {errorSetting} = {errorValue}";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
 }
