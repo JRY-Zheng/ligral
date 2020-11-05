@@ -60,8 +60,6 @@ namespace Ligral
             }
             else if (options.InputFile!=null)
             {
-                // try
-                // {
                 string text = File.ReadAllText(options.InputFile);
                 Syntax.Parser parser = new Syntax.Parser();
                 parser.Load(text);
@@ -87,16 +85,9 @@ namespace Ligral
                 }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                // Wanderer wanderer = new Wanderer();
-                // wanderer.Wander(routine);
                 Problem problem = new Problem(routine);
                 Solver solver = new EulerSolver();
                 solver.Solve(problem);
-                // }
-                // catch (Exception e)
-                // {
-                //     Console.WriteLine(e.ToString());
-                // }
             }
             else
             {
@@ -124,8 +115,9 @@ namespace Ligral
                 }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                Wanderer wanderer = new Wanderer();
-                wanderer.Wander(routine);
+                Problem problem = new Problem(routine);
+                Solver solver = new EulerSolver();
+                solver.Solve(problem);
             }
             return null;
         }
