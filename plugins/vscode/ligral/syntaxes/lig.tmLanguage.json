@@ -1,9 +1,14 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Ligral",
+	"foldingStartMarker": "^route\\s.*",
+	"foldingStopMarker": "^\\s*end",
 	"patterns": [
 		{
 			"include": "#keywords"
+		},
+		{
+			"include": "#operators"
 		},
 		{
 			"include": "#strings"
@@ -15,6 +20,9 @@
 			"include": "#digits"
 		},
 		{
+			"include": "#booleans"
+		},
+		{
 			"include": "#block-comments"
 		},
 		{
@@ -24,13 +32,16 @@
 			"include": "#line-comments"
 		},
 		{
-			"include": "#var-name"
+			"include": "#assign-clause"
 		},
 		{
-			"include": "#digit-name"
+			"include": "#block"
 		},
 		{
-			"include": "#models"
+			"include": "#configuration"
+		},
+		{
+			"include": "#matrices"
 		}
 	],
 	"repository": {
@@ -40,10 +51,22 @@
 				"match": "\\b(digit|route|end|import|using|conf|let)\\b"
 			}]
 		},
+		"operators": {
+			"patterns": [{
+				"name": "keyword.operator.lig",
+				"match": "\\+|->?|\\*|/|\\^|=|<-|,|;"
+			}]
+		},
 		"digits": {
 			"patterns": [{
 				"name": "constant.numeric.lig",
 				"match": "\\b\\d+(\\.\\d+)?\\b"
+			}]
+		},
+		"booleans": {
+			"patterns": [{
+				"name": "constant.language.lig",
+				"match": "\\b(true|false)\\b"
 			}]
 		},
 		"strings": {
@@ -71,16 +94,38 @@
 			"begin": "###",
 			"end": "###"
 		},
-		"var-name": {
-			"begin": "\\[",
-			"end": "\\]",
+		"assign-clause": {
+			"begin": "\\b(let|digit)\\b",
+			"end": ";",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.lig"
+				}
+			},
 			"patterns": [
 				{
-					"match": "\\b([_\\w][_\\w\\d]*)\\s*"
+					"include": "#digits"
+				},
+				{
+					"include": "#block-comments"
+				},
+				{
+					"include": "#inline-comments"
+				},
+				{
+					"include": "#line-comments"
 				}
 			]
 		},
-		"digit-name": {
+		"block": {
+			"match": "\\b([_\\w][_\\w\\d]*|~)(\\[([_\\w][_\\w\\d]*)\\])",
+			"captures": {
+				"1": {
+					"name": "entity.name.class.lig"
+				}
+			}
+		},
+		"configuration": {
 			"begin": "\\{",
 			"end": "\\}",
 			"patterns": [
@@ -103,13 +148,35 @@
 				}
 			]
 		},
-		"models": {
-			"match": "\\b([_\\w][_\\w\\d]*)\\s*",
-			"captures": {
-				"1": {
-					"name": "entity.name.class.lig"
+		"matrices": {
+			"begin": "\\[",
+			"end": "\\]",
+			"patterns": [
+				{
+					"include": "#block"
+				},
+				{
+					"include": "#configuration"
+				},
+				{
+					"include": "#digits"
+				},
+				{
+					"include": "#operators"
+				},
+				{
+					"include": "#block-comments"
+				},
+				{
+					"include": "#inline-comments"
+				},
+				{
+					"include": "#line-comments"
+				},
+				{
+					"include": "#matrices"
 				}
-			}
+			]
 		}
 	},
 	"scopeName": "source.lig"
