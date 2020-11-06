@@ -23,7 +23,7 @@
 			"include": "#digits"
 		},
 		{
-			"include": "#booleans"
+			"include": "#constants"
 		},
 		{
 			"include": "#block-comments"
@@ -62,14 +62,27 @@
 		},
 		"digits": {
 			"patterns": [{
-				"name": "constant.numeric.lig",
-				"match": "\\b\\d+(\\.\\d+)?\\b"
+				"match": "\\b(\\d+(\\.\\d+)?)((e)(\\+|-)?(\\d+))\\b",
+				"captures": {
+					"1": {
+						"name": "constant.numeric.lig"
+					},
+					"4": {
+						"name": "constant.language.lig"
+					},
+					"5": {
+						"name": "keyword.operator.lig"
+					},
+					"6": {
+						"name": "constant.numeric.lig"
+					}
+				}
 			}]
 		},
-		"booleans": {
+		"constants": {
 			"patterns": [{
 				"name": "constant.language.lig",
-				"match": "\\b(true|false)\\b"
+				"match": "\\b(true|false|pi)\\b"
 			}]
 		},
 		"strings": {
