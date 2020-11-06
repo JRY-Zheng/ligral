@@ -45,6 +45,9 @@
 		},
 		{
 			"include": "#matrices"
+		},
+		{
+			"include": "#ports"
 		}
 	],
 	"repository": {
@@ -62,7 +65,7 @@
 		},
 		"digits": {
 			"patterns": [{
-				"match": "\\b(\\d+(\\.\\d+)?)((e)(\\+|-)?(\\d+))\\b",
+				"match": "\\b(\\d+(\\.\\d+)?)((e)(\\+|-)?(\\d+))?\\b",
 				"captures": {
 					"1": {
 						"name": "constant.numeric.lig"
@@ -141,6 +144,14 @@
 				}
 			}
 		},
+		"ports": {
+			"match": ":([_\\w][_\\w\\d]*)\\b",
+			"captures": {
+				"1": {
+					"name": "variable.parameter.lig"
+				}
+			}
+		},
 		"configuration": {
 			"begin": "\\{",
 			"end": "\\}",
@@ -212,6 +223,9 @@
 				},
 				{
 					"include": "#matrices"
+				},
+				{
+					"include": "#ports"
 				}
 			]
 		},
