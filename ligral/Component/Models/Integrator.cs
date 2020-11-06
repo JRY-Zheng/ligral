@@ -23,7 +23,6 @@ namespace Ligral.Component.Models
             foreach (double initialValue in initial.ToList())
             {
                 State state = State.CreateState(initialValue, $"{Name}{states.Count+1}");
-                state.Config(1e-5, 10);
                 states.Add(state);
             }
             InPort inPort = InPortList[0];
