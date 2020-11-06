@@ -4,6 +4,7 @@ using Dict=System.Collections.Generic.Dictionary<string,object>;
 using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Component.Parameter>;
 using System.Text;
 using Ligral.Component.Models;
+using Ligral.Simulation;
 
 namespace Ligral.Component
 {
@@ -33,6 +34,7 @@ namespace Ligral.Component
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Calculate = DefaultCalculate;
+            Observation.Stopped += Release;
             SetUpPorts();
             SetUpResults();
             SetUpParameters();

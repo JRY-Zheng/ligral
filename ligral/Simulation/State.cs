@@ -7,10 +7,6 @@ namespace Ligral.Simulation
         public double StateVariable;
         public double InitialValue;
         public double Derivative;
-        private List<double> timeCache = new List<double>();
-        private double errorThreshold;
-        private int cacheLength;
-        private bool isConfigured = false;
         public static List<State> StatePool = new List<State>();
         public string Name;
         public static State CreateState(double init, string name=null)
@@ -24,20 +20,6 @@ namespace Ligral.Simulation
         {
             InitialValue = init;
             StateVariable = init;
-        }
-        public void Config(double err, int cache)
-        {
-            if (isConfigured)
-            {
-                throw new LigralException($"Duplicated configuration of state {Name}");
-            }
-            errorThreshold = err;
-            cacheLength = cache;
-            isConfigured = true;
-        }
-        public void EulerPropagate()
-        {
-            StateVariable += Derivative*(Solver.Time-timeCache[timeCache.Count-1]);
         }
     }
 }

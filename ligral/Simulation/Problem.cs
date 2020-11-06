@@ -31,7 +31,8 @@ namespace Ligral.Simulation
         }
         public List<double> ObservationFunction()
         {
-            throw new System.NotImplementedException();
+            Observation.OnStepped();
+            return Observation.ObservationPool.ConvertAll(item => item.Item2.OutputVariable);
         }
     }
 }
