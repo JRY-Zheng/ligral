@@ -14,7 +14,7 @@ namespace Ligral.Component
                 OutPort outPort = new OutPort($"out{outPortNO}", this);
                 OutPortList.Add(outPort);
                 outPort.Bind(inPort);
-                Results.Add(new Signal());
+                Results.Add(new Signal(outPort.SignalName));
             }
             else
             {

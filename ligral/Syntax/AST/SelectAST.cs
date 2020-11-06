@@ -6,15 +6,15 @@ namespace Ligral.Syntax.ASTs
     class SelectAST : AST
     {
         public AST ModelObject;
-        public WordAST PortName;
-        public SelectAST(AST model, WordAST port)
+        public PortAST Port;
+        public SelectAST(AST model, PortAST port)
         {
             ModelObject = model;
-            PortName = port;
+            Port = port;
         }
         public override Token FindToken()
         {
-            return PortName.FindToken();
+            return Port.FindToken();
         }
     }
 }

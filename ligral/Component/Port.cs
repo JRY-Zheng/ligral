@@ -46,6 +46,7 @@ namespace Ligral.Component
     class OutPort : Port
     {
         private List<InPort> destinationList;
+        public string SignalName;
         public OutPort(string name, Model model) : base(name, model)
         {
             destinationList = new List<InPort>();

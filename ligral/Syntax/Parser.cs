@@ -391,15 +391,27 @@ namespace Ligral.Syntax
         private AST Selector()
         {
             AST blockAST = Block();
-            WordAST portNameAST = null;
             if (currentToken.Type==TokenType.COLON)
             {
                 Eat(TokenType.COLON);
-                StringToken portIdToken = Eat(TokenType.ID) as StringToken;
-                portNameAST = new WordAST(portIdToken);
-                blockAST = new SelectAST(blockAST, portNameAST);
+                PortAST portAST = Port();
+                blockAST = new SelectAST(blockAST, portAST);
             }
             return blockAST;
+        }
+        private PortAST Port()
+        {
+            StringToken portIdToken = Eat(TokenType.ID) as StringToken;
+            WordAST portIdAST = new WordAST(portIdToken);
+            WordAST portNameAST = null;
+            if (currentToken.Type == TokenType.LBRK)
+            {
+                Eat(TokenType.LBRK);
+                StringToken portNameToken = Eat(TokenType.ID) as StringToken;
+                portNameAST = new WordAST(portNameToken);
+                Eat(TokenType.RBRK);
+            }
+            return new PortAST(portIdAST, portNameAST);
         }
         private ConfigureAST Block()
         {

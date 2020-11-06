@@ -69,7 +69,7 @@ namespace Ligral.Component
         }
         protected void SetUpResults()
         {
-            Results = OutPortList.ConvertAll((outPort)=>{return new Signal();});
+            Results = OutPortList.ConvertAll((outPort)=>{return new Signal(outPort.SignalName);});
         }
         protected virtual void AfterConfigured(){}
         public override void Configure(Dict dictionary) 

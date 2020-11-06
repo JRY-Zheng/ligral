@@ -126,6 +126,8 @@ namespace Ligral.Syntax
                     return Visit(routePortAST);
                 case RouteAST routeAST:
                     return Visit(routeAST);
+                case null:
+                    return null;
                 default:
                     throw new LigralException($"Unknown AST {ast.GetType().Name}");
             }
@@ -635,10 +637,10 @@ namespace Ligral.Syntax
             ModelBase modelBase = Visit(selectAST.ModelObject) as ModelBase;
             if (modelBase!=null)
             {
-                string portName = Visit(selectAST.PortName);
+                string portId = Visit(selectAST.Port.PortId);
                 try
                 {
-                    Port port = modelBase.Expose(portName);
+                    Port port = modelBase.Expose(portId);
                     Node node = ModelManager.Create("Node") as Node;
                     InPort inPort = port as InPort;
                     OutPort outPort = port as OutPort;
@@ -648,13 +650,14 @@ namespace Ligral.Syntax
                     }
                     else if (outPort!=null)
                     {
+                        outPort.SignalName = Visit(selectAST.Port.PortName);
                         outPort.Bind(node.Expose(0));
                     }
                     return node;
                 }
                 catch (LigralException ex)
                 {
-                    throw new SemanticException(selectAST.PortName.FindToken(), ex.Message);
+                    throw new SemanticException(selectAST.Port.FindToken(), ex.Message);
                 }
             }
             else

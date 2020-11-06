@@ -36,20 +36,20 @@ namespace Ligral.Component
 
         object IEnumerator.Current => throw new System.NotImplementedException();
 
-        public Signal()
+        public Signal(string name = null)
         {
             id += 1;
-            Name = GetType().Name + id.ToString();
+            Name = name ?? GetType().Name + id.ToString();
         }
-        public Signal(object val) : this()
+        public Signal(object val, string name = null) : this(name)
         {
             Pack(val);
         }
-        public Signal(Matrix<double> val) : this()
+        public Signal(Matrix<double> val, string name = null) : this(name)
         {
             Pack(val);
         }
-        public Signal(double val) : this()
+        public Signal(double val, string name = null) : this(name)
         {
             Pack(val);
         }
