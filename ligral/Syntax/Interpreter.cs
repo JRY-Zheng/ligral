@@ -150,7 +150,12 @@ namespace Ligral.Syntax
             Symbol symbol = currentScope.Lookup(idAST.Id);
             if (symbol==null)
             {
-                throw new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}");
+                TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
+                Node node = typeSymbol.GetValue() as Node;
+                ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
+                currentScope.Insert(modelSymbol);
+                return node;
+                // throw new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}");
             }
             else
             {
