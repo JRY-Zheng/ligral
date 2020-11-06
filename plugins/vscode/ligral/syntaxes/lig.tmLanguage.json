@@ -5,6 +5,9 @@
 	"foldingStopMarker": "^\\s*end",
 	"patterns": [
 		{
+			"include": "#routes"
+		},
+		{
 			"include": "#keywords"
 		},
 		{
@@ -136,7 +139,28 @@
 					"include": "#single-strings"
 				},
 				{
+					"include": "#block"
+				},
+				{
+					"include": "#configuration"
+				},
+				{
 					"include": "#digits"
+				},
+				{
+					"include": "#operators"
+				},
+				{
+					"include": "#block-comments"
+				},
+				{
+					"include": "#inline-comments"
+				},
+				{
+					"include": "#line-comments"
+				},
+				{
+					"include": "#matrices"
 				},
 				{
 					"match": "\\b([_\\w][_\\w\\d]*)\\s*:",
@@ -175,6 +199,69 @@
 				},
 				{
 					"include": "#matrices"
+				}
+			]
+		},
+		"routes": {
+			"begin": "(route)\\s+([_\\w][_\\w\\d]*)\\s*\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.lig"
+				},
+				"2": {
+					"name": "entity.name.function.lig"
+				}
+			},
+			"patterns": [
+				{
+					"begin": "([_\\w][_\\w\\d]*)(:([_\\w][_\\w\\d]*))?=",
+					"end": ",|;",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.parameter.lig"
+						},
+						"3": {
+							"name": "storage.class.lig"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#block"
+						},
+						{
+							"include": "#configuration"
+						},
+						{
+							"include": "#digits"
+						},
+						{
+							"include": "#operators"
+						},
+						{
+							"include": "#block-comments"
+						},
+						{
+							"include": "#inline-comments"
+						},
+						{
+							"include": "#line-comments"
+						},
+						{
+							"include": "#matrices"
+						}
+					]
+				},
+				{
+					"match": "([_\\w][_\\w\\d]*)\\s*(:([_\\w][_\\w\\d]*))?",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.lig"
+						},
+						"3": {
+							"name": "storage.class.lig"
+						}
+					}
 				}
 			]
 		}
