@@ -11,7 +11,19 @@ namespace Ligral.Component
     class Model : ModelBase
     {
         protected static int id = 0;
-        public string Name;
+        public string Name 
+        {
+            get
+            {
+                return GivenName ?? DefaultName;
+            }
+            set
+            {
+                GivenName = value;
+            }
+        }
+        public string DefaultName;
+        public string GivenName;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
         // public bool Initializeable = false;
@@ -30,7 +42,7 @@ namespace Ligral.Component
         public Model()
         {
             id += 1;
-            Name = GetType().Name + id.ToString();
+            DefaultName = GetType().Name + id.ToString();
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Calculate = DefaultCalculate;
@@ -69,7 +81,7 @@ namespace Ligral.Component
         }
         protected void SetUpResults()
         {
-            Results = OutPortList.ConvertAll((outPort)=>{return new Signal(outPort.SignalName);});
+            Results = OutPortList.ConvertAll(outPort => new Signal(outPort));
         }
         protected virtual void AfterConfigured(){}
         public override void Configure(Dict dictionary) 
@@ -179,7 +191,13 @@ namespace Ligral.Component
         }
         protected virtual List<Signal> DefaultCalculate(List<Signal> values)
         {
-            return values;
+            foreach (var pair in Results.Zip(values))
+            {
+                Signal outputSignal = pair.First;
+                Signal inputSignal = pair.Second;
+                outputSignal.Clone(inputSignal);
+            }
+            return Results;
         }
         public void Propagate()
         {

@@ -152,6 +152,7 @@ namespace Ligral.Syntax
             {
                 TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
                 Node node = typeSymbol.GetValue() as Node;
+                node.Name = idAST.Id;
                 ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
                 currentScope.Insert(modelSymbol);
                 return node;
@@ -655,8 +656,13 @@ namespace Ligral.Syntax
                     }
                     else if (outPort!=null)
                     {
-                        outPort.SignalName = Visit(selectAST.Port.PortName);
+                        string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
+                        outPort.SignalName = signalName;
                         outPort.Bind(node.Expose(0));
+                        if (outPort.SignalName != null)
+                        {
+                            node.Name = outPort.SignalName;
+                        }
                     }
                     return node;
                 }

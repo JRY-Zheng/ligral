@@ -43,7 +43,36 @@ namespace Ligral.Component
     class OutPort : Port
     {
         private List<InPort> destinationList;
-        public string SignalName;
+        private string signalName;
+        public string SignalName
+        {
+            get 
+            {
+                if (signalName != null)
+                {
+                    return signalName;
+                }
+                else if (FatherModel.GivenName != null)
+                {
+                    if (FatherModel.OutPortCount() == 1)
+                    {
+                        return FatherModel.GivenName;
+                    }
+                    else
+                    {
+                        return $"{FatherModel.GivenName}.{Name}";
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                signalName = value;
+            }
+        }
         public OutPort(string name, Model model) : base(name, model)
         {
             destinationList = new List<InPort>();

@@ -7,8 +7,21 @@ namespace Ligral.Component
 {
     class Signal : IEnumerable<double>, IEnumerator<double>, System.IComparable<Signal>
     {
-        protected static int id = 0;
-        public string Name;
+        public string Name
+        {
+            get 
+            {
+                if (outPort == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return outPort.SignalName;
+                }
+            }
+        }
+        private OutPort outPort;
         private double doubleValue = 0;
         private Matrix<double> matrixValue;
         public bool IsMatrix {get; private set;} = false;
@@ -36,20 +49,19 @@ namespace Ligral.Component
 
         object IEnumerator.Current => throw new System.NotImplementedException();
 
-        public Signal(string name = null)
+        public Signal(OutPort port = null)
         {
-            id += 1;
-            Name = name ?? GetType().Name + id.ToString();
+            outPort = port;
         }
-        public Signal(object val, string name = null) : this(name)
-        {
-            Pack(val);
-        }
-        public Signal(Matrix<double> val, string name = null) : this(name)
+        public Signal(object val, OutPort port = null) : this(port)
         {
             Pack(val);
         }
-        public Signal(double val, string name = null) : this(name)
+        public Signal(Matrix<double> val, OutPort port = null) : this(port)
+        {
+            Pack(val);
+        }
+        public Signal(double val, OutPort port = null) : this(port)
         {
             Pack(val);
         }

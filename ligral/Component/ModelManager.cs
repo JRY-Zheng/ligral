@@ -80,7 +80,7 @@ namespace Ligral.Component
             {
                 modelCount[modelType] = 1;
             }
-            model.Name = modelType+modelCount[modelType].ToString();
+            model.DefaultName = modelType+modelCount[modelType].ToString();
             ModelPool.Add(model);
             return model;
         }
