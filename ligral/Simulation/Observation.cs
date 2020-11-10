@@ -29,11 +29,6 @@ namespace Ligral.Simulation
                 return observation;
             }
         }
-        static Observation()
-        {
-            Stepped += () => {};
-            Stopped += () => {};
-        }
         private Observation() {}
         public void Add(double value, double t)
         {
@@ -56,7 +51,7 @@ namespace Ligral.Simulation
         {
             ObservationPool.ForEach(item => item.Item2.Commit());
             TimeList.Add(Solver.Time);
-            Stepped();
+            if (Stepped != null) Stepped();
         }
         public static void OnStopped()
         {
@@ -74,7 +69,7 @@ namespace Ligral.Simulation
                 string dataFile = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
                 table.DumpFile(dataFile, true);
             }
-            Stopped();
+            if (Stopped != null) Stopped();
         }
     }
 }

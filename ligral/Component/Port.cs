@@ -24,14 +24,11 @@ namespace Ligral.Component
         public OutPort Source;
         public delegate void InPortValueReceivedHandler(Signal value);
         public event InPortValueReceivedHandler InPortValueReceived;
-        public InPort(string name, Model model) : base(name, model) 
-        {
-            InPortValueReceived += s => {};
-        }
+        public InPort(string name, Model model) : base(name, model) {}
         public void Input(Signal value)
         {
             Value = value;
-            InPortValueReceived(value);
+            if (InPortValueReceived != null) InPortValueReceived(value);
         }
         public Signal GetValue()
         {
