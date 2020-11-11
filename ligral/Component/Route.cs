@@ -25,9 +25,10 @@ namespace Ligral.Component
         }
         private void Interpret()
         {
-            Interpreter interpreter = new Interpreter();
-            interpreter.SetScope(RouteScope);
+            Interpreter interpreter = Interpreter.GetInstance();
+            ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
             interpreter.Interpret(statementsAST);
+            interpreter.SetScope(scope);
         }
         public override Port Expose(string portName)
         {

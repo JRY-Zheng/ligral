@@ -64,7 +64,7 @@ namespace Ligral
                 Syntax.Parser parser = new Syntax.Parser();
                 parser.Load(text);
                 ProgramAST p = parser.Parse();
-                Interpreter interpreter = new Interpreter(Path.GetDirectoryName(options.InputFile));
+                Interpreter interpreter = Interpreter.GetInstance(Path.GetDirectoryName(options.InputFile));
                 interpreter.Interpret(p);
                 Settings settings = Settings.GetInstance();
                 if (options.OutputFolder!=null)
@@ -97,7 +97,7 @@ namespace Ligral
                 Console.WriteLine("Type your ligral script below, and use 'run' command to execute.");
                 string lineInput = "";
                 Syntax.Parser parser = new Syntax.Parser();
-                Interpreter interpreter = new Interpreter(".");
+                Interpreter interpreter = Interpreter.GetInstance(".");
                 while (lineInput.Trim()!="run")
                 {
                     parser.Load(lineInput);

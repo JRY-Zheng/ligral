@@ -14,10 +14,17 @@ namespace Ligral.Syntax
     {
         private string folder;
         private ScopeSymbolTable currentScope;
-        public Interpreter(string folder=".")
+        private static Interpreter instance;
+        public static Interpreter GetInstance(string folder = ".")
         {
-            this.folder = folder;
+            if (instance == null)
+            {
+                instance = new Interpreter();
+                instance.folder = folder;
+            }
+            return instance;
         }
+        private Interpreter() {}
         public void Interpret(ProgramAST programAST)
         {
             Visit(programAST);
@@ -46,9 +53,11 @@ namespace Ligral.Syntax
             ProgramAST programAST = parser.Parse();
             Interpret(programAST);
         }
-        public void SetScope(ScopeSymbolTable scope)
+        public ScopeSymbolTable SetScope(ScopeSymbolTable scope)
         {
+            ScopeSymbolTable originalScope = currentScope;
             currentScope = scope;
+            return originalScope;
         }
         private object Visit(AST ast)
         {
