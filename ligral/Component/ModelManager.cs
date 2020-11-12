@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Ligral.Component.Models;
+using Ligral.Syntax;
 
 namespace Ligral.Component
 {
@@ -81,6 +82,7 @@ namespace Ligral.Component
                 modelCount[modelType] = 1;
             }
             model.DefaultName = modelType+modelCount[modelType].ToString();
+            model.ScopeName = Interpreter.ScopeName;
             ModelPool.Add(model);
             return model;
         }

@@ -51,6 +51,8 @@ namespace Ligral.Component
         public Route Construct()
         {
             Route route = new Route();
+            Interpreter interpreter = Interpreter.GetInstance();
+            ScopeSymbolTable enclosingScope = interpreter.SetScope(RouteScope);
             foreach (string inPortName in inPortNameList)
             {
                 Model model = ModelManager.Create("<Input>");
@@ -69,6 +71,7 @@ namespace Ligral.Component
                 ModelSymbol modelSymbol = new ModelSymbol(outPortName, modelType, model);
                 RouteScope.Insert(modelSymbol);
             }
+            interpreter.SetScope(enclosingScope);
             route.SetUp(Name, Type, RouteScope.Clone(), parameters, statementsAST);
             return route;
         }

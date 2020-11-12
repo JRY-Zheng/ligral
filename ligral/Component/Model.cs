@@ -23,6 +23,21 @@ namespace Ligral.Component
             }
         }
         public string DefaultName;
+        private string scopeName;
+        public string ScopeName
+        {
+            get
+            {
+                return scopeName;
+            }
+            set
+            {
+                if (value != "<global>")
+                {
+                    scopeName = value;
+                }
+            }
+        }
         public string GivenName;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;

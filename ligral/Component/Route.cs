@@ -6,22 +6,35 @@ namespace Ligral.Component
 {
     class Route : Group
     {
-        public string Name;
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                RouteScope.scopeName = name;
+            }
+        }
         public string Type;
+        public string Base;
         public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
         private StatementsAST statementsAST;
-        public void SetUp(string name, string type, ScopeSymbolTable scope, List<RouteParam> parameters, StatementsAST statementsAST)
+        public void SetUp(string type, string baseType, ScopeSymbolTable scope, List<RouteParam> parameters, StatementsAST statementsAST)
         {
-            Name = name;
             Type = type;
+            Base = baseType;
             RouteScope = scope;
             this.parameters = parameters;
             this.statementsAST = statementsAST;
         }
         public override string GetTypeName()
         {
-            return Name;
+            return Type;
         }
         private void Interpret()
         {
@@ -44,7 +57,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException($"No port named {portName} in {Name}");
+                throw new LigralException($"No port named {portName} in {Type}");
             }
         }
         public override void Configure(Dictionary<string, object> dictionary)

@@ -65,7 +65,25 @@ namespace Ligral.Syntax
     class ScopeSymbolTable
     {
         public Dictionary<string,Symbol> Symbols = new Dictionary<string, Symbol>();
-        public string scopeName;
+        private string name;
+        public string scopeName
+        {
+            get
+            {
+                if (enclosingScope != null)
+                {
+                    return enclosingScope.scopeName + "." + name;
+                }
+                else
+                {
+                    return name;
+                }
+            }
+            set
+            {
+                name = value;
+            }
+        }
         public int scopeLevel;
         private ScopeSymbolTable enclosingScope;
         public ScopeSymbolTable(string name, int level, ScopeSymbolTable enclosingScope=null)

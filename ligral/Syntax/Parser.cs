@@ -15,9 +15,9 @@ namespace Ligral.Syntax
             lexer.Load(text);
             currentToken = Feed();
         }
-        public ProgramAST Parse()
+        public ProgramAST Parse(string name = "<global>")
         {
-            return Program();
+            return Program(name);
         }
         private Token Feed() => lexer.GetNextToken();
         private Token Eat(TokenType tokenType)
@@ -43,10 +43,10 @@ namespace Ligral.Syntax
             lexer.Restore();
             currentToken = currentTokenBackup;
         }
-        private ProgramAST Program()
+        private ProgramAST Program(string programName)
         {
             StatementsAST statementsAST = Statements();
-            return new ProgramAST("global", statementsAST);
+            return new ProgramAST(programName, statementsAST);
         }
         private StatementsAST Statements()
         {

@@ -15,6 +15,20 @@ namespace Ligral.Syntax
         private string folder;
         private ScopeSymbolTable currentScope;
         private static Interpreter instance;
+        public static string ScopeName 
+        {
+            get 
+            {
+                if (instance == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return instance.currentScope.scopeName;
+                }
+            }
+        }
         public static Interpreter GetInstance(string folder = ".")
         {
             if (instance == null)
@@ -50,7 +64,7 @@ namespace Ligral.Syntax
             string text = File.ReadAllText(fullFileName);
             Parser parser = new Parser();
             parser.Load(text);
-            ProgramAST programAST = parser.Parse();
+            ProgramAST programAST = parser.Parse(fileName);
             Interpret(programAST);
         }
         public ScopeSymbolTable SetScope(ScopeSymbolTable scope)
@@ -143,7 +157,7 @@ namespace Ligral.Syntax
         }
         private object Visit(ProgramAST programAST)
         {
-            currentScope = new ScopeSymbolTable("global", 0);
+            currentScope = new ScopeSymbolTable(programAST.Name, 0);
             return Visit(programAST.Statements);
         }
         private object Visit(StatementsAST statementsAST)
@@ -400,10 +414,14 @@ namespace Ligral.Syntax
                 ModelBase modelBase = Visit(modelTypeAST) as ModelBase;
                 if (modelBase!=null)
                 {
-                    Model model = modelBase as Model;
-                    if (model!=null)
+                    switch (modelBase)
                     {
-                        model.Name = id;
+                        case Model model:
+                            model.Name = id;
+                            break;
+                        case Route route:
+                            route.Name = id;
+                            break;
                     }
                     TypeSymbol typeSymbol = currentScope.Lookup(modelBase.GetTypeName()) as TypeSymbol;
                     ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, modelBase);

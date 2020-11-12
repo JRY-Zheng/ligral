@@ -36,6 +36,10 @@ namespace Ligral.Component.Models
             if (varName == null)
             {
                 varName = GivenName ?? inputSignal.Name ?? Name;
+                if (ScopeName != null)
+                {
+                    varName = ScopeName + "." + varName;
+                }// [TODO] given name doesnt contain scope
             }
             System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
             return Results;
