@@ -25,7 +25,7 @@ namespace Ligral.Syntax
                 }
                 else
                 {
-                    return instance.currentScope.scopeName;
+                    return instance.currentScope.ScopeName;
                 }
             }
         }
@@ -641,7 +641,7 @@ namespace Ligral.Syntax
             string module = Visit(usingAST.ModuleName);
             string fileName = string.Join('/', usingAST.FileName.ConvertAll(file=>Visit(file)));
             ScopeSymbolTable mainScope = currentScope;
-            currentScope = new ScopeSymbolTable(module, 0);
+            // currentScope = new ScopeSymbolTable(module, 0);
             Interpret(fileName);
             TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
             ScopeSymbol scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
@@ -689,6 +689,17 @@ namespace Ligral.Syntax
                         if (outPort.SignalName != null)
                         {
                             node.Name = outPort.SignalName;
+                        }
+                        if (signalName != null)
+                        {
+                            Symbol valueSymbol = currentScope.Lookup(signalName);
+                            if (valueSymbol!=null)
+                            {
+                                throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
+                            }
+                            TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
+                            ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
+                            currentScope.Insert(modelSymbol);
                         }
                     }
                     return node;

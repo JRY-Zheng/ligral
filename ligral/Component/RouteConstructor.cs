@@ -20,6 +20,7 @@ namespace Ligral.Component
     {
         public string Name;
         public string Type;
+        private int id = 1;
         public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
         private List<string> inPortNameList;
@@ -73,6 +74,8 @@ namespace Ligral.Component
             }
             interpreter.SetScope(enclosingScope);
             route.SetUp(Name, Type, RouteScope.Clone(), parameters, statementsAST);
+            route.Name = Name + id.ToString();
+            id++;
             return route;
         }
     }

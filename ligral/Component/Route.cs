@@ -6,17 +6,15 @@ namespace Ligral.Component
 {
     class Route : Group
     {
-        private string name;
         public string Name
         {
             get
             {
-                return name;
+                return RouteScope.ScopeName;
             }
             set
             {
-                name = value;
-                RouteScope.scopeName = name;
+                RouteScope.ScopeName = value;
             }
         }
         public string Type;

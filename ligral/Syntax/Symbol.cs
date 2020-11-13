@@ -66,13 +66,13 @@ namespace Ligral.Syntax
     {
         public Dictionary<string,Symbol> Symbols = new Dictionary<string, Symbol>();
         private string name;
-        public string scopeName
+        public string ScopeName
         {
             get
             {
-                if (enclosingScope != null)
+                if (enclosingScope != null && enclosingScope.ScopeName != "<global>")
                 {
-                    return enclosingScope.scopeName + "." + name;
+                    return enclosingScope.ScopeName + "." + name;
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace Ligral.Syntax
         private ScopeSymbolTable enclosingScope;
         public ScopeSymbolTable(string name, int level, ScopeSymbolTable enclosingScope=null)
         {
-            this.scopeName = name;
+            this.ScopeName = name;
             this.scopeLevel = level;
             this.enclosingScope = enclosingScope;
             InitBuiltins();
@@ -139,7 +139,7 @@ namespace Ligral.Syntax
         }
         public ScopeSymbolTable Clone()
         {
-            ScopeSymbolTable newScope = new ScopeSymbolTable(scopeName, scopeLevel, enclosingScope);
+            ScopeSymbolTable newScope = new ScopeSymbolTable(ScopeName, scopeLevel, enclosingScope);
             return newScope.Merge(this);
         }
         public bool IsInheritFrom(string inheritType, string baseType)
@@ -162,9 +162,9 @@ namespace Ligral.Syntax
                 "\n",
                 "SCOPE SYMBOL TABLE",
                 "==================",
-                string.Format("{0,20} {1}", "Scope Name", scopeName),
+                string.Format("{0,20} {1}", "Scope Name", ScopeName),
                 string.Format("{0,20} {1}", "Scope Level", scopeLevel),
-                string.Format("{0,20} {1}", "Enclosing Scope", enclosingScope==null?"None":enclosingScope.scopeName),
+                string.Format("{0,20} {1}", "Enclosing Scope", enclosingScope==null?"None":enclosingScope.ScopeName),
                 "------------------"
             };
             foreach (Symbol symbol in Symbols.Values)
