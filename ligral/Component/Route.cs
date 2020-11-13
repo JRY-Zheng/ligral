@@ -111,7 +111,7 @@ namespace Ligral.Component
                     }
                     else
                     {
-                        throw new LigralException($"Type inconsistence for {routeParam.Name}, {routeParam.Type} expected");
+                        throw new LigralException($"Type inconsistency for {routeParam.Name}, {routeParam.Type} expected");
                     }
                 }
             }

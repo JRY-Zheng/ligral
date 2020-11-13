@@ -54,13 +54,22 @@ namespace Ligral.Component
                 }
                 else if (FatherModel.GivenName != null)
                 {
+                    string referenceName;
                     if (FatherModel.OutPortCount() == 1)
                     {
-                        return FatherModel.GivenName;
+                        referenceName = FatherModel.GivenName;
                     }
                     else
                     {
-                        return $"{FatherModel.GivenName}.{Name}";
+                        referenceName = $"{FatherModel.GivenName}.{Name}";
+                    }
+                    if (FatherModel.ScopeName != null)
+                    {
+                        return FatherModel.ScopeName + "." + referenceName;
+                    }
+                    else
+                    {
+                        return referenceName;
                     }
                 }
                 else
