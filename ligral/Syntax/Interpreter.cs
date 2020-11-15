@@ -787,6 +787,11 @@ namespace Ligral.Syntax
                 default:
                     throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
+            Symbol symbol = currentScope.Lookup(routeConstructor.Name);
+            if (symbol != null)
+            {
+                throw new SemanticException(routeAST.Definition.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists.");
+            }
             routeConstructor.SetUp(currentScope.scopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
             routeConstructor.SetUp(parameters);
