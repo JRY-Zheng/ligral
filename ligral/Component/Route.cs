@@ -21,12 +21,23 @@ namespace Ligral.Component
         public string Base;
         public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
+        private List<string> inPortNameList;
+        private List<string> outPortNameList;
         private StatementsAST statementsAST;
-        public void SetUp(string type, string baseType, ScopeSymbolTable scope, List<RouteParam> parameters, StatementsAST statementsAST)
+        public void SetUp(
+            string type, 
+            string baseType, 
+            ScopeSymbolTable scope, 
+            List<RouteParam> parameters,
+            List<string> inPortNameList, 
+            List<string> outPortNameList, 
+            StatementsAST statementsAST)
         {
             Type = type;
             Base = baseType;
             RouteScope = scope;
+            this.inPortNameList = inPortNameList;
+            this.outPortNameList = outPortNameList;
             this.parameters = parameters;
             this.statementsAST = statementsAST;
         }
@@ -38,6 +49,24 @@ namespace Ligral.Component
         {
             Interpreter interpreter = Interpreter.GetInstance();
             ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
+            foreach (string inPortName in inPortNameList)
+            {
+                Model model = ModelManager.Create("<Input>");
+                model.Name = inPortName;
+                inputModels.Add(model);
+                TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
+                ModelSymbol modelSymbol = new ModelSymbol(inPortName, modelType, model);
+                RouteScope.Insert(modelSymbol);
+            }
+            foreach (string outPortName in outPortNameList)
+            {
+                Model model = ModelManager.Create("<Output>");
+                model.Name = outPortName;
+                outputModels.Add(model);
+                TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
+                ModelSymbol modelSymbol = new ModelSymbol(outPortName, modelType, model);
+                RouteScope.Insert(modelSymbol);
+            }
             interpreter.Interpret(statementsAST);
             interpreter.SetScope(scope);
         }

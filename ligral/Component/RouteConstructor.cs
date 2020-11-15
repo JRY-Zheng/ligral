@@ -21,11 +21,12 @@ namespace Ligral.Component
         public string Name;
         public string Type;
         private int id = 1;
-        public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
         private List<string> inPortNameList;
         private List<string> outPortNameList;
         private StatementsAST statementsAST;
+        private int scopeLevel;
+        private ScopeSymbolTable enclosingScope;
         public void SetUp(RouteInherit routeInherit)
         {
             Name = routeInherit.Name;
@@ -45,6 +46,11 @@ namespace Ligral.Component
             this.inPortNameList = inPortNameList;
             this.outPortNameList = outPortNameList;
         }
+        public void SetUp(int scopeLevel, ScopeSymbolTable enclosingScope)
+        {
+            this.scopeLevel = scopeLevel;
+            this.enclosingScope = enclosingScope;
+        }
         public void SetUp(StatementsAST statementsAST)
         {
             this.statementsAST = statementsAST;
@@ -52,28 +58,8 @@ namespace Ligral.Component
         public Route Construct()
         {
             Route route = new Route();
-            Interpreter interpreter = Interpreter.GetInstance();
-            ScopeSymbolTable enclosingScope = interpreter.SetScope(RouteScope);
-            foreach (string inPortName in inPortNameList)
-            {
-                Model model = ModelManager.Create("<Input>");
-                model.Name = inPortName;
-                route.inputModels.Add(model);
-                TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
-                ModelSymbol modelSymbol = new ModelSymbol(inPortName, modelType, model);
-                RouteScope.Insert(modelSymbol);
-            }
-            foreach (string outPortName in outPortNameList)
-            {
-                Model model = ModelManager.Create("<Output>");
-                model.Name = outPortName;
-                route.outputModels.Add(model);
-                TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
-                ModelSymbol modelSymbol = new ModelSymbol(outPortName, modelType, model);
-                RouteScope.Insert(modelSymbol);
-            }
-            interpreter.SetScope(enclosingScope);
-            route.SetUp(Name, Type, RouteScope.Clone(), parameters, statementsAST);
+            ScopeSymbolTable routeScope = new ScopeSymbolTable(Name, scopeLevel, enclosingScope);
+            route.SetUp(Name, Type, routeScope, parameters, inPortNameList, outPortNameList, statementsAST);
             route.Name = Name + id.ToString();
             id++;
             return route;

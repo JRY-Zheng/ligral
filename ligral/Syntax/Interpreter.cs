@@ -794,7 +794,7 @@ namespace Ligral.Syntax
                 default:
                     throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
-            routeConstructor.RouteScope = new ScopeSymbolTable(routeConstructor.Name, currentScope.scopeLevel+1, currentScope);
+            routeConstructor.SetUp(currentScope.scopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
             routeConstructor.SetUp(parameters);
             List<string> inPortNameList = Visit(routeAST.InPorts);

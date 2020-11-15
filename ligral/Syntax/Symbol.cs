@@ -137,11 +137,11 @@ namespace Ligral.Syntax
             }
             return this;
         }
-        public ScopeSymbolTable Clone()
-        {
-            ScopeSymbolTable newScope = new ScopeSymbolTable(ScopeName, scopeLevel, enclosingScope);
-            return newScope.Merge(this);
-        }
+        // public ScopeSymbolTable Clone()
+        // {
+        //     ScopeSymbolTable newScope = new ScopeSymbolTable(ScopeName, scopeLevel, enclosingScope);
+        //     return newScope.Merge(this);
+        // }
         public bool IsInheritFrom(string inheritType, string baseType)
         {
             while (inheritType!=baseType)
