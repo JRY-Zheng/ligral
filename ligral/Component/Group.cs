@@ -5,10 +5,11 @@ using Ligral.Component.Models;
 
 namespace Ligral.Component
 {
-    class Group : ModelBase
+    class Group : ILinkable
     {
         internal List<Model> inputModels = new List<Model>();
         internal List<Model> outputModels = new List<Model>();
+        public bool IsConfigured {get; set;}
         public void AddInputModel(Model model)
         {
             inputModels.Add(model);
@@ -31,7 +32,7 @@ namespace Ligral.Component
                 outputModels.AddRange(group.outputModels);
             }
         }
-        public override InPort Expose(int inPortNO)
+        public InPort Expose(int inPortNO)
         {
             int i = 0;
             var inPortVariableModels = inputModels.FindAll(model => model is InPortVariableModel);
@@ -60,11 +61,11 @@ namespace Ligral.Component
             }
             throw new LigralException("In port number exceeds limit");
         }
-        public override Port Expose(string portName)
+        public virtual Port Expose(string portName)
         {
             return null;
         }
-        public override void Connect(int outPortNO, InPort inPort)
+        public void Connect(int outPortNO, InPort inPort)
         {
             int i = 0;
             var outPortVariableModels = outputModels.FindAll(model => model is OutPortVariableModel);
@@ -94,11 +95,11 @@ namespace Ligral.Component
                 throw new LigralException("Out port number exceeds limit");
             }
         }
-        public override int InPortCount()
+        public int InPortCount()
         {
             return inputModels.Sum(model=>model.InPortCount());
         }
-        public override int OutPortCount()
+        public int OutPortCount()
         {
             return outputModels.Sum(model=>model.OutPortCount());
         }
@@ -107,11 +108,11 @@ namespace Ligral.Component
             inputModels.AddRange(group.inputModels);
             outputModels.AddRange(group.outputModels);
         }
-        public override void Configure(Dict dictionary)
+        public virtual void Configure(Dict dictionary)
         {
 
         }
-        public override string GetTypeName()
+        public virtual string GetTypeName()
         {
             return "GROUP";
         }

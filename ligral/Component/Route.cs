@@ -60,19 +60,26 @@ namespace Ligral.Component
         }
         public override void Configure(Dictionary<string, object> dictionary)
         {
-            if (Configured)
+            if (IsConfigured)
             {
                 return;
             }
-            Configured = true;
-            // route is first constructed then configured, 
+            IsConfigured = true;
+            // route is first constructed then Isconfigured, 
             // but construction needs configuration.
             foreach (RouteParam routeParam in parameters)
             {
                 object value;
                 if (routeParam.DefaultValue==null)
                 {
-                    value = ObtainKeyValue(dictionary, routeParam.Name);
+                    if (dictionary.ContainsKey(routeParam.Name))
+                    {
+                        value = dictionary[routeParam.Name];
+                    }
+                    else
+                    {
+                        throw new LigralException(string.Format("Parameter {0} is required but not provided.", routeParam.Name));
+                    }
                 }
                 else
                 {
@@ -102,11 +109,11 @@ namespace Ligral.Component
                 }
                 else
                 {
-                    ModelBase modelBase = value as ModelBase;// validation in interpreter
-                    if (modelBase!=null && RouteScope.IsInheritFrom(modelBase.GetTypeName(), routeParam.Type))
+                    ILinkable linkable = value as ILinkable;// validation in interpreter
+                    if (linkable!=null && RouteScope.IsInheritFrom(linkable.GetTypeName(), routeParam.Type))
                     {
                         TypeSymbol modelType = RouteScope.Lookup(routeParam.Type) as TypeSymbol;
-                        ModelSymbol modelSymbol = new ModelSymbol(routeParam.Name, modelType, modelBase);
+                        ModelSymbol modelSymbol = new ModelSymbol(routeParam.Name, modelType, linkable);
                         RouteScope.Insert(modelSymbol);
                     }
                     else

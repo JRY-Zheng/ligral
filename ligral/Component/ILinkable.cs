@@ -2,24 +2,24 @@ using Dict=System.Collections.Generic.Dictionary<string,object>;
 
 namespace Ligral.Component
 {
-    abstract class ModelBase
+    interface ILinkable
     {
-        protected bool Configured = false;
-        public void Connect(ModelBase modelBase)
+        bool IsConfigured {get; set;}
+        void Connect(ILinkable linkable)
         {
-            for (int i=0; i<OutPortCount() || i<modelBase.InPortCount(); i++)
+            for (int i=0; i<OutPortCount() || i<linkable.InPortCount(); i++)
             {
-                Connect(i, modelBase.Expose(i));
+                Connect(i, linkable.Expose(i));
             }
         }
-        public abstract void Connect(int outPortNO, InPort inPort);
-        public abstract InPort Expose(int inPortNO);
-        public abstract int InPortCount();
-        public abstract int OutPortCount();
-        public abstract void Configure(Dict dictionary);
-        public abstract Port Expose(string portName);
-        public abstract string GetTypeName();
-        public static Group operator+(ModelBase left, ModelBase right)
+        void Connect(int outPortNO, InPort inPort);
+        InPort Expose(int inPortNO);
+        int InPortCount();
+        int OutPortCount();
+        void Configure(Dict dictionary);
+        Port Expose(string portName);
+        string GetTypeName();
+        public static Group operator+(ILinkable left, ILinkable right)
         {
             if (right.GetType().Name=="Group")
             {
@@ -30,18 +30,7 @@ namespace Ligral.Component
                 return left+(right as Model);
             }
         }
-        protected object ObtainKeyValue(Dict dictionary, string key)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                return dictionary[key];
-            }
-            else
-            {
-                throw new LigralException(string.Format("Parameter {0} is required but not provided.", key));
-            }
-        }
-        public static Group operator+(ModelBase left, Group right)
+        public static Group operator+(ILinkable left, Group right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -52,7 +41,7 @@ namespace Ligral.Component
                 return (left as Model)+right;
             }
         }
-        public static Group operator+(ModelBase left, Model right)
+        public static Group operator+(ILinkable left, Model right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -63,7 +52,7 @@ namespace Ligral.Component
                 return (left as Model)+right;
             }
         }
-        public static Group operator-(ModelBase left, ModelBase right)
+        public static Group operator-(ILinkable left, ILinkable right)
         {
             if (right.GetType().Name=="Group")
             {
@@ -74,7 +63,7 @@ namespace Ligral.Component
                 return left-(right as Model);
             }
         }
-        public static Group operator-(ModelBase left, Group right)
+        public static Group operator-(ILinkable left, Group right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -85,7 +74,7 @@ namespace Ligral.Component
                 return (left as Model)-right;
             }
         }
-        public static Group operator-(ModelBase left, Model right)
+        public static Group operator-(ILinkable left, Model right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -96,7 +85,7 @@ namespace Ligral.Component
                 return (left as Model)-right;
             }
         }
-        public static Group operator*(ModelBase left, ModelBase right)
+        public static Group operator*(ILinkable left, ILinkable right)
         {
             if (right.GetType().Name=="Group")
             {
@@ -107,7 +96,7 @@ namespace Ligral.Component
                 return left*(right as Model);
             }
         }
-        public static Group operator*(ModelBase left, Group right)
+        public static Group operator*(ILinkable left, Group right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -118,7 +107,7 @@ namespace Ligral.Component
                 return (left as Model)*right;
             }
         }
-        public static Group operator*(ModelBase left, Model right)
+        public static Group operator*(ILinkable left, Model right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -129,7 +118,7 @@ namespace Ligral.Component
                 return (left as Model)*right;
             }
         }
-        public static Group operator/(ModelBase left, ModelBase right)
+        public static Group operator/(ILinkable left, ILinkable right)
         {
             if (right.GetType().Name=="Group")
             {
@@ -140,7 +129,7 @@ namespace Ligral.Component
                 return left/(right as Model);
             }
         }
-        public static Group operator/(ModelBase left, Group right)
+        public static Group operator/(ILinkable left, Group right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -151,7 +140,7 @@ namespace Ligral.Component
                 return (left as Model)/right;
             }
         }
-        public static Group operator/(ModelBase left, Model right)
+        public static Group operator/(ILinkable left, Model right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -162,7 +151,7 @@ namespace Ligral.Component
                 return (left as Model)/right;
             }
         }
-        public static Group operator^(ModelBase left, ModelBase right)
+        public static Group operator^(ILinkable left, ILinkable right)
         {
             if (right.GetType().Name=="Group")
             {
@@ -173,7 +162,7 @@ namespace Ligral.Component
                 return left^(right as Model);
             }
         }
-        public static Group operator^(ModelBase left, Group right)
+        public static Group operator^(ILinkable left, Group right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -184,7 +173,7 @@ namespace Ligral.Component
                 return (left as Model)^right;
             }
         }
-        public static Group operator^(ModelBase left, Model right)
+        public static Group operator^(ILinkable left, Model right)
         {
             if (left.GetType().Name=="Group")
             {
@@ -195,26 +184,26 @@ namespace Ligral.Component
                 return (left as Model)^right;
             }
         }
-        public static Group operator+(ModelBase modelBase)
+        public static Group operator+(ILinkable linkable)
         {
-            if (modelBase.GetType().Name=="Group")
+            if (linkable.GetType().Name=="Group")
             {
-                return +(modelBase as Group);
+                return +(linkable as Group);
             }
             else
             {
-                return +(modelBase as Model);
+                return +(linkable as Model);
             }
         }
-        public static Group operator-(ModelBase modelBase)
+        public static Group operator-(ILinkable linkable)
         {
-            if (modelBase.GetType().Name=="Group")
+            if (linkable.GetType().Name=="Group")
             {
-                return -(modelBase as Group);
+                return -(linkable as Group);
             }
             else
             {
-                return -(modelBase as Model);
+                return -(linkable as Model);
             }
         }
     }

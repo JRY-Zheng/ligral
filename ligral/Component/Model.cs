@@ -8,7 +8,7 @@ using Ligral.Simulation;
 
 namespace Ligral.Component
 {
-    class Model : ModelBase
+    class Model : ILinkable
     {
         protected static int id = 0;
         public string Name 
@@ -22,6 +22,7 @@ namespace Ligral.Component
                 GivenName = value;
             }
         }
+        public bool IsConfigured {get; set;}
         public string DefaultName;
         private string scopeName;
         public string ScopeName
@@ -99,13 +100,13 @@ namespace Ligral.Component
             Results = OutPortList.ConvertAll(outPort => new Signal(outPort));
         }
         protected virtual void AfterConfigured(){}
-        public override void Configure(Dict dictionary) 
+        public void Configure(Dict dictionary) 
         {
-            if (Configured)
+            if (IsConfigured)
             {
                 return;
             }
-            Configured = true;
+            IsConfigured = true;
             // ConfigureAction(dictionary);
             dictionary.Keys.Except(Parameters.Keys).ToList().ForEach(unknownParameterName=>
             {
@@ -140,7 +141,7 @@ namespace Ligral.Component
         }
         protected virtual void ConfigureAction(Dict dictionary) {}
         public virtual void Release() { }
-        public override void Connect(int outPortNO, InPort inPort)
+        public virtual void Connect(int outPortNO, InPort inPort)
         {
             if (outPortNO >= OutPortCount())
             {
@@ -151,7 +152,7 @@ namespace Ligral.Component
                 OutPortList[outPortNO].Bind(inPort);
             }
         }
-        public override InPort Expose(int inPortNO)
+        public virtual InPort Expose(int inPortNO)
         {
             if (inPortNO>=InPortCount())
             {
@@ -162,7 +163,7 @@ namespace Ligral.Component
                 return InPortList[inPortNO];
             }
         }
-        public override Port Expose(string portName)
+        public Port Expose(string portName)
         {
             int inPortNO = InPortList.FindIndex(inPort=>inPort.Name==portName);
             int outPortNO = OutPortList.FindIndex(outPort=>outPort.Name==portName);
@@ -179,11 +180,11 @@ namespace Ligral.Component
                 throw new LigralException("Undefined port name "+portName);
             }
         }
-        public override int InPortCount()
+        public int InPortCount()
         {
             return InPortList.Count;
         }
-        public override int OutPortCount()
+        public int OutPortCount()
         {
             return OutPortList.Count;
         }
@@ -231,7 +232,7 @@ namespace Ligral.Component
                 });
             }
         }
-        public override string GetTypeName()
+        public string GetTypeName()
         {
             return GetType().Name;
         }
@@ -285,7 +286,7 @@ namespace Ligral.Component
             Gain gain = ModelManager.Create("Gain") as Gain;
             Dict dictionary = new Dict(){{"value", -1}};
             gain.Configure(dictionary);
-            model.Connect(gain);
+            ((ILinkable) model).Connect(gain);
             Group group = new Group();
             group.AddInputModel(model);
             group.AddOutputModel(gain);

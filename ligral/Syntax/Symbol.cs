@@ -38,7 +38,7 @@ namespace Ligral.Syntax
 
     class ModelSymbol : Symbol
     {
-        public ModelSymbol(string name, TypeSymbol type, ModelBase value) : base(name, type, value) {}
+        public ModelSymbol(string name, TypeSymbol type, ILinkable value) : base(name, type, value) {}
     }
 
     class TypeSymbol : Symbol

@@ -247,14 +247,14 @@ namespace Ligral.Syntax
             {
                 switch (Visit(rowMuxAST.Items[i]))
                 {
-                    case ModelBase modelBase:
-                        if (modelBase.OutPortCount() != 1)
+                    case ILinkable linkable:
+                        if (linkable.OutPortCount() != 1)
                         {
                             throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port");
                         }
                         else
                         {
-                            modelBase.Connect(0, hStack.Expose(i));
+                            linkable.Connect(0, hStack.Expose(i));
                         }
                         break;
                     case OutPort outPort:
@@ -290,22 +290,22 @@ namespace Ligral.Syntax
         private Group Visit(RowDeMuxAST rowDeMuxAST)
         {
             Model split = ModelManager.Create("Split");
-            var modelList = new List<ModelBase>();
+            var modelList = new List<ILinkable>();
             bool canOutputMatrix = true;
             for (int i = 0; i < rowDeMuxAST.Items.Count; i++)
             {
                 switch (Visit(rowDeMuxAST.Items[i]))
                 {
-                    case ModelBase modelBase:
-                        modelList.Add(modelBase);
-                        if (modelBase.InPortCount() != 1)
+                    case ILinkable linkable:
+                        modelList.Add(linkable);
+                        if (linkable.InPortCount() != 1)
                         {
                             throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port");
                         }
                         else
                         {
-                            canOutputMatrix = canOutputMatrix && modelBase.OutPortCount() == 1;
-                            split.Connect(i, modelBase.Expose(0));
+                            canOutputMatrix = canOutputMatrix && linkable.OutPortCount() == 1;
+                            split.Connect(i, linkable.Expose(0));
                         }
                         break;
                     default:
@@ -319,8 +319,8 @@ namespace Ligral.Syntax
                 Model hStack = ModelManager.Create("HStack");
                 for (int i = 0; i < modelList.Count; i++)
                 {
-                    ModelBase modelBase = modelList[i];
-                    modelBase.Connect(0, hStack.Expose(i));
+                    ILinkable linkable = modelList[i];
+                    linkable.Connect(0, hStack.Expose(i));
                 }
                 group.AddOutputModel(hStack);
             }
@@ -400,7 +400,7 @@ namespace Ligral.Syntax
             object value = Visit(keyValuePairAST.Value);
             return new KeyValuePair<string, object>(key, value);
         }
-        private ModelBase Visit(DeclareAST declareAST)
+        private ILinkable Visit(DeclareAST declareAST)
         {
             string id = Visit(declareAST.Id);
             Symbol valueSymbol = currentScope.Lookup(id);
@@ -411,10 +411,10 @@ namespace Ligral.Syntax
             else
             {
                 AST modelTypeAST = declareAST.ModelType;
-                ModelBase modelBase = Visit(modelTypeAST) as ModelBase;
-                if (modelBase!=null)
+                ILinkable linkable = Visit(modelTypeAST) as ILinkable;
+                if (linkable!=null)
                 {
-                    switch (modelBase)
+                    switch (linkable)
                     {
                         case Model model:
                             model.Name = id;
@@ -423,10 +423,10 @@ namespace Ligral.Syntax
                             route.Name = id;
                             break;
                     }
-                    TypeSymbol typeSymbol = currentScope.Lookup(modelBase.GetTypeName()) as TypeSymbol;
-                    ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, modelBase);
+                    TypeSymbol typeSymbol = currentScope.Lookup(linkable.GetTypeName()) as TypeSymbol;
+                    ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, linkable);
                     currentScope.Insert(modelSymbol);
-                    return modelBase;
+                    return linkable;
                 }
                 else
                 {
@@ -434,33 +434,33 @@ namespace Ligral.Syntax
                 }
             }
         }
-        private ModelBase Visit(ConfigureAST configureAST)
+        private ILinkable Visit(ConfigureAST configureAST)
         {
             AST modelAST = configureAST.Model;
             object modelObject = Visit(modelAST);
-            ModelBase modelBase = modelObject as ModelBase;
-            if (modelBase==null)
+            ILinkable linkable = modelObject as ILinkable;
+            if (linkable==null)
             {
-                modelBase = ModelManager.Create("Constant");
+                linkable = ModelManager.Create("Constant");
                 Dict dictionary = new Dict(){{"value", modelObject}};
-                modelBase.Configure(dictionary);
+                linkable.Configure(dictionary);
             }
             try
             {
-                modelBase.Configure(Visit(configureAST.ModelParameters));
+                linkable.Configure(Visit(configureAST.ModelParameters));
             }
             catch (LigralException ex)
             {
                 throw new SemanticException(configureAST.FindToken(), ex.Message);
             }
-            return modelBase;
+            return linkable;
         }
         private Group Visit(BinOpAST binOpAST)
         {
             object leftObject = Visit(binOpAST.Left);
-            ModelBase left = leftObject as ModelBase;
+            ILinkable left = leftObject as ILinkable;
             object rightObject = Visit(binOpAST.Right);
-            ModelBase right = rightObject as ModelBase;
+            ILinkable right = rightObject as ILinkable;
             switch (binOpAST.Operator.Value)
             {
                 case '+':
@@ -479,7 +479,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(UnaryOpAST unaryOpAST)
         {
-            ModelBase value = Visit(unaryOpAST.Value) as ModelBase;
+            ILinkable value = Visit(unaryOpAST.Value) as ILinkable;
             switch (unaryOpAST.Operator.Value)
             {
                 case '+':
@@ -585,8 +585,8 @@ namespace Ligral.Syntax
         {
             object source = Visit(gotoOpAST.Source);
             object destination = Visit(gotoOpAST.Destination);
-            ModelBase sourceModel = source as ModelBase;
-            ModelBase destinationModel = destination as ModelBase;
+            ILinkable sourceModel = source as ILinkable;
+            ILinkable destinationModel = destination as ILinkable;
             OutPort sourceOutPort = source as OutPort;
             InPort destinationInPort = destination as InPort;
             if (sourceModel!=null && destinationModel!=null)
@@ -667,13 +667,13 @@ namespace Ligral.Syntax
         }
         private Model Visit(SelectAST selectAST)
         {
-            ModelBase modelBase = Visit(selectAST.ModelObject) as ModelBase;
-            if (modelBase!=null)
+            ILinkable linkable = Visit(selectAST.ModelObject) as ILinkable;
+            if (linkable!=null)
             {
                 string portId = Visit(selectAST.Port.PortId);
                 try
                 {
-                    Port port = modelBase.Expose(portId);
+                    Port port = linkable.Expose(portId);
                     Node node = ModelManager.Create("Node") as Node;
                     InPort inPort = port as InPort;
                     OutPort outPort = port as OutPort;
@@ -716,22 +716,22 @@ namespace Ligral.Syntax
         }
         private Group Visit(ChainAST chainAST)
         {
-            ModelBase modelBase = Visit(chainAST.Tree) as ModelBase;
-            if (modelBase as Model!=null)
+            ILinkable linkable = Visit(chainAST.Tree) as ILinkable;
+            if (linkable as Model!=null)
             {
                 Group group = new Group();
-                Model model = modelBase as Model;
+                Model model = linkable as Model;
                 group.AddInputModel(model);
                 group.AddOutputModel(model);
                 return group;
             }
-            else if (modelBase as Group!=null)
+            else if (linkable as Group!=null)
             {
-                return modelBase as Group;
+                return linkable as Group;
             }
             else
             {
-                throw new LigralException($"Unknown type {modelBase}");
+                throw new LigralException($"Unknown type {linkable}");
             }
         }
         private RouteInherit Visit(InheritAST inheritAST)
@@ -762,8 +762,8 @@ namespace Ligral.Syntax
                 }
                 else
                 {
-                    ModelBase modelBase = routeParam.DefaultValue as ModelBase;// validation in interpreter
-                    if (modelBase==null || !currentScope.IsInheritFrom(modelBase.GetTypeName(), routeParam.Type))
+                    ILinkable linkable = routeParam.DefaultValue as ILinkable;// validation in interpreter
+                    if (linkable==null || !currentScope.IsInheritFrom(linkable.GetTypeName(), routeParam.Type))
                     {
                         throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency for {routeParam.Name}, {routeParam.Type} expected");
                     }
