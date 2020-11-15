@@ -2,16 +2,54 @@ using System.Collections.Generic;
 
 namespace Ligral.Component
 {
-    class Port
+    class Port : ILinkable
     {
         public string Name;
         public Model FatherModel;
         protected Signal Value;
-        public Port(string name, Model model)
+        protected Port(string name, Model model)
         {
             Name = name;
             FatherModel = model;
         }
+
+        public bool IsConfigured { get; set; }
+
+        public void Configure(Dictionary<string, object> dictionary)
+        {
+            
+        }
+
+        public virtual void Connect(int outPortNO, InPort inPort)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual InPort Expose(int inPortNO)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual Port Expose(string portName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual string GetTypeName()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual int InPortCount()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual int OutPortCount()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override string ToString()
         {
             return string.Format("Port({0}={1})", Name, Value);
@@ -34,6 +72,43 @@ namespace Ligral.Component
         {
             return Value;
         }
+        public override void Connect(int outPortNO, InPort inPort)
+        {
+            throw new ModelException(FatherModel, "Cannot link in port to in port");
+        }
+
+        public override InPort Expose(int inPortNO)
+        {
+            if (inPortNO == 0)
+            {
+                return this;
+            }
+            else
+            {
+                throw new ModelException(FatherModel, "Cannot link multiple signals to single in port");
+            }
+        }
+
+        public override Port Expose(string portName)
+        {
+            throw new ModelException(FatherModel, "Cannot expose ports from out port");
+        }
+
+        public override string GetTypeName()
+        {
+            return "InPort";
+        }
+
+        public override int InPortCount()
+        {
+            return 1;
+        }
+
+        public override int OutPortCount()
+        {
+            return 0;
+        }
+
         public override string ToString()
         {
             return string.Format("InPort({0}={1})", Name, Value);
@@ -110,6 +185,42 @@ namespace Ligral.Component
         {
             destinationList.ForEach(inPort=>{inPort.Visited = true;});
             return destinationList.ConvertAll(inPort=>inPort.FatherModel);
+        }
+        public override void Connect(int outPortNO, InPort inPort)
+        {
+            if (outPortNO == 0)
+            {
+                Bind(inPort);
+            }
+            else
+            {
+                throw new ModelException(FatherModel, "Out port has only single signal");
+            }
+        }
+
+        public override InPort Expose(int inPortNO)
+        {
+            throw new ModelException(FatherModel, "Out port has no in port");
+        }
+
+        public override Port Expose(string portName)
+        {
+            throw new ModelException(FatherModel, "Cannot expose ports from out port");
+        }
+
+        public override string GetTypeName()
+        {
+            return "OutPort";
+        }
+
+        public override int InPortCount()
+        {
+            return 0;
+        }
+
+        public override int OutPortCount()
+        {
+            return 1;
         }
         public override string ToString()
         {

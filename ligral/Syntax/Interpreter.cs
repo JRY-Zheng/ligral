@@ -257,9 +257,6 @@ namespace Ligral.Syntax
                             linkable.Connect(0, hStack.Expose(i));
                         }
                         break;
-                    case OutPort outPort:
-                        outPort.Bind(hStack.Expose(i));
-                        break;
                     default:
                         throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected");
                 } 
@@ -665,7 +662,7 @@ namespace Ligral.Syntax
                 throw new SemanticException(pointerAST.ScopeName.FindToken(), "Scope expected");
             }
         }
-        private Model Visit(SelectAST selectAST)
+        private ILinkable Visit(SelectAST selectAST)
         {
             ILinkable linkable = Visit(selectAST.ModelObject) as ILinkable;
             if (linkable!=null)
@@ -674,35 +671,31 @@ namespace Ligral.Syntax
                 try
                 {
                     Port port = linkable.Expose(portId);
-                    Node node = ModelManager.Create("Node") as Node;
-                    InPort inPort = port as InPort;
-                    OutPort outPort = port as OutPort;
-                    if (inPort!=null)
+                    switch (port)
                     {
-                        node.Connect(0, inPort);
-                    }
-                    else if (outPort!=null)
-                    {
-                        string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
-                        outPort.SignalName = signalName;
-                        outPort.Bind(node.Expose(0));
-                        if (outPort.SignalName != null)
-                        {
-                            node.Name = outPort.SignalName;
-                        }
-                        if (signalName != null)
-                        {
-                            Symbol valueSymbol = currentScope.Lookup(signalName);
-                            if (valueSymbol!=null)
+                        case InPort inPort:
+                            return inPort;
+                        case OutPort outPort:
+                            string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
+                            if (signalName != null)
                             {
-                                throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
+                                Node node = ModelManager.Create("Node") as Node;
+                                outPort.SignalName = signalName;
+                                node.Name = outPort.SignalName;
+                                outPort.Bind(node.Expose(0));
+                                Symbol valueSymbol = currentScope.Lookup(signalName);
+                                if (valueSymbol!=null)
+                                {
+                                    throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
+                                }
+                                TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
+                                ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
+                                currentScope.Insert(modelSymbol);
                             }
-                            TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
-                            ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
-                            currentScope.Insert(modelSymbol);
-                        }
+                            return outPort;
+                        default:
+                            throw new SemanticException(selectAST.Port.FindToken(), "Ambiguous port");
                     }
-                    return node;
                 }
                 catch (LigralException ex)
                 {
