@@ -7,7 +7,7 @@ namespace Ligral.Simulation
     {
         public static List<double> TimeList = new List<double>();
         public List<double> ObservationList = new List<double>();
-        public double OutputVariable = 0;
+        public double OutputVariable {get; private set;}
         private bool isCommitted = true;
         public string Name;
         public delegate void SteppedHandler();
@@ -30,7 +30,7 @@ namespace Ligral.Simulation
             }
         }
         private Observation() {}
-        public void Add(double value, double t)
+        public void Cache(double value)
         {
             isCommitted = false;
             OutputVariable = value;

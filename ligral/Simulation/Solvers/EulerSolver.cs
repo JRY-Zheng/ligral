@@ -19,7 +19,9 @@ namespace Ligral.Simulation.Solvers
                     state += deriv*settings.StepSize;
                     return state;
                 });
+                problem.ObservationFunction();
             }
+            Observation.OnStopped();
         }
     }
 }

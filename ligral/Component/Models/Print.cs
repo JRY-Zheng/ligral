@@ -15,6 +15,7 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
+        private List<Observation> observations = new List<Observation>();
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("input", this));
@@ -42,9 +43,32 @@ namespace Ligral.Component.Models
                     {
                         varName = ScopeName + "." + varName;
                     }
-                }// [TODO] given name doesnt contain scope
+                }
             }
-            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
+            Observation.Stepped += () =>
+                System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
+            (int rowNo, int colNo) = inputSignal.Shape();
+            if (inputSignal.IsMatrix)
+            {
+                for(int i = 0; i < rowNo; i++)
+                {
+                    for (int j = 0; j < colNo; j++)
+                    {
+                        observations.Add(Observation.CreateObservation($"{varName}({i}-{j})"));
+                    }
+                }
+            }
+            else
+            {
+                observations.Add(Observation.CreateObservation(varName));
+            }
+            Calculate = PostCalculate;
+            return Calculate(values);
+        }
+        protected List<Signal> PostCalculate(List<Signal> values)
+        {
+            Signal inputSignal = values[0];
+            inputSignal.ZipApply<Observation>(observations, (value, observation) => observation.Cache(value));
             return Results;
         }
     }
