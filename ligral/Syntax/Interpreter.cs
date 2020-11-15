@@ -783,18 +783,17 @@ namespace Ligral.Syntax
         {
             RouteConstructor routeConstructor = new RouteConstructor();
             object definition = Visit(routeAST.Definition);
-            try
+            switch (definition)
             {
-                routeConstructor.SetUp((RouteInherit) definition);
+                case RouteInherit routeInherit:
+                    routeConstructor.SetUp(routeInherit);
+                    break;
+                case string routeName:
+                    routeConstructor.SetUp(routeName);
+                    break;
+                default:
+                    throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
-            catch {try
-            {
-                routeConstructor.SetUp((string) definition);
-            }
-            catch
-            {
-                throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
-            }}
             routeConstructor.RouteScope = new ScopeSymbolTable(routeConstructor.Name, currentScope.scopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
             routeConstructor.SetUp(parameters);
