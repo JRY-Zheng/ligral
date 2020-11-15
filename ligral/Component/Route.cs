@@ -72,8 +72,8 @@ namespace Ligral.Component
         }
         public override Port Expose(string portName)
         {
-            Model inputModel = inputModels.Find(model=>model.Name==portName);
-            Model outputModel = outputModels.Find(model=>model.Name==portName);
+            Model inputModel = inputModels.ConvertAll(model => (Model) model).Find(model=>model.Name==portName);
+            Model outputModel = outputModels.ConvertAll(model => (Model) model).Find(model=>model.Name==portName);
             if (inputModel!=null)
             {
                 return inputModel.Expose("input");

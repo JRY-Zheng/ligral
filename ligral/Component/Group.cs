@@ -7,35 +7,48 @@ namespace Ligral.Component
 {
     class Group : ILinkable
     {
-        internal List<Model> inputModels = new List<Model>();
-        internal List<Model> outputModels = new List<Model>();
+        internal List<ILinkable> inputModels = new List<ILinkable>();
+        internal List<ILinkable> outputModels = new List<ILinkable>();
         public bool IsConfigured {get; set;}
-        public void AddInputModel(Model model)
+        public void AddInputModel(ILinkable linkable)
         {
-            inputModels.Add(model);
-        }
-        public void AddInputModel(Group group)
-        {
-            if (group!=null)
+            switch(linkable)
             {
-                inputModels.AddRange(group.inputModels);
+                case Model model:
+                    inputModels.Add(model);
+                    break;
+                case Group group:
+                    inputModels.AddRange(group.inputModels);
+                    break;
+                case InPort inPort:
+                    inputModels.Add(inPort);
+                    break;
+                default:
+                    throw new LigralException("Illegal type as input of a group");
             }
         }
-        public void AddOutputModel(Model model)
+        public void AddOutputModel(ILinkable linkable)
         {
-            outputModels.Add(model);
-        }
-        public void AddOutputModel(Group group)
-        {
-            if (group!=null)
+            switch(linkable)
             {
-                outputModels.AddRange(group.outputModels);
+                case Model model:
+                    outputModels.Add(model);
+                    break;
+                case Group group:
+                    outputModels.AddRange(group.inputModels);
+                    break;
+                case OutPort outPort:
+                    outputModels.Add(outPort);
+                    break;
+                default:
+                    throw new LigralException("Illegal type as output of a group");
             }
         }
         public InPort Expose(int inPortNO)
         {
             int i = 0;
-            var inPortVariableModels = inputModels.FindAll(model => model is InPortVariableModel);
+            var inPortVariableModels = inputModels.FindAll(model => model is InPortVariableModel)
+                                                  .ConvertAll(model => (InPortVariableModel) model);
             if (inputModels.Count == 1 && inPortVariableModels.Count == 1)
             {
                 inputModels[0].Expose(inPortNO);
@@ -46,12 +59,12 @@ namespace Ligral.Component
             }
             else
             {
-                foreach (Model model in inputModels)
+                foreach (ILinkable linkable in inputModels)
                 {
-                    int inPortCount = model.InPortCount();
+                    int inPortCount = linkable.InPortCount();
                     if (i+inPortCount>inPortNO)
                     {
-                        return model.Expose(inPortNO-i);
+                        return linkable.Expose(inPortNO-i);
                     }
                     else
                     {
@@ -68,7 +81,8 @@ namespace Ligral.Component
         public void Connect(int outPortNO, InPort inPort)
         {
             int i = 0;
-            var outPortVariableModels = outputModels.FindAll(model => model is OutPortVariableModel);
+            var outPortVariableModels = outputModels.FindAll(model => model is OutPortVariableModel)
+                                                    .ConvertAll(model => (OutPortVariableModel) model);
             if (outputModels.Count == 1 && outPortVariableModels.Count == 1)
             {
                 outputModels[0].Connect(outPortNO, inPort);
@@ -79,12 +93,12 @@ namespace Ligral.Component
             }
             else // no out port variable model
             {
-                foreach (Model model in outputModels)
+                foreach (ILinkable linkable in outputModels)
                 {
-                    int outPortCount = model.OutPortCount();
+                    int outPortCount = linkable.OutPortCount();
                     if (i+outPortCount>outPortNO)
                     {
-                        model.Connect(outPortNO-i, inPort);
+                        linkable.Connect(outPortNO-i, inPort);
                         return;
                     }
                     else

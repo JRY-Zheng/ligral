@@ -692,7 +692,10 @@ namespace Ligral.Syntax
                                 ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
                                 currentScope.Insert(modelSymbol);
                             }
-                            return outPort;
+                            Group group = new Group();
+                            group.AddInputModel(linkable);
+                            group.AddOutputModel(outPort);
+                            return group;
                         default:
                             throw new SemanticException(selectAST.Port.FindToken(), "Ambiguous port");
                     }
