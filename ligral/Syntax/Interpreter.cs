@@ -400,7 +400,7 @@ namespace Ligral.Syntax
         private ILinkable Visit(DeclareAST declareAST)
         {
             string id = Visit(declareAST.Id);
-            Symbol valueSymbol = currentScope.Lookup(id);
+            Symbol valueSymbol = currentScope.Lookup(id, false);
             if (valueSymbol!=null)
             {
                 throw new SemanticException(declareAST.Id.ReferenceToken, $"Duplicated ID {id}");
@@ -558,7 +558,7 @@ namespace Ligral.Syntax
             {
                 throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
             }
-            Symbol symbol = currentScope.Lookup(id);
+            Symbol symbol = currentScope.Lookup(id, false);
             if (symbol!=null)
             {
                 throw new SemanticException(fromOpAST.Id.FindToken(), $"Duplicated ID {id}");
@@ -683,7 +683,7 @@ namespace Ligral.Syntax
                                 outPort.SignalName = signalName;
                                 node.Name = outPort.SignalName;
                                 outPort.Bind(node.Expose(0));
-                                Symbol valueSymbol = currentScope.Lookup(signalName);
+                                Symbol valueSymbol = currentScope.Lookup(signalName, false);
                                 if (valueSymbol!=null)
                                 {
                                     throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
@@ -787,7 +787,7 @@ namespace Ligral.Syntax
                 default:
                     throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
-            Symbol symbol = currentScope.Lookup(routeConstructor.Name);
+            Symbol symbol = currentScope.Lookup(routeConstructor.Name, false);
             if (symbol != null)
             {
                 throw new SemanticException(routeAST.Definition.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists.");

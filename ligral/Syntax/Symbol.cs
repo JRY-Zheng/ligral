@@ -114,13 +114,13 @@ namespace Ligral.Syntax
         {
             Symbols[symbol.Name] = symbol;
         }
-        public Symbol Lookup(string name)
+        public Symbol Lookup(string name, bool recursively = true)
         {
             if (Symbols.ContainsKey(name))
             {
                 return Symbols[name];
             }
-            else if (enclosingScope!=null)
+            else if (recursively && enclosingScope!=null)
             {
                 return enclosingScope.Lookup(name);
             }
@@ -137,11 +137,6 @@ namespace Ligral.Syntax
             }
             return this;
         }
-        // public ScopeSymbolTable Clone()
-        // {
-        //     ScopeSymbolTable newScope = new ScopeSymbolTable(ScopeName, scopeLevel, enclosingScope);
-        //     return newScope.Merge(this);
-        // }
         public bool IsInheritFrom(string inheritType, string baseType)
         {
             while (inheritType!=baseType)
