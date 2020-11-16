@@ -138,9 +138,9 @@ namespace Ligral.Component
                     {
                         referenceName = $"{FatherModel.GivenName}.{Name}";
                     }
-                    if (FatherModel.ScopeName != null)
+                    if (FatherModel.Scope != null)
                     {
-                        return FatherModel.ScopeName + "." + referenceName;
+                        return FatherModel.Scope + "." + referenceName;
                     }
                     else
                     {

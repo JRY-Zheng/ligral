@@ -37,11 +37,11 @@ namespace Ligral.Component.Models
             if (varName == null)
             {
                 varName = GivenName ?? inputSignal.Name ?? Name;
-                if (ScopeName != null)
+                if (Scope != null)
                 {
                     if (GivenName != null || inputSignal.Name == null)
                     {
-                        varName = ScopeName + "." + varName;
+                        varName = Scope + "." + varName;
                     }
                 }
             }

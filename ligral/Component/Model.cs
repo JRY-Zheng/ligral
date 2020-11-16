@@ -24,18 +24,32 @@ namespace Ligral.Component
         }
         public bool IsConfigured {get; set;}
         public string DefaultName;
-        private string scopeName;
-        public string ScopeName
+        private string scope;
+        public string Scope
         {
             get
             {
-                return scopeName;
+                return scope;
             }
             set
             {
                 if (value != "<global>")
                 {
-                    scopeName = value;
+                    scope = value;
+                }
+            }
+        }
+        public string ScopedName
+        {
+            get
+            {
+                if (Scope != null)
+                {
+                    return Scope + "." + Name;
+                }
+                else
+                {
+                    return Name;
                 }
             }
         }

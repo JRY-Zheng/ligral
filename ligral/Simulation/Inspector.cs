@@ -48,7 +48,7 @@ namespace Ligral.Simulation
                 else
                 {
                     List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
-                    System.Console.WriteLine("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.Name)));
+                    System.Console.WriteLine("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName)));
                     throw new LigralException("Schematic Error: Algebraic loop exists.");
                 }
             }

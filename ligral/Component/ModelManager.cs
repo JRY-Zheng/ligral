@@ -82,7 +82,7 @@ namespace Ligral.Component
                 modelCount[modelType] = 1;
             }
             model.DefaultName = modelType+modelCount[modelType].ToString();
-            model.ScopeName = Interpreter.ScopeName;
+            model.Scope = Interpreter.ScopeName;
             ModelPool.Add(model);
             return model;
         }
