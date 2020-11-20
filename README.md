@@ -2,6 +2,8 @@
 
 <a href='https://gitee.com/junruoyu-zheng/ligral/stargazers'><img src='https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=gray' alt='star'></img></a>
 
+![LOGO](https://sued-wind.cc/static/img/ligral/ligral.png)
+
 Ligral是一个基于文本的仿真框图语言，旨在替代Simulink，编写、运行仿真程序。
 
 **版本**：v0.2.0
