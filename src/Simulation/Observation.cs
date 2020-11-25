@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DoubleCsvTable;
+using Ligral.Tools;
 
 namespace Ligral.Simulation
 {
