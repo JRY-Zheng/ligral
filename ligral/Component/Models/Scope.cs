@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using DoubleCsvTable;
-using Ligral.Component;
+using Ligral.Tools;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models

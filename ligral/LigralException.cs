@@ -123,4 +123,24 @@ namespace Ligral
             }
         }
     }
+    [System.Serializable]
+    class CSVFormatError : LigralException
+    {
+        public CSVFormatError(string message) : base(message)
+        {
+
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Wrong CSV format";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
 }

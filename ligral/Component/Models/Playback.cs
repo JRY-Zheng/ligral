@@ -3,8 +3,7 @@ using System.Linq;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using DoubleCsvTable;
-using Ligral.Component;
+using Ligral.Tools;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models
