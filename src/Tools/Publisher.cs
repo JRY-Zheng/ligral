@@ -18,6 +18,13 @@ namespace Ligral.Tools
         static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse(Settings.GetInstance().IPAddress);
         static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().Port);
+        private static int count = 0;
+        public int Id;
+        public Publisher()
+        {
+            Id = count;
+            count++;
+        }
         public void Send<T>(int label, T data) where T:struct
         {
             Packet<T> packet = new Tools.Packet<T>(){Label = label, Data = data};

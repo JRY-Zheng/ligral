@@ -119,7 +119,7 @@ namespace Ligral
                 Solver solver = new EulerSolver();
                 solver.Solve(problem);*/
                 Tools.Publisher publisher = new Tools.Publisher();
-                Tools.Protocols.FigureProtocol.Data data = new Tools.Protocols.FigureProtocol.Data(){CurveHandle = 0, XValue = 0, YValue = 2};
+                Tools.Protocols.FigureProtocol.Data data = new Tools.Protocols.FigureProtocol.Data(){FigureId = 1, CurveHandle = 0, XValue = 0, YValue = 2};
                 publisher.Send(Tools.Protocols.FigureProtocol.DataLabel, data);
             }
             return null;
