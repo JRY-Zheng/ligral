@@ -17,9 +17,9 @@ namespace Ligral.Tools.Protocols
             public int FigureId {get; set; }
             [JsonPropertyName("curve")]
             public int CurveHandle { get; set; }
-            [JsonPropertyName("x_value")]
+            [JsonPropertyName("xvalue")]
             public double XValue { get; set; }
-            [JsonPropertyName("y_value")]
+            [JsonPropertyName("yvalue")]
             public double YValue { get; set; }
         }
         public const int CurveLabel = 0xffc0;

@@ -111,6 +111,14 @@ namespace Ligral
                     YLabel = "angle/deg"
                 };
                 publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
+                FigureProtocol.Curve curve = new FigureProtocol.Curve()
+                {
+                    FigureId = 1,
+                    CurveHandle = 0,
+                    RowNO = 0,
+                    ColumnNO = 0
+                };
+                publisher.Send(FigureProtocol.CurveLabel, curve);
                 FigureProtocol.ShowCommand showCommand = new FigureProtocol.ShowCommand()
                 {
                     FigureId = 1
@@ -123,6 +131,10 @@ namespace Ligral
                     XValue = 0, 
                     YValue = 2
                 };
+                publisher.Send(FigureProtocol.DataLabel, data);
+                System.Threading.Thread.Sleep(1000);
+                data.XValue = 1;
+                data.YValue = 1;
                 publisher.Send(FigureProtocol.DataLabel, data);
             }
             return null;
