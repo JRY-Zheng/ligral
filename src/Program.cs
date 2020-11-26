@@ -9,6 +9,8 @@ using Ligral.Syntax;
 using Ligral.Component;
 using Ligral.Simulation;
 using Ligral.Simulation.Solvers;
+using Ligral.Tools;
+using Ligral.Tools.Protocols;
 
 namespace Ligral
 {
@@ -91,36 +93,37 @@ namespace Ligral
             }
             else
             {
-                /*Console.WriteLine("Ligral is a Literal and Graphical Simulation Language.");
-                Console.WriteLine("\tUse --help option to get help infomation.");
-                Console.WriteLine("*******************************************************");
-                Console.WriteLine("Type your ligral script below, and use 'run' command to execute.");
-                string lineInput = "";
-                Syntax.Parser parser = new Syntax.Parser();
-                Interpreter interpreter = Interpreter.GetInstance(".");
-                while (lineInput.Trim()!="run")
+                Publisher publisher = new Publisher();
+                FigureProtocol.FigureConfig figureConfig = new FigureProtocol.FigureConfig()
                 {
-                    parser.Load(lineInput);
-                    try
-                    {
-                        ProgramAST p = parser.Parse();
-                        interpreter.AppendInterpret(p);
-                    }
-                    catch(Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-                    Console.Write(">>>");
-                    lineInput = Console.ReadLine();
-                }
-                Inspector inspector = new Inspector();
-                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                Problem problem = new Problem(routine);
-                Solver solver = new EulerSolver();
-                solver.Solve(problem);*/
-                Tools.Publisher publisher = new Tools.Publisher();
-                Tools.Protocols.FigureProtocol.Data data = new Tools.Protocols.FigureProtocol.Data(){FigureId = 1, CurveHandle = 0, XValue = 0, YValue = 2};
-                publisher.Send(Tools.Protocols.FigureProtocol.DataLabel, data);
+                    FigureId = 1,
+                    Title = "my title",
+                    RowsCount = 1,
+                    ColumnsCount = 1
+                };
+                publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
+                FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
+                {
+                    FigureId = 1,
+                    RowNO = 0,
+                    ColumnNO = 0,
+                    XLabel = "time/s",
+                    YLabel = "angle/deg"
+                };
+                publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
+                FigureProtocol.ShowCommand showCommand = new FigureProtocol.ShowCommand()
+                {
+                    FigureId = 1
+                };
+                publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
+                FigureProtocol.Data data = new FigureProtocol.Data()
+                {
+                    FigureId = 1, 
+                    CurveHandle = 0, 
+                    XValue = 0, 
+                    YValue = 2
+                };
+                publisher.Send(FigureProtocol.DataLabel, data);
             }
             return null;
         }

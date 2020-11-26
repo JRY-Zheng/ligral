@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Ligral.Tools
 {
@@ -25,13 +26,12 @@ namespace Ligral.Tools
             Id = count;
             count++;
         }
-        public void Send<T>(int label, T data) where T:struct
+        public async void Send<T>(int label, T data) where T:struct
         {
             Packet<T> packet = new Tools.Packet<T>(){Label = label, Data = data};
             string packetString = JsonSerializer.Serialize<Packet<T>>(packet);
-            System.Console.WriteLine(packetString);
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
-            socket.SendTo(packetBytes, endPoint);
+            await Task.Run(() => socket.SendTo(packetBytes, endPoint));
         }
     }
 }

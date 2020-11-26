@@ -4,12 +4,18 @@ namespace Ligral.Tools.Protocols
 {
     static class FigureProtocol
     {
+        public const int ShowCommandLabel = 0xffe0;
+        public struct ShowCommand
+        {
+            [JsonPropertyName("fig")]
+            public int FigureId {get; set; }
+        }
         public const int DataLabel = 0xffd0;
         public struct Data
         {
             [JsonPropertyName("fig")]
             public int FigureId {get; set; }
-            [JsonPropertyName("curve_handle")]
+            [JsonPropertyName("curve")]
             public int CurveHandle { get; set; }
             [JsonPropertyName("x_value")]
             public double XValue { get; set; }
@@ -21,7 +27,7 @@ namespace Ligral.Tools.Protocols
         {
             [JsonPropertyName("fig")]
             public int FigureId {get; set; }
-            [JsonPropertyName("curve_handle")]
+            [JsonPropertyName("curve")]
             public int CurveHandle {get; set; }
             [JsonPropertyName("row")]
             public int RowNO {get; set; }
@@ -39,8 +45,6 @@ namespace Ligral.Tools.Protocols
             public int RowsCount {get; set; }
             [JsonPropertyName("cols")]
             public int ColumnsCount {get; set; }
-            [JsonPropertyName("grid")]
-            public bool Grid {get; set; }
         }
         public const int PlotConfigLabel = 0xffa0;
         public struct PlotConfig
