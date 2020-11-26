@@ -15,7 +15,7 @@ namespace Ligral.Component.Models
             }
         }
         private string fileName;
-        private CsvTable table;
+        private Storage table;
         private int rowNo = -1;
         private int colNo = -1;
         protected override void SetUpPorts()
@@ -56,7 +56,7 @@ namespace Ligral.Component.Models
                 {
                     columns.Add("Data");
                 }
-                table = new CsvTable(columns, new List<List<double>>());
+                table = new Storage(columns, new List<List<double>>());
             }
             Calculate = PostCalculate;
             return Calculate(values);

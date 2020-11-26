@@ -15,7 +15,7 @@ namespace Ligral.Component.Models
             }
         }
         private string fileName;
-        private CsvTable table;
+        private Storage table;
         private int rowNo = -1;
         private int colNo = -1;
         private enum Mode {Ymn, Xmn, X1mYn1, Xm1Y1n, X1Y1};
@@ -113,7 +113,7 @@ namespace Ligral.Component.Models
             {
                 throw new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa.");
             }
-            table = new CsvTable(columns, new List<List<double>>());
+            table = new Storage(columns, new List<List<double>>());
             Calculate = PostCalculate;
             return Calculate(values);
         }

@@ -17,7 +17,7 @@ namespace Ligral.Component.Models
                 return "This model generates a playback provided by a time-data csv file.";
             }
         }
-        private CsvTable table;
+        private Storage table;
         private int rowNo = 0;
         private int colNo = 0;
         protected override void SetUpPorts()
@@ -30,7 +30,7 @@ namespace Ligral.Component.Models
             {
                 {"file", new Parameter(value=>
                 {
-                    table = new CsvTable((string)value, true);
+                    table = new Storage((string)value, true);
                     if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")
                     {
                         throw new ModelException(this,"Invalid playback file");

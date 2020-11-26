@@ -7,7 +7,7 @@ using System;
 
 namespace Ligral.Tools
 {
-    public class CsvTable
+    public class Storage
     {
         public List<string> Columns { get; private set; }
         public List<List<double>> Data { get; private set; }
@@ -15,7 +15,7 @@ namespace Ligral.Tools
         private Regex headerRegex;
         private Regex doubleRegex;
         private Regex dataRegex;
-        public CsvTable()
+        public Storage()
         {
             string columnString = @"[^,\s]+";
             columnRegex = new Regex(columnString);
@@ -28,12 +28,12 @@ namespace Ligral.Tools
         {
             return new Regex($"\\s*{item}\\s*(,\\s*{item}\\s*)*");
         }
-        public CsvTable(List<string> columns, List<List<double>> data) : this()
+        public Storage(List<string> columns, List<List<double>> data) : this()
         {
             Columns = columns;
             Data = data;
         }
-        public CsvTable(string fileName, bool hasHeader = false) : this()
+        public Storage(string fileName, bool hasHeader = false) : this()
         {
             LoadFile(fileName, hasHeader);
         }

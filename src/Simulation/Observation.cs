@@ -57,7 +57,7 @@ namespace Ligral.Simulation
         {
             if (ObservationPool.Count > 0)
             {
-                CsvTable table = new CsvTable();
+                Storage table = new Storage();
                 table.AddColumn("Time", Observation.TimeList);
                 foreach ((string name, var observation) in ObservationPool)
                 {
