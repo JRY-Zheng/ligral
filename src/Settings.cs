@@ -84,7 +84,13 @@ namespace Ligral
                 needOutput = value;
             }
         }
-        
+
+        public string IPAddress { get => iPAddress; set => iPAddress = value; }
+        public int Port { get => port; set => port = value; }
+
+        private string iPAddress = "127.0.0.1";
+        private int port = 8783;
+
         public void AddSetting(string item, object val)
         {
             switch (item)
@@ -98,6 +104,10 @@ namespace Ligral
                     VariableStep = (bool) val; break;
                 case "output_folder":
                     OutputFolder = (string) val; break;
+                case "ip_address":
+                    IPAddress = (string) val; break;
+                case "port":
+                    Port = (int) val; break;
                 default:
                     throw new LigralException($"Unsupported setting {item}");
             }

@@ -91,7 +91,7 @@ namespace Ligral
             }
             else
             {
-                Console.WriteLine("Ligral is a Literal and Graphical Simulation Language.");
+                /*Console.WriteLine("Ligral is a Literal and Graphical Simulation Language.");
                 Console.WriteLine("\tUse --help option to get help infomation.");
                 Console.WriteLine("*******************************************************");
                 Console.WriteLine("Type your ligral script below, and use 'run' command to execute.");
@@ -117,7 +117,10 @@ namespace Ligral
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                 Problem problem = new Problem(routine);
                 Solver solver = new EulerSolver();
-                solver.Solve(problem);
+                solver.Solve(problem);*/
+                Tools.Publisher publisher = new Tools.Publisher();
+                Tools.Protocols.FigureProtocol.Data data = new Tools.Protocols.FigureProtocol.Data(){CurveHandle = 0, XValue = 0, YValue = 2};
+                publisher.Send(Tools.Protocols.FigureProtocol.DataLabel, data);
             }
             return null;
         }
