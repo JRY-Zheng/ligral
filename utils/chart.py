@@ -36,6 +36,10 @@ class PlotterHandler:
         self.pools = []
         self.handle = self.handler_wrapper(self.handle)
 
+    def clear(self):
+        self.figs = {}
+        self.pools = []
+
     def invoke(self, label, data):
         self.pools.append((label, data))
 
@@ -102,8 +106,10 @@ if __name__ == "__main__":
 
     threading._start_new_thread(task, (serverSock, handler))
 
-    while not handler.figs or np.array([not fig.showed for i, fig in handler.figs.items()]).any():
-        if handler.pools:
-            handler.handle(*handler.pools.pop(0))
+    while True:
+        while not handler.figs or np.array([not fig.showed for i, fig in handler.figs.items()]).any():
+            if handler.pools:
+                handler.handle(*handler.pools.pop(0))
 
-    plt.show()
+        plt.show()
+        handler.clear()
