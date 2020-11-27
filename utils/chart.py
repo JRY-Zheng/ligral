@@ -16,7 +16,10 @@ class Figure:
 
     def __getitem__(self, item):
         if isinstance(self.ax, np.ndarray):
-            return self.ax[item]
+            if isinstance(item, tuple) and len(item)==2 and (item[0]==0 or item[1]==0):
+                return self.ax[item[0]+item[1]]
+            else:
+                return self.ax[item]
         elif item==(0,0) or item==0:
             return self.ax
 
