@@ -4,6 +4,20 @@ namespace Ligral.Tools.Protocols
 {
     static class FigureProtocol
     {
+        public const int DataFileLabel = 0xfff0;
+        public struct DataFile
+        {
+            [JsonPropertyName("fig")]
+            public int FigureId {get; set; }
+            [JsonPropertyName("curve")]
+            public int CurveHandle { get; set; }
+            [JsonPropertyName("file")]
+            public string FileName {get; set; }
+            [JsonPropertyName("x")]
+            public string XColumn {get; set; }
+            [JsonPropertyName("y")]
+            public string YColumn {get; set; }
+        }
         public const int ShowCommandLabel = 0xffe0;
         public struct ShowCommand
         {

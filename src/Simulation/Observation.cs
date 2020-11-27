@@ -10,6 +10,7 @@ namespace Ligral.Simulation
         public double OutputVariable {get; private set;}
         private bool isCommitted = true;
         public string Name;
+        public static string DataFile;
         public delegate void SteppedHandler();
         public static event SteppedHandler Stepped;
         public delegate void StoppedHandler();
@@ -66,8 +67,8 @@ namespace Ligral.Simulation
                 Settings settings = Settings.GetInstance();
                 settings.NeedOutput = true;
                 string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-                string dataFile = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
-                table.DumpFile(dataFile, true);
+                DataFile = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
+                table.DumpFile(DataFile, true);
             }
             if (Stopped != null) Stopped();
         }

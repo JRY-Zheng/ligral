@@ -116,12 +116,20 @@ namespace Ligral.Tools
         }
         public void AddColumn(string column, List<double> values, int pos = -1)
         {
-            if (values.Count != Data.Count)
+            if (Data == null)
+            {
+                Data = values.ConvertAll(item => new List<double>(){ item });
+                Columns = new List<string>(){ column };
+            }
+            else if (values.Count != Data.Count)
             {
                 throw new CSVFormatError("row number inconsistency");
             }
-            AddToList(Columns, column, pos);
-            Data.Zip(values, (row, value) => { AddToList(row, value, pos); return 0; }).ToList();
+            else
+            {
+                AddToList(Columns, column, pos);
+                Data.Zip(values, (row, value) => { AddToList(row, value, pos); return 0; }).ToList();
+            }
         }
         private T GetItem<T>(List<T> list, int index)
         {
