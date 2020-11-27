@@ -15,6 +15,7 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
+        private Signal inputSignal;
         private List<Observation> observations = new List<Observation>();
         protected override void SetUpPorts()
         {
@@ -33,7 +34,7 @@ namespace Ligral.Component.Models
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             // Results.Clear();
-            Signal inputSignal = values[0];
+            inputSignal = values[0];
             if (varName == null)
             {
                 varName = GivenName ?? inputSignal.Name ?? Name;
@@ -45,8 +46,6 @@ namespace Ligral.Component.Models
                     }
                 }
             }
-            Observation.Stepped += () =>
-                System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
             (int rowNo, int colNo) = inputSignal.Shape();
             if (inputSignal.IsMatrix)
             {
@@ -70,6 +69,10 @@ namespace Ligral.Component.Models
             Signal inputSignal = values[0];
             inputSignal.ZipApply<Observation>(observations, (value, observation) => observation.Cache(value));
             return Results;
+        }
+        public override void Refresh()
+        {
+            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
         }
     }
 }

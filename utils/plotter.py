@@ -58,7 +58,7 @@ class PlotterHandler:
             cv, = ax.plot([], [])
             figure.curves[data['curve']] = cv, data['row'], data['col']
         elif label==0xffb0:
-            fig, ax = self.plotter.subplots(data['rows'], data['cols'])
+            fig, ax = self.plotter.subplots(data['rows'], data['cols'], num=data['title'])
             fig.suptitle(data['title'])
             self.figs[data['fig']] = Figure(fig, ax)
         elif label==0xffa0:

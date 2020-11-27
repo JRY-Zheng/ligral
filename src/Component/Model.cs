@@ -76,6 +76,7 @@ namespace Ligral.Component
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Calculate = DefaultCalculate;
+            Observation.Stepped += Refresh;
             Observation.Stopped += Release;
             SetUpPorts();
             SetUpResults();
@@ -153,7 +154,7 @@ namespace Ligral.Component
             });
             AfterConfigured();
         }
-        protected virtual void ConfigureAction(Dict dictionary) {}
+        public virtual void Refresh() { }
         public virtual void Release() { }
         public virtual void Connect(int outPortNO, InPort inPort)
         {
