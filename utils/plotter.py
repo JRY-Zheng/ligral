@@ -39,16 +39,14 @@ class PlotterHandler:
         def wrapper(label, data):
             try:
                 handler(label, data)
-                return True
             except KeyError as e:
                 print(f'ERROR: invalid packet: {e}')
-                return False
         return wrapper
 
     def handle(self, label, data):
         if label==0xffe0:
             figure = self.figs[data['fig']]
-            self.ani = FuncAnimation(figure.fig, self.update)
+            self.ani = FuncAnimation(figure.fig, self.update, interval=0.01)
             figure.show()
         # elif label==0xffd0:
         #     data update is in update function
@@ -74,7 +72,8 @@ class PlotterHandler:
         if not self.pools:
             return None,
         label, data = self.pools.pop(0)
-        assert label == 0xffd0
+        if label != 0xffd0:
+            return None,
         figure = self.figs[data['fig']]
         cv, row, col = figure.curves[data['curve']]
         ax = figure[row, col]
@@ -96,7 +95,7 @@ def task(serverSock, handler):
     while True:
         packetbytes, addr = serverSock.recvfrom(1024)
         packet = json.loads(packetbytes)
-        print(f'INFO: received packet {packet}')
+        # print(f'INFO: received packet {packet}')
         label, data = packet['label'], packet['data']
         if label < 0xff00:
             pass
@@ -119,7 +118,6 @@ if __name__ == "__main__":
 
     while not handler.figs or np.array([not fig.showed for i, fig in handler.figs.items()]).any():
         if handler.pools:
-            if handler.handle(*handler.pools[0]):
-                handler.pools.pop(0)
+            handler.handle(*handler.pools.pop(0))
 
     plt.show()
