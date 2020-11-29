@@ -390,17 +390,23 @@ namespace Ligral.Component
                 return new Signal(func(doubleValue, other));
             }
         }
-        public void ZipApply<TOther>(List<TOther> other, System.Action<double, TOther> action)
+        public void ZipApply<TOther>(IEnumerable<TOther> other, System.Action<double, TOther> action)
         {
             Reset();
             if (IsMatrix)
             {
-                other.Zip<TOther, double>(this).ToList()
-                    .ForEach(pair => action(pair.Second, pair.First));                
+                foreach ((var otherItem, var val) in other.Zip<TOther, double>(this))
+                {
+                    action(val, otherItem);   
+                }             
             }
             else
             {
-                other.ForEach(otherItem => action(doubleValue, otherItem));
+                // other.ForEach(otherItem => action(doubleValue, otherItem));
+                foreach (var otherItem in other)
+                {
+                    action(doubleValue, otherItem);
+                }
             }
         }
         public List<TResult> ZipApply<TOther, TResult>(List<TOther> other, System.Func<double, TOther, TResult> func)
