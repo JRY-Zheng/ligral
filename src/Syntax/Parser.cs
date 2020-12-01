@@ -188,13 +188,11 @@ namespace Ligral.Syntax
         {
             List<RowAST> rows = new List<RowAST>();
             Eat(TokenType.LBRK);
+            rows.Add(Row());
             while (currentToken.Type!=TokenType.RBRK)
             {
+                Eat(TokenType.SEMIC);
                 rows.Add(Row());
-                if (currentToken.Type==TokenType.SEMIC)
-                {
-                    Eat(TokenType.SEMIC);
-                }
             }
             Eat(TokenType.RBRK);
             return new MatrixAST(rows);
@@ -202,13 +200,11 @@ namespace Ligral.Syntax
         private RowAST Row()
         {
             List<AST> items = new List<AST>();
+            items.Add(ValueExpr());
             while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
             {
+                Eat(TokenType.COMMA);
                 items.Add(ValueExpr());
-                if (currentToken.Type==TokenType.COMMA)
-                {
-                    Eat(TokenType.COMMA);
-                }
             }
             return new RowAST(items);
         }
@@ -318,13 +314,11 @@ namespace Ligral.Syntax
         {
             List<RowMuxAST> rows = new List<RowMuxAST>();
             Eat(TokenType.LBRK);
+            rows.Add(RowMux());
             while (currentToken.Type!=TokenType.RBRK)
             {
+                Eat(TokenType.SEMIC);
                 rows.Add(RowMux());
-                if (currentToken.Type==TokenType.SEMIC)
-                {
-                    Eat(TokenType.SEMIC);
-                }
             }
             Eat(TokenType.RBRK);
             return new MatrixMuxAST(rows);
@@ -334,14 +328,12 @@ namespace Ligral.Syntax
             int? columnNumber = null;
             List<RowDeMuxAST> rows = new List<RowDeMuxAST>();
             Eat(TokenType.LBRK);
+            rows.Add(RowDeMux(columnNumber, out int parsedColumnNumber));
             while (currentToken.Type!=TokenType.RBRK)
             {
-                rows.Add(RowDeMux(columnNumber, out int parsedColumnNumber));
+                Eat(TokenType.SEMIC);
+                rows.Add(RowDeMux(columnNumber, out parsedColumnNumber));
                 columnNumber = parsedColumnNumber;
-                if (currentToken.Type==TokenType.SEMIC)
-                {
-                    Eat(TokenType.SEMIC);
-                }
             }
             Eat(TokenType.RBRK);
             return new MatrixDeMuxAST(rows, (int)columnNumber);
@@ -349,26 +341,22 @@ namespace Ligral.Syntax
         private RowMuxAST RowMux()
         {
             List<AST> items = new List<AST>();
+            items.Add(NodeExpr(true));
             while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
             {
+                Eat(TokenType.COMMA);
                 items.Add(NodeExpr(true));
-                if (currentToken.Type==TokenType.COMMA)
-                {
-                    Eat(TokenType.COMMA);
-                }
             }
             return new RowMuxAST(items);
         }
         private RowDeMuxAST RowDeMux(int? numberRequired, out int numberParsed)
         {
             List<AST> items = new List<AST>();
+            items.Add(Selector());
             while (currentToken.Type!=TokenType.RBRK && currentToken.Type!=TokenType.SEMIC)
             {
+                Eat(TokenType.COMMA);
                 items.Add(Selector());
-                if (currentToken.Type==TokenType.COMMA)
-                {
-                    Eat(TokenType.COMMA);
-                }
             }
             numberParsed = items.Count;
             if (numberRequired != null && numberRequired != numberParsed)
