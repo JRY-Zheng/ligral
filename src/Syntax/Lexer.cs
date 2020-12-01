@@ -193,27 +193,27 @@ namespace Ligral.Syntax
                 string word = Word();
                 switch (word)
                 {
-                    case "digit":
+                case "digit":
                     // supported in v0.2.0, unsupported in higher version
                     // replaced by `let`
                     return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
-                    case "let":
+                case "let":
                     return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
-                    case "route":
+                case "route":
                     return new StringToken(TokenType.ROUTE, word, lineNO, columnNO);
-                    case "end":
+                case "end":
                     return new StringToken(TokenType.END, word, lineNO, columnNO);
-                    case "import":
+                case "import":
                     return new StringToken(TokenType.IMPORT, word, lineNO, columnNO);
-                    case "using":
+                case "using":
                     return new StringToken(TokenType.USING, word, lineNO, columnNO);
-                    case "conf":
+                case "conf":
                     return new StringToken(TokenType.CONF, word, lineNO, columnNO);
-                    case "true":
+                case "true":
                     return new BoolToken(TokenType.CONF, true, lineNO, columnNO);
-                    case "false":
+                case "false":
                     return new BoolToken(TokenType.CONF, false, lineNO, columnNO);
-                    default:
+                default:
                     return new StringToken(TokenType.ID, word, lineNO, columnNO);
                 }
             }

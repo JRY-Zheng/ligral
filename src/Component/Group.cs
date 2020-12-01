@@ -14,34 +14,34 @@ namespace Ligral.Component
         {
             switch(linkable)
             {
-                case Model model:
-                    inputModels.Add(model);
-                    break;
-                case Group group:
-                    inputModels.AddRange(group.inputModels);
-                    break;
-                case InPort inPort:
-                    inputModels.Add(inPort);
-                    break;
-                default:
-                    throw new LigralException("Illegal type as input of a group");
+            case Model model:
+                inputModels.Add(model);
+                break;
+            case Group group:
+                inputModels.AddRange(group.inputModels);
+                break;
+            case InPort inPort:
+                inputModels.Add(inPort);
+                break;
+            default:
+                throw new LigralException("Illegal type as input of a group");
             }
         }
         public void AddOutputModel(ILinkable linkable)
         {
             switch(linkable)
             {
-                case Model model:
-                    outputModels.Add(model);
-                    break;
-                case Group group:
-                    outputModels.AddRange(group.outputModels);
-                    break;
-                case OutPort outPort:
-                    outputModels.Add(outPort);
-                    break;
-                default:
-                    throw new LigralException("Illegal type as output of a group");
+            case Model model:
+                outputModels.Add(model);
+                break;
+            case Group group:
+                outputModels.AddRange(group.outputModels);
+                break;
+            case OutPort outPort:
+                outputModels.Add(outPort);
+                break;
+            default:
+                throw new LigralException("Illegal type as output of a group");
             }
         }
         public InPort Expose(int inPortNO)

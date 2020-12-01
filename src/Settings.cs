@@ -97,23 +97,23 @@ namespace Ligral
         {
             switch (item)
             {
-                case "step_size":
-                    StepSize = (double) val;
-                    VariableStep = false; break;
-                case "stop_time":
-                    StopTime = (double) val; break;
-                case "variable_step":
-                    VariableStep = (bool) val; break;
-                case "output_folder":
-                    OutputFolder = (string) val; break;
-                case "ip_address":
-                    IPAddress = (string) val; break;
-                case "port":
-                    Port = (int) val; break;
-                case "realtime_draw":
-                    RealTimeDrawing = (bool) val; break;
-                default:
-                    throw new LigralException($"Unsupported setting {item}");
+            case "step_size":
+                StepSize = (double) val;
+                VariableStep = false; break;
+            case "stop_time":
+                StopTime = (double) val; break;
+            case "variable_step":
+                VariableStep = (bool) val; break;
+            case "output_folder":
+                OutputFolder = (string) val; break;
+            case "ip_address":
+                IPAddress = (string) val; break;
+            case "port":
+                Port = (int) val; break;
+            case "realtime_draw":
+                RealTimeDrawing = (bool) val; break;
+            default:
+                throw new LigralException($"Unsupported setting {item}");
             }
         }
         #endregion

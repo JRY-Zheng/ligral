@@ -77,82 +77,82 @@ namespace Ligral.Syntax
         {
             switch (ast)
             {
-                case ProgramAST programAST:
-                    return Visit(programAST);
-                case StatementsAST statementsAST:
-                    return Visit(statementsAST);
-                case IdAST idAST:
-                    return Visit(idAST);
-                case WordAST wordAST:
-                    return Visit(wordAST);
-                case BoolAST boolAST:
-                    return Visit(boolAST);
-                case RowAST rowAST:
-                    return Visit(rowAST);
-                case MatrixAST matrixAST:
-                    return Visit(matrixAST);
-                case MatrixMuxAST matrixMuxAST:
-                    return Visit(matrixMuxAST);
-                case MatrixDeMuxAST matrixDeMuxAST:
-                    return Visit(matrixDeMuxAST);
-                case RowMuxAST rowMuxAST:
-                    return Visit(rowMuxAST);
-                case RowDeMuxAST rowDeMuxAST:
-                    return Visit(rowDeMuxAST);
-                case DigitAST digitAST:
-                    return Visit(digitAST);
-                case DigitBlockAST digitBlockAST:
-                    return Visit(digitBlockAST);
-                case StringAST stringAST:
-                    return Visit(stringAST);
-                case BusAST busAST:
-                    return Visit(busAST);
-                case DictAST dictAST:
-                    return Visit(dictAST);
-                case KeyValuePairAST keyValuePairAST:
-                    return Visit(keyValuePairAST);
-                case DeclareAST declareAST:
-                    return Visit(declareAST);
-                case ConfigureAST configureAST:
-                    return Visit(configureAST);
-                case BinOpAST binOpAST:
-                    return Visit(binOpAST);
-                case UnaryOpAST unaryOpAST:
-                    return Visit(unaryOpAST);
-                case ValBinOpAST valBinOpAST:
-                    return Visit(valBinOpAST);
-                case ValUnaryOpAST valUnaryOpAST:
-                    return Visit(valUnaryOpAST);
-                case ConfAST confAST:
-                    return Visit(confAST);
-                case FromOpAST fromOpAST:
-                    return Visit(fromOpAST);
-                case GotoOpAST gotoOpAST:
-                    return Visit(gotoOpAST);
-                case ImportAST importAST:
-                    return Visit(importAST);
-                case UsingAST usingAST:
-                    return Visit(usingAST);
-                case PointerAST pointerAST:
-                    return Visit(pointerAST);
-                case SelectAST selectAST:
-                    return Visit(selectAST);
-                case ChainAST chainAST:
-                    return Visit(chainAST);
-                case InheritAST inheritAST:
-                    return Visit(inheritAST);
-                case RouteParamAST routeParamAST:
-                    return Visit(routeParamAST);
-                case RouteParamsAST routeParamsAST:
-                    return Visit(routeParamsAST);
-                case RoutePortAST routePortAST:
-                    return Visit(routePortAST);
-                case RouteAST routeAST:
-                    return Visit(routeAST);
-                case null:
-                    return null;
-                default:
-                    throw new LigralException($"Unknown AST {ast.GetType().Name}");
+            case ProgramAST programAST:
+                return Visit(programAST);
+            case StatementsAST statementsAST:
+                return Visit(statementsAST);
+            case IdAST idAST:
+                return Visit(idAST);
+            case WordAST wordAST:
+                return Visit(wordAST);
+            case BoolAST boolAST:
+                return Visit(boolAST);
+            case RowAST rowAST:
+                return Visit(rowAST);
+            case MatrixAST matrixAST:
+                return Visit(matrixAST);
+            case MatrixMuxAST matrixMuxAST:
+                return Visit(matrixMuxAST);
+            case MatrixDeMuxAST matrixDeMuxAST:
+                return Visit(matrixDeMuxAST);
+            case RowMuxAST rowMuxAST:
+                return Visit(rowMuxAST);
+            case RowDeMuxAST rowDeMuxAST:
+                return Visit(rowDeMuxAST);
+            case DigitAST digitAST:
+                return Visit(digitAST);
+            case DigitBlockAST digitBlockAST:
+                return Visit(digitBlockAST);
+            case StringAST stringAST:
+                return Visit(stringAST);
+            case BusAST busAST:
+                return Visit(busAST);
+            case DictAST dictAST:
+                return Visit(dictAST);
+            case KeyValuePairAST keyValuePairAST:
+                return Visit(keyValuePairAST);
+            case DeclareAST declareAST:
+                return Visit(declareAST);
+            case ConfigureAST configureAST:
+                return Visit(configureAST);
+            case BinOpAST binOpAST:
+                return Visit(binOpAST);
+            case UnaryOpAST unaryOpAST:
+                return Visit(unaryOpAST);
+            case ValBinOpAST valBinOpAST:
+                return Visit(valBinOpAST);
+            case ValUnaryOpAST valUnaryOpAST:
+                return Visit(valUnaryOpAST);
+            case ConfAST confAST:
+                return Visit(confAST);
+            case FromOpAST fromOpAST:
+                return Visit(fromOpAST);
+            case GotoOpAST gotoOpAST:
+                return Visit(gotoOpAST);
+            case ImportAST importAST:
+                return Visit(importAST);
+            case UsingAST usingAST:
+                return Visit(usingAST);
+            case PointerAST pointerAST:
+                return Visit(pointerAST);
+            case SelectAST selectAST:
+                return Visit(selectAST);
+            case ChainAST chainAST:
+                return Visit(chainAST);
+            case InheritAST inheritAST:
+                return Visit(inheritAST);
+            case RouteParamAST routeParamAST:
+                return Visit(routeParamAST);
+            case RouteParamsAST routeParamsAST:
+                return Visit(routeParamsAST);
+            case RoutePortAST routePortAST:
+                return Visit(routePortAST);
+            case RouteAST routeAST:
+                return Visit(routeAST);
+            case null:
+                return null;
+            default:
+                throw new LigralException($"Unknown AST {ast.GetType().Name}");
             }
         }
         private object Visit(ProgramAST programAST)
@@ -247,18 +247,18 @@ namespace Ligral.Syntax
             {
                 switch (Visit(rowMuxAST.Items[i]))
                 {
-                    case ILinkable linkable:
-                        if (linkable.OutPortCount() != 1)
-                        {
-                            throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port");
-                        }
-                        else
-                        {
-                            linkable.Connect(0, hStack.Expose(i));
-                        }
-                        break;
-                    default:
-                        throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected");
+                case ILinkable linkable:
+                    if (linkable.OutPortCount() != 1)
+                    {
+                        throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port");
+                    }
+                    else
+                    {
+                        linkable.Connect(0, hStack.Expose(i));
+                    }
+                    break;
+                default:
+                    throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected");
                 } 
             }
             Group group = new Group();
@@ -293,20 +293,20 @@ namespace Ligral.Syntax
             {
                 switch (Visit(rowDeMuxAST.Items[i]))
                 {
-                    case ILinkable linkable:
-                        modelList.Add(linkable);
-                        if (linkable.InPortCount() != 1)
-                        {
-                            throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port");
-                        }
-                        else
-                        {
-                            canOutputMatrix = canOutputMatrix && linkable.OutPortCount() == 1;
-                            split.Connect(i, linkable.Expose(0));
-                        }
-                        break;
-                    default:
-                        throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model expected");
+                case ILinkable linkable:
+                    modelList.Add(linkable);
+                    if (linkable.InPortCount() != 1)
+                    {
+                        throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port");
+                    }
+                    else
+                    {
+                        canOutputMatrix = canOutputMatrix && linkable.OutPortCount() == 1;
+                        split.Connect(i, linkable.Expose(0));
+                    }
+                    break;
+                default:
+                    throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model expected");
                 } 
             }
             Group group = new Group();
@@ -413,12 +413,12 @@ namespace Ligral.Syntax
                 {
                     switch (linkable)
                     {
-                        case Model model:
-                            model.Name = id;
-                            break;
-                        case Route route:
-                            route.Name = id;
-                            break;
+                    case Model model:
+                        model.Name = id;
+                        break;
+                    case Route route:
+                        route.Name = id;
+                        break;
                     }
                     TypeSymbol typeSymbol = currentScope.Lookup(linkable.GetTypeName()) as TypeSymbol;
                     ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, linkable);
@@ -460,18 +460,18 @@ namespace Ligral.Syntax
             ILinkable right = rightObject as ILinkable;
             switch (binOpAST.Operator.Value)
             {
-                case '+':
-                    return left+right;
-                case '-':
-                    return left-right;
-                case '*':
-                    return left*right;
-                case '/':
-                    return left/right;
-                case '^':
-                    return left^right;
-                default:
-                    throw new SemanticException(binOpAST.FindToken(), "Invalid operator");
+            case '+':
+                return left+right;
+            case '-':
+                return left-right;
+            case '*':
+                return left*right;
+            case '/':
+                return left/right;
+            case '^':
+                return left^right;
+            default:
+                throw new SemanticException(binOpAST.FindToken(), "Invalid operator");
             }
         }
         private Group Visit(UnaryOpAST unaryOpAST)
@@ -479,12 +479,12 @@ namespace Ligral.Syntax
             ILinkable value = Visit(unaryOpAST.Value) as ILinkable;
             switch (unaryOpAST.Operator.Value)
             {
-                case '+':
-                    return +value;
-                case '-':
-                    return -value;
-                default:
-                    throw new SemanticException(unaryOpAST.FindToken(), "Invalid operator");
+            case '+':
+                return +value;
+            case '-':
+                return -value;
+            default:
+                throw new SemanticException(unaryOpAST.FindToken(), "Invalid operator");
             }
         }
         private double Visit(ValBinOpAST valBinOpAST)
@@ -493,22 +493,22 @@ namespace Ligral.Syntax
             double right = (double) Visit(valBinOpAST.Right);
             switch (valBinOpAST.Operator.Value)
             {
-                case '+':
-                    return left+right;
-                case '-':
-                    return left-right;
-                case '*':
-                    return left*right;
-                case '/':
-                    if (right==0)
-                    {
-                        throw new SemanticException(valBinOpAST.Right.FindToken(), "0 Division");
-                    }
-                    return left/right;
-                case '^':
-                    return Math.Pow(left, right);
-                default:
-                    throw new SemanticException(valBinOpAST.FindToken(), "Invalid operator");
+            case '+':
+                return left+right;
+            case '-':
+                return left-right;
+            case '*':
+                return left*right;
+            case '/':
+                if (right==0)
+                {
+                    throw new SemanticException(valBinOpAST.Right.FindToken(), "0 Division");
+                }
+                return left/right;
+            case '^':
+                return Math.Pow(left, right);
+            default:
+                throw new SemanticException(valBinOpAST.FindToken(), "Invalid operator");
             }
         }
         private double Visit(ValUnaryOpAST valUnaryOpAST)
@@ -516,12 +516,12 @@ namespace Ligral.Syntax
             double value = (double) Visit(valUnaryOpAST.Value);
             switch (valUnaryOpAST.Operator.Value)
             {
-                case '+':
-                    return +value;
-                case '-':
-                    return -value;
-                default:
-                    throw new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator");
+            case '+':
+                return +value;
+            case '-':
+                return -value;
+            default:
+                throw new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator");
             }
         }
         private object Visit(ConfAST confAST)
@@ -636,31 +636,31 @@ namespace Ligral.Syntax
                     Port port = linkable.Expose(portId);
                     switch (port)
                     {
-                        case InPort inPort:
-                            return inPort;
-                        case OutPort outPort:
-                            string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
-                            if (signalName != null)
+                    case InPort inPort:
+                        return inPort;
+                    case OutPort outPort:
+                        string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
+                        if (signalName != null)
+                        {
+                            Node node = ModelManager.Create("Node") as Node;
+                            outPort.SignalName = signalName;
+                            node.Name = outPort.SignalName;
+                            outPort.Bind(node.Expose(0));
+                            Symbol valueSymbol = currentScope.Lookup(signalName, false);
+                            if (valueSymbol!=null)
                             {
-                                Node node = ModelManager.Create("Node") as Node;
-                                outPort.SignalName = signalName;
-                                node.Name = outPort.SignalName;
-                                outPort.Bind(node.Expose(0));
-                                Symbol valueSymbol = currentScope.Lookup(signalName, false);
-                                if (valueSymbol!=null)
-                                {
-                                    throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
-                                }
-                                TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
-                                ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
-                                currentScope.Insert(modelSymbol);
+                                throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
                             }
-                            Group group = new Group();
-                            group.AddInputModel(linkable);
-                            group.AddOutputModel(outPort);
-                            return group;
-                        default:
-                            throw new SemanticException(selectAST.Port.FindToken(), "Ambiguous port");
+                            TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
+                            ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
+                            currentScope.Insert(modelSymbol);
+                        }
+                        Group group = new Group();
+                        group.AddInputModel(linkable);
+                        group.AddOutputModel(outPort);
+                        return group;
+                    default:
+                        throw new SemanticException(selectAST.Port.FindToken(), "Ambiguous port");
                     }
                 }
                 catch (LigralException ex)
@@ -744,14 +744,14 @@ namespace Ligral.Syntax
             object definition = Visit(routeAST.Definition);
             switch (definition)
             {
-                case RouteInherit routeInherit:
-                    routeConstructor.SetUp(routeInherit);
-                    break;
-                case string routeName:
-                    routeConstructor.SetUp(routeName);
-                    break;
-                default:
-                    throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
+            case RouteInherit routeInherit:
+                routeConstructor.SetUp(routeInherit);
+                break;
+            case string routeName:
+                routeConstructor.SetUp(routeName);
+                break;
+            default:
+                throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
             Symbol symbol = currentScope.Lookup(routeConstructor.Name, false);
             if (symbol != null)

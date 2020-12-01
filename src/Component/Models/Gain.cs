@@ -28,12 +28,12 @@ namespace Ligral.Component.Models
                     string prod = (string) value;
                     switch (prod)
                     {
-                        case "left":
-                            leftProduct = true; break;
-                        case "right":
-                            leftProduct = false; break;
-                        default:
-                            throw new ModelException(this, $"Invalid enum prod {prod}");
+                    case "left":
+                        leftProduct = true; break;
+                    case "right":
+                        leftProduct = false; break;
+                    default:
+                        throw new ModelException(this, $"Invalid enum prod {prod}");
                     }
                 }, ()=>{})}
             };
