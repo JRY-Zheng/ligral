@@ -35,7 +35,7 @@ namespace Ligral.Component
                     outputModels.Add(model);
                     break;
                 case Group group:
-                    outputModels.AddRange(group.inputModels);
+                    outputModels.AddRange(group.outputModels);
                     break;
                 case OutPort outPort:
                     outputModels.Add(outPort);
