@@ -12,19 +12,22 @@ class Figure:
         self.fig = fig
         self.ax = ax
         self.curves = {}
-        self.showed = False
+        if isinstance(self.ax, np.ndarray):
+            self.showed = np.zeros_like(ax)
+        else:
+            self.showed = np.zeros((1,1))
 
     def __getitem__(self, item):
         if isinstance(self.ax, np.ndarray):
-            if isinstance(item, tuple) and len(item)==2 and (item[0]==0 or item[1]==0):
-                return self.ax[item[0]+item[1]]
-            else:
-                return self.ax[item]
+            return self.ax[item]
         elif item==(0,0) or item==0:
             return self.ax
 
-    def show(self):
-        self.showed = True
+    def show(self, row, col):
+        self.showed[row, col] = 1
+
+    def is_showed(self):
+        return (self.showed==1).all()
 
 class PlotterHandler:
     def __init__(self, agg='mpl'):
@@ -34,11 +37,13 @@ class PlotterHandler:
             raise NotImplementedError()
         self.figs = {}
         self.pools = []
+        self.dfs = {}
         self.handle = self.handler_wrapper(self.handle)
 
     def clear(self):
         self.figs = {}
         self.pools = []
+        self.dfs = {}
 
     def invoke(self, label, data):
         self.pools.append((label, data))
@@ -53,15 +58,19 @@ class PlotterHandler:
 
     def handle(self, label, data):
         if label==0xfff0:
-            df = pd.read_csv(data['file'], skipinitialspace=True)
-            print(df.columns)
+            if data['file'] in self.dfs:
+                df = self.dfs[data['file']]
+            else:
+                df = pd.read_csv(data['file'], skipinitialspace=True)
+                self.dfs[data['file']] = df
             x = df[data['x']]
             y = df[data['y']]
             figure = self.figs[data['fig']]
             _, row, col = figure.curves[data['curve']]
             ax = figure[row, col]
             ax.plot(x.values, y.values)
-            figure.show()
+            figure.show(row, col)
+            print(f'INFO: fig {data["fig"]} ax {row, col}')
         elif label==0xffc0:
             figure = self.figs[data['fig']]
             figure.curves[data['curve']] = None, data['row'], data['col']
@@ -107,7 +116,7 @@ if __name__ == "__main__":
     threading._start_new_thread(task, (serverSock, handler))
 
     while True:
-        while not handler.figs or np.array([not fig.showed for i, fig in handler.figs.items()]).any():
+        while not handler.figs or np.array([not fig.is_showed() for i, fig in handler.figs.items()]).any():
             if handler.pools:
                 handler.handle(*handler.pools.pop(0))
 

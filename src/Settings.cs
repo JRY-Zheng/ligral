@@ -87,9 +87,11 @@ namespace Ligral
 
         public string IPAddress { get => iPAddress; set => iPAddress = value; }
         public int Port { get => port; set => port = value; }
+        public bool RealTimeDrawing { get => realTimeDrawing; set => realTimeDrawing = value; }
 
         private string iPAddress = "127.0.0.1";
         private int port = 8783;
+        private bool realTimeDrawing = false;
 
         public void AddSetting(string item, object val)
         {
@@ -108,6 +110,8 @@ namespace Ligral
                     IPAddress = (string) val; break;
                 case "port":
                     Port = (int) val; break;
+                case "realtime_draw":
+                    RealTimeDrawing = (bool) val; break;
                 default:
                     throw new LigralException($"Unsupported setting {item}");
             }
