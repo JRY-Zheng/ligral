@@ -546,18 +546,6 @@ namespace Ligral.Syntax
             object value;
             TypeSymbol typeSymbol;
             value = Visit(fromOpAST.Expression);
-            if ((value  as Matrix<double> != null))
-            {
-                typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
-            }
-            else if (value is double)
-            {
-                typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
-            }
-            else 
-            {
-                throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
-            }
             Symbol symbol = currentScope.Lookup(id, false);
             if (symbol!=null)
             {
@@ -565,64 +553,39 @@ namespace Ligral.Syntax
             }
             else
             {
-                if (typeSymbol.Name == "MATRIX")
+                switch (value)
                 {
-                    MatrixSymbol matrixSymbol = new MatrixSymbol(id, typeSymbol, value as Matrix<double>);
+                case Matrix<double> matrix:
+                    typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
+                    MatrixSymbol matrixSymbol = new MatrixSymbol(id, typeSymbol, matrix);
                     currentScope.Insert(matrixSymbol);
-                }
-                else
-                {
-                    DigitSymbol digitSymbol = new DigitSymbol(id, typeSymbol, (double) value);
+                    break;
+                case double val:
+                    typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
+                    DigitSymbol digitSymbol = new DigitSymbol(id, typeSymbol, val);
                     currentScope.Insert(digitSymbol);
+                    break;
+                default:
+                    throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
                 }
                 return value;
             }
         }
         private Group Visit(GotoOpAST gotoOpAST)
         {
-            object source = Visit(gotoOpAST.Source);
-            object destination = Visit(gotoOpAST.Destination);
-            ILinkable sourceModel = source as ILinkable;
-            ILinkable destinationModel = destination as ILinkable;
-            OutPort sourceOutPort = source as OutPort;
-            InPort destinationInPort = destination as InPort;
-            if (sourceModel!=null && destinationModel!=null)
+            ILinkable source = Visit(gotoOpAST.Source) as ILinkable;
+            ILinkable destination = Visit(gotoOpAST.Destination) as ILinkable;
+            if (source!=null && destination!=null)
             {
-                sourceModel.Connect(destinationModel);
-            }
-            else if (sourceModel!=null && destinationInPort!=null)
-            {
-                sourceModel.Connect(0,destinationInPort);
-            }
-            else if (sourceOutPort!=null && destinationModel!=null)
-            {
-                sourceOutPort.Bind(destinationModel.Expose(0));
-            }
-            else if (sourceOutPort!=null && destinationInPort!=null)
-            {
-                sourceOutPort.Bind(destinationInPort);
+                source.Connect(destination);
             }
             else
             {
                 throw new SemanticException(gotoOpAST.FindToken(), "Invalid connection");
             }
             Group group = new Group();
-            if (sourceModel as Model!=null)
-            {
-                group.AddInputModel(sourceModel as Model);
-            }
-            else
-            {
-                group.AddInputModel(sourceModel as Group);
-            }
-            if (destinationModel as Model!=null)
-            {
-                group.AddOutputModel(destinationModel as Model);
-            }
-            else
-            {
-                group.AddOutputModel(destinationModel as Group);
-            }
+            group.AddInputModel(source);
+            group.AddOutputModel(destination);
             return group;
         }
         private object Visit(ImportAST importAST)
