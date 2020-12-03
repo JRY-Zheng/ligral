@@ -1,4 +1,4 @@
-<svg class="railroad-diagram" height="101" viewBox="0 0 474.0 101" width="474.0" xmlns="http://www.w3.org/2000/svg">
+<svg class="railroad-diagram" height="92" viewBox="0 0 371.5 92" width="371.5" xmlns="http://www.w3.org/2000/svg">
 <g transform="translate(.5 .5)">
 <style>/* <![CDATA[ */
 	svg.railroad-diagram {
@@ -32,13 +32,10 @@
 
 /* ]]> */
 </style><g>
-<path d="M20 30v20m10 -20v20m-10 -10h61.0"></path><text style="text-anchor:start" x="20" y="25">Matrix</text></g><path d="M81.0 40h10"></path><g>
-<path d="M91.0 40h0.0"></path><path d="M424.0 40h0.0"></path><g class="terminal ">
-<path d="M91.0 40h0.0"></path><path d="M145.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="91.0" y="29"></rect><text x="118.0" y="44">LBRK</text></g><path d="M145.0 40h10"></path><path d="M155.0 40h10"></path><g>
-<path d="M165.0 40h0.0"></path><path d="M247.5 40h0.0"></path><path d="M165.0 40h10"></path><g class="non-terminal ">
-<path d="M175.0 40h8.5"></path><path d="M229.0 40h8.5"></path><rect height="22" width="45.5" x="183.5" y="29"></rect><text x="206.25" y="44">Row</text></g><path d="M237.5 40h10"></path><path d="M175.0 40a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g class="terminal ">
-<path d="M175.0 70h0.0"></path><path d="M237.5 70h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="175.0" y="59"></rect><text x="206.25" y="74">SEMIC</text></g><path d="M237.5 70a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M247.5 40h10"></path><g>
-<path d="M257.5 40h0.0"></path><path d="M360.0 40h0.0"></path><path d="M257.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g>
-<path d="M277.5 20h62.5"></path></g><path d="M340.0 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M257.5 40h20"></path><g class="terminal ">
-<path d="M277.5 40h0.0"></path><path d="M340.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="277.5" y="29"></rect><text x="308.75" y="44">SEMIC</text></g><path d="M340.0 40h20"></path></g><path d="M360.0 40h10"></path><g class="terminal ">
-<path d="M370.0 40h0.0"></path><path d="M424.0 40h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="370.0" y="29"></rect><text x="397.0" y="44">RBRK</text></g></g><path d="M424.0 40h10"></path><path d="M 434.0 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+<path d="M20 21v20m10 -20v20m-10 -10h61.0"></path><text style="text-anchor:start" x="20" y="16">Matrix</text></g><path d="M81.0 31h10"></path><g>
+<path d="M91.0 31h0.0"></path><path d="M321.5 31h0.0"></path><g class="terminal ">
+<path d="M91.0 31h0.0"></path><path d="M145.0 31h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="91.0" y="20"></rect><text x="118.0" y="35">LBRK</text></g><path d="M145.0 31h10"></path><path d="M155.0 31h10"></path><g>
+<path d="M165.0 31h0.0"></path><path d="M247.5 31h0.0"></path><path d="M165.0 31h10"></path><g class="non-terminal ">
+<path d="M175.0 31h8.5"></path><path d="M229.0 31h8.5"></path><rect height="22" width="45.5" x="183.5" y="20"></rect><text x="206.25" y="35">Row</text></g><path d="M237.5 31h10"></path><path d="M175.0 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g class="terminal ">
+<path d="M175.0 61h0.0"></path><path d="M237.5 61h0.0"></path><rect height="22" rx="10" ry="10" width="62.5" x="175.0" y="50"></rect><text x="206.25" y="65">SEMIC</text></g><path d="M237.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M247.5 31h10"></path><path d="M257.5 31h10"></path><g class="terminal ">
+<path d="M267.5 31h0.0"></path><path d="M321.5 31h0.0"></path><rect height="22" rx="10" ry="10" width="54.0" x="267.5" y="20"></rect><text x="294.5" y="35">RBRK</text></g></g><path d="M321.5 31h10"></path><path d="M 331.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>

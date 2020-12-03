@@ -7,7 +7,7 @@ def draw(name, *args):
     d = Diagram(Start('simple', name), *args)
     with open(os.path.join(folder, f'{name}.svg'), 'w') as f:
         d.writeSvg(f.write)
-    print(f'~~~\n\n~~~\n![{name}]({name}.svg)\n')
+    # print(f'~~~\n\n~~~\n![{name}]({name}.svg)\n')
 
 draw("Program", NonTerminal("Statements"))
 draw("Statements", OneOrMore(Skip(), NonTerminal("Statement")))
@@ -33,8 +33,8 @@ draw("Value", Choice(1,
     Sequence("LPAR", NonTerminal("ValueExpr"), "RPAR"),
     "DIGIT", NonTerminal("Matrix"), NonTerminal("Pointer")
 ))
-draw("Matrix", Sequence("LBRK", OneOrMore(NonTerminal("Row"), "SEMIC"), Optional("SEMIC"), "RBRK"))
-draw("Row", OneOrMore(Sequence(NonTerminal("ValueExpr"), Optional("COMMA"))))
+draw("Matrix", Sequence("LBRK", OneOrMore(NonTerminal("Row"), "SEMIC"), "RBRK"))
+draw("Row", OneOrMore(NonTerminal("ValueExpr"), "COMMA"))
 draw("Pointer", OneOrMore("ID", "DOT"))
 draw("Chain", OneOrMore(NonTerminal("NodeExpr"), "GOTO"))
 draw("NodeExpr", OneOrMore(NonTerminal("NodeFactor"), Choice(0, "PLUS", "MINUS")))
@@ -46,11 +46,12 @@ draw("Node", Choice(1,
     "DIGIT", NonTerminal("MatrixMux"), NonTerminal("MatrixDeMux"), NonTerminal("Selector")
 ))
 draw("Bus", OneOrMore(NonTerminal("Chain"), "COMMA"))
-draw("MatrixMux", Sequence("LBRK", OneOrMore(NonTerminal("RowMux"), "SEMIC"), Optional("SEMIC"), "RBRK"))
-draw("RowMux", OneOrMore(Sequence(NonTerminal("NodeExpr"), Optional("COMMA"))))
-draw("MatrixDeMux", Sequence("LBRK", OneOrMore(NonTerminal("RowDeMux"), "SEMIC"), Optional("SEMIC"), "RBRK"))
-draw("RowDeMux", OneOrMore(Sequence(NonTerminal("Selector"), Optional("COMMA"))))
-draw("Selector", Sequence(NonTerminal("Block"), Optional(Sequence("COLON", "ID"))))
+draw("MatrixMux", Sequence("LBRK", OneOrMore(NonTerminal("RowMux"), "SEMIC"), "RBRK"))
+draw("RowMux", OneOrMore(NonTerminal("NodeExpr"), "COMMA"))
+draw("MatrixDeMux", Sequence("LBRK", OneOrMore(NonTerminal("RowDeMux"), "SEMIC"), "RBRK"))
+draw("RowDeMux", OneOrMore(NonTerminal("Selector"), "COMMA"))
+draw("Selector", Sequence(NonTerminal("Block"), Optional(Sequence("COLON", NonTerminal("Port")))))
+draw("Port", Sequence("ID", Optional(Sequence("LBRK", "ID", "RBRK"))))
 draw("Block", Sequence(NonTerminal("Declare"), Optional(NonTerminal("Configure"))))
 draw("Declare", Sequence(NonTerminal("Pointer"), Optional(
     Sequence("LBRK", "ID", "RBRK")

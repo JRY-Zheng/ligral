@@ -66,14 +66,14 @@ Value: (PLUS|MINUS)Value|LPAR ValueExpr RPAR|DIGIT|Matrix|Pointer
 ## Matrix
 
 ~~~
-Matrix: LBRK Row(SEMIC Row)*SEMIC?RBRK
+Matrix: LBRK Row(SEMIC Row)*RBRK
 ~~~
 ![Matrix](Matrix.svg)
 
 ## Row
 
 ~~~
-Row: (ValueExpr COMMA?)*
+Row: ValueExpr(COMMA ValueExpr)*
 ~~~
 ![Row](Row.svg)
 
@@ -129,28 +129,28 @@ Bus: Chain(COMMA Chain)*
 ## MatrixMux
 
 ~~~
-MatrixMux: LBRK Row(SEMIC RowMux)*SEMIC?RBRK
+MatrixMux: LBRK RowMux(SEMIC RowMux)*RBRK
 ~~~
 ![MatrixMux](MatrixMux.svg)
 
 ## RowMux
 
 ~~~
-RowMux: (NodeExpr COMMA?)*
+RowMux: NodeExpr(COMMA NodeExpr)*
 ~~~
 ![RowMux](RowMux.svg)
 
 ## MatrixDeMux
 
 ~~~
-MatrixDeMux: LBRK Row(SEMIC RowDeMux)*SEMIC?RBRK
+MatrixDeMux: LBRK RowDeMux(SEMIC RowDeMux)*RBRK
 ~~~
 ![MatrixDeMux](MatrixDeMux.svg)
 
 ## RowDeMux
 
 ~~~
-RowDeMux: (Selector COMMA?)*
+RowDeMux: Selector(COMMA Selector)*
 ~~~
 ![RowDeMux](RowDeMux.svg)
 
@@ -160,6 +160,13 @@ RowDeMux: (Selector COMMA?)*
 Selector: Block(COLON ID)?
 ~~~
 ![Selector](Selector.svg)
+
+## Port
+
+~~~
+Port: ID(LBRK ID LBRK)?
+~~~
+![Port](Port.svg)
 
 ## Block
 
