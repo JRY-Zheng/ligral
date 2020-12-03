@@ -24,7 +24,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"base", new Parameter(value=>
+                {"base", new Parameter(ParameterType.Signal , value=>
                 {
                     newBase = (double)value;
                 }, ()=>

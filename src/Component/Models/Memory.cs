@@ -19,7 +19,7 @@ namespace Ligral.Component.Models
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
-            Parameters["delay"] = new Parameter(value =>
+            Parameters["delay"] = new Parameter(ParameterType.Signal , value =>
             {
                 int delayedFrame = Convert.ToInt32(value);
                 if (delayedFrame < 1)

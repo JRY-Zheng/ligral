@@ -26,21 +26,21 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"ampl", new Parameter(value=>
+                {"ampl", new Parameter(ParameterType.Signal , value=>
                 {
                     ampl = (double)value;
                 }, ()=>
                 {
                     ampl = 1;
                 })},
-                {"omega", new Parameter(value=>
+                {"omega", new Parameter(ParameterType.Signal , value=>
                 {
                     omega = (double)value;
                 }, ()=>
                 {
                     omega = 1;
                 })},
-                {"phi", new Parameter(value=>
+                {"phi", new Parameter(ParameterType.Signal , value=>
                 {
                     phi = (double)value;
                 }, ()=>

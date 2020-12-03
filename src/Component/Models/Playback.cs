@@ -28,7 +28,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"file", new Parameter(value=>
+                {"file", new Parameter(ParameterType.Signal , value=>
                 {
                     table = new Storage((string)value, true);
                     if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")
@@ -36,11 +36,11 @@ namespace Ligral.Component.Models
                         throw new ModelException(this,"Invalid playback file");
                     }
                 })},
-                {"col", new Parameter(value=>
+                {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = Convert.ToInt32(value);
                 }, ()=>{})},
-                {"row", new Parameter(value=>
+                {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = Convert.ToInt32(value);
                 }, ()=>{})}

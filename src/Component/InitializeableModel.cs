@@ -36,15 +36,15 @@ namespace Ligral.Component
         {
             Parameters = new ParameterDictionary()
             {
-                {"initial", new Parameter(value=>
+                {"initial", new Parameter(ParameterType.Signal , value=>
                 {
                     initial.Pack(value);
                 }, ()=>{})},
-                {"col", new Parameter(value=>
+                {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = Convert.ToInt32(value);
                 }, ()=>{})},
-                {"row", new Parameter(value=>
+                {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = Convert.ToInt32(value);
                 }, ()=>{})}

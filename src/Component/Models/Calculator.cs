@@ -24,7 +24,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"type", new Parameter(value=>
+                {"type", new Parameter(ParameterType.String, value=>
                 {
                     char operType = System.Convert.ToChar(value);
                     if (operType=='+'||operType=='-'||operType=='*'||operType=='/'||operType=='^'||operType=='@')

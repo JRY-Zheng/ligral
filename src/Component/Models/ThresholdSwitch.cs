@@ -25,7 +25,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"threshold", new Parameter(value=>
+                {"threshold", new Parameter(ParameterType.Signal , value=>
                 {
                     threshold = (double)value;
                 }, ()=>

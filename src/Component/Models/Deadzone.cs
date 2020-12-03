@@ -19,11 +19,11 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"left", new Parameter(value=>
+                {"left", new Parameter(ParameterType.Signal , value=>
                 {
                     left = (double)value;
                 })},
-                {"right", new Parameter(value=>
+                {"right", new Parameter(ParameterType.Signal , value=>
                 {
                     right = (double)value;
                 })},

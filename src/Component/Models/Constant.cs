@@ -23,7 +23,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"value", new Parameter(value=>
+                {"value", new Parameter(ParameterType.Signal , value=>
                 {
                     Matrix<double> matrix = value as Matrix<double>;
                     if (matrix!=null)

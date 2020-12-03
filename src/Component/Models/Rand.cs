@@ -26,7 +26,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"seed", new Parameter(value=>
+                {"seed", new Parameter(ParameterType.Signal , value=>
                 {
                     seed = Convert.ToInt32(value);
                     random = new Random(seed);
@@ -35,14 +35,14 @@ namespace Ligral.Component.Models
                     seed = System.DateTime.Now.Millisecond;
                     random = new Random(seed);
                 })},
-                {"upper", new Parameter(value=>
+                {"upper", new Parameter(ParameterType.Signal , value=>
                 {
                     upper = (double)value;
                 }, ()=>
                 {
                     upper = 1;
                 })},
-                {"lower", new Parameter(value=>
+                {"lower", new Parameter(ParameterType.Signal , value=>
                 {
                     lower = (double)value;
                 }, ()=>

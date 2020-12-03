@@ -24,14 +24,14 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"start", new Parameter(value=>
+                {"start", new Parameter(ParameterType.Signal , value=>
                 {
                     start = (double)value;
                 }, ()=>
                 {
                     start = 0;
                 })},
-                {"level", new Parameter(value=>
+                {"level", new Parameter(ParameterType.Signal , value=>
                 {
                     level = (double)value;
                 }, ()=>

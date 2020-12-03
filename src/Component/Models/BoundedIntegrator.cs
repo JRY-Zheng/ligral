@@ -17,11 +17,11 @@ namespace Ligral.Component.Models
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
-            Parameters["upper"] = new Parameter(value=>
+            Parameters["upper"] = new Parameter(ParameterType.Signal , value=>
                 {
                     upper=(double)value;
                 });
-            Parameters["lower"] = new Parameter(value=>
+            Parameters["lower"] = new Parameter(ParameterType.Signal , value=>
                 {
                     lower = (double)value;
                 });
