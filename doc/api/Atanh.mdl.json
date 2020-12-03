@@ -1,10 +1,10 @@
 {
-  "Type": "Atanh",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Atanh",
+  "parameters": [],
+  "in-ports": [
     "x"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }

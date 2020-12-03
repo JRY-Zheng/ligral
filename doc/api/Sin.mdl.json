@@ -1,10 +1,10 @@
 {
-  "Type": "Sin",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Sin",
+  "parameters": [],
+  "in-ports": [
     "x"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }

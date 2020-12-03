@@ -1,17 +1,17 @@
 {
-  "Type": "Step",
-  "Parameters": [
+  "type": "Step",
+  "parameters": [
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     },
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     }
   ],
-  "InPorts": [],
-  "OutPorts": [
+  "in-ports": [],
+  "out-ports": [
     "source"
   ]
 }

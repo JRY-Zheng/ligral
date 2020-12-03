@@ -1,14 +1,14 @@
 {
-  "Type": "PhaseDiagram",
-  "Parameters": [
+  "type": "PhaseDiagram",
+  "parameters": [
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     }
   ],
-  "InPorts": [
+  "in-ports": [
     "x",
     "y"
   ],
-  "OutPorts": []
+  "out-ports": []
 }

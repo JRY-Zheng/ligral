@@ -1,13 +1,13 @@
 {
-  "Type": "Constant",
-  "Parameters": [
+  "type": "Constant",
+  "parameters": [
     {
-      "fig": true,
-      "Type": "signal"
+      "required": true,
+      "type": "signal"
     }
   ],
-  "InPorts": [],
-  "OutPorts": [
+  "in-ports": [],
+  "out-ports": [
     "value"
   ]
 }

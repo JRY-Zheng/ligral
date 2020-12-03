@@ -1,13 +1,13 @@
 {
-  "Type": "Scope",
-  "Parameters": [
+  "type": "Scope",
+  "parameters": [
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     }
   ],
-  "InPorts": [
+  "in-ports": [
     "input"
   ],
-  "OutPorts": []
+  "out-ports": []
 }

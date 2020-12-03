@@ -1,12 +1,12 @@
 {
-  "Type": "LogicSwitch",
-  "Parameters": [],
-  "InPorts": [
+  "type": "LogicSwitch",
+  "parameters": [],
+  "in-ports": [
     "condition",
     "first",
     "second"
   ],
-  "OutPorts": [
+  "out-ports": [
     "result"
   ]
 }

@@ -1,10 +1,10 @@
 {
-  "Type": "Node",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Node",
+  "parameters": [],
+  "in-ports": [
     "input"
   ],
-  "OutPorts": [
+  "out-ports": [
     "output"
   ]
 }

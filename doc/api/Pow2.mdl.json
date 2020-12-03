@@ -1,11 +1,11 @@
 {
-  "Type": "Pow2",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Pow2",
+  "parameters": [],
+  "in-ports": [
     "base",
     "index"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }

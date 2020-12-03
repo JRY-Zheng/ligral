@@ -1,15 +1,15 @@
 {
-  "Type": "Pow",
-  "Parameters": [
+  "type": "Pow",
+  "parameters": [
     {
-      "fig": true,
-      "Type": "signal"
+      "required": true,
+      "type": "signal"
     }
   ],
-  "InPorts": [
+  "in-ports": [
     "x"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }

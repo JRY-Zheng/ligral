@@ -1,10 +1,10 @@
 {
-  "Type": "Split",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Split",
+  "parameters": [],
+  "in-ports": [
     "matrix"
   ],
-  "OutPorts": [
+  "out-ports": [
     "out0"
   ]
 }

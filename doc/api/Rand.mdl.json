@@ -1,21 +1,21 @@
 {
-  "Type": "Rand",
-  "Parameters": [
+  "type": "Rand",
+  "parameters": [
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     },
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     },
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     }
   ],
-  "InPorts": [],
-  "OutPorts": [
+  "in-ports": [],
+  "out-ports": [
     "output"
   ]
 }

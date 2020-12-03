@@ -1,16 +1,16 @@
 {
-  "Type": "Calculator",
-  "Parameters": [
+  "type": "Calculator",
+  "parameters": [
     {
-      "fig": true,
-      "Type": "string"
+      "required": true,
+      "type": "string"
     }
   ],
-  "InPorts": [
+  "in-ports": [
     "left",
     "right"
   ],
-  "OutPorts": [
+  "out-ports": [
     "result"
   ]
 }

@@ -1,10 +1,10 @@
 {
-  "Type": "HStack",
-  "Parameters": [],
-  "InPorts": [
+  "type": "HStack",
+  "parameters": [],
+  "in-ports": [
     "in0"
   ],
-  "OutPorts": [
+  "out-ports": [
     "matrix"
   ]
 }

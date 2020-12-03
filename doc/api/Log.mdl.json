@@ -1,15 +1,15 @@
 {
-  "Type": "Log",
-  "Parameters": [
+  "type": "Log",
+  "parameters": [
     {
-      "fig": false,
-      "Type": "signal"
+      "required": false,
+      "type": "signal"
     }
   ],
-  "InPorts": [
+  "in-ports": [
     "x"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }

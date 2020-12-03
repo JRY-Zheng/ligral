@@ -1,11 +1,11 @@
 {
-  "Type": "Log2",
-  "Parameters": [],
-  "InPorts": [
+  "type": "Log2",
+  "parameters": [],
+  "in-ports": [
     "x",
     "base"
   ],
-  "OutPorts": [
+  "out-ports": [
     "y"
   ]
 }
