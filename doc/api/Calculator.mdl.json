@@ -2,6 +2,7 @@
   "type": "Calculator",
   "parameters": [
     {
+      "name": "type",
       "required": true,
       "type": "string"
     }

@@ -2,18 +2,22 @@
   "type": "Memory",
   "parameters": [
     {
+      "name": "initial",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "col",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "row",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "delay",
       "required": false,
       "type": "signal"
     }

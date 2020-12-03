@@ -2,14 +2,17 @@
   "type": "Playback",
   "parameters": [
     {
+      "name": "file",
       "required": true,
       "type": "signal"
     },
     {
+      "name": "col",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "row",
       "required": false,
       "type": "signal"
     }

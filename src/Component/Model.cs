@@ -108,6 +108,7 @@ namespace Ligral.Component
                 Type = GetType().Name,
                 Parameters = Parameters.Keys.ToList().ConvertAll(key => new ParameterDocument()
                 {
+                    Name = key,
                     Type = Parameters[key].Type.ToString("f").ToLower(),
                     Required = Parameters[key].Required
                 }).ToArray(),

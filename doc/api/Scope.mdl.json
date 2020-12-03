@@ -2,6 +2,7 @@
   "type": "Scope",
   "parameters": [
     {
+      "name": "name",
       "required": false,
       "type": "signal"
     }

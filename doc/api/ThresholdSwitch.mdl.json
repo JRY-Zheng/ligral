@@ -2,6 +2,7 @@
   "type": "ThresholdSwitch",
   "parameters": [
     {
+      "name": "threshold",
       "required": false,
       "type": "signal"
     }

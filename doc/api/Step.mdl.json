@@ -2,10 +2,12 @@
   "type": "Step",
   "parameters": [
     {
+      "name": "start",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "level",
       "required": false,
       "type": "signal"
     }

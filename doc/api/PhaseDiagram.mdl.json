@@ -2,6 +2,7 @@
   "type": "PhaseDiagram",
   "parameters": [
     {
+      "name": "name",
       "required": false,
       "type": "signal"
     }

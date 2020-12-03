@@ -2,14 +2,17 @@
   "type": "Integrator",
   "parameters": [
     {
+      "name": "initial",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "col",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "row",
       "required": false,
       "type": "signal"
     }

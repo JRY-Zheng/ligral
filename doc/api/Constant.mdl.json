@@ -2,6 +2,7 @@
   "type": "Constant",
   "parameters": [
     {
+      "name": "value",
       "required": true,
       "type": "signal"
     }

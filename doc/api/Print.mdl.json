@@ -2,6 +2,7 @@
   "type": "Print",
   "parameters": [
     {
+      "name": "name",
       "required": false,
       "type": "signal"
     }

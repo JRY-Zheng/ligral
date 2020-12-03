@@ -2,6 +2,7 @@
   "type": "Log",
   "parameters": [
     {
+      "name": "base",
       "required": false,
       "type": "signal"
     }

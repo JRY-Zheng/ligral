@@ -2,10 +2,12 @@
   "type": "Gain",
   "parameters": [
     {
+      "name": "value",
       "required": true,
       "type": "signal"
     },
     {
+      "name": "prod",
       "required": false,
       "type": "signal"
     }

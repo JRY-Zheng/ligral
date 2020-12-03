@@ -2,10 +2,12 @@
   "type": "Saturation",
   "parameters": [
     {
+      "name": "upper",
       "required": true,
       "type": "signal"
     },
     {
+      "name": "lower",
       "required": true,
       "type": "signal"
     }

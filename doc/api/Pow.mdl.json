@@ -2,6 +2,7 @@
   "type": "Pow",
   "parameters": [
     {
+      "name": "power",
       "required": true,
       "type": "signal"
     }

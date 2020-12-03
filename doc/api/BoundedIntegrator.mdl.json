@@ -2,22 +2,27 @@
   "type": "BoundedIntegrator",
   "parameters": [
     {
+      "name": "initial",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "col",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "row",
       "required": false,
       "type": "signal"
     },
     {
+      "name": "upper",
       "required": true,
       "type": "signal"
     },
     {
+      "name": "lower",
       "required": true,
       "type": "signal"
     }

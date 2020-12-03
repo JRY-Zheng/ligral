@@ -2,10 +2,12 @@
   "type": "Deadzone",
   "parameters": [
     {
+      "name": "left",
       "required": true,
       "type": "signal"
     },
     {
+      "name": "right",
       "required": true,
       "type": "signal"
     }
