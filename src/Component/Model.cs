@@ -101,6 +101,20 @@ namespace Ligral.Component
             }
             return stringBuilder.ToString();
         }
+        public ModelDocument GetDocStruct()
+        {
+            return new ModelDocument() 
+            {
+                Type = GetType().Name,
+                Parameters = Parameters.Keys.ToList().ConvertAll(key => new ParameterDocument()
+                {
+                    Type = Parameters[key].Type.ToString("f").ToLower(),
+                    Required = Parameters[key].Required
+                }).ToArray(),
+                InPorts = InPortList.ConvertAll(inPort => inPort.Name).ToArray(),
+                OutPorts = OutPortList.ConvertAll(outPort => outPort.Name).ToArray(),
+            };
+        }
         protected virtual void SetUpParameters() 
         {
             Parameters = new ParameterDictionary();

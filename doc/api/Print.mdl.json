@@ -1,0 +1,13 @@
+{
+  "Type": "Print",
+  "Parameters": [
+    {
+      "fig": false,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": []
+}

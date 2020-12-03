@@ -1,0 +1,10 @@
+{
+  "Type": "Node",
+  "Parameters": [],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": [
+    "output"
+  ]
+}

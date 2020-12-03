@@ -1,0 +1,11 @@
+{
+  "Type": "Log2",
+  "Parameters": [],
+  "InPorts": [
+    "x",
+    "base"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

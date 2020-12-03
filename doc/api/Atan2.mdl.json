@@ -1,0 +1,11 @@
+{
+  "Type": "Atan2",
+  "Parameters": [],
+  "InPorts": [
+    "sin",
+    "cos"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

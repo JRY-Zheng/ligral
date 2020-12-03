@@ -1,0 +1,11 @@
+{
+  "Type": "Min",
+  "Parameters": [],
+  "InPorts": [
+    "first",
+    "second"
+  ],
+  "OutPorts": [
+    "min"
+  ]
+}

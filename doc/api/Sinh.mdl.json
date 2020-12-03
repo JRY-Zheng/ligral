@@ -1,0 +1,10 @@
+{
+  "Type": "Sinh",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

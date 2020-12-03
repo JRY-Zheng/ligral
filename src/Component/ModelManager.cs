@@ -54,6 +54,7 @@ namespace Ligral.Component
             {"Max", ()=>new Max()},
             {"Min", ()=>new Min()},
             {"Rand", ()=>new Rand()},
+            {"Terminal", ()=>new Terminal()},
             {"_", ()=>new Terminal()},
             {"VStack", ()=>new VStack()},
             {"HStack", ()=>new HStack()},

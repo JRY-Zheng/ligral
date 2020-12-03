@@ -20,6 +20,9 @@ namespace Ligral
         [Option('D', "docs", HelpText = "Show the documents of all models.")]
         public bool RequireDocs { get; set; }
 
+        [Option('J', "models-json", HelpText = "Output model.json for GUI program.")]
+        public bool RequireModelJSON { get; set; }
+
         [Option('h', HelpText = "Show the examples.")]
         public bool RequireExamples { get; set; }
 

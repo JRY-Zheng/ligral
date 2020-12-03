@@ -1,0 +1,10 @@
+{
+  "Type": "VStack",
+  "Parameters": [],
+  "InPorts": [
+    "in0"
+  ],
+  "OutPorts": [
+    "matrix"
+  ]
+}

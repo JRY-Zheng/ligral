@@ -1,0 +1,19 @@
+{
+  "Type": "Saturation",
+  "Parameters": [
+    {
+      "fig": true,
+      "Type": "signal"
+    },
+    {
+      "fig": true,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": [
+    "output"
+  ]
+}

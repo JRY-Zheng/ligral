@@ -1,0 +1,10 @@
+{
+  "Type": "Cosh",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

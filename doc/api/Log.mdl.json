@@ -1,0 +1,15 @@
+{
+  "Type": "Log",
+  "Parameters": [
+    {
+      "fig": false,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

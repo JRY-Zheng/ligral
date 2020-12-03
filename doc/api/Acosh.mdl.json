@@ -1,0 +1,10 @@
+{
+  "Type": "Acosh",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

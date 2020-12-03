@@ -1,0 +1,10 @@
+{
+  "Type": "Tan",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

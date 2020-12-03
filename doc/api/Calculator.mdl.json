@@ -1,0 +1,16 @@
+{
+  "Type": "Calculator",
+  "Parameters": [
+    {
+      "fig": true,
+      "Type": "string"
+    }
+  ],
+  "InPorts": [
+    "left",
+    "right"
+  ],
+  "OutPorts": [
+    "result"
+  ]
+}

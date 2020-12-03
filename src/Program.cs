@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using CommandLine;
-using System.Text;
+using System.Text.Json;
 using System.Linq;
 using System;
 using Ligral.Syntax.ASTs;
@@ -31,6 +31,7 @@ namespace Ligral
         }
         static ParserResult<Options> DoParse(Options options)
         {
+            Settings settings = Settings.GetInstance();
             if (options.RequireDoc!=null)
             {
                 if (ModelManager.ModelTypePool.Keys.Contains(options.RequireDoc))
@@ -47,6 +48,27 @@ namespace Ligral
                 foreach (string modelName in ModelManager.ModelTypePool.Keys)
                 {
                     Console.WriteLine(ModelManager.Create(modelName).GetDoc());
+                }
+            }
+            else if (options.RequireModelJSON)
+            {
+                if (options.OutputFolder!=null)
+                {
+                    settings.OutputFolder = options.OutputFolder;
+                }
+                else if (settings.OutputFolder==null)
+                {
+                    settings.OutputFolder = Path.GetFileNameWithoutExtension(options.InputFile);
+                }
+                settings.NeedOutput = true;
+                foreach (string modelName in ModelManager.ModelTypePool.Keys)
+                {
+                    if (modelName.Contains('<')) continue;
+                    ModelDocument modelDocument = ModelManager.Create(modelName).GetDocStruct();
+                    string modelJson = JsonSerializer.Serialize<ModelDocument>(
+                        modelDocument, new JsonSerializerOptions() {WriteIndented = true}
+                    );
+                    File.WriteAllText(Path.Join(settings.OutputFolder, $"{modelDocument.Type}.mdl.json"), modelJson);
                 }
             }
             else if (options.RequireExamples)
@@ -68,7 +90,6 @@ namespace Ligral
                 ProgramAST p = parser.Parse();
                 Interpreter interpreter = Interpreter.GetInstance(Path.GetDirectoryName(options.InputFile));
                 interpreter.Interpret(p);
-                Settings settings = Settings.GetInstance();
                 if (options.OutputFolder!=null)
                 {
                     settings.OutputFolder = options.OutputFolder;

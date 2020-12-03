@@ -1,0 +1,10 @@
+{
+  "Type": "HSplit",
+  "Parameters": [],
+  "InPorts": [
+    "matrix"
+  ],
+  "OutPorts": [
+    "out0"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "Type": "ThresholdSwitch",
+  "Parameters": [
+    {
+      "fig": false,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "condition",
+    "first",
+    "second"
+  ],
+  "OutPorts": [
+    "result"
+  ]
+}

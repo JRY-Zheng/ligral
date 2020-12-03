@@ -1,0 +1,10 @@
+{
+  "Type": "Atanh",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

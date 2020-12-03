@@ -1,0 +1,8 @@
+{
+  "Type": "Terminal",
+  "Parameters": [],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": []
+}

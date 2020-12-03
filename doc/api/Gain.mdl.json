@@ -1,0 +1,19 @@
+{
+  "Type": "Gain",
+  "Parameters": [
+    {
+      "fig": true,
+      "Type": "signal"
+    },
+    {
+      "fig": false,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": [
+    "output"
+  ]
+}

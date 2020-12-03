@@ -1,0 +1,10 @@
+{
+  "Type": "Atan",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

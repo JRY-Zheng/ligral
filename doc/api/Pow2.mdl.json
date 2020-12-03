@@ -1,0 +1,11 @@
+{
+  "Type": "Pow2",
+  "Parameters": [],
+  "InPorts": [
+    "base",
+    "index"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

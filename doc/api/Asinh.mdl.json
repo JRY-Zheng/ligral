@@ -1,0 +1,10 @@
+{
+  "Type": "Asinh",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

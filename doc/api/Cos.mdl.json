@@ -1,0 +1,10 @@
+{
+  "Type": "Cos",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

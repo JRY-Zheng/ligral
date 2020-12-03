@@ -1,0 +1,10 @@
+{
+  "Type": "VSplit",
+  "Parameters": [],
+  "InPorts": [
+    "matrix"
+  ],
+  "OutPorts": [
+    "out0"
+  ]
+}

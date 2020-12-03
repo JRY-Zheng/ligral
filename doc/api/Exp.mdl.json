@@ -1,0 +1,10 @@
+{
+  "Type": "Exp",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

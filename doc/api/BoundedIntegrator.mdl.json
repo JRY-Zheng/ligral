@@ -1,0 +1,31 @@
+{
+  "Type": "BoundedIntegrator",
+  "Parameters": [
+    {
+      "fig": false,
+      "Type": "signal"
+    },
+    {
+      "fig": false,
+      "Type": "signal"
+    },
+    {
+      "fig": false,
+      "Type": "signal"
+    },
+    {
+      "fig": true,
+      "Type": "signal"
+    },
+    {
+      "fig": true,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": [
+    "output"
+  ]
+}

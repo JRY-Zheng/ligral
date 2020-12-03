@@ -1,0 +1,10 @@
+{
+  "Type": "Sign",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "Type": "Clock",
+  "Parameters": [],
+  "InPorts": [],
+  "OutPorts": [
+    "time"
+  ]
+}

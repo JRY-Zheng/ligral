@@ -1,0 +1,10 @@
+{
+  "Type": "Acos",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

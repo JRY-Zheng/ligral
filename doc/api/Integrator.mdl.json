@@ -1,0 +1,23 @@
+{
+  "Type": "Integrator",
+  "Parameters": [
+    {
+      "fig": false,
+      "Type": "signal"
+    },
+    {
+      "fig": false,
+      "Type": "signal"
+    },
+    {
+      "fig": false,
+      "Type": "signal"
+    }
+  ],
+  "InPorts": [
+    "input"
+  ],
+  "OutPorts": [
+    "output"
+  ]
+}

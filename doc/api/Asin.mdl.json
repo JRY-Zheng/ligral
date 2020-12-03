@@ -1,0 +1,10 @@
+{
+  "Type": "Asin",
+  "Parameters": [],
+  "InPorts": [
+    "x"
+  ],
+  "OutPorts": [
+    "y"
+  ]
+}

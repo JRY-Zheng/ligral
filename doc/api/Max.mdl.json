@@ -1,0 +1,11 @@
+{
+  "Type": "Max",
+  "Parameters": [],
+  "InPorts": [
+    "first",
+    "second"
+  ],
+  "OutPorts": [
+    "max"
+  ]
+}
