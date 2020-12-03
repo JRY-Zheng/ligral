@@ -9,7 +9,7 @@
     {
       "name": "prod",
       "required": false,
-      "type": "signal"
+      "type": "string"
     }
   ],
   "in-ports": [

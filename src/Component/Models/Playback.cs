@@ -28,7 +28,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"file", new Parameter(ParameterType.Signal , value=>
+                {"file", new Parameter(ParameterType.String , value=>
                 {
                     table = new Storage((string)value, true);
                     if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")

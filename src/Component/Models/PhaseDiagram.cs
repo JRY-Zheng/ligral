@@ -32,7 +32,7 @@ namespace Ligral.Component.Models
         {
             Parameters = new ParameterDictionary()
             {
-                {"name", new Parameter(ParameterType.Signal , value=>
+                {"name", new Parameter(ParameterType.String , value=>
                 {
                     varName = (string)value;
                 }, ()=> {})}

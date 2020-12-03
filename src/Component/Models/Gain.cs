@@ -23,7 +23,7 @@ namespace Ligral.Component.Models
                 {
                     gain = new Signal(value);
                 })},
-                {"prod", new Parameter(ParameterType.Signal , value=>
+                {"prod", new Parameter(ParameterType.String , value=>
                 {
                     string prod = (string) value;
                     switch (prod)

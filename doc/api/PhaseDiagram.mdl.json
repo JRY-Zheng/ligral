@@ -4,7 +4,7 @@
     {
       "name": "name",
       "required": false,
-      "type": "signal"
+      "type": "string"
     }
   ],
   "in-ports": [
