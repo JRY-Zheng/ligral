@@ -511,11 +511,16 @@ pre {
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: 90%;
-  color: #212529; }
+  color: #212529;
+  background-color: #f8f9fa;
+  border-radius: 0.2rem;
+  padding: 0.3rem 1rem; }
   pre code {
-    padding: 0.3rem;
+    padding: 0;
     font-size: inherit;
-    color: inherit; }
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0; }
 
 .pre-scrollable {
   max-height: 340px;
