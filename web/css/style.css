@@ -487,9 +487,9 @@ samp {
 code {
   padding: 0.2rem 0.4rem;
   font-size: 90%;
-  color: #bd4147;
+  color: #2b57d1;
   background-color: #f8f9fa;
-  border-radius: 0; }
+  border-radius: 0.2rem; }
   a > code {
     padding: 0;
     color: inherit;
@@ -513,11 +513,9 @@ pre {
   font-size: 90%;
   color: #212529; }
   pre code {
-    padding: 0;
+    padding: 0.3rem;
     font-size: inherit;
-    color: inherit;
-    background-color: transparent;
-    border-radius: 0; }
+    color: inherit; }
 
 .pre-scrollable {
   max-height: 340px;
