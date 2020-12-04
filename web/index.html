@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   Home
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="css/style.css" rel="stylesheet"/>
+  <link href="css/rolling.css" rel="stylesheet"/>
+  <link href="css/custom.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+     <!-- Right header box -->
+     <!-- <div class="col-6 text-right">               
+                        <p class="header-social-icons social-icons">
+                            <a href='https://gitee.com/junruoyu-zheng/ligral/stargazers'><img src='https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark' alt='star'></img></a>
+                        </p>
+                    </div> -->
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+       <a class="nav-link" href="index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="#">
+         快速入门
+        </a>
+        <a class="dropdown-item" href="#">
+         使用文档
+        </a>
+        <a class="dropdown-item" href="#">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="#">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="#">
+        联系
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <div class="jumbotron-wrap">
+   <div class="container">
+    <div class="carousel slide" data-ride="carousel" id="mainCarousel">
+     <div class="carousel-inner">
+      <div class="carousel-item active">
+       <div class="jumbotron">
+        <h1 class="text-center">
+         Ligral 预览版 v0.1.0 已经上线
+        </h1>
+        <p class="lead text-center">
+         此版本仅支持基于标量的仿真和欧拉定步长求解器。
+        </p>
+        <p class="lead text-center">
+         <a class="btn btn-primary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/wikis" role="button">
+          <i class="fa fa-info-circle">
+          </i>
+          了解更多
+         </a>
+         <a class="btn btn-secondary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta" role="button">
+          <i class="fa fa-cloud-download-alt">
+          </i>
+          下载
+         </a>
+        </p>
+       </div>
+      </div>
+      <div class="carousel-item">
+       <div class="jumbotron">
+        <h1 class="text-center">
+         欢迎加入 Ligral 开发团队
+        </h1>
+        <p class="lead text-center">
+         我们目前致力于开发求解器以及扩展工具箱。
+        </p>
+        <p class="lead text-center">
+         <a class="btn btn-outline-primary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/issues" role="button">
+          <i class="fa fa-info-circle">
+          </i>
+          提交 Issue
+         </a>
+         <a class="btn btn-outline-secondary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/pulls" role="button">
+          <i class="fa fa-cloud-upload-alt">
+          </i>
+          提交 PR
+         </a>
+        </p>
+       </div>
+      </div>
+     </div>
+     <a class="carousel-control-prev" data-slide="prev" href="#mainCarousel" role="button">
+      <span aria-hidden="true" class="carousel-control-prev-icon">
+      </span>
+      <span class="sr-only">
+       Previous
+      </span>
+     </a>
+     <a class="carousel-control-next" data-slide="next" href="#mainCarousel" role="button">
+      <span aria-hidden="true" class="carousel-control-next-icon">
+      </span>
+      <span class="sr-only">
+       Next
+      </span>
+     </a>
+    </div>
+   </div>
+  </div>
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row">
+    <!-- Main content -->
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       Ligral
+      </h1>
+      <p>
+       <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers">
+        <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=gray"/>
+       </a>
+      </p>
+      <p>
+       <img alt="LOGO" src="https://sued-wind.cc/static/img/ligral/ligral.png"/>
+      </p>
+      <p>
+       Ligral是一个基于文本的仿真框图语言，旨在替代Simulink，编写、运行仿真程序。
+      </p>
+      <p>
+       <strong>
+        版本
+       </strong>
+       ：v0.2.0
+      </p>
+      <h2>
+       语法
+      </h2>
+      <h3>
+       节点与连接
+      </h3>
+      <p>
+       新建一个节点
+       <code>
+        Node
+       </code>
+       ，
+       <code>
+        [ ]
+       </code>
+       内可选地定义节点的变量名。
+      </p>
+      <pre><code>Node | Node[node1]
+</code></pre>
+      <p>
+       为节点
+       <code>
+        Gain
+       </code>
+       添加参数
+       <code>
+        value
+       </code>
+       ，多个参数可用“
+       <code>
+        ,
+       </code>
+       ”隔开。
+      </p>
+      <pre><code>Gain{value:1}
+</code></pre>
+      <p>
+       连接节点的输入输出，使用连接语句（chain）。支持顺序多次连接，行末需要加“
+       <code>
+        ;
+       </code>
+       ”。已经定义的节点可以通过变量名来引用。
+      </p>
+      <pre><code>node1 -&gt; Gain{value:1} -&gt; Integrator;
+</code></pre>
+      <p>
+       多输入输出节点的连接，可以使用“chain list”表达式：
+      </p>
+      <pre><code>(Constant{value:1}, Constant{value:2}) -&gt; Calculator{type:'+'};
+</code></pre>
+      <p>
+       Chain list中每一项均可以是一个连接语句，但不需要以“
+       <code>
+        ;
+       </code>
+       ”结尾，如下所示：
+      </p>
+      <pre><code>(
+    Constant{value:1} -&gt; Gain{value:2}, 
+    Constant{value:-2} -&gt; Abs
+) -&gt; Calculator{type:'+'};
+</code></pre>
+      <p>
+       连接语句还可以基于端口（port），例如
+       <code>
+        ThresholdSwitch
+       </code>
+       的输入有三个端口，可以写作：
+      </p>
+      <pre><code>node1 -&gt; ThresholdSwitch[switch]:condition;
+1 -&gt; switch:first; 
+2 -&gt; switch:second;
+</code></pre>
+      <h3>
+       定义语句
+      </h3>
+      <p>
+       常量定义由以下语句完成（
+       <em>
+        注意：
+        <code>
+         digit
+        </code>
+        关键字和
+        <code>
+         &lt;-
+        </code>
+        符号将于下个版本废弃
+       </em>
+       ），目前支持 scalar 和二维的 matrix。
+      </p>
+      <pre><code>let a = 1;
+let vec = [1, 2]
+let mat = [-a, 2; vec];
+</code></pre>
+      <p>
+       节点定义由以下语句完成：
+      </p>
+      <pre><code>route NodeName(parameters;in_ports;out_ports)
+    some_chains;
+end
+</code></pre>
+      <p>
+       其中
+       <code>
+        parameters
+       </code>
+       是该节点所需的参数，参数之间由“
+       <code>
+        ,
+       </code>
+       ”分隔。如果参数有默认值，则其为可选参数，否则是必选参数。若参数未指定类型，则参数是scalar，否则该参数必须是指定类型或其继承类型。
+      </p>
+      <pre><code># parameters:
+param1, param2:Node, param3=2
+</code></pre>
+      <p>
+       如果指定一个类型继承另一个类型，可以写作：
+      </p>
+      <pre><code>route NodeName:Gain(parameters;input;output)...
+</code></pre>
+      <p>
+       指定继承关系后，子类型的输入输出端口必须和父类型一致，但参数可以不一致，如
+       <code>
+        Gain
+       </code>
+       的输入输出端口分别是
+       <code>
+        input
+       </code>
+       和
+       <code>
+        output
+       </code>
+       。指定了继承关系并不意味着继承了信号处理逻辑，如需用到父类的逻辑，可以在内部调用父类。
+      </p>
+      <h3>
+       引用
+      </h3>
+      <p>
+       导入另一个
+       <code>
+        .lig
+       </code>
+       文件的全部内容，使用
+       <code>
+        import
+       </code>
+       语句：
+      </p>
+      <pre><code>import module;
+</code></pre>
+      <p>
+       以命名空间的方式引用，使用
+       <code>
+        using
+       </code>
+       语句：
+      </p>
+      <pre><code>using module;
+module.MyNode -&gt; Scope;
+</code></pre>
+      <h3>
+       自动装箱
+      </h3>
+      <p>
+       连接语句中的
+       <code>
+        1
+       </code>
+       会被自动装箱成
+       <code>
+        Constant{value:1}
+       </code>
+       。此外，如果是一个符号，如
+      </p>
+      <pre><code>let a = 1;
+a -&gt; Print;
+</code></pre>
+      <p>
+       此处的
+       <code>
+        a
+       </code>
+       也会被自动装箱。除了数字以外，矩阵也会被自动装箱，但是只有矩阵符号会被装箱，如下两个表达是等价的。
+      </p>
+      <pre><code>let a = [1, 2];
+a -&gt; Print;
+Constant{value:a} -&gt; Print;
+</code></pre>
+      <h3>
+       运算符
+      </h3>
+      <p>
+       在常量定义语句中，支持
+       <code>
+        +
+       </code>
+       ,
+       <code>
+        -
+       </code>
+       ,
+       <code>
+        *
+       </code>
+       ,
+       <code>
+        /
+       </code>
+       和
+       <code>
+        ^
+       </code>
+       等常见的运算符。
+      </p>
+      <p>
+       在连接语句中，这些运算符将被解析成以下结构：
+      </p>
+      <pre><code>let a = 1;
+
+a + 1 -&gt; Print;
+(a, 1) -&gt; Calculate{type:'+'} -&gt; Print;
+
+-a -&gt; Print;
+(0, a) -&gt; Calculate{type:'-'} -&gt; Print;
+</code></pre>
+      <h3>
+       矩阵构建解构器
+      </h3>
+      <p>
+       直接在连接语句中定义的“矩阵”则不会被直接装箱，因为该“矩阵”所包含的不一定是常数。通常，在连接语句中的“矩阵”我们称之为矩阵构建解构器，根据其位置（句首、句中、句尾）又分为构建器、构建解构器和解构器。以构建解构器为例，解释器将其解释成如下结构，提供了语法层面的便利。
+      </p>
+      <pre><code>let vec = [1, -2];
+vec -&gt; [Node, Abs] -&gt; Print;
+vec -&gt; VSplit -&gt; Split -&gt; (Node, Abs) -&gt; HStack -&gt; VStack -&gt; Print;
+</code></pre>
+      <p>
+       其中
+       <code>
+        VSplit
+       </code>
+       将矩阵按行分解成单行的矩阵，
+       <code>
+        Split
+       </code>
+       将矩阵分解成数字；
+       <code>
+        HStack
+       </code>
+       将元素横向堆叠成矩阵，
+       <code>
+        VStack
+       </code>
+       将元素纵向堆叠成矩阵。构建解构器的本质就是对一个矩阵信号结构后进行逐元素遍历，再重新构建成一个矩阵的过程，因此要求元素行列数与矩阵信号一致，且均为但输入输出的节点。
+      </p>
+      <p>
+       位于句尾的解构器则允许出现非单输出的节点，即对输出节点数目不做限制，也不会自动构建 Stack 族的节点。位于句首的构建器则更加灵活，还允许出现表达式。
+      </p>
+      <pre><code>let mat = [1, 2];
+[mat; 2*mat] -&gt; [_, _; Print, _];
+</code></pre>
+      <p>
+       此处的
+       <code>
+        _
+       </code>
+       是弃元，解释器将其解释成一个特殊的节点，在运行过程中该节点不会执行任何语句，用于声明放弃使用一些信号。上述例子中，构建器内包含一些运算，嵌套了一些矩阵，输出的矩阵信号被解构器解析，并打印左下角的值。
+      </p>
+      <h3>
+       设置语句
+      </h3>
+      <p>
+       可以在脚本中对求解器进行配置。目前支持的字段如下所示：
+      </p>
+      <pre><code>conf step_size = 0.01;
+conf stop_time = 10;
+conf variable_step = false;
+conf output_folder = 'output';
+</code></pre>
+      <h2>
+       用法
+      </h2>
+      <p>
+       使用以下语句运行
+       <code>
+        .lig
+       </code>
+       文件：
+      </p>
+      <pre><code>ligral path/file.lig
+</code></pre>
+      <p>
+       支持以下参数：
+      </p>
+      <table>
+       <thead>
+        <tr>
+         <th>
+          参数
+         </th>
+         <th>
+          作用
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          -o, --output
+         </td>
+         <td>
+          输出重定向至给定文件夹
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -d, --doc
+         </td>
+         <td>
+          展示指定节点的文档
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -D, --docs
+         </td>
+         <td>
+          展示所有节点文档
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -h
+         </td>
+         <td>
+          展示示例程序
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -s, --size
+         </td>
+         <td>
+          设置仿真步长
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -t, --time
+         </td>
+         <td>
+          设置仿真时长
+         </td>
+        </tr>
+        <tr>
+         <td>
+          --help
+         </td>
+         <td>
+          展示帮助
+         </td>
+        </tr>
+        <tr>
+         <td>
+          --version
+         </td>
+         <td>
+          展示版本信息
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       依赖
+      </h2>
+      <p>
+       绘图模块
+       <code>
+        Scope
+       </code>
+       和
+       <code>
+        PhaseDiagram
+       </code>
+       需要 python 3 支持，且需要numpy、matplotlib、pandas包。
+      </p>
+      <h2>
+       示例
+      </h2>
+      <p>
+       以下是一个弹簧阻尼质量块系统的仿真。
+      </p>
+      <pre><code>route MassSpringDamper(m,k,d,x0,v0; F; x,v)
+    F-k*x-d*v -&gt; Gain{value:1/m} -&gt; Integrator{initial:v0} -&gt; v;
+    v -&gt; Integrator{initial:x0} -&gt; x;
+end
+
+SineWave[F]{ampl:10, omega:pi, phi:pi/4};
+MassSpringDamper[sys]{m:10, k:1, d:0.1, x0:0, v0: 0};
+
+F -&gt; sys;
+sys:x -&gt; Scope{name:'position'};
+(sys:x, sys:v) -&gt; PhaseDiagram{name:'phase plot'};
+
+conf step_size = 0.001;
+conf stop_time = 10;
+</code></pre>
+      <p>
+       <img alt="plots" src="https://pic4.zhimg.com/80/v2-b648e7e15562f2ccdc6fe87c21cbc873_720w.jpg?source=c8b7c179"/>
+      </p>
+     </article>
+     <!-- Example pagination Bootstrap component -->
+     <!-- <nav>
+                        <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                        </ul>
+                    </nav> -->
+    </div>
+    <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item active" href="index.html">
+        主页
+       </a>
+       <a class="list-group-item" href="#">
+        文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="#">
+         快速入门
+        </a>
+        <a class="list-group-item" href="#">
+         使用文档
+        </a>
+        <a class="list-group-item" href="#">
+         开发文档
+        </a>
+        <a class="list-group-item" href="#">
+         接口定义
+        </a>
+       </div>
+       <a class="list-group-item" href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta">
+        产品
+       </a>
+       <a class="list-group-item" href="#">
+        联系
+       </a>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励，感谢我的导师 James 对数值积分的指导，感谢 Gitee 对项目的支持，在刚开源不久就为我推荐，感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2020. Ligral All rights reserved. 梨果科技版权所有 © 2020
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="js/popper.min.js">
+  </script>
+  <script src="js/bootstrap.min.js">
+  </script>
+  <script src="js/TweenMax.min.js">
+  </script>
+  <script src="js/rolling.js">
+  </script>
+ </body>
+</html>
