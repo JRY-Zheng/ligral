@@ -22,7 +22,9 @@ namespace Ligral.Simulation
             observation.Name = name??$"{ObservationPool.Count}";
             if (ObservationPool.Exists(item => item.Item1 == observation.Name))
             {
-                throw new LigralException($"Observation name conflict: {observation.Name}");
+                // throw new LigralException($"Observation name conflict: {observation.Name}");
+                // [TODO] add log system to warn override
+                return ObservationPool.Find(item => item.Item1 == observation.Name).Item2;
             }
             else
             {
