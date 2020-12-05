@@ -18,3 +18,43 @@ article img {
   width: 100%;
   max-width: 500px;
 }
+#prod-laptop {
+    width: 100%;
+    max-width: 1000px;
+    align-items: center;
+    /* margin-left: -15%; */
+}
+#prod-png, #prod-gif {
+    width: 77%;
+    max-width: 760px;
+    /* margin-left: -3%; */
+}
+#prod-wrap {
+    height: 80%;
+    position: relative;
+    margin: 2rem 0rem;
+}
+#prod-laptop-wrap {
+    position: relative;
+}
+#prod-laptop-wrap, #prod-png-wrap, #prod-gif-wrap {
+    /* position: absolute; */
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+#prod-png-wrap, #prod-gif-wrap {
+    position: absolute;
+}
+#prod-laptop-wrap {
+    z-index: 3;
+}
+#prod-png-wrap {
+    z-index: 1;
+}
+#prod-gif-wrap {
+    z-index: 2;
+}
