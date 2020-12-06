@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   快速开始
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="css/style.css" rel="stylesheet"/>
+  <link href="css/rolling.css" rel="stylesheet"/>
+  <link href="css/custom.css" rel="stylesheet"/>
+  <link href="avatar.png" rel="shortcut icon" type="image/x-icon"/>
+  <!-- Font Awesome -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+       <a class="nav-link" href="index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown active">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="quick-start.html">
+         快速开始
+        </a>
+        <a class="dropdown-item" href="user-guide/basic-grammar.html">
+         用户文档
+        </a>
+        <a class="dropdown-item" href="dev-guide/interpreter.html">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="interface/model.html">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="product.html">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="contact.html">
+        联系我们
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row">
+    <!-- Main content -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item active" href="quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="user-guide/basic-grammar.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="user-guide/basic-grammar.html">
+         基础语法
+        </a>
+        <a class="list-group-item" href="user-guide/matrix-cal.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="user-guide/route.html">
+         Route 模块
+        </a>
+        <a class="list-group-item" href="user-guide/inherit.html">
+         继承关系
+        </a>
+       </div>
+       <a class="list-group-item" href="dev-guide/interpreter.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="dev-guide/interpreter.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="dev-guide/model-component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="dev-guide/formulation.html">
+         问题抽象
+        </a>
+       </div>
+       <a class="list-group-item" href="interface/model.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       快速开始
+      </h1>
+      <p>
+       Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windows 和 Linux 系统上
+       <em>
+        （Windows 10 以及 Ubuntu 20、Debian 10 测试通过，Mac 系统尚未测试）
+       </em>
+       。只要简单几个步骤就可以让 Ligral 运行在自己的机器上，让我们马上开始吧！
+      </p>
+      <h2>
+       下载安装
+      </h2>
+      <h3>
+       可执行程序
+      </h3>
+      <h4>
+       Windows 系统
+      </h4>
+      <p>
+       目前，Ligral v0.1.0 beta 发行版在
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta">
+        Gitee
+       </a>
+       开放下载。打开链接就可以看到打包好了的 ligral.exe。
+      </p>
+      <p>
+       <img alt="v0.1.0-beta" src="img/v0.1.0-beta.png"/>
+      </p>
+      <p>
+       下载到本地就可以运行了，但是十分建议您把 ligral 添加到环境变量。具体操作为
+      </p>
+      <ul>
+       <li>
+        按下开始建，输入控制面板；
+       </li>
+       <li>
+        在控制面板右上方搜索环境变量；
+       </li>
+       <li>
+        打开环境变量，在上方方框里找到 Path 变量；
+       </li>
+       <li>
+        双击打开，把 ligral 所在文件夹地址粘贴到新的一行；
+       </li>
+      </ul>
+      <p>
+       此操作适用于 Windows 10 系统。如果您的操作系统是 Windows 7 或者更低版本，操作可能略有不同。
+      </p>
+      <p>
+       安装成功后，您可以在任意文件夹打开 cmd（强烈建议 Windows 10 用户下载安装 Windows Terminal），输入
+       <code>
+        ligral
+       </code>
+       ，应当能看到如下输出：
+      </p>
+      <pre><code>Ligral is a Literal and Graphical Simulation Language.
+        Use --help option to get help infomation.
+*******************************************************
+Type your ligral script below, and use 'run' command to execute.
+&gt;&gt;&gt;
+</code></pre>
+      <p>
+       这是 v0.1.0 版本中带有的一个 ligral shell 环境，在此您可以逐行输入代码并即使解析。但是考虑到这项功能没有应用场景，在未来的版本中可能会删除。
+      </p>
+      <h4>
+       Linux 系统
+      </h4>
+      <p>
+       此版本暂未提供 Linux 系统的打包程序，请跳转至源码安装。
+      </p>
+      <h3>
+       源码安装
+      </h3>
+      <p>
+       无论是在 Windows 系统下还是 Linux 系统下，源码安装的方式都是一样的。首先，您需要下载安装 .NET core 3.1 开发工具包，即 SDK。不过下载 .NET 5 也是可以的，其性能更优，但是不是长期支持版本（LTS）。如果您的机器安装的是 Windows 系统，可以前往
+       <a href="https://dotnet.microsoft.com/download/dotnet-core">
+        .NET 官网
+       </a>
+       下载；Linux 上安装稍微复杂一些，但好在微软准备了一份
+       <a href="https://docs.microsoft.com/zh-cn/dotnet/core/install/linux">
+        安装教程
+       </a>
+       。
+      </p>
+      <p>
+       如果您的机器已经安装好了 git，您可以打开终端，在准备存放 ligral 的文件夹运行以下命令（二选一）：
+      </p>
+      <pre><code>git clone https://gitee.com/junruoyu-zheng/ligral.git
+git clone https://github.com/jry-zheng/ligral.git
+</code></pre>
+      <p>
+       如果没有安装 git，您可以去
+       <a href="https://gitee.com/junruoyu-zheng/ligral">
+        Gitee
+       </a>
+       或者
+       <a href="https://github.com/jry-zheng/ligral">
+        GitHub
+       </a>
+       网站上点击下载 ligral。以 Gitee 为例：
+      </p>
+      <p>
+       <img alt="下载" src="img/download.png"/>
+      </p>
+      <p>
+       打开 ligral 文件夹后，在命令里运行：
+      </p>
+      <pre><code>cd ligral
+dotnet build
+</code></pre>
+      <p>
+       如果您看到以下提示信息，说明以及编译成功了：
+      </p>
+      <pre><code>Microsoft (R) Build Engine version 16.8.0-preview-20475-05+aed5e7ed0 for .NET
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  You are using a preview version of .NET. See: https://aka.ms/dotnet-core-preview
+  ligral -&gt; C:\Users\zheng\Documents\ligral\bin\Debug\netcoreapp3.1\ligral.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.30
+</code></pre>
+      <p>
+       第一次编译可能需要进行还原（这些都是自动运行的），会需要较长的时间，视网络情况。编译成功后，建议把上面提示信息中“Build succeeded”上一行的文件所在文件夹添加到环境变量，具体操作参考上一节。
+      </p>
+      <h3>
+       其他配置
+      </h3>
+      <p>
+       由于 ligral 中的绘图模块依赖于 python3 的 matplotlib，因此如果您需要用到绘图时，还需要下载 python3，并且安装 numpy、matplotlib、pandas 三个包。目前暂不清楚对这三个包的最低版本要求是什么，但是较新版本都应是可用的。
+      </p>
+      <p>
+       Windows 系统可以从
+       <a href="https://www.python.org/downloads/windows/">
+        python 官网
+       </a>
+       下载，安装时最好把“添加到环境变量”；Linux 则一般自带 python，也可以通过命令安装（视系统不同选用的命令也可能不同）：
+      </p>
+      <pre><code>sudo apt-get install python
+sudo yum install python
+</code></pre>
+      <p>
+       安装完 python 之后，确保 python 和 pip 都是可调用的，运行以下命令：
+      </p>
+      <pre><code>pip install numpy
+pip install matplotlib
+pip install pandas
+</code></pre>
+      <p>
+       如果 pip 不可调用，可以使用
+       <code>
+        python -m pip
+       </code>
+       代替。如果网速较慢，可以在命令后面加上参数
+      </p>
+      <pre><code>pip install *** -i https://mirrors.cloud.tencent.com/pypi/simple
+</code></pre>
+      <p>
+       使用腾讯镜像。
+      </p>
+      <p>
+       如果您不需要用到绘图工具，仅需要将仿真的结果保存到 CSV 文件，您也可以忽略此步骤，程序仍然可以正确运行。
+      </p>
+      <h2>
+       第一次运行
+      </h2>
+      <h3>
+       Hello World!
+      </h3>
+      <p>
+       安装完 ligral 之后，您可以尝试运行一些简单的“Hello World”程序。虽然 ligral 确实不能打印字符串，但是您也可以尝试以下最简单的仿真模型：
+      </p>
+      <pre><code>conf step_size = 1;
+conf stop_time = 1;
+1 -&gt; Print;
+</code></pre>
+      <p>
+       第一句和第二句命令，以
+       <code>
+        conf
+       </code>
+       为起始，表示这是配置命令。顾名思义，这两句的意思是设置仿真步长为 1（秒），仿真时长也为 1（秒）。这么做的目的是为了下一句打印语句不要出现得太多，如果没有的话不影响程序的运行。第三句也很简单，就是把一个常数 1 发送给打印输出模块
+       <code>
+        Print
+       </code>
+       。新建一个文件 test1.lig，输入以上内容并保存，在终端运行：
+      </p>
+      <pre><code>ligral test.lig
+</code></pre>
+      <p>
+       您将看到以下输出：
+      </p>
+      <pre><code>Time: 0.00       Print1 = 1
+Time: 1.00       Print1 = 1
+</code></pre>
+      <p>
+       这表明 ligral 程序已经正常工作了。
+      </p>
+      <h3>
+       开始浏览 examples
+      </h3>
+      <p>
+       您可以在
+       <a href="https://gitee.com/junruoyu-zheng/ligral">
+        Gitee
+       </a>
+       或者
+       <a href="https://github.com/jry-zheng/ligral">
+        GitHub
+       </a>
+       仓库的 examples 中找到一些简单的工程。比如 MassSpringDamper 工程，描述的是一个弹簧阻尼质量块系统。如果您学过自动控制原理，您应该很熟悉以下的框图：
+      </p>
+      <p>
+       <img alt="系统框图" src="img/system.png"/>
+      </p>
+      <p>
+       其中 sys 是 Simulink 中的 SubSystem，双击进入后可以看到其内部结构为：
+      </p>
+      <p>
+       <img alt="弹簧阻尼质量块模型" src="img/model.png"/>
+      </p>
+      <p>
+       运行以上 Simulink 程序，得到的仿真结果是
+      </p>
+      <p>
+       <img alt="Simulink 运行结果!!" src="img/simulink-plots.png" style="max-width:100%;"/>
+      </p>
+      <p>
+       在 ligral 中，与 SubSystem 相对应的概念是 route。在 MassSpringDamper 工程里，我们定义了这一模块，并且调用它生成实例（
+       <strong>
+        这是 ligral 与 Simulink 最为不同的地方之一！
+       </strong>
+       ），得到相同的模型，代码如下：
+      </p>
+      <pre><code># 模块类名：MassSpringDamper
+# 参数：
+#     m： 质量
+#     k： 刚度
+#     d： 阻尼
+#     v0：初始速度
+#     x0：初始位置
+# 输入：
+#     F： 外部作用力
+# 输出：
+#     v：速度
+#     x：位置
+route MassSpringDamper(m, k, d, x0, v0; F; x, v)
+    F-k*x-d*v -&gt; Gain{value:1/m} -&gt; Integrator{initial:v0} -&gt; v;
+    v -&gt; Integrator{initial:x0} -&gt; x;
+end
+
+# 定义一个 Step 信号
+Step[F]{start:3, level:5};
+
+# 实例化一个 MassSpringDamper 对象
+MassSpringDamper[sys]{m:0.1, k:10, d:0.3, x0:1, v0: 0};
+
+# 连接模块
+F -&gt; sys;
+sys:x[position] -&gt; Scope;
+(sys:x, sys:v[velocity]) -&gt; PhaseDiagram;
+</code></pre>
+      <p>
+       其中
+       <code>
+        #
+       </code>
+       开头的语句是注释，执行中被忽略。更详尽的代码注释请看 examples 文件夹中的工程文件。您可以先尝试着复制这段代码粘贴到 test_msd.lig 文件中，并运行。您将看到这样的结果：
+      </p>
+      <p>
+       <img alt="ligral 运行动图!!" src="img/mass-spring-damper.gif" style="max-width:100%;"/>
+      </p>
+      <p>
+       可以看到，ligral 求解该模型得到了和 Simulink 一样的结果。
+      </p>
+      <h2>
+       结束
+      </h2>
+      <p>
+       到此为止，恭喜您完成了快速开始的全部内容！需要继续深入了解 ligral 语法等问题，请看用户指引。如果有问题，可以发
+       <a href="https://gitee.com/junruoyu-zheng/ligral/issues">
+        Issue
+       </a>
+       或者
+       <a href="mailto:zhengjry@outlook.com">
+        给我写信
+       </a>
+       。
+      </p>
+     </article>
+    </div>
+    <!-- Sidebar -->
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励；感谢我的导师 James 对数值积分的指导；感谢 Gitee 对项目的支持，在刚开源不久就为我推荐；感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2020. Ligral All rights reserved. 梨果科技版权所有 © 2020
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="js/popper.min.js">
+  </script>
+  <script src="js/bootstrap.min.js">
+  </script>
+  <script src="js/TweenMax.min.js">
+  </script>
+  <script src="js/rolling.js">
+  </script>
+ </body>
+</html>

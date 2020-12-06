@@ -19,8 +19,7 @@ def set_article(soup, article, pre_process=None):
 
     articles = soup.find_all('article')
     if len(articles) == 0:
-        print('ERROR: no article was found.')
-        sys.exit(1)
+        raise ValueError('ERROR: no article was found.')
     elif len(articles) > 1:
         print('WARN: multiple articles were found, use the first.')
     else:
@@ -33,6 +32,45 @@ def set_article(soup, article, pre_process=None):
                 article.insert(i, child)
         else:
             article.replace_with(html)
+
+def move_aside(soup):
+    asides = soup.find_all('aside')
+    for aside in asides:
+        aside.extract()
+    if asides:
+        div = soup.find('div', class_='col-sm-8')
+        div.insert_before(asides[0])
+        return asides[0]
+
+def recursive_cat(root, cat):
+    for key, val in cat.items():
+        if isinstance(val, str):
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val)
+            a.append(soup.new_string(key))
+            root.append(a)
+        elif isinstance(val, dict):
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val[list(val)[0]])
+            a.append(soup.new_string(key))
+            root.append(a)
+            box = soup.new_tag('div', **{'class':'list-group'})
+            root.append(box)
+            recursive_cat(box, val)
+        else:
+            raise ValueError(f'item should be str or dict but {val}')
+
+def set_aside(soup, aside, cat):
+    boxes = aside.find_all('div', class_='sidebar-box')
+    if not boxes:
+        raise ValueError('no cat box')
+    box = boxes[0]
+    box.clear()
+    h4 = soup.new_tag('h4')
+    h4.append(soup.new_string('目录'))
+    box.append(h4)
+    root = soup.new_tag('div', **{'class':'list-group list-group-root'})
+    box.append(root)
+    recursive_cat(root, cat)
+
 
 def delete_aside(soup):
     asides = soup.find_all('aside')
@@ -58,17 +96,28 @@ def set_navbar_active(soup, index):
     for i, nav_item in enumerate(nav_items):
         if 'active' in nav_item['class'] and i != index:
             nav_item['class'].remove('active')
-        elif 'active ' not in nav_item['class'] and i == index:
+        elif 'active' not in nav_item['class'] and i == index:
             nav_item['class'].append('active')
+
+def set_item_active(soup, index):
+    items = soup.find_all('a', class_='list-group-item')
+    for i, item in enumerate(items):
+        if 'active' in item['class'] and i != index:
+            item['class'].remove('active')
+        elif 'active' not in item['class'] and i == index:
+            item['class'].append('active')
 
 def migrate_img(soup, base_dir):
     images = soup.find_all('img')
     for image in images:
+        if image['alt'].endswith('!!'):
+            image['style'] = 'max-width:100%;'
         src = image['src']
         src_file = os.path.join(base_dir, src)
         if os.path.exists(src_file):
             # local image found
             filename = os.path.basename(src_file)
+            print('found local', filename)
             dst_file = f'web/img/{filename}'
             if os.path.exists(dst_file):
                 print(f'{dst_file} already exists, will be overrode.')
@@ -92,12 +141,41 @@ if __name__ == "__main__":
 
     print('INFO: index.html done.')
 
+    aside = move_aside(soup)
+    set_aside(soup, aside, {
+        '快速开始': 'quick-start.html',
+        '用户文档': {
+            '基础语法': 'user-guide/basic-grammar.html',
+            '矩阵运算': 'user-guide/matrix-cal.html',
+            'Route 模块': 'user-guide/route.html',
+            '继承关系': 'user-guide/inherit.html'
+        },
+        '开发文档': {
+            '语法解析': 'dev-guide/interpreter.html',
+            '模块组件': 'dev-guide/model-component.html',
+            '问题抽象': 'dev-guide/formulation.html'
+        },
+        '接口定义': {
+            '模块接口': 'interface/model.html',
+            '数据接口': 'interface/protocol.html'
+        }
+    })
+    set_article(soup, os.path.join(script_folder, '../doc/quick-start/README.md'))
+    delete_jumbotron(soup)
+    set_title(soup, '快速开始')
+    set_navbar_active(soup, 1)
+    set_item_active(soup, 0)
+    migrate_img(soup, os.path.join(script_folder, '../doc/quick-start'))
+    with open('web/quick-start.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: quick-start.html done.')
+
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()
     prod_soup = BeautifulSoup(prod_text, features='lxml')
     set_article(soup, prod_soup.find_all('article')[0])
     delete_aside(soup)
-    delete_jumbotron(soup)
     set_title(soup, '产品')
     set_navbar_active(soup, 2)
     with open('web/product.html', 'w', encoding='utf8') as f:

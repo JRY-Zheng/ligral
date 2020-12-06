@@ -1,6 +1,6 @@
 # 快速开始
 
-Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windows 和 Linux 系统上*（WIndows 10 以及 Ubuntu 20、Debian 10 测试通过，Mac 系统尚未测试）*。只要简单几个步骤就可以让 Ligral 运行在自己的机器上，让我们马上开始吧！
+Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windows 和 Linux 系统上*（Windows 10 以及 Ubuntu 20、Debian 10 测试通过，Mac 系统尚未测试）*。只要简单几个步骤就可以让 Ligral 运行在自己的机器上，让我们马上开始吧！
 
 ## 下载安装
 
@@ -127,7 +127,7 @@ Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows
 
 运行以上 Simulink 程序，得到的仿真结果是
 
-![Simulink 运行结果](figures/simulink-plots.png)
+![Simulink 运行结果!!](figures/simulink-plots.png)
 
 在 ligral 中，与 SubSystem 相对应的概念是 route。在 MassSpringDamper 工程里，我们定义了这一模块，并且调用它生成实例（**这是 ligral 与 Simulink 最为不同的地方之一！**），得到相同的模型，代码如下：
 
@@ -161,7 +161,7 @@ Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows
 
 其中`#`开头的语句是注释，执行中被忽略。更详尽的代码注释请看 examples 文件夹中的工程文件。您可以先尝试着复制这段代码粘贴到 test_msd.lig 文件中，并运行。您将看到这样的结果：
 
-![ligral 运行动图](figures/mass-spring-damper.gif)
+![ligral 运行动图!!](figures/mass-spring-damper.gif)
 
 可以看到，ligral 求解该模型得到了和 Simulink 一样的结果。
 
