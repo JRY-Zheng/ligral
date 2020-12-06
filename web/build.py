@@ -1,13 +1,19 @@
 import sys, os, shutil
 import markdown
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 
 def set_article(soup, article, pre_process=None):
-    with open(article, 'r', encoding='utf8') as f:
-        text = f.read()
+    if isinstance(article, str):
+        with open(article, 'r', encoding='utf8') as f:
+            text = f.read()
 
-    html_text = markdown.markdown(text, extensions=['markdown.extensions.tables'])
-    html = BeautifulSoup(html_text, features='lxml')
+        html_text = markdown.markdown(text, extensions=['markdown.extensions.tables'])
+        html = BeautifulSoup(html_text, features='lxml')
+    elif isinstance(article, element.Tag):
+        html = article
+    else:
+        raise ValueError(f'article should be md filename or html object, but {type(article)}')
+
     if callable(pre_process):
         pre_process(html)
 
@@ -21,9 +27,12 @@ def set_article(soup, article, pre_process=None):
         article = articles[0]
         article.clear()
         bodies = html.find_all('body')
-        body = bodies[0]
-        for i, child in enumerate(body.children):
-            article.insert(i, child)
+        if bodies:
+            body = bodies[0]
+            for i, child in enumerate(body.children):
+                article.insert(i, child)
+        else:
+            article.replace_with(html)
 
 def delete_aside(soup):
     asides = soup.find_all('aside')
@@ -81,19 +90,25 @@ if __name__ == "__main__":
     with open('web/index.html', 'w', encoding='utf8') as f:
         f.write(soup.prettify())
 
-    # witten manually
+    print('INFO: index.html done.')
 
-    # set_article(soup, os.path.join(script_folder, 'product.md'), 
-    #     lambda soup: migrate_img(soup, script_folder))
-    # delete_aside(soup)
-    # delete_jumbotron(soup)
-    # set_title(soup, '产品')
-    # set_navbar_active(soup, 2)
-    # with open('web/product.html', 'w', encoding='utf8') as f:
-    #     f.write(soup.prettify())
+    with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
+        prod_text = f.read()
+    prod_soup = BeautifulSoup(prod_text, features='lxml')
+    set_article(soup, prod_soup.find_all('article')[0])
+    delete_aside(soup)
+    delete_jumbotron(soup)
+    set_title(soup, '产品')
+    set_navbar_active(soup, 2)
+    with open('web/product.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: product.html done.')
 
     set_article(soup, os.path.join(script_folder, 'contact.md'))
     set_title(soup, '联系我们')
     set_navbar_active(soup, 3)
     with open('web/contact.html', 'w', encoding='utf8') as f:
         f.write(soup.prettify())
+
+    print('INFO: contact.html done.')
