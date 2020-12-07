@@ -34,13 +34,9 @@ def set_article(soup, article, pre_process=None):
             article.replace_with(html)
 
 def move_aside(soup):
-    asides = soup.find_all('aside')
-    for aside in asides:
-        aside.extract()
-    if asides:
-        div = soup.find('div', class_='col-sm-8')
-        div.insert_before(asides[0])
-        return asides[0]
+    dives = soup.find_all('div', class_='row')
+    div = dives[1]
+    div['style'] = 'flex-direction: row-reverse;'
 
 def recursive_cat(root, cat):
     for key, val in cat.items():
@@ -58,7 +54,9 @@ def recursive_cat(root, cat):
         else:
             raise ValueError(f'item should be str or dict but {val}')
 
-def set_aside(soup, aside, cat):
+def set_aside(soup, cat):
+    asides = soup.find_all('aside')
+    aside = asides[0]
     boxes = aside.find_all('div', class_='sidebar-box')
     if not boxes:
         raise ValueError('no cat box')
@@ -70,7 +68,6 @@ def set_aside(soup, aside, cat):
     root = soup.new_tag('div', **{'class':'list-group list-group-root'})
     box.append(root)
     recursive_cat(root, cat)
-
 
 def delete_aside(soup):
     asides = soup.find_all('aside')
@@ -141,8 +138,8 @@ if __name__ == "__main__":
 
     print('INFO: index.html done.')
 
-    aside = move_aside(soup)
-    set_aside(soup, aside, {
+    move_aside(soup)
+    set_aside(soup, {
         '快速开始': 'quick-start.html',
         '用户文档': {
             '基础语法': 'user-guide/basic-grammar.html',
