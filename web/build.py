@@ -41,11 +41,11 @@ def move_aside(soup):
 def recursive_cat(root, cat):
     for key, val in cat.items():
         if isinstance(val, str):
-            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val)
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val+'.html')
             a.append(soup.new_string(key))
             root.append(a)
         elif isinstance(val, dict):
-            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val[list(val)[0]])
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val[list(val)[0]]+'.html')
             a.append(soup.new_string(key))
             root.append(a)
             box = soup.new_tag('div', **{'class':'list-group'})
@@ -140,21 +140,22 @@ if __name__ == "__main__":
 
     move_aside(soup)
     set_aside(soup, {
-        '快速开始': 'quick-start.html',
+        '快速开始': 'quick-start',
         '用户文档': {
-            '基础语法': 'user-guide/basic-grammar.html',
-            '矩阵运算': 'user-guide/matrix-cal.html',
-            'Route 模块': 'user-guide/route.html',
-            '继承关系': 'user-guide/inherit.html'
+            '术语定义': 'user-guide/terms'
+            '基础语法': 'user-guide/basic-grammar',
+            '矩阵运算': 'user-guide/matrix-cal',
+            '路由类型': 'user-guide/route',
+            '继承关系': 'user-guide/inherit'
         },
         '开发文档': {
-            '语法解析': 'dev-guide/interpreter.html',
-            '模块组件': 'dev-guide/model-component.html',
-            '问题抽象': 'dev-guide/formulation.html'
+            '语法解析': 'dev-guide/interpreter',
+            '模块组件': 'dev-guide/model-component',
+            '问题抽象': 'dev-guide/formulation'
         },
         '接口定义': {
-            '模块接口': 'interface/model.html',
-            '数据接口': 'interface/protocol.html'
+            '模块接口': 'interface/model',
+            '数据接口': 'interface/protocol'
         }
     })
     set_article(soup, os.path.join(script_folder, '../doc/quick-start/README.md'))
