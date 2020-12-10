@@ -142,7 +142,7 @@ if __name__ == "__main__":
     set_aside(soup, {
         '快速开始': 'quick-start',
         '用户文档': {
-            '术语定义': 'user-guide/terms'
+            '术语定义': 'user-guide/terms',
             '基础语法': 'user-guide/basic-grammar',
             '矩阵运算': 'user-guide/matrix-cal',
             '路由类型': 'user-guide/route',
@@ -168,6 +168,15 @@ if __name__ == "__main__":
         f.write(soup.prettify())
 
     print('INFO: quick-start.html done.')
+
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/terms.md'))
+    set_title(soup, '术语定义')
+    set_item_active(soup, 2)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/terms.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/terms.html done.')
 
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()

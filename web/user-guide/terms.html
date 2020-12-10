@@ -2,7 +2,7 @@
 <html lang="en">
  <head>
   <title>
-   联系我们
+   术语定义
   </title>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -52,7 +52,7 @@
         </span>
        </a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown active">
        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
         文档
        </a>
@@ -79,7 +79,7 @@
         产品
        </a>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
        <a class="nav-link" href="contact.html">
         联系我们
        </a>
@@ -97,96 +97,161 @@
   <main class="container">
    <div class="row" style="flex-direction: row-reverse;">
     <!-- Main content -->
-    <div class="col">
+    <div class="col-sm-8">
      <article>
-      <h2>
-       联系我们
-      </h2>
+      <h1>
+       术语定义
+      </h1>
       <p>
-       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       本节介绍了 ligral 的一些术语及其定义，避免文档中出现含义不清的表述，让用户能更好地阅读文档，在遇到问题时能清楚地、规范地表达和搜索信息。
       </p>
       <h3>
-       如果您想阅读仓库代码 ...
+       Ligral
       </h3>
       <p>
-       您可以去
-       <a href="https://gitee.com/junruoyu-zheng/ligral">
-        Gitee
-       </a>
-       或者
-       <a href="https://github.com/JRY-Zheng/ligral">
-        GitHub
-       </a>
-       上 Fork 我们的仓库，然后通过命令
+       Ligral 是一种语言，用文本的形式描述一个仿真模型，等效于一个仿真框图。同时，ligral 也指代 ligral 语言的官方解释器/编译器，是一个程序，可以在终端中调用 ligral 程序，解析 ligral 语言。
       </p>
-      <pre><code>git clone https://your-username.gitee.com/ligral.git
-</code></pre>
       <p>
-       将代码克隆到本地。如果您想持续关注仓库动态，可以点击 Watch，如果您觉得本项目还不错，请为我们点一个 Star，十分感谢！
+       用 ligral 语言编写仿真模型，得到的文件称之为 lig 文件，其后缀名为 lig。
       </p>
       <h3>
-       如果您发现了一些 Bug ...
+       框图 Block diagram
       </h3>
       <p>
-       或者您有一些建议，或者疑问，您都可以新建一个
-       <a href="https://gitee.com/junruoyu-zheng/ligral/issues">
-        Issue
-       </a>
-       。如果您不习惯提出一个 Issue，您也可以
-       <a href="mailto:zhengjry@outlook.com">
-        给我写信
-       </a>
-       ，如果是很有价值的问题或建议，我也会以匿名的形式放在 Issue 中。
+       框图是表示一个系统各部分之间关系的图示。在 ligral 语言中，各部分指的是是具有特定功能的计算单元，接收一定量的输入，计算一定量的输出或者产生某些外部性影响。各部分之间的关系，指的是输入输出之间的对应关系。很显然，每一个输入对应一个输出，而每一个输出对应零个或多个输入，输入和输入、输出和输出之间不存在对应关系。每一对对应关系总是从输出到输入，是有向的，因此可以用箭头表示。
       </p>
       <h3>
-       如果您甚至修改了 Bug ...
+       模块 Model
       </h3>
       <p>
-       或者您改进了我们的代码，那实在是太感谢了！希望您尽快发起一个 PR，我们会对您的 PR 进行审查。不过由衷建议您在发起 PR 前先和我们讨论一下，以免不符合要求，打击您的积极性。讨论的方式可以是
-       <a href="https://gitee.com/junruoyu-zheng/ligral/issues">
-        Issue
-       </a>
-       或者
-       <a href="mailto:zhengjry@outlook.com">
-        email
-       </a>
-       。当然，有必要的话我们也可以添加其他联系方式。
+       在 ligral 语言中，模块代表着最小的计算单元。模块要么是 ligral 程序提供的，要么是扩展包提供的，但不是由 ligral 语言编写的。
       </p>
       <h3>
-       如果您想关注开发者 ...
+       端口 Port
       </h3>
       <p>
-       目前，项目组仅有我（苦愚君）一个人，你也可以叫我郑君。你可以在
-       <a href="https://www.zhihu.com/people/LostFish">
-        知乎
-       </a>
-       和
-       <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
-        即刻
-       </a>
-       上关注我，在那里我可能会不定期更新一些本项目的计划、进度和思考。
+       模块的每个输入或输出都称之为端口，分别为输入端口和输出端口。
       </p>
       <h3>
-       如果您想成为开发者 ...
+       模块链 Chain
       </h3>
       <p>
-       非常期待您能尽快与我联系，请不要犹豫！无论是
-       <a href="https://www.zhihu.com/people/LostFish">
-        知乎
-       </a>
-       还是
-       <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
-        即刻
-       </a>
-       上发私信，还是直接
-       <a href="mailto:zhengjry@outlook.com">
-        给我写信
-       </a>
-       ，都是可以的！
+       如果有大于一个模块按照某种特定的顺序排列，使之恰好前后的输出、输入端口互相匹配且连接，并将第一个模块的输入端口和最后一个模块的输出端口暴露出来，所形成的结构称之为模块链。单个模块也可视作一种特殊的模块链。
+      </p>
+      <h3>
+       模块组 Group
+      </h3>
+      <p>
+       大于等于一个模块链并联而成的结构称之为模块组。所有模块链的全部输入端口为模块组的输入端口，所有模块链的全部输出端口为模块组的输出端口。
+      </p>
+      <h3>
+       路由 Route
+      </h3>
+      <p>
+       一种特殊的模块组，规定输入端口仅能为一种特殊的模块
+       <code>
+        Input
+       </code>
+       的输入端口，输出端口仅能为另一种特殊的模块
+       <code>
+        Output
+       </code>
+       的输出端口。每个路由都是一个类型，其规定了输入输出端口的数量和名字、内部模块的连接方式，提供了一个内部的符号表，拥有一个可配置的参数列表。
+      </p>
+      <p>
+       每个路由都可以声明任意个不同的实例，这些实例的输入输出端口的数量和名字、内部模块的连接方式都是一致的，但是根据初始化时的参数配置不同可能拥有不同的逻辑。在初始化的时候会生成闭包，内部符号表不可从外部访问，但是可以从内部向外部访问。每个实例都是不同的，因为每个实例都有自己的闭包。
+      </p>
+      <p>
+       模块链、模块组和路由都是计算单元，它们都是由 ligral 语言编写的。路由最大的特点就在于它是可复用的，声明一个路由类型后，可以进行多次实例化而不会互相干扰。模块链和模块组都是临时声明临时使用的。
       </p>
      </article>
     </div>
     <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item" href="quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="user-guide/terms.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item active" href="user-guide/terms.html">
+         术语定义
+        </a>
+        <a class="list-group-item" href="user-guide/basic-grammar.html">
+         基础语法
+        </a>
+        <a class="list-group-item" href="user-guide/matrix-cal.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="user-guide/route.html">
+         路由类型
+        </a>
+        <a class="list-group-item" href="user-guide/inherit.html">
+         继承关系
+        </a>
+       </div>
+       <a class="list-group-item" href="dev-guide/interpreter.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="dev-guide/interpreter.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="dev-guide/model-component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="dev-guide/formulation.html">
+         问题抽象
+        </a>
+       </div>
+       <a class="list-group-item" href="interface/model.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
    </div>
   </main>
   <!-- Footer -->
