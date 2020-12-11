@@ -41,11 +41,12 @@ def move_aside(soup):
 def recursive_cat(root, cat):
     for key, val in cat.items():
         if isinstance(val, str):
-            a = soup.new_tag('a', **{'class':'list-group-item'}, href=val+'.html')
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href='/ligral/'+val+'.html')
             a.append(soup.new_string(key))
             root.append(a)
         elif isinstance(val, dict):
-            a = soup.new_tag('a', **{'class':'list-group-item'}, href='index.html')
+            folder = val[list(val)[0]].rsplit('/', maxsplit=1)[0]
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href='/ligral/'+folder+'index.html')
             a.append(soup.new_string(key))
             root.append(a)
             box = soup.new_tag('div', **{'class':'list-group'})
