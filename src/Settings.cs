@@ -79,8 +79,6 @@ namespace Ligral
                 stopTime = value;
             }
         }
-        private bool variableStep = false;
-        public bool VariableStep { get { return variableStep;} set { variableStep = value;}}
         private string outputFolder = null;
         public string OutputFolder { get { return outputFolder;} set { outputFolder = value;}}
         private bool needOutput = false;
@@ -116,12 +114,9 @@ namespace Ligral
             switch (item)
             {
             case "step_size":
-                StepSize = (double) val;
-                VariableStep = false; break;
+                StepSize = (double) val; break;
             case "stop_time":
                 StopTime = (double) val; break;
-            case "variable_step":
-                VariableStep = (bool) val; break;
             case "output_folder":
                 OutputFolder = (string) val; break;
             case "ip_address":
