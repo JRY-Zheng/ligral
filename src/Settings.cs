@@ -1,4 +1,6 @@
 using System.IO;
+using Ligral.Syntax;
+using Ligral.Syntax.ASTs;
 
 namespace Ligral
 {
@@ -25,6 +27,22 @@ namespace Ligral
             return settingsInstance;
         }
         #endregion
+
+        public void GetDefaultSettings()
+        {
+            string executingPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string defaultSetting = Path.Join(executingPath, "default.lig");
+            if (File.Exists(defaultSetting))
+            {
+                string text = File.ReadAllText(defaultSetting);
+                Parser parser = new Parser();
+                parser.Load(text);
+                ProgramAST p = parser.Parse();
+                p.Statements.Statements.RemoveAll(ast => !(ast is ConfAST));
+                Interpreter interpreter = Interpreter.GetInstance(Path.GetDirectoryName(executingPath));
+                interpreter.Interpret(p);
+            }
+        }
         
         #region Settings
         private double stepSize = 0.01;

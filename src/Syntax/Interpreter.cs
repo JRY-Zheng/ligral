@@ -34,8 +34,8 @@ namespace Ligral.Syntax
             if (instance == null)
             {
                 instance = new Interpreter();
-                instance.folder = folder;
             }
+            instance.folder = folder;
             return instance;
         }
         private Interpreter() {}

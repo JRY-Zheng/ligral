@@ -32,6 +32,7 @@ namespace Ligral
         static ParserResult<Options> DoParse(Options options)
         {
             Settings settings = Settings.GetInstance();
+            settings.GetDefaultSettings();
             if (options.RequireDoc!=null)
             {
                 if (ModelManager.ModelTypePool.Keys.Contains(options.RequireDoc))
