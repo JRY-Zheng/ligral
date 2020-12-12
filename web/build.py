@@ -46,7 +46,7 @@ def recursive_cat(root, cat):
             root.append(a)
         elif isinstance(val, dict):
             folder = val[list(val)[0]].rsplit('/', maxsplit=1)[0]
-            a = soup.new_tag('a', **{'class':'list-group-item'}, href='/ligral/'+folder+'index.html')
+            a = soup.new_tag('a', **{'class':'list-group-item'}, href='/ligral/'+folder+'/index.html')
             a.append(soup.new_string(key))
             root.append(a)
             box = soup.new_tag('div', **{'class':'list-group'})
