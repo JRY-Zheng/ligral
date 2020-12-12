@@ -487,26 +487,26 @@ namespace Ligral.Syntax
                 throw new SemanticException(unaryOpAST.FindToken(), "Invalid operator");
             }
         }
-        private double Visit(ValBinOpAST valBinOpAST)
+        private object Visit(ValBinOpAST valBinOpAST)
         {
-            double left = (double) Visit(valBinOpAST.Left);
-            double right = (double) Visit(valBinOpAST.Right);
+            Signal left = new Signal(Visit(valBinOpAST.Left));
+            Signal right = new Signal(Visit(valBinOpAST.Right));
             switch (valBinOpAST.Operator.Value)
             {
             case '+':
-                return left+right;
+                return (left+right).Unpack();
             case '-':
-                return left-right;
+                return (left-right).Unpack();
             case '*':
-                return left*right;
+                return (left*right).Unpack();
             case '/':
-                if (right==0)
+                if (right.Unpack() is double v && v == 0)
                 {
                     throw new SemanticException(valBinOpAST.Right.FindToken(), "0 Division");
                 }
-                return left/right;
+                return (left/right).Unpack();
             case '^':
-                return Math.Pow(left, right);
+                return (left^right).Unpack();
             default:
                 throw new SemanticException(valBinOpAST.FindToken(), "Invalid operator");
             }
