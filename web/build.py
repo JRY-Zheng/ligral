@@ -7,7 +7,18 @@ def set_article(soup, article, pre_process=None):
         with open(article, 'r', encoding='utf8') as f:
             text = f.read()
 
-        html_text = markdown.markdown(text, extensions=['markdown.extensions.tables'])
+        html_text = markdown.markdown(text, 
+            extensions=[
+                'markdown.extensions.tables', 
+                'markdown_katex'
+            ],
+            extension_configs={
+                'markdown_katex': {
+                    'no_inline_svg': True,      # fix for WeasyPrint
+                    'insert_fonts_css': True,
+                },
+            }
+        )
         html = BeautifulSoup(html_text, features='lxml')
     elif isinstance(article, element.Tag):
         html = article
@@ -173,6 +184,15 @@ if __name__ == "__main__":
         f.write(soup.prettify())
 
     print('INFO: quick-start.html done.')
+
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/README.md'))
+    set_title(soup, '用户文档')
+    set_item_active(soup, 1)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/index.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/index.html done.')
 
     set_article(soup, os.path.join(script_folder, '../doc/user-guide/terms.md'))
     set_title(soup, '术语定义')
