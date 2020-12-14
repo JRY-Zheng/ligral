@@ -159,7 +159,7 @@ if __name__ == "__main__":
             '声明常量': 'user-guide/const',
             '声明节点': 'user-guide/node',
             '节点连接': 'user-guide/link',
-            '矩阵运算': 'user-guide/matrix-cal',
+            '矩阵运算': 'user-guide/matrix',
             '路由类型': 'user-guide/route',
             '继承关系': 'user-guide/inherit'
         },
@@ -220,6 +220,15 @@ if __name__ == "__main__":
         f.write(soup.prettify())
 
     print('INFO: user-guide/const.html done.')
+
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/node.md'))
+    set_title(soup, '声明节点')
+    set_item_active(soup, 5)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/node.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/const.node done.')
 
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   声明节点
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="/ligral/css/style.css" rel="stylesheet"/>
+  <link href="/ligral/css/rolling.css" rel="stylesheet"/>
+  <link href="/ligral/css/custom.css" rel="stylesheet"/>
+  <link href="/ligral/css/katex.min.css" rel="stylesheet"/>
+  <link href="/ligral/avatar.png" rel="shortcut icon" type="image/x-icon"/>
+  <!-- Font Awesome -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown active">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="/ligral/quick-start.html">
+         快速开始
+        </a>
+        <a class="dropdown-item" href="/ligral/user-guide">
+         用户文档
+        </a>
+        <a class="dropdown-item" href="/ligral/dev-guide">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="/ligral/interface/">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/product.html">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/contact.html">
+        联系我们
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row" style="flex-direction: row-reverse;">
+    <!-- Main content -->
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       声明节点
+      </h1>
+      <p>
+       如前所述，节点包括模块和路由，它们的声明、使用方式是类似的，因此放在一起介绍。
+      </p>
+      <p>
+       声明一个节点，无论是模块还是路由，本质上都是创建一个新的实例。实例的行为和逻辑是由它的类型定义的，如果您更新了类的定义（比如升级模块的扩展包或者修改路由的代码），所有的实例都会发生变化，这保证了代码的协调和一致。
+      </p>
+      <h3>
+       标准语法
+      </h3>
+      <p>
+       不同于 C++ 及其衍生语言中实例化一个类型通常以圆括号结尾包含参数，在 ligral 中，您直接引用类型名字，就创建了它的实例。在下面的例子中，
+       <code>
+        Step
+       </code>
+       是一个阶跃信号源模块，
+       <code>
+        Print
+       </code>
+       是打印模块，它们所需的参数都是可选的，因此可以直接使用类型名来声明。
+      </p>
+      <pre><code>Step -&gt; Print;
+</code></pre>
+      <p>
+       但是按照这种方法声明实例，从声明所在语句结束起，ligral 就失去了对该实例的引用。也就是说，该实例必须在所在语句中完成所有的端口连接，因为在其他语句您无法调用该实例。如果要实现更复杂的功能，就必须分配一个唯一的 ID。分配 ID 的语法如下所示：
+      </p>
+      <pre><code>Step[src];
+src -&gt; Print;
+</code></pre>
+      <p>
+       分配了 ID
+       <code>
+        src
+       </code>
+       之后，在第一行仅声明了一个 Step 的实例，直到第二行才调用。如果需要的话，您还可以在其他语句中调用，实现更复杂的逻辑。在 Ligral 中，ID 必须先声明后使用，和信号计算的顺序无关。例如在下面这段代码中，虽然第二行语句会先计算，但是从文法的角度，模块
+       <code>
+        abs
+       </code>
+       的声明必须放在第一行。
+      </p>
+      <pre><code>Abs[abs] -&gt; Print;
+Step -&gt; abs;
+</code></pre>
+      <p>
+       节点在声明的时候有时需要传入一些参数，传参的格式和 JSON 十分相似，在声明语句之后用花括号包住所有的参数，参数之间用逗号分隔，每个参数都必须显示指定参数名和值（如果是可选参数可以不提供，使用默认值），参数名和值之间使用冒号分隔。比如
+       <code>
+        Step
+       </code>
+       模块有两个可选参数，分别是
+       <code>
+        start
+       </code>
+       和
+       <code>
+        level
+       </code>
+       ，制定了阶跃信号的发生时间和水平。如果保持默认水平不变，仅仅改动发生时间为 2 秒，应该写作：
+      </p>
+      <pre><code>Step{start:2};
+</code></pre>
+      <p>
+       如果既要分配 ID，也要传参，分配 ID 应在传参之前。
+      </p>
+      <pre><code>Step[src]{start:2};
+</code></pre>
+      <h3>
+       语法糖
+      </h3>
+      <h4>
+       Constant 模块
+      </h4>
+      <p>
+       Ligral 的目的之一就是在于减轻建模时的工作量，使仿真模型更加简洁、清晰、直观，因此其支持了许多语法糖，让建模变得更加高效。
+      </p>
+      <p>
+       首先，模块
+       <code>
+        Constant
+       </code>
+       是一个常数信号源，有一个必选参数
+       <code>
+        value
+       </code>
+       ，其作用是在仿真期间持续发出
+       <code>
+        value
+       </code>
+       这一常数。在 v0.2.0以上版本，
+       <code>
+        value
+       </code>
+       既可以是一个标量也可以是一个矩阵。例如，如果需要一个值为 1 的常数信号源，可以写作：
+      </p>
+      <pre><code>Constant{value:1};
+</code></pre>
+      <p>
+       但是这么写过于繁琐，ligral 支持之间使用常数本身来答题这一模块，因此，您可以简写成：
+      </p>
+      <pre><code>1 -&gt; Print;
+</code></pre>
+      <p>
+       另外，已经定义好的常量也可以被解析封装成
+       <code>
+        Constant
+       </code>
+       模块。
+      </p>
+      <pre><code>let a = 1;
+a -&gt; Print;
+</code></pre>
+      <h4>
+       Calculator 模块
+      </h4>
+      <p>
+       其次，模块
+       <code>
+        Calculator
+       </code>
+       是一个双目运算模块，有一个必选参数
+       <code>
+        type
+       </code>
+       ，其值可以是
+       <code>
+        +
+       </code>
+       、
+       <code>
+        -
+       </code>
+       、
+       <code>
+        *
+       </code>
+       、
+       <code>
+        /
+       </code>
+       、
+       <code>
+        ^
+       </code>
+       等多种运算符。该模块接收两个输入，计算运算结果然后输出。如果您的仿真模型是
+       <code>
+        1+1
+       </code>
+       ，那么应该写成（本例连接部分比较复杂，可以参考
+       <a href="link">
+        节点连接
+       </a>
+       ）：
+      </p>
+      <pre><code>(1, 1) -&gt; Calculator{type:'+'};
+</code></pre>
+      <p>
+       为了避免繁琐，ligral 支持直接解析
+       <code>
+        1+1
+       </code>
+       这一语句，且还支持括号表达式，运算顺序和
+       <a href="const">
+        常量声明
+       </a>
+       章节中提到的一致。
+      </p>
+      <pre><code>1 + 2 * 3 ^ (4 - 3) -&gt; Print;  # 7
+</code></pre>
+      <p>
+       从这个例子还能看出，这些双目运算符的运算优先级高于连接符号。此外，ligral 还支持
+       <code>
+        +
+       </code>
+       和
+       <code>
+        -
+       </code>
+       两个单目运算符，并以补 0 的形式调用
+       <code>
+        Calculator
+       </code>
+       模块。
+      </p>
+      <p>
+       除了常量以外，所有输出端口数目为 1 的节点都可以使用 Calculator 语法糖，如
+       <code>
+        Step
+       </code>
+       模块。
+      </p>
+      <pre><code>Step + 1 -&gt; Print;
+</code></pre>
+      <h4>
+       Node 模块
+      </h4>
+      <p>
+       尽管“声明 - 引用”体系已经足够强大用以描述复杂的仿真模型，但有些情况下显得违反直觉。例如在一个一阶低通系统中，模型结构为：
+      </p>
+      <pre><code>                  ┌───┐ 
+          ┌───────┤ k │◄─────┐
+          │       └───┘      │
+╭───╮   + ▼-      ┌─────┐x   │
+│ r ├───►(x)─────►│ 1/s ├────┘
+╰───╯             └─────┘
+</code></pre>
+      <p>
+       其中，
+       <code>
+        r
+       </code>
+       是输入节点，
+       <code>
+        k
+       </code>
+       是常量增益。很显然，积分器的输出需要在积分器的输入之前调用，因此积分器的定义需要出现在前面，代码如下：
+      </p>
+      <pre><code>r - Integrator[i] * k -&gt; i;
+</code></pre>
+      <p>
+       这种书写方式容易让人产生误解，因此 ligral 提供了一个空节点
+       <code>
+        Node
+       </code>
+       来代替类似
+       <code>
+        Integrator
+       </code>
+       这些具有明显含义的节点实现引用。
+       <code>
+        Node
+       </code>
+       节点仅仅原封不动地转发输入到输出，很适合用来做引用。上述代码可以改写为：
+      </p>
+      <pre><code>r - Node[i] * k -&gt; Integrator -&gt; i;
+</code></pre>
+      <p>
+       虽然代码变长了，但是结构却变得更加清晰。在此基础上，ligral 甚至允许在未定义
+       <code>
+        Node
+       </code>
+       节点的情况下直接引用，这看似违反了之前所说的“先声明后引用”原则，但是实际上 ligral 只是在第一次识别到未声明的符号时默认解析成
+       <code>
+        Node
+       </code>
+       节点。因此，上述代码可以进一步简化为：
+      </p>
+      <pre><code>r - i * k -&gt; Integrator -&gt; i;
+</code></pre>
+      <p>
+       此外，在一些场合可能需要仅声明一个
+       <code>
+        Node
+       </code>
+       节点但不引用，可以用
+       <code>
+        ~
+       </code>
+       符号代替。这意味着，
+       <code>
+        ~
+       </code>
+       符号可以出现在模块链的任意位置而不影响整个程序，如：
+      </p>
+      <pre><code>1 -&gt; ~ -&gt; Print;  # 1
+</code></pre>
+      <h3>
+       端口引用
+      </h3>
+      <p>
+       有许多模块有不止一个输入或者输出端口，如果您需要指定调用其中某个端口，您可以用冒号引出端口名。例如，
+       <code>
+        LogicSwitch
+       </code>
+       模块具有三个输入端口：
+       <code>
+        condition
+       </code>
+       、
+       <code>
+        first
+       </code>
+       和
+       <code>
+        second
+       </code>
+       ，如果需要指定
+       <code>
+        condition
+       </code>
+       端口，可以写作：
+      </p>
+      <pre><code>1 -&gt; LogicSwitch:condition;
+</code></pre>
+      <p>
+       在这种场合，通常需要为该模块分配 ID，否则其他端口无法被连接。输入端口的行为如同一个单输入零输出的节点，因此只能有一个信号连接到输入端口，不能有信号从输入端口连接到其他节点。
+      </p>
+      <p>
+       指定一个输出端口的语法和输入端口完全一致，但是不同的是输出端口的行为却如同一个多输入单输出的节点，其输入端口和原来的节点一致。系统自带的模块没有多输出端口的节点，但单输出节点也可以使用端口引用（虽然看起来有点多余）。以
+       <code>
+        Gain
+       </code>
+       节点为例，其有一个输入端口
+       <code>
+        input
+       </code>
+       和一个输出端口
+       <code>
+        output
+       </code>
+       ，在使用时可以这么写：
+      </p>
+      <pre><code>1 -&gt; Gain{value:10}:output -&gt; Print;
+</code></pre>
+      <p>
+       如果某个节点的输出端口需要在多处引用，您也可以为它起个别名，但这个别名也必须是唯一的，因为其相当于分配了一个 ID，或者说事实上，ligral 自动定义了一个
+       <code>
+        Node
+       </code>
+       用来被这个输出端口连接，并分配了 ID。输入端口一般不会被多处引用，因为一个输入端口只能连接到一个输出端口，所以端口的别名不支持输入端口。起别名的语法和为节点分配 ID 的语法类似，都是用方括号来起名：
+      </p>
+      <pre><code>1 -&gt; Gain{value:10}:output[x];
+x -&gt; Print;
+</code></pre>
+      <p>
+       当然根据上一小节，您也可以写作：
+      </p>
+      <pre><code>1 -&gt; Gain{value:10}:output -&gt; x;
+x -&gt; Print;
+</code></pre>
+      <p>
+       但是两者还是有细微的差别，这一点在之后的文档中会详细介绍。
+      </p>
+     </article>
+    </div>
+    <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item" href="/ligral/quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="/ligral/user-guide/index.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/user-guide/terms.html">
+         术语定义
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/config.html">
+         设置语句
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/const.html">
+         声明常量
+        </a>
+        <a class="list-group-item active" href="/ligral/user-guide/node.html">
+         声明节点
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/link.html">
+         节点连接
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/matrix.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/route.html">
+         路由类型
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/inherit.html">
+         继承关系
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/dev-guide/index.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/dev-guide/syntax.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/simulation.html">
+         问题抽象
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/tools.html">
+         工具箱
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/interface/index.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="/ligral/interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励；感谢我的导师 James 对数值积分的指导；感谢 Gitee 对项目的支持，在刚开源不久就为我推荐；感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2020. Ligral All rights reserved. 梨果科技版权所有 © 2020
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="/ligral/js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="/ligral/js/popper.min.js">
+  </script>
+  <script src="/ligral/js/bootstrap.min.js">
+  </script>
+  <script src="/ligral/js/TweenMax.min.js">
+  </script>
+  <script src="/ligral/js/rolling.js">
+  </script>
+ </body>
+</html>
