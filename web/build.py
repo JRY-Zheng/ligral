@@ -1,4 +1,4 @@
-import sys, os, shutil
+import sys, os, shutil, re
 import markdown
 from bs4 import BeautifulSoup, element
 
@@ -6,6 +6,8 @@ def set_article(soup, article, pre_process=None):
     if isinstance(article, str):
         with open(article, 'r', encoding='utf8') as f:
             text = f.read()
+
+        text, num =  re.subn(r'\$([^$\n]+)\$', '$`\g<1>`$', text)
 
         html_text = markdown.markdown(text, 
             extensions=[
@@ -228,7 +230,16 @@ if __name__ == "__main__":
     with open('web/user-guide/node.html', 'w', encoding='utf8') as f:
         f.write(soup.prettify())
 
-    print('INFO: user-guide/const.node done.')
+    print('INFO: user-guide/node.html done.')
+
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/link.md'))
+    set_title(soup, '节点连接')
+    set_item_active(soup, 6)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/link.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/link.html done.')
 
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()

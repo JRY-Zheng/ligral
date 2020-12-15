@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   节点连接
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="/ligral/css/style.css" rel="stylesheet"/>
+  <link href="/ligral/css/rolling.css" rel="stylesheet"/>
+  <link href="/ligral/css/custom.css" rel="stylesheet"/>
+  <link href="/ligral/css/katex.min.css" rel="stylesheet"/>
+  <link href="/ligral/avatar.png" rel="shortcut icon" type="image/x-icon"/>
+  <!-- Font Awesome -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown active">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="/ligral/quick-start.html">
+         快速开始
+        </a>
+        <a class="dropdown-item" href="/ligral/user-guide">
+         用户文档
+        </a>
+        <a class="dropdown-item" href="/ligral/dev-guide">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="/ligral/interface/">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/product.html">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/contact.html">
+        联系我们
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row" style="flex-direction: row-reverse;">
+    <!-- Main content -->
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       节点连接
+      </h1>
+      <p>
+       在 ligral 中，所有的连接都是从一个输出端口到一个输入端口的有向边，表示从输出端口发出来的信号原封不动地注入至输入端口。因此，无论多么复杂的仿真模型，只要节点数目是有限的，ligral 总能以如下最基本的形式描述节点的连接情况：
+      </p>
+      <pre><code>SomeNode:input -&gt; OtherNode:output;
+</code></pre>
+      <p>
+       上述代码很直观地表述了信号的流向，以至于在前几节曾出现过一些连接的例子，虽然那时尚未介绍连接地语法，却也不影响理解。这种从显式指定的输出端口到输入端口的连接称之为端口连接。如果每一个连接都需要这样显式指定端口且分行，必然会丧失代码的简洁和可读性。Ligral 在连接方式的简化上也不遗余力地引入许多便捷的表示。
+      </p>
+      <h3>
+       全连接
+      </h3>
+      <p>
+       如果源节点的输出端口数目和目标节点的输入端口数目一致，且源节点的每一个输出端口正好依次连接到目标节点对应的输入端口，则成这些连接的集合为一个全连接。全连接是最常见的一种连接方式，因为许多节点是单输入输出节点，它们之间的连接全是全连接。
+      </p>
+      <p>
+       声明全连接时不需要指定端口，只需要在节点之间直接连接即可。在之前举国的例子中，
+       <code>
+        Step
+       </code>
+       是单输出模块，
+       <code>
+        Print
+       </code>
+       是单输出模块，因此可以使用全连接：
+      </p>
+      <pre><code>Step -&gt; Print;
+</code></pre>
+      <h3>
+       利用节点组实现全连接
+      </h3>
+      <p>
+       回顾定义，节点组可以用来组合输入和输出端口。在某些不满足全连接的情况中，可以利用节点组来凑成全连接，从而简化代码。
+      </p>
+      <p>
+       <code>
+        Calculate
+       </code>
+       是一个双输入模块，如果您希望将两个
+       <code>
+        Constant
+       </code>
+       模块分别连接到两个端口上，您可以将两个
+       <code>
+        Constant
+       </code>
+       模块并连成一个模块组。声明模块组的语法很简单，只要用逗号分隔模块链，再用圆括号括起来即可，如下所示（这个例子在上一节展示过）：
+      </p>
+      <pre><code>(1, 1) -&gt; Calculate{type:'+'};
+</code></pre>
+      <p>
+       上面的例子如前所示可以简化成
+       <code>
+        1+1
+       </code>
+       ，不再赘述。模块组除了可以作为源节点，也可以作为目标节点，甚至可以同时充当源节点和目标节点，虽然从语义的角度而言没有意义，比如：
+      </p>
+      <pre><code>(1, 2) -&gt; (Print, Print);
+</code></pre>
+      <p>
+       这样的语句虽然是合法的，但是未必比分开写更紧凑或者更清晰：
+      </p>
+      <pre><code>1 -&gt; Print; 2 -&gt; Print;
+</code></pre>
+      <p>
+       使用端口来组成节点组也是很常见的，这适用于多输入输出节点之间的互相连接，且端口顺序不一定对应得上的时候。例如如果您研究的一个模型有速度
+       <span class="katex">
+        <span class="katex-mathml">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <semantics>
+           <mrow>
+            <mi>
+             v
+            </mi>
+           </mrow>
+           <annotation encoding="application/x-tex">
+            v
+           </annotation>
+          </semantics>
+         </math>
+        </span>
+        <span aria-hidden="true" class="katex-html">
+         <span class="base">
+          <span class="strut" style="height:0.43056em;vertical-align:0em;">
+          </span>
+          <span class="mord mathnormal" style="margin-right:0.03588em;">
+           v
+          </span>
+         </span>
+        </span>
+       </span>
+       和位置
+       <span class="katex">
+        <span class="katex-mathml">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <semantics>
+           <mrow>
+            <mi>
+             x
+            </mi>
+           </mrow>
+           <annotation encoding="application/x-tex">
+            x
+           </annotation>
+          </semantics>
+         </math>
+        </span>
+        <span aria-hidden="true" class="katex-html">
+         <span class="base">
+          <span class="strut" style="height:0.43056em;vertical-align:0em;">
+          </span>
+          <span class="mord mathnormal">
+           x
+          </span>
+         </span>
+        </span>
+       </span>
+       两个状态，外加一个加速度
+       <span class="katex">
+        <span class="katex-mathml">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <semantics>
+           <mrow>
+            <mi>
+             a
+            </mi>
+           </mrow>
+           <annotation encoding="application/x-tex">
+            a
+           </annotation>
+          </semantics>
+         </math>
+        </span>
+        <span aria-hidden="true" class="katex-html">
+         <span class="base">
+          <span class="strut" style="height:0.43056em;vertical-align:0em;">
+          </span>
+          <span class="mord mathnormal">
+           a
+          </span>
+         </span>
+        </span>
+       </span>
+       ，但是您设计的速度控制器可能仅需要
+       <span class="katex">
+        <span class="katex-mathml">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <semantics>
+           <mrow>
+            <mi>
+             v
+            </mi>
+           </mrow>
+           <annotation encoding="application/x-tex">
+            v
+           </annotation>
+          </semantics>
+         </math>
+        </span>
+        <span aria-hidden="true" class="katex-html">
+         <span class="base">
+          <span class="strut" style="height:0.43056em;vertical-align:0em;">
+          </span>
+          <span class="mord mathnormal" style="margin-right:0.03588em;">
+           v
+          </span>
+         </span>
+        </span>
+       </span>
+       和
+       <span class="katex">
+        <span class="katex-mathml">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <semantics>
+           <mrow>
+            <mi>
+             a
+            </mi>
+           </mrow>
+           <annotation encoding="application/x-tex">
+            a
+           </annotation>
+          </semantics>
+         </math>
+        </span>
+        <span aria-hidden="true" class="katex-html">
+         <span class="base">
+          <span class="strut" style="height:0.43056em;vertical-align:0em;">
+          </span>
+          <span class="mord mathnormal">
+           a
+          </span>
+         </span>
+        </span>
+       </span>
+       ，此时您有两种写法。其一，将模型重组为节点组：
+      </p>
+      <pre><code>(model:v, model:a) -&gt; controller;
+</code></pre>
+      <p>
+       其二，使用弃元（弃元是一个特殊的单输入模块，它声明放弃指向它的信号，详见模块文档）：
+      </p>
+      <pre><code>model -&gt; (_, controller);
+</code></pre>
+      <p>
+       在没有优化的时候，第二种写法确实会多浪费一点计算资源，但是日后实现优化后两者是等效的。但是第二种写法默认了
+       <code>
+        model
+       </code>
+       模块和
+       <code>
+        controller
+       </code>
+       模块的端口顺序是一致的，即
+       <code>
+        model
+       </code>
+       的输出端口为
+       <code>
+        x
+       </code>
+       、
+       <code>
+        v
+       </code>
+       和
+       <code>
+        a
+       </code>
+       ，
+       <code>
+        controller
+       </code>
+       的输入端口为
+       <code>
+        v
+       </code>
+       、
+       <code>
+        a
+       </code>
+       。相比之下，第一种写法更具灵活性。
+      </p>
+      <h3>
+       半全连接
+      </h3>
+      <p>
+       在一个节点为单输入输出，另一个为多输入输出时，半全连接也很常见。半全连接指的是端口和单输入输出节点之间的连接，此时单输入输出节点不需要显式指定端口。
+      </p>
+      <p>
+       这种情况一般多用于多输出节点和单输入节点之间的连接，因为输出端口不一定需要连接，可能只有部分端口被连接到一些新的节点上。但是对于多输入节点，每个输入端口都必须被连接，因此利用节点组实现全连接会是更好的选择。
+      </p>
+      <h3>
+       顺次连接
+      </h3>
+      <p>
+       目标节点和源节点不一定是对立的，而是相对的概念。一个连接中的目标节点也可以是其他连接中的源节点，ligral 的语法允许这些连接顺次出现，从而减少重复，包括行数、节点的引用以及可能因为减少到引用而可以省略的 ID 分配等等。
+      </p>
+      <p>
+       如果前后两个连接都是全连接（包括利用节点组实现的全连接），直接合并中间节点即可。下面的代码求解了 -1 的绝对值：
+      </p>
+      <pre><code>-1 -&gt; Abs -&gt; Print;
+</code></pre>
+      <p>
+       如果上游的连接时全连接，下游是半全连接或者端口连接，也可以直接合并中间节点，如：
+      </p>
+      <pre><code>(model:v, model:a) -&gt; controller -&gt; model:u;
+</code></pre>
+      <p>
+       如果
+       <code>
+        model
+       </code>
+       的输入端口只有一个，还可以改写成：
+      </p>
+      <pre><code>controller -&gt; model:v -&gt; Print;
+</code></pre>
+      <p>
+       这个例子咋看起来很容易理解，但是深究起来可能会有些困惑。实际上 ligral 会把它解释成这样：
+      </p>
+      <pre><code>controller -&gt; model; model:v -&gt; Print;
+</code></pre>
+      <p>
+       因为下游的连接虽然指定了输出端口，但是对输入端口没有影响，因此
+       <code>
+        controller
+       </code>
+       的输出还是连接到了
+       <code>
+        model
+       </code>
+       的输入端口
+       <code>
+        u
+       </code>
+       上而不是
+       <code>
+        v
+       </code>
+       上。
+      </p>
+      <p>
+       但是如果中间节点被上游连接指定了输入端口，下面的第二行语句就是非法的：
+      </p>
+      <pre><code>model:a -&gt; controller:a;
+model:v -&gt; controller:v -&gt; model;
+</code></pre>
+      <p>
+       原因有二。其一，如果这个语句是合法的，则 ligral 会把它解释成：
+      </p>
+      <pre><code>model:v -&gt; controller:v; controller -&gt; model;
+</code></pre>
+      <p>
+       这种拆解方式远不如指定输出端口时的拆解方式来得自然，容易引起误解。其二，输出端口是可以被忽略的，也常常被忽略，因此鼓励引用端口，而输入端口是不能被忽略的，更倾向于用全连接的方式进行连接。
+      </p>
+      <p>
+       最后一种情况是上游连接的源节点指定了输出端口，但是目标节点没有，不影响下游连接。例如：
+      </p>
+      <pre><code>controller:u -&gt; model -&gt; (_, controller);
+</code></pre>
+      <p>
+       虽然如果
+       <code>
+        controller
+       </code>
+       的输出端口仅有一个
+       <code>
+        u
+       </code>
+       的话，指定端口语句完全可以被省略，此处只是举例需要。
+      </p>
+      <h3>
+       语句的终止
+      </h3>
+      <p>
+       虽然 ligral 鼓励使用者将连接串起来提高语言的简洁性，但是如果语句逻辑太过复杂，或者语义已经中断时，建议您拆分长语句，让代码更符合人的阅读习惯。必要的时候，将一些内部相关的语句整理到一个路由中，降低模块的耦合性。例如以下代码：
+      </p>
+      <pre><code>(f - k*x - c*v -&gt; Intergrator -&gt; v -&gt; Integrator -&gt; x)*Kp + (r-x -&gt; Integrator)*Ki + v*Kd -&gt; f;
+</code></pre>
+      <p>
+       以上一行代码描述了用 PID 控制器控制一个二阶系统得到的闭环模型，由于逻辑过于复杂反而丧失了可读性。好的代码往往这么写：
+      </p>
+      <pre><code># model
+f - k*x - c*v -&gt; Intergrator -&gt; v;
+v -&gt; Integrator -&gt; x;
+
+# reference tracking
+r-x -&gt; Integrator -&gt; ei;
+
+# pid controller
+x*Kp + v*Kd + ei*Ki -&gt; f;
+</code></pre>
+     </article>
+    </div>
+    <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item" href="/ligral/quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="/ligral/user-guide/index.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/user-guide/terms.html">
+         术语定义
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/config.html">
+         设置语句
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/const.html">
+         声明常量
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/node.html">
+         声明节点
+        </a>
+        <a class="list-group-item active" href="/ligral/user-guide/link.html">
+         节点连接
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/matrix.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/route.html">
+         路由类型
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/inherit.html">
+         继承关系
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/dev-guide/index.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/dev-guide/syntax.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/simulation.html">
+         问题抽象
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/tools.html">
+         工具箱
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/interface/index.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="/ligral/interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励；感谢我的导师 James 对数值积分的指导；感谢 Gitee 对项目的支持，在刚开源不久就为我推荐；感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2020. Ligral All rights reserved. 梨果科技版权所有 © 2020
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="/ligral/js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="/ligral/js/popper.min.js">
+  </script>
+  <script src="/ligral/js/bootstrap.min.js">
+  </script>
+  <script src="/ligral/js/TweenMax.min.js">
+  </script>
+  <script src="/ligral/js/rolling.js">
+  </script>
+ </body>
+</html>
