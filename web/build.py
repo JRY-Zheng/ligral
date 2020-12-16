@@ -241,6 +241,15 @@ if __name__ == "__main__":
 
     print('INFO: user-guide/link.html done.')
 
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/matrix.md'))
+    set_title(soup, '矩阵计算')
+    set_item_active(soup, 6)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/matrix.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/matrix.html done.')
+
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()
     prod_soup = BeautifulSoup(prod_text, features='lxml')
