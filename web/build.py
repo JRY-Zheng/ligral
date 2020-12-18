@@ -5,9 +5,16 @@ from bs4 import BeautifulSoup, element
 def set_article(soup, article, pre_process=None):
     if isinstance(article, str):
         with open(article, 'r', encoding='utf8') as f:
-            text = f.read()
+        #     text = f.read()
+            lines = f.readlines()
+        
+        for i, line in enumerate(lines):
+            if not line.startswith('    '):
+                lines[i], _ = re.subn(r'\$([^$\n]+)\$', '$`\g<1>`$', line)
 
-        text, num =  re.subn(r'\$([^$\n]+)\$', '$`\g<1>`$', text)
+        text = ''.join(lines)
+
+        # text, num =  re.subn(r'\$([^$\n]+)\$', '$`\g<1>`$', text)
 
         html_text = markdown.markdown(text, 
             extensions=[
@@ -163,7 +170,7 @@ if __name__ == "__main__":
             '节点连接': 'user-guide/link',
             '矩阵运算': 'user-guide/matrix',
             '路由类型': 'user-guide/route',
-            '继承关系': 'user-guide/inherit'
+            '接口继承': 'user-guide/inherit'
         },
         '开发文档': {
             '语法解析': 'dev-guide/syntax',
@@ -249,6 +256,15 @@ if __name__ == "__main__":
         f.write(soup.prettify())
 
     print('INFO: user-guide/matrix.html done.')
+
+    set_article(soup, os.path.join(script_folder, '../doc/user-guide/route.md'))
+    set_title(soup, '路由类型')
+    set_item_active(soup, 6)
+    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    with open('web/user-guide/route.html', 'w', encoding='utf8') as f:
+        f.write(soup.prettify())
+
+    print('INFO: user-guide/route.html done.')
 
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()
