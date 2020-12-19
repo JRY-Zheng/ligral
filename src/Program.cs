@@ -9,8 +9,6 @@ using Ligral.Syntax;
 using Ligral.Component;
 using Ligral.Simulation;
 using Ligral.Simulation.Solvers;
-using Ligral.Tools;
-using Ligral.Tools.Protocols;
 
 namespace Ligral
 {
@@ -115,49 +113,6 @@ namespace Ligral
             }
             else
             {
-                Publisher publisher = new Publisher();
-                FigureProtocol.FigureConfig figureConfig = new FigureProtocol.FigureConfig()
-                {
-                    FigureId = 1,
-                    Title = "my title",
-                    RowsCount = 1,
-                    ColumnsCount = 1
-                };
-                publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
-                FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
-                {
-                    FigureId = 1,
-                    RowNO = 0,
-                    ColumnNO = 0,
-                    XLabel = "time/s",
-                    YLabel = "angle/deg"
-                };
-                publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
-                FigureProtocol.Curve curve = new FigureProtocol.Curve()
-                {
-                    FigureId = 1,
-                    CurveHandle = 0,
-                    RowNO = 0,
-                    ColumnNO = 0
-                };
-                publisher.Send(FigureProtocol.CurveLabel, curve);
-                FigureProtocol.ShowCommand showCommand = new FigureProtocol.ShowCommand()
-                {
-                    FigureId = 1
-                };
-                publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
-                FigureProtocol.Data data = new FigureProtocol.Data()
-                {
-                    FigureId = 1, 
-                    CurveHandle = 0, 
-                    XValue = 0, 
-                    YValue = 2
-                };
-                publisher.Send(FigureProtocol.DataLabel, data);
-                System.Threading.Thread.Sleep(1000);
-                data.XValue = 1;
-                data.YValue = 1;
-                publisher.Send(FigureProtocol.DataLabel, data);
             }
             return null;
         }
