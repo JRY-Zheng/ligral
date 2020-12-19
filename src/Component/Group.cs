@@ -40,6 +40,8 @@ namespace Ligral.Component
             case OutPort outPort:
                 outputModels.Add(outPort);
                 break;
+            case InPort inPort:
+                break;
             default:
                 throw new LigralException("Illegal type as output of a group");
             }
