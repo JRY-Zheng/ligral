@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
 
@@ -67,7 +68,17 @@ namespace Ligral.Component
                 ModelSymbol modelSymbol = new ModelSymbol(outPortName, modelType, model);
                 RouteScope.Insert(modelSymbol);
             }
+            int modelsCount = ModelManager.ModelPool.Count;
             interpreter.Interpret(statementsAST);
+            var innerModels = ModelManager.ModelPool.Skip(modelsCount);
+            if (inputModels.Find(model => ((Model)model).IsConnected()) is Model connectedModel)
+            {
+                throw new ModelException(connectedModel, "Input cannot be connected inside the route.");
+            }
+            if (outputModels.Union(innerModels).ToList().Find(model => !((Model)model).IsConnected()) is Model unconnectedModel)
+            {
+                throw new ModelException(unconnectedModel, "models inside the route apart from inputs cannot be unconnected");
+            }
             interpreter.SetScope(scope);
         }
         public override Port Expose(string portName)
