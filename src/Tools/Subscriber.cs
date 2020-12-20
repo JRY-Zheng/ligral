@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Linq;
 using Ligral.Tools.Protocols;
 
 namespace Ligral.Tools
@@ -26,25 +27,21 @@ namespace Ligral.Tools
             Id = count;
             count++;
         }
-        public void Start()
-        {
-            running = true;
-            Serve();
-        }
         public void Stop()
         {
             running = false;
         }
-        public async void Serve()
+        public async Task Serve()
         {
+            running = true;
+            EndPoint senderRemote = (EndPoint)endPoint;
+            socket.Bind(endPoint);
             while (running)
             {
                 byte[] buffer = new byte[1024];
-                EndPoint senderRemote = (EndPoint)endPoint;
-                await new Task(()=>socket.ReceiveFrom(buffer, ref senderRemote));
-                string packetString = Encoding.UTF8.GetString(buffer);
+                await Task.Run(()=>socket.ReceiveFrom(buffer, ref senderRemote));
+                string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
-                System.Console.WriteLine($"received {packetLabel.Label}");
                 switch (packetLabel.Label)
                 {
                 case FigureProtocol.FigureConfigLabel:
