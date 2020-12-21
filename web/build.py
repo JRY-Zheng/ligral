@@ -45,6 +45,10 @@ def set_article(soup, article, pre_process=None):
     else:
         article = articles[0]
         article.clear()
+        links = html.find_all('a')
+        for link in links:
+            if link['href'].startswith('http'):
+                link['target'] = '_blank'
         bodies = html.find_all('body')
         if bodies:
             body = bodies[0]
@@ -154,6 +158,10 @@ if __name__ == "__main__":
     soup = BeautifulSoup(text, features='lxml')
 
     set_article(soup, os.path.join(script_folder, '../README.md'))
+    links = soup.find_all('a')
+    for link in links:
+        if link['href'].startswith('http'):
+            link['target'] = '_blank'
     with open('web/index.html', 'w', encoding='utf8') as f:
         f.write(soup.prettify())
 
