@@ -1,10 +1,15 @@
-import os, shutil
+import os, re
 
 docpath = os.path.dirname(__file__)
 wikipath = os.path.abspath(os.path.join(docpath, '../../ligral.wiki'))
+figurepath = '/junruoyu-zheng/ligral/raw/dev/doc/'
+pagepath = 'https://junruoyu-zheng.gitee.io/ligral/'
 
 def parsefilename(filewithext):
-    return filewithext.rsplit('.', maxsplit=1)
+    res = filewithext.rsplit('.', maxsplit=1)
+    if len(res) == 1:
+        res.append('')
+    return res
 
 def gettitle(path, mdfile):
     with open(os.path.join(path, mdfile+'.md'), 'r', encoding='utf8') as f:
@@ -19,6 +24,19 @@ def getfoldername(abspath, folder):
         return gettitle(abspath, 'README')
     else:
         return translate.get(folder, folder)
+
+def copymdfile(srcfile, dstfile, refpath):
+    with open(srcfile, 'r', encoding='utf8') as f:
+        text = f.read()
+    matches = re.findall('\[.*?\]\((.*?)\)', text)
+    for match in matches:
+        if not match.startswith('http') and not match.startswith('mail'):
+            if parsefilename(match)[1] in ['png', 'gif', 'svg', 'jpg']:
+                text = text.replace(match, figurepath+refpath.strip('./\\')+'/'+match.strip('/\\'))
+            else:
+                text = text.replace(match, pagepath+refpath.strip('./\\')+'/'+match.strip('/\\')+'.html')
+    with open(dstfile, 'w', encoding='utf8') as f:
+        f.write(text)
 
 translate = {
     'api': '接口',
@@ -46,7 +64,7 @@ def recursive_deploy(docfolder='.', wikifolder='.'):
             wikifile = gettitle(docdir, parsefilename(item)[0])+'.md'
             absdocfile = os.path.join(docdir, item)
             abswikifile = os.path.join(wikidir, wikifile)
-            shutil.copy(absdocfile, abswikifile)
+            copymdfile(absdocfile, abswikifile, docfolder)
             print(f'mv {absdocfile} {abswikifile}')
 
 
