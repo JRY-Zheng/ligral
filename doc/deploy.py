@@ -2,7 +2,7 @@ import os, re
 
 docpath = os.path.dirname(__file__)
 wikipath = os.path.abspath(os.path.join(docpath, '../../ligral.wiki'))
-figurepath = '/junruoyu-zheng/ligral/raw/dev/doc/'
+figurepath = 'https://gitee.com/junruoyu-zheng/ligral/raw/dev/doc/'
 pagepath = 'https://junruoyu-zheng.gitee.io/ligral/'
 
 def parsefilename(filewithext):
