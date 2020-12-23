@@ -61,7 +61,15 @@ namespace Ligral.Syntax
         public void Interpret(string fileName)
         {
             string fullFileName = Path.Join(folder, fileName+".lig");
-            string text = File.ReadAllText(fullFileName);
+            string text;
+            try
+            {
+                text = File.ReadAllText(fullFileName);
+            }
+            catch (FileNotFoundException)
+            {
+                throw new LigralException($"File {fullFileName} not found.");
+            }
             Parser parser = new Parser();
             parser.Load(text);
             ProgramAST programAST = parser.Parse(fileName);
