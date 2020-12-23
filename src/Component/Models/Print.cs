@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using Ligral.Component;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models
@@ -28,6 +28,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
+        private double start = 0;
+        private double end = 0;
         private Signal inputSignal;
         private List<Observation> observations = new List<Observation>();
         protected override void SetUpPorts()
@@ -41,7 +43,22 @@ namespace Ligral.Component.Models
                 {"name", new Parameter(ParameterType.String , value=>
                 {
                     varName = (string) value;
-                }, ()=>{})}
+                }, ()=>{})},
+                {"start", new Parameter(ParameterType.Signal , value=>
+                {
+                    start = Convert.ToInt32(value);
+                }, ()=>
+                {
+                    start = 0;
+                })},
+                {"stop", new Parameter(ParameterType.Signal , value=>
+                {
+                    end = Convert.ToInt32(value);
+                }, ()=>
+                {
+                    Settings settings = Settings.GetInstance();
+                    end = settings.StopTime;
+                })},
             };
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
@@ -86,6 +103,7 @@ namespace Ligral.Component.Models
         }
         public override void Refresh()
         {
+            if (Solver.Time > end || Solver.Time < start) return;
             System.Console.WriteLine(string.Format(format, Solver.Time, varName, inputSignal.ToStringInLine()));
         }
     }
