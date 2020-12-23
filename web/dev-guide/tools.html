@@ -2,7 +2,7 @@
 <html lang="en">
  <head>
   <title>
-   矩阵运算
+   工具箱
   </title>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -101,243 +101,8 @@
     <div class="col-sm-8">
      <article>
       <h1>
-       矩阵计算
+       我还没写呢，过段时间再来看吧~
       </h1>
-      <p>
-       Ligral 从 v0.2.0 开始支持矩阵。在目前的版本中，矩阵和标量是两个独立的概念，即
-       <span class="katex">
-        <span class="katex-mathml">
-         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <semantics>
-           <mrow>
-            <mn>
-             1
-            </mn>
-            <mo>
-             ×
-            </mo>
-            <mn>
-             1
-            </mn>
-           </mrow>
-           <annotation encoding="application/x-tex">
-            1\times 1
-           </annotation>
-          </semantics>
-         </math>
-        </span>
-        <span aria-hidden="true" class="katex-html">
-         <span class="base">
-          <span class="strut" style="height:0.72777em;vertical-align:-0.08333em;">
-          </span>
-          <span class="mord">
-           1
-          </span>
-          <span class="mspace" style="margin-right:0.2222222222222222em;">
-          </span>
-          <span class="mbin">
-           ×
-          </span>
-          <span class="mspace" style="margin-right:0.2222222222222222em;">
-          </span>
-         </span>
-         <span class="base">
-          <span class="strut" style="height:0.64444em;vertical-align:0em;">
-          </span>
-          <span class="mord">
-           1
-          </span>
-         </span>
-        </span>
-       </span>
-       的矩阵不被视作为标量，日后可能会做出调整。关于矩阵常量的声明和一些简单的计算，已经在
-       <a href="const">
-        声明常量
-       </a>
-       一节简要地介绍了，再次不再赘述。本节主要介绍矩阵在连接语句中的应用。
-      </p>
-      <h3>
-       矩阵信号
-      </h3>
-      <p>
-       除了一些特殊的模块，几乎所有模块都支持矩阵信号（目前没有不支持矩阵信号的模块，倒是一些矩阵专用模块如
-       <code>
-        Split
-       </code>
-       不支持标量信号）。一些模块对矩阵运算有特殊的规则，比如
-       <code>
-        Calculator{type:'*'}
-       </code>
-       执行了矩阵乘法，根据左乘和右乘的不同，输入输出的矩阵形状也不同。绝大多数的模块接受一个矩阵输入信号时，通常只是简单地遍历，比如
-       <code>
-        Sin
-       </code>
-       模块就是对矩阵的每一个元素
-       <span class="katex">
-        <span class="katex-mathml">
-         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <semantics>
-           <mrow>
-            <mi>
-             x
-            </mi>
-           </mrow>
-           <annotation encoding="application/x-tex">
-            x
-           </annotation>
-          </semantics>
-         </math>
-        </span>
-        <span aria-hidden="true" class="katex-html">
-         <span class="base">
-          <span class="strut" style="height:0.43056em;vertical-align:0em;">
-          </span>
-          <span class="mord mathnormal">
-           x
-          </span>
-         </span>
-        </span>
-       </span>
-       求
-       <span class="katex">
-        <span class="katex-mathml">
-         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <semantics>
-           <mrow>
-            <mi>
-             sin
-            </mi>
-            <mo>
-             ⁡
-            </mo>
-            <mi>
-             x
-            </mi>
-           </mrow>
-           <annotation encoding="application/x-tex">
-            \sin{x}
-           </annotation>
-          </semantics>
-         </math>
-        </span>
-        <span aria-hidden="true" class="katex-html">
-         <span class="base">
-          <span class="strut" style="height:0.66786em;vertical-align:0em;">
-          </span>
-          <span class="mop">
-           sin
-          </span>
-          <span class="mspace" style="margin-right:0.16666666666666666em;">
-          </span>
-          <span class="mord">
-           <span class="mord mathnormal">
-            x
-           </span>
-          </span>
-         </span>
-        </span>
-       </span>
-       。不同模块的用法详见模块文档。
-      </p>
-      <p>
-       形如
-       <code>
-        Integrator
-       </code>
-       、
-       <code>
-        Memory
-       </code>
-       这些可以被初始化的模块，如果初始值没有显示给出，必须显式给出矩阵的形状，否则默认采用标量。如果初始化为标量，输入的信号是矩阵，或者输入信号的形状和初始化形状不一致，会引起错误。
-      </p>
-      <h3>
-       矩阵构建器
-      </h3>
-      <p>
-       在声明常数一节曾提到常数矩阵可以用于连接语句。事实上，形如以下的语句，是会被解析成一个
-       <code>
-        Constant
-       </code>
-       加入到连接图中：
-      </p>
-      <pre><code>let mat = [1, 0; 0, 1];
-mat -&gt; Print;
-</code></pre>
-      <p>
-       但是，下列语句虽然是合法的，但是背后的原理却完全不一样：
-      </p>
-      <pre><code>[1, 0; 0, 1] -&gt; Print;
-</code></pre>
-      <p>
-       <code>
-        [1, 0; 0, 1]
-       </code>
-       看起来是一个矩阵常量，但是实际上是一个矩阵构建器，它能提供更为强大的语法。
-      </p>
-      <p>
-       首先，构建器的每一个元素都可以是一个单输出的节点组，因此您可以在其中放置常数、节点、节点链，只要保证最后的输出端口只有一个即可（如果是节点链的话，需要用圆括号括出）。例如：
-      </p>
-      <pre><code>let a = 0;
-[1+1, (Step-&gt;Integrator); SineWave, a] -&gt; Print;
-</code></pre>
-      <p>
-       其次，构建器的元素的输出信号也可以是一个矩阵，这一点和矩阵常量声明时的语法类似，只要保证矩阵形状时融洽的就能正确地构建矩阵信号。
-      </p>
-      <pre><code>let a = 0;
-let mat = [1, 0; 0, 1];
-[mat, [0;1]; 1+1, (Step-&gt;Integrator), a] -&gt; Print;
-</code></pre>
-      <p>
-       在进行了优化后（尚待开发），所有关于常量的计算都会在循环之前进行初始化计算，因此使用矩阵构建器创建常量矩阵也不会比直接用
-       <code>
-        Constant
-       </code>
-       模块带来更多的开销。
-      </p>
-      <h3>
-       矩阵解构器
-      </h3>
-      <p>
-       矩阵结构是矩阵构建的逆操作，它将一个矩阵信号分解成标量信号，分别连接到若干个单输入节点。与矩阵构建器的灵活相反，矩阵解构器只允许元素是一个单输入的节点，且每个节点只能接收标量信号。如果需要将矩阵分割成更小的矩阵，参考模块
-       <code>
-        SubMatrix
-       </code>
-       （尚待开发）。
-      </p>
-      <p>
-       矩阵解构器常用来获取矩阵中的某些值，比如您在开发质点三自由度运动方程（EOM）时，通常会把三个位移状态和三个速度状态分别放进一个向量中（在 ligral 中，向量也是矩阵），用矩阵的形式开发会更加容易。但是当您需要用到这些状态求解物体受力情况时，通常需要获取每一个状态进行特殊处理，这时候就会用到矩阵解构器（以及通常成对出现的矩阵构建器）。
-      </p>
-      <pre><code>eom:Z -&gt; [x; y; z];
-eom:V -&gt; [xdot; ydot; zdot];
-(x, y, z, xdot, ydot, zdot) -&gt; model;
-[model:fx; model:fy; model:fz] -&gt; eom:Z;
-</code></pre>
-      <p>
-       矩阵解构器有一种特殊类型，在解构矩阵之后再构建回一个矩阵，称之为矩阵遍历器。这要求每个元素不仅是单输入的，还必须是单输出的，相当于对原先的矩阵信号做了依次逐元素的处理。如果您需要将一个广义坐标向量中的角度元素从弧度制改为角度制，就可以这么写：
-      </p>
-      <pre><code># X is [x; y; theta]
-X -&gt; [~; ~; Gain{180/pi}] -&gt; Print;
-</code></pre>
-      <p>
-       您可能还记得
-       <code>
-        ~
-       </code>
-       是
-       <code>
-        Node
-       </code>
-       的简洁记法，在这里表示所连接的信号不需要处理，直接转发。
-      </p>
-      <h3>
-       矩阵的位置
-      </h3>
-      <p>
-       您可能已经注意到，矩阵构建器和解构器的语法看起来有些相似，矩阵解构器和矩阵遍历器的语法甚至完全相同，ligral 如何知道您需要的是什么呢？
-      </p>
-      <p>
-       其实很简单，矩阵构建器由于没有输入，其永远只能出现在一个连接语句的句首；矩阵解构器由于没有输出，其永远只能出现在一个连接语句的句末；而矩阵遍历器则可以出现在句中和句末（因为放弃输出是被允许的）。因此，ligral 在句首读取到的永远被解析为矩阵构建器，之后读取到的，ligral 会逐个分析是否符合矩阵遍历器的要求，即是否每个元素都是单输入单输出的，如果不满足则解释为矩阵解构器。这其实是很符合使用直觉的。
-      </p>
      </article>
     </div>
     <!-- Sidebar -->
@@ -369,7 +134,7 @@ X -&gt; [~; ~; Gain{180/pi}] -&gt; Print;
         <a class="list-group-item" href="/ligral/user-guide/link.html">
          节点连接
         </a>
-        <a class="list-group-item active" href="/ligral/user-guide/matrix.html">
+        <a class="list-group-item" href="/ligral/user-guide/matrix.html">
          矩阵运算
         </a>
         <a class="list-group-item" href="/ligral/user-guide/route.html">
@@ -392,7 +157,7 @@ X -&gt; [~; ~; Gain{180/pi}] -&gt; Print;
         <a class="list-group-item" href="/ligral/dev-guide/simulation.html">
          问题抽象
         </a>
-        <a class="list-group-item" href="/ligral/dev-guide/tools.html">
+        <a class="list-group-item active" href="/ligral/dev-guide/tools.html">
          工具箱
         </a>
        </div>

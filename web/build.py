@@ -4,9 +4,13 @@ from bs4 import BeautifulSoup, element
 
 def set_article(soup, article, pre_process=None):
     if isinstance(article, str):
-        with open(article, 'r', encoding='utf8') as f:
-        #     text = f.read()
-            lines = f.readlines()
+        if os.path.exists(article):
+            with open(article, 'r', encoding='utf8') as f:
+            #     text = f.read()
+                lines = f.readlines()
+        else:
+            print(f'{article} not found')
+            lines = ['# 我还没写呢，过段时间再来看吧~']
         
         for i, line in enumerate(lines):
             if not line.startswith('    '):
@@ -149,6 +153,44 @@ def migrate_img(soup, base_dir):
                 print('same file, ignored')
             image['src'] = f'img/{os.path.basename(src_file)}'
 
+def deploy_docs(conf, index, head=None):
+    titles = list(conf)
+    if head:
+        titles.remove(head)
+        titles.insert(0, head)
+    for title in titles:
+        if isinstance(conf[title], str):
+            path = conf[title]
+            if os.path.isdir('doc/' + path):
+                if os.path.isdir('web/' + path):
+                    html = path + '/index.html'
+                    print(f'DEBUG: web/{path} found')
+                else:
+                    html = path + '.html'
+                    print(f'DEBUG: web/{path} not found')
+                md = path + '/README.md'
+            else:
+                html = path + '.html'
+                md = path + '.md'
+            # print(f'DEBUG: {md} found')
+            set_article(soup, os.path.join(script_folder, '../doc/' + md))
+            set_title(soup, title)
+            set_item_active(soup, index)
+            index += 1
+            migrate_img(soup, os.path.join(script_folder, '../doc/' + md.rsplit('/')[0]))
+            with open('web/' + html, 'w', encoding='utf8') as f:
+                f.write(soup.prettify())
+
+            print(f'INFO: {html} done.')
+        elif isinstance(conf[title], dict):
+            folder = conf[title]
+            folder[title] = folder[list(folder)[0]].rsplit('/')[0]
+            if not os.path.isdir('web/' + folder[title]):
+                os.mkdir('web/' + folder[title])
+            index = deploy_docs(folder, index, title)
+
+    return index
+
 if __name__ == "__main__":
     script_folder = os.path.dirname(__file__)
         
@@ -168,7 +210,7 @@ if __name__ == "__main__":
     print('INFO: index.html done.')
 
     move_aside(soup)
-    set_aside(soup, {
+    conf = {
         '快速开始': 'quick-start',
         '用户文档': {
             '术语定义': 'user-guide/terms',
@@ -190,89 +232,92 @@ if __name__ == "__main__":
             '模块接口': 'interface/model',
             '数据接口': 'interface/protocol'
         }
-    })
-    set_article(soup, os.path.join(script_folder, '../doc/quick-start/README.md'))
+    }
+    set_aside(soup, conf)
+
     delete_jumbotron(soup)
-    set_title(soup, '快速开始')
     set_navbar_active(soup, 1)
-    set_item_active(soup, 0)
-    migrate_img(soup, os.path.join(script_folder, '../doc/quick-start'))
-    with open('web/quick-start.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    deploy_docs(conf, 0)
+    # set_article(soup, os.path.join(script_folder, '../doc/quick-start/README.md'))
+    # set_title(soup, '快速开始')
+    # set_item_active(soup, 0)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/quick-start'))
+    # with open('web/quick-start.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: quick-start.html done.')
+    # print('INFO: quick-start.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/README.md'))
-    set_title(soup, '用户文档')
-    set_item_active(soup, 1)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/index.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/README.md'))
+    # set_title(soup, '用户文档')
+    # set_item_active(soup, 1)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/index.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/index.html done.')
+    # print('INFO: user-guide/index.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/terms.md'))
-    set_title(soup, '术语定义')
-    set_item_active(soup, 2)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/terms.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/terms.md'))
+    # set_title(soup, '术语定义')
+    # set_item_active(soup, 2)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/terms.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/terms.html done.')
+    # print('INFO: user-guide/terms.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/config.md'))
-    set_title(soup, '设置语句')
-    set_item_active(soup, 3)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/config.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/config.md'))
+    # set_title(soup, '设置语句')
+    # set_item_active(soup, 3)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/config.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/config.html done.')
+    # print('INFO: user-guide/config.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/const.md'))
-    set_title(soup, '声明常量')
-    set_item_active(soup, 4)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/const.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/const.md'))
+    # set_title(soup, '声明常量')
+    # set_item_active(soup, 4)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/const.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/const.html done.')
+    # print('INFO: user-guide/const.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/node.md'))
-    set_title(soup, '声明节点')
-    set_item_active(soup, 5)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/node.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/node.md'))
+    # set_title(soup, '声明节点')
+    # set_item_active(soup, 5)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/node.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/node.html done.')
+    # print('INFO: user-guide/node.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/link.md'))
-    set_title(soup, '节点连接')
-    set_item_active(soup, 6)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/link.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/link.md'))
+    # set_title(soup, '节点连接')
+    # set_item_active(soup, 6)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/link.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/link.html done.')
+    # print('INFO: user-guide/link.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/matrix.md'))
-    set_title(soup, '矩阵计算')
-    set_item_active(soup, 6)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/matrix.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/matrix.md'))
+    # set_title(soup, '矩阵计算')
+    # set_item_active(soup, 6)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/matrix.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/matrix.html done.')
+    # print('INFO: user-guide/matrix.html done.')
 
-    set_article(soup, os.path.join(script_folder, '../doc/user-guide/route.md'))
-    set_title(soup, '路由类型')
-    set_item_active(soup, 6)
-    migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
-    with open('web/user-guide/route.html', 'w', encoding='utf8') as f:
-        f.write(soup.prettify())
+    # set_article(soup, os.path.join(script_folder, '../doc/user-guide/route.md'))
+    # set_title(soup, '路由类型')
+    # set_item_active(soup, 6)
+    # migrate_img(soup, os.path.join(script_folder, '../doc/user-guide'))
+    # with open('web/user-guide/route.html', 'w', encoding='utf8') as f:
+    #     f.write(soup.prettify())
 
-    print('INFO: user-guide/route.html done.')
+    # print('INFO: user-guide/route.html done.')
 
     with open(os.path.join(script_folder, 'product.html'), 'r', encoding='utf8') as f:
         prod_text = f.read()
