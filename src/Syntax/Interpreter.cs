@@ -64,7 +64,15 @@ namespace Ligral.Syntax
         }
         public void Interpret(string fileName)
         {
-            string fullFileName = Path.Join(folder, fileName+".lig");
+            string fullFileName = Path.Join(folder, fileName);
+            if (Directory.Exists(fullFileName))
+            {
+                fullFileName = Path.Join(fullFileName, "index.lig");
+            }
+            else
+            {
+                fullFileName += ".lig";
+            }
             string text;
             try
             {
