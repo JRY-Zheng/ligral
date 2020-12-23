@@ -14,6 +14,19 @@ namespace Ligral.Component.Models
                 return "This model prints the data to the console.";
             }
         }
+        private static int maxLength = 10;
+        private static string format = "Time: {0,-6:0.00} {1,10} = {2:0.00}";
+        private static int length
+        {
+            set
+            {
+                if (value > maxLength)
+                {
+                    maxLength = value;
+                    format = "Time: {0,-6:0.00} {1,"+ maxLength +"} = {2:0.00}";
+                }
+            }
+        }
         private string varName;
         private Signal inputSignal;
         private List<Observation> observations = new List<Observation>();
@@ -46,6 +59,7 @@ namespace Ligral.Component.Models
                     }
                 }
             }
+            length = varName.Length;
             (int rowNo, int colNo) = inputSignal.Shape();
             if (inputSignal.IsMatrix)
             {
@@ -72,7 +86,7 @@ namespace Ligral.Component.Models
         }
         public override void Refresh()
         {
-            System.Console.WriteLine(string.Format("Time: {0,-6:0.00} {1,10} = {2:0.00}", Solver.Time, varName, inputSignal.ToStringInLine()));
+            System.Console.WriteLine(string.Format(format, Solver.Time, varName, inputSignal.ToStringInLine()));
         }
     }
 }
