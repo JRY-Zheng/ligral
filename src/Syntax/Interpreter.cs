@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using System.IO;
-using System;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Ligral.Component.Models;
@@ -611,12 +611,21 @@ namespace Ligral.Syntax
         {
             string module = Visit(usingAST.ModuleName);
             string fileName = string.Join('/', usingAST.FileName.ConvertAll(file=>Visit(file)));
+            TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
             ScopeSymbolTable mainScope = currentScope;
+            ScopeSymbolTable scopeSymbolTable = mainScope;
+            ScopeSymbol scopeSymbol;
+            foreach (WordAST folder in usingAST.FileName.Take(usingAST.FileName.Count - 1))
+            {
+                var temp = new ScopeSymbolTable(folder.Word, 0);
+                scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
+                scopeSymbolTable.Insert(scopeSymbol);
+                scopeSymbolTable = temp;
+            }
             // currentScope = new ScopeSymbolTable(module, 0);
             Interpret(fileName);
-            TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
-            ScopeSymbol scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
-            mainScope.Insert(scopeSymbol);
+            scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
+            scopeSymbolTable.Insert(scopeSymbol);
             currentScope = mainScope;
             return null;
         }
