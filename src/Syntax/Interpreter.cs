@@ -12,6 +12,8 @@ namespace Ligral.Syntax
 {
     class Interpreter
     {
+        private string rootFolder;
+        private string relativeFolder;
         private string folder;
         private ScopeSymbolTable currentScope;
         private static Interpreter instance;
@@ -36,6 +38,8 @@ namespace Ligral.Syntax
                 instance = new Interpreter();
             }
             instance.folder = folder;
+            instance.rootFolder = folder;
+            instance.relativeFolder = folder;
             return instance;
         }
         private Interpreter() {}
@@ -70,6 +74,7 @@ namespace Ligral.Syntax
             {
                 throw new LigralException($"File {fullFileName} not found.");
             }
+            relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();
             parser.Load(text);
             ProgramAST programAST = parser.Parse(fileName);
@@ -611,6 +616,7 @@ namespace Ligral.Syntax
         {
             ScopeSymbolTable mainScope = currentScope;
             string fileName = string.Join('/', importAST.FileName.ConvertAll(file=>Visit(file)));
+            folder = importAST.Relative ? relativeFolder : rootFolder;
             Interpret(fileName);
             currentScope = mainScope.Merge(currentScope);
             return null;
@@ -630,7 +636,7 @@ namespace Ligral.Syntax
                 scopeSymbolTable.Insert(scopeSymbol);
                 scopeSymbolTable = temp;
             }
-            // currentScope = new ScopeSymbolTable(module, 0);
+            folder = usingAST.Relative ? relativeFolder : rootFolder;
             Interpret(fileName);
             scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
             scopeSymbolTable.Insert(scopeSymbol);

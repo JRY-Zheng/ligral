@@ -7,10 +7,12 @@ namespace Ligral.Syntax.ASTs
     {
         public List<WordAST> FileName;
         public WordAST ModuleName;
-        public UsingAST(List<WordAST> fileName, WordAST moduleName)
+        public bool Relative;
+        public UsingAST(List<WordAST> fileName, WordAST moduleName, bool relative)
         {
             FileName = fileName;
             ModuleName = moduleName;
+            Relative = relative;
         }
         public override Token FindToken()
         {

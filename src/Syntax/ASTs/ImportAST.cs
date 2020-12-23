@@ -6,9 +6,11 @@ namespace Ligral.Syntax.ASTs
     class ImportAST : AST
     {
         public List<WordAST> FileName;
-        public ImportAST(List<WordAST> fileName)
+        public bool Relative;
+        public ImportAST(List<WordAST> fileName, bool relative)
         {
             FileName = fileName;
+            Relative = relative;
         }
         public override Token FindToken()
         {

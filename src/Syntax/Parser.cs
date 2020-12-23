@@ -594,6 +594,22 @@ namespace Ligral.Syntax
             Eat(TokenType.USING);
             List<WordAST> fileName = new List<WordAST>();
             WordAST moduleName;
+            bool relative = false;
+            if (currentToken.Type == TokenType.CARET)
+            {
+                relative = true;
+                while (currentToken.Type == TokenType.CARET)
+                {
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    Eat(TokenType.CARET);
+                    fileName.Add(new WordAST(token));
+                }
+            }
+            else if (currentToken.Type == TokenType.DOT)
+            {
+                relative = true;
+                Eat(TokenType.DOT);
+            }
             while (true)
             {
                 StringToken moduleToken = Eat(TokenType.ID) as StringToken;
@@ -608,13 +624,29 @@ namespace Ligral.Syntax
                     Eat(TokenType.DOT);
                 }
             }
-            return new UsingAST(fileName, moduleName);
+            return new UsingAST(fileName, moduleName, relative);
         }
         private ImportAST Import()
         {
             Eat(TokenType.IMPORT);
             List<WordAST> fileName = new List<WordAST>();
             WordAST moduleName;
+            bool relative = false;
+            if (currentToken.Type == TokenType.CARET)
+            {
+                relative = true;
+                while (currentToken.Type == TokenType.CARET)
+                {
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    Eat(TokenType.CARET);
+                    fileName.Add(new WordAST(token));
+                }
+            }
+            else if (currentToken.Type == TokenType.DOT)
+            {
+                relative = true;
+                Eat(TokenType.DOT);
+            }
             while (true)
             {
                 StringToken moduleToken = Eat(TokenType.ID) as StringToken;
@@ -629,7 +661,7 @@ namespace Ligral.Syntax
                     Eat(TokenType.DOT);
                 }
             }
-            return new ImportAST(fileName);
+            return new ImportAST(fileName, relative);
         }
     }
 }
