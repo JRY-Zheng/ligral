@@ -438,7 +438,18 @@ namespace Ligral.Syntax
             ILinkable linkable = modelObject as ILinkable;
             if (linkable==null)
             {
-                linkable = ModelManager.Create("Constant");
+                Model constant = ModelManager.Create("Constant");
+                string name = "";
+                while (modelAST is PointerAST pointerAST)
+                {
+                    name = "." + pointerAST.Member.Id + name;
+                    modelAST = pointerAST.ScopeName;
+                }
+                if (modelAST is IdAST idAST)
+                {
+                    constant.Name = idAST.Id + name;
+                }
+                linkable = constant;
                 Dict dictionary = new Dict(){{"value", modelObject}};
                 linkable.Configure(dictionary);
             }
