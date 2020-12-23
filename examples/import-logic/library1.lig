@@ -1,0 +1,3 @@
+import subfolder.sublib2;
+
+let hello = 1;

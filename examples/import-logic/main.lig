@@ -1,0 +1,71 @@
+using library1;
+import library2;
+using subfolder.sublib1;
+using package;
+
+# 目录结构及文件内容：
+
+# ┬ 根目录
+# ├──── library1.lig:
+# │    ┌─────────────────────────────┐
+# │    │import subfolder.sublib2;    │
+# │    │let hello = 1;               │
+# │    └─────────────────────────────┘
+# ├──── library2.lig:
+# │    ┌─────────────────────────────┐
+# │    │let hello = 2;               │
+# │    └─────────────────────────────┘
+# ├───┬ subfolder:
+# │   ├──── sublib1.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │let world = 1;               │
+# │   │    └─────────────────────────────┘
+# │   ├──── sublib2.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │import .sublib3;             │
+# │   │    │import ^package.module2;     │
+# │   │    └─────────────────────────────┘
+# │   └──── sublib3.lig:
+# │        ┌─────────────────────────────┐
+# │        │let world = 2;               │
+# │        └─────────────────────────────┘
+# ├───┬ package:
+# │   ├──── index.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │using .module1;              │
+# │   │    │using .module2;              │
+# │   │    └─────────────────────────────┘
+# │   ├──── module1.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │let hey = 3;                 │
+# │   │    └─────────────────────────────┘
+# │   └──── module2.lig:
+# │        ┌─────────────────────────────┐
+# │        │let ligral = 4;              │
+# │        └─────────────────────────────┘
+
+# 来自 library 1 的变量，using 子句引入的变量需要完整路径引用
+library1.hello -> Print;
+
+# 来自 library 2 的变量，import 子句引入的变量可以直接引用
+hello -> Print;
+
+# 来自 sublib 1 的变量，引用子文件夹中的 lig 文件
+# 因为是 using 子句，所以仍需要完整路径引用
+subfolder.sublib1.world -> Print;
+
+# library 1 引用了 sublib 2，sublib 2 又引用了 sublib 3
+# 第一次引用是 using 子句，需要引用路径
+# 由于后两次引用都是 import 子句，所以不需要完整路径
+library1.world -> Print;
+
+# 来自 module 1 的变量，通过包引用，index 引用了 module 1
+# 由于两次都是 using 子句，所以两级的路劲都需要完整引用
+package.module1.hey -> Print;
+
+# library 1 引用了 sublib 2，sublib 2 引用了上级目录下的包中的 lig 文件
+library1.ligral -> Print;
+
+# 简化输出
+conf step_size = 1;
+conf stop_time = 1;
