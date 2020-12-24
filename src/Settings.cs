@@ -39,7 +39,7 @@ namespace Ligral
                 parser.Load(text);
                 ProgramAST p = parser.Parse();
                 p.Statements.Statements.RemoveAll(ast => !(ast is ConfAST));
-                Interpreter interpreter = Interpreter.GetInstance(Path.GetDirectoryName(executingPath));
+                Interpreter interpreter = Interpreter.GetInstance(defaultSetting);
                 interpreter.Interpret(p);
             }
         }

@@ -87,7 +87,7 @@ namespace Ligral
                 Syntax.Parser parser = new Syntax.Parser();
                 parser.Load(text);
                 ProgramAST p = parser.Parse();
-                Interpreter interpreter = Interpreter.GetInstance(Path.GetDirectoryName(options.InputFile));
+                Interpreter interpreter = Interpreter.GetInstance(options.InputFile);
                 interpreter.Interpret(p);
                 if (options.OutputFolder!=null)
                 {

@@ -15,7 +15,9 @@ namespace Ligral.Syntax
         private string rootFolder;
         private string relativeFolder;
         private string folder;
+        private string currentFileName;
         private ScopeSymbolTable currentScope;
+        private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
         private static Interpreter instance;
         public static string ScopeName 
         {
@@ -31,15 +33,25 @@ namespace Ligral.Syntax
                 }
             }
         }
-        public static Interpreter GetInstance(string folder = ".")
+        public static Interpreter GetInstance(string filename)
         {
             if (instance == null)
             {
                 instance = new Interpreter();
             }
+            instance.currentFileName = Path.GetFullPath(filename);
+            string folder = Path.GetDirectoryName(filename);
             instance.folder = folder;
             instance.rootFolder = folder;
             instance.relativeFolder = folder;
+            return instance;
+        }
+        public static Interpreter GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new Interpreter();
+            }
             return instance;
         }
         private Interpreter() {}
@@ -73,6 +85,7 @@ namespace Ligral.Syntax
             {
                 fullFileName += ".lig";
             }
+            currentFileName = Path.GetFullPath(fullFileName);
             string text;
             try
             {
@@ -178,7 +191,13 @@ namespace Ligral.Syntax
         }
         private object Visit(ProgramAST programAST)
         {
+            if (modules.ContainsKey(currentFileName))
+            {
+                currentScope = modules[currentFileName];
+                return null;
+            }
             currentScope = new ScopeSymbolTable(programAST.Name, 0);
+            modules[currentFileName] = currentScope;
             return Visit(programAST.Statements);
         }
         private object Visit(StatementsAST statementsAST)
