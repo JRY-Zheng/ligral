@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   引用依赖
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="/ligral/css/style.css" rel="stylesheet"/>
+  <link href="/ligral/css/rolling.css" rel="stylesheet"/>
+  <link href="/ligral/css/custom.css" rel="stylesheet"/>
+  <link href="/ligral/css/katex.min.css" rel="stylesheet"/>
+  <link href="/ligral/avatar.png" rel="shortcut icon" type="image/x-icon"/>
+  <!-- Font Awesome -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown active">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="/ligral/quick-start.html">
+         快速开始
+        </a>
+        <a class="dropdown-item" href="/ligral/user-guide">
+         用户文档
+        </a>
+        <a class="dropdown-item" href="/ligral/dev-guide">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="/ligral/interface/">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/product.html">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/contact.html">
+        联系我们
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row" style="flex-direction: row-reverse;">
+    <!-- Main content -->
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       引用依赖
+      </h1>
+      <p>
+       一个结构清晰的中大型仿真工程离不开引用依赖，不论这些依赖来自于内部或是引用自外部。在 ligral 中，您可以很方便地处理这些依赖关系并且引用到仿真工程中。本文涉及的所有例子均可在
+       <code>
+        /examples/import-logic/
+       </code>
+       下查看。
+      </p>
+      <h3>
+       绝对路径引用
+      </h3>
+      <p>
+       最简单的情况莫过于所有 lig 文件都在同一个文件夹，ligral 提供了两个子句以供使用。例如下面的文件结构：
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+└──── library1.lig:
+     ┌─────────────────────────────┐
+     │let hello = 1;               │
+     └─────────────────────────────┘
+</code></pre>
+      <p>
+       在
+       <code>
+        main.lig
+       </code>
+       中调用
+       <code>
+        hello
+       </code>
+       有两种方法：
+      </p>
+      <pre><code># 方法 1
+import library1;
+hello -&gt; Print;
+
+# 方法 2
+using library1;
+library1.hello -&gt; Print;
+</code></pre>
+      <p>
+       顾名思义，
+       <code>
+        import
+       </code>
+       代表导入，会将文件
+       <code>
+        library1.lig
+       </code>
+       中的所有成员（包括常量、节点和连接关系等等）量导入到当前的命名空间。
+       <code>
+        using
+       </code>
+       代表使用（或引用），即使用
+       <code>
+        library
+       </code>
+       这一命名空间来访问文件
+       <code>
+        library1.lig
+       </code>
+       中的成员。
+      </p>
+      <p>
+       注意，重复导入或者引用同一个 lig 文件，该文件只会被加载一次。
+      </p>
+      <p>
+       这个例子中的
+       <code>
+        main.lig
+       </code>
+       被称为入口文件，入口文件所在的目录是工程根目录，是绝对引用的参考目录。也就是说，在此目录下如果还有子文件夹，导入或引用子文件夹中的 lig 文件必须给出相对于工程根目录的路径。例如下面的文件结构：
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+└───┬ subfolder:
+    └──── sublib1.lig:
+         ┌─────────────────────────────┐
+         │let world = 1;               │
+         └─────────────────────────────┘
+</code></pre>
+      <p>
+       同样，根据需要可以使用两种语法来导入或引用该文件，且通过
+       <code>
+        using
+       </code>
+       子句引用的变量需要完整路径引用：
+      </p>
+      <pre><code># 方法 1
+import subfolder.sublib1;
+world -&gt; Print;
+
+# 方法 2
+using subfolder.sublib1;
+subfolder.sublib1.world -&gt; Print;
+</code></pre>
+      <h3>
+       相对路径引用
+      </h3>
+      <p>
+       相对路径引用是针对不在工程根目录的文件而言的，因为此时文件所在目录和工程根目录不一致。请看以下文件结构：
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+└───┬ subfolder:
+    ├──── sublib1.lig
+    └──── sublib2.lig:
+         ┌─────────────────────────────┐
+         │let world = 2;               │
+         └─────────────────────────────┘
+</code></pre>
+      <p>
+       如果要在
+       <code>
+        sublib1.lig
+       </code>
+       中使用
+       <code>
+        world
+       </code>
+       ，以
+       <code>
+        using
+       </code>
+       为例，有绝对引用和相对引用两种方法，绝对引用如下：
+      </p>
+      <pre><code>using subfolder.sublib2;
+subfolder.sublib2.world -&gt; Print;
+</code></pre>
+      <p>
+       这么写的前提是入口文件是
+       <code>
+        main.lig
+       </code>
+       。如果入口文件发生变动，这一语句就不能正常执行，因此 ligral 提供了相对应用的方式：
+      </p>
+      <pre><code>using .sublib2;
+sublib2.world -&gt; Print;
+</code></pre>
+      <p>
+       <code>
+        sublib2
+       </code>
+       前的
+       <code>
+        .
+       </code>
+       号表明在文件
+       <code>
+        sublib1.lig
+       </code>
+       所在目录搜索
+       <code>
+        sublib2.lig
+       </code>
+       。如果这个目录下仍有文件夹
+       <code>
+        subsubfolder
+       </code>
+       ，自然就可以写成
+       <code>
+        .subsubfolder.file
+       </code>
+       。
+      </p>
+      <p>
+       如果要访问上一级目录，就在
+       <code>
+        .
+       </code>
+       号之前继续加
+       <code>
+        .
+       </code>
+       ，也就是如果有两个
+       <code>
+        .
+       </code>
+       ，表示在上一级目录搜索，如果有三个
+       <code>
+        .
+       </code>
+       ，则表示上两级目录。但是一般建议不要超过一级目录进行跨级访问。例如下面的文件结构：
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+├───┬ subfolder:
+│   └──── sublib1.lig
+└───┬ package:
+    └──── module1.lig:
+         ┌─────────────────────────────┐
+         │let ligral = 1;              │
+         └─────────────────────────────┘
+</code></pre>
+      <p>
+       如果
+       <code>
+        sublib1.lig
+       </code>
+       文件需要引用
+       <code>
+        world
+       </code>
+       ，一种方法是通过绝对路径访问，这要求
+       <code>
+        main.lig
+       </code>
+       是入口文件：
+      </p>
+      <pre><code>using package.module1;
+package.module1.ligral -&gt; Print;
+</code></pre>
+      <p>
+       如果用相对引用的方式，则可以写：
+      </p>
+      <pre><code>using ..package.module1;
+package.module1.ligral -&gt; Print;
+</code></pre>
+      <p>
+       可以看到，标识符前面的两个点是被省略了的，不需要写出上一级文件夹的名字。如果使用
+       <code>
+        import
+       </code>
+       子句，就不会存在这个问题。
+      </p>
+      <h3>
+       包引用
+      </h3>
+      <p>
+       之前的情况都属于文件引用，如果引用了一个文件夹，该文件夹必须是一个包。成为包的充分必要条件就是该文件夹下存在一个
+       <code>
+        index.lig
+       </code>
+       文件，引用该文件夹等效于引用
+       <code>
+        index.lig
+       </code>
+       文件。例如下列文件结构：
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+└───┬ package:
+    ├──── index.lig:
+    │    ┌─────────────────────────────┐
+    │    │using .module1;              │
+    │    └─────────────────────────────┘
+    └──── module1.lig:
+         ┌─────────────────────────────┐
+         │let ligral = 1;              │
+         └─────────────────────────────┘
+</code></pre>
+      <p>
+       如果您在
+       <code>
+        main.lig
+       </code>
+       中导入
+       <code>
+        package
+       </code>
+       这个包：
+      </p>
+      <pre><code>import package;
+</code></pre>
+      <p>
+       您将会在当前命名空间看到
+       <code>
+        index.lig
+       </code>
+       中的所有内容。而
+       <code>
+        index.lig
+       </code>
+       中包含
+       <code>
+        module1
+       </code>
+       这一标识符，因此如果您需要使用
+       <code>
+        ligral
+       </code>
+       ，应该写：
+      </p>
+      <pre><code>module1.ligral -&gt; Print;
+</code></pre>
+      <p>
+       需要说明的是，在
+       <code>
+        index.lig
+       </code>
+       文件中，您可以选择使用
+       <code>
+        using
+       </code>
+       ，也可以使用
+       <code>
+        import
+       </code>
+       ，根据实际需要。如果在上面的例子中，
+       <code>
+        index.lig
+       </code>
+       文件里是
+       <code>
+        import .module1;
+       </code>
+       ，那么在
+       <code>
+        main.lig
+       </code>
+       中就可以直接调用
+       <code>
+        ligral
+       </code>
+       了。
+      </p>
+      <h3>
+       选择性导入
+      </h3>
+      <p>
+       有的时候一些包或者 lig 文件可能包含很多成员，但实际使用中可能只需要引用其中的部分成员，这时使用
+       <code>
+        using
+       </code>
+       子句可以避免命名污染。但是如果不想通过命名空间的方式来调用对象，可以使用
+       <code>
+        import
+       </code>
+       子句的选择性导入语法。
+      </p>
+      <pre><code>┬ 根目录
+├──── main.lig
+└───┬ subfolder:
+    └──── sublib4.lig:
+         ┌─────────────────────────────┐
+         │let world = 4;               │
+         │let unused = 0;              │
+         └─────────────────────────────┘
+</code></pre>
+      <p>
+       如果您只想使用
+       <code>
+        world
+       </code>
+       成员，您可以这么写：
+      </p>
+      <pre><code>import subfolder.sublib4 : world;
+world -&gt; Print;
+</code></pre>
+      <p>
+       此时仅有
+       <code>
+        world
+       </code>
+       被导入到当前命名空间，而
+       <code>
+        unused
+       </code>
+       没有，因此不能被访问。如果您需要导入多个成员，可以用逗号分隔。
+      </p>
+      <h3>
+       别名引用
+      </h3>
+      <p>
+       有的时候由于文件层级较多，使用
+       <code>
+        using
+       </code>
+       子句导入往往导致命名空间太长，此时可以使用
+       <code>
+        using
+       </code>
+       子句的别名语法。在上面的例子中，如果使用普通的
+       <code>
+        using
+       </code>
+       子句，需要这么写：
+      </p>
+      <pre><code>using subfolder.sublib4;
+subfolder.sublib4.world -&gt; Print;
+</code></pre>
+      <p>
+       如果采用别名语法，把命名空间起名为
+       <code>
+        lib
+       </code>
+       ，则可以写：
+      </p>
+      <pre><code>using subfolder.sublib4 : lib;
+lib.world -&gt; Print;
+</code></pre>
+      <p>
+       这样可以避免冗长的代码，但是需要注意别名不能和现有的成员冲突。
+      </p>
+      <p>
+       <strong>
+        需要注意的是
+       </strong>
+       ，
+       <code>
+        import
+       </code>
+       子句和
+       <code>
+        using
+       </code>
+       子句虽然都使用了
+       <code>
+        :
+       </code>
+       来扩展语法，但是
+       <code>
+        :
+       </code>
+       的含义是不同的。
+       <code>
+        import
+       </code>
+       子句用
+       <code>
+        :
+       </code>
+       来引出需要导入的成员，
+       <code>
+        using
+       </code>
+       子句用
+       <code>
+        :
+       </code>
+       引出命名空间的别名。不过有一点是相同的：出现
+       <code>
+        :
+       </code>
+       的语句中，
+       <code>
+        :
+       </code>
+       之后的符号会被加载到当前命名空间中，之前的不会。
+      </p>
+      <h3>
+       循环依赖
+      </h3>
+      <p>
+       循环依赖指的是文件 A 依赖于文件 B，同时文件 B 也依赖于文件 A 的情况，这在一般情况下是需要避免的，不是一种良好的编程风格。但这并不意味着循环依赖一定会报错，某些场合很谨慎地使用也是可以解释通过的，通过这种方式您能更深入地了解 ligral 如何处理依赖关系。以下属于进阶内容，感兴趣的话可以深入研究。
+      </p>
+      <pre><code>┬ 根目录
+├──── node1.lig:
+│    ┌─────────────────────────────┐
+│    │let b = 2;                   │
+│    │import .node2;               │
+│    │a -&gt; Print;                  │
+│    └─────────────────────────────┘
+└──── node2.lig:
+     ┌─────────────────────────────┐
+     │import .node1;               │
+     │b -&gt; Print;                  │
+     │let a = 1;                   │
+     └─────────────────────────────┘
+</code></pre>
+      <p>
+       在上面这个例子中，如果程序从
+       <code>
+        node1.lig
+       </code>
+       启动，执行代码的顺序及当前的命名空间如下表所示：
+      </p>
+      <table>
+       <thead>
+        <tr>
+         <th>
+          代码
+         </th>
+         <th>
+          node1 命名空间
+         </th>
+         <th>
+          node2 命名空间
+         </th>
+         <th>
+          备注
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          <code>
+           let b = 2;
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+          *
+         </td>
+         <td>
+          -
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <code>
+           import .node2
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+         </td>
+         <td>
+          <code>
+           []
+          </code>
+          *
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <code>
+           import .node1
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+          *
+         </td>
+         <td>
+          不会重复加载 node1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <code>
+           b -&gt; Print;
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+          *
+         </td>
+         <td>
+          成功访问到
+          <code>
+           b
+          </code>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <code>
+           let a = 1;
+          </code>
+         </td>
+         <td>
+          <code>
+           [b]
+          </code>
+         </td>
+         <td>
+          <code>
+           [b, a]
+          </code>
+          *
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <code>
+           a -&gt; Print;
+          </code>
+         </td>
+         <td>
+          <code>
+           [b, a]
+          </code>
+          *
+         </td>
+         <td>
+          <code>
+           [b, a]
+          </code>
+         </td>
+         <td>
+          成功访问到
+          <code>
+           a
+          </code>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       其中 * 号表示当前的命名空间。
+      </p>
+     </article>
+    </div>
+    <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item" href="/ligral/quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="/ligral/user-guide/index.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/user-guide/terms.html">
+         术语定义
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/config.html">
+         设置语句
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/const.html">
+         声明常量
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/node.html">
+         声明节点
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/link.html">
+         节点连接
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/matrix.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/route.html">
+         路由类型
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/inherit.html">
+         接口继承
+        </a>
+        <a class="list-group-item active" href="/ligral/user-guide/import.html">
+         引用依赖
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/dev-guide/index.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/dev-guide/syntax.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/simulation.html">
+         问题抽象
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/tools.html">
+         工具箱
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/interface/index.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="/ligral/interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis" target="_blank">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" target="_blank" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" target="_blank" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish" target="_blank">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5" target="_blank">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral" target="_blank">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral" target="_blank">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com" target="_blank">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer" target="_blank">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励；感谢我的导师 James 对数值积分的指导；感谢 Gitee 对项目的支持，在刚开源不久就为我推荐；感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;" target="_blank">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish" target="_blank">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2020. Ligral All rights reserved. 梨果科技版权所有 © 2020
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="/ligral/js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="/ligral/js/popper.min.js">
+  </script>
+  <script src="/ligral/js/bootstrap.min.js">
+  </script>
+  <script src="/ligral/js/TweenMax.min.js">
+  </script>
+  <script src="/ligral/js/rolling.js">
+  </script>
+ </body>
+</html>
