@@ -593,7 +593,7 @@ namespace Ligral.Syntax
         {
             Eat(TokenType.USING);
             List<WordAST> fileName = new List<WordAST>();
-            WordAST moduleName;
+            WordAST moduleName = null;
             bool relative = false;
             if (currentToken.Type == TokenType.CARET)
             {
@@ -613,8 +613,7 @@ namespace Ligral.Syntax
             while (true)
             {
                 StringToken moduleToken = Eat(TokenType.ID) as StringToken;
-                moduleName = new WordAST(moduleToken);
-                fileName.Add(moduleName);
+                fileName.Add(new WordAST(moduleToken));
                 if (currentToken.Type!=TokenType.DOT)
                 {
                     break;
@@ -623,6 +622,12 @@ namespace Ligral.Syntax
                 {
                     Eat(TokenType.DOT);
                 }
+            }
+            if (currentToken.Type == TokenType.COLON)
+            {
+                Eat(TokenType.COLON);
+                StringToken moduleToken = Eat(TokenType.ID) as StringToken;
+                moduleName = new WordAST(moduleToken);
             }
             return new UsingAST(fileName, moduleName, relative);
         }
@@ -630,7 +635,7 @@ namespace Ligral.Syntax
         {
             Eat(TokenType.IMPORT);
             List<WordAST> fileName = new List<WordAST>();
-            WordAST moduleName;
+            List<WordAST> symbols = new List<WordAST>();
             bool relative = false;
             if (currentToken.Type == TokenType.CARET)
             {
@@ -650,7 +655,7 @@ namespace Ligral.Syntax
             while (true)
             {
                 StringToken moduleToken = Eat(TokenType.ID) as StringToken;
-                moduleName = new WordAST(moduleToken);
+                WordAST moduleName = new WordAST(moduleToken);
                 fileName.Add(moduleName);
                 if (currentToken.Type!=TokenType.DOT)
                 {
@@ -661,7 +666,25 @@ namespace Ligral.Syntax
                     Eat(TokenType.DOT);
                 }
             }
-            return new ImportAST(fileName, relative);
+            if (currentToken.Type == TokenType.COLON)
+            {
+                Eat(TokenType.COLON);
+                while (true)
+                {
+                    StringToken moduleToken = Eat(TokenType.ID) as StringToken;
+                    WordAST symbol = new WordAST(moduleToken);
+                    symbols.Add(symbol);
+                    if (currentToken.Type!=TokenType.COMMA)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Eat(TokenType.COMMA);
+                    }
+                }
+            }
+            return new ImportAST(fileName, relative, symbols);
         }
     }
 }

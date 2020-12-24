@@ -78,7 +78,7 @@ namespace Ligral.Syntax
             {
                 text = File.ReadAllText(fullFileName);
             }
-            catch (FileNotFoundException)
+            catch (IOException)
             {
                 throw new LigralException($"File {fullFileName} not found.");
             }
@@ -626,23 +626,47 @@ namespace Ligral.Syntax
             string fileName = string.Join('/', importAST.FileName.ConvertAll(file=>Visit(file)));
             folder = importAST.Relative ? relativeFolder : rootFolder;
             Interpret(fileName);
-            currentScope = mainScope.Merge(currentScope);
+            if (importAST.Symbols.Count == 0)
+            {
+                currentScope = mainScope.Merge(currentScope);
+            }
+            else
+            {
+                foreach (var symbolName in importAST.Symbols)
+                {
+                    var symbol = currentScope.Lookup(Visit(symbolName), false);
+                    if (symbol == null)
+                    {
+                        throw new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} from {importAST.FileName.Last()}");
+                    }
+                    mainScope.Insert(symbol);
+                }
+                currentScope = mainScope;
+            }
             return null;
         }
         private object Visit(UsingAST usingAST)
         {
-            string module = Visit(usingAST.ModuleName);
             string fileName = string.Join('/', usingAST.FileName.ConvertAll(file=>Visit(file)));
             TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
             ScopeSymbolTable mainScope = currentScope;
             ScopeSymbolTable scopeSymbolTable = mainScope;
             ScopeSymbol scopeSymbol;
-            foreach (WordAST folder in usingAST.FileName.Take(usingAST.FileName.Count - 1))
+            string module;
+            if (usingAST.ModuleName != null)
             {
-                var temp = new ScopeSymbolTable(folder.Word, 0);
-                scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
-                scopeSymbolTable.Insert(scopeSymbol);
-                scopeSymbolTable = temp;
+                module = Visit(usingAST.ModuleName);
+            }
+            else
+            {
+                module = Visit(usingAST.FileName.Last());
+                foreach (WordAST folder in usingAST.FileName.Take(usingAST.FileName.Count - 1))
+                {
+                    var temp = new ScopeSymbolTable(folder.Word, 0);
+                    scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
+                    scopeSymbolTable.Insert(scopeSymbol);
+                    scopeSymbolTable = temp;
+                }
             }
             folder = usingAST.Relative ? relativeFolder : rootFolder;
             Interpret(fileName);
