@@ -662,10 +662,18 @@ namespace Ligral.Syntax
                 module = Visit(usingAST.FileName.Last());
                 foreach (WordAST folder in usingAST.FileName.Take(usingAST.FileName.Count - 1))
                 {
-                    var temp = new ScopeSymbolTable(folder.Word, 0);
-                    scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
-                    scopeSymbolTable.Insert(scopeSymbol);
-                    scopeSymbolTable = temp;
+                    var symbol = scopeSymbolTable.Lookup(folder.Word);
+                    if (symbol != null && symbol is ScopeSymbol scope)
+                    {
+                        scopeSymbolTable = scope.GetValue() as ScopeSymbolTable;
+                    }
+                    else
+                    {
+                        var temp = new ScopeSymbolTable(folder.Word, 0);
+                        scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
+                        scopeSymbolTable.Insert(scopeSymbol);
+                        scopeSymbolTable = temp;
+                    }
                 }
             }
             folder = usingAST.Relative ? relativeFolder : rootFolder;
