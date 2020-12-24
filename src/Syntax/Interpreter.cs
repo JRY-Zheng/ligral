@@ -686,6 +686,10 @@ namespace Ligral.Syntax
                     {
                         scopeSymbolTable = scope.GetValue() as ScopeSymbolTable;
                     }
+                    else if (folder.Word == "..")
+                    {
+                        continue;
+                    }
                     else
                     {
                         var temp = new ScopeSymbolTable(folder.Word, 0);
