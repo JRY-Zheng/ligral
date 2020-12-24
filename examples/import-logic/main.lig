@@ -69,8 +69,12 @@ subfolder.sublib1.world -> Print;
 # 由于后两次引用都是 import 子句，所以不需要完整路径
 library1.world -> Print;
 
+# 来自 sublib 4 的变量。
+# 由于只引用了 world，unused是无法获取的，因此会被解释成一个 Node
 world -> Print;
+# unused -> Print;
 
+# 来自 sublib 5 的变量，sublib 5 的别名是 lib
 lib.world -> Print;
 
 # 来自 module 1 的变量，通过包引用，index 引用了 module 1

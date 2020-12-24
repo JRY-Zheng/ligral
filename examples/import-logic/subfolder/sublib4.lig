@@ -1,1 +1,2 @@
 let world = 4;
+let unused = 0;
