@@ -1,2 +1,2 @@
 import .sublib3;
-import ^package.module2;
+import ..package.module2;

@@ -595,20 +595,16 @@ namespace Ligral.Syntax
             List<WordAST> fileName = new List<WordAST>();
             WordAST moduleName = null;
             bool relative = false;
-            if (currentToken.Type == TokenType.CARET)
-            {
-                relative = true;
-                while (currentToken.Type == TokenType.CARET)
-                {
-                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
-                    Eat(TokenType.CARET);
-                    fileName.Add(new WordAST(token));
-                }
-            }
-            else if (currentToken.Type == TokenType.DOT)
+            if (currentToken.Type == TokenType.DOT)
             {
                 relative = true;
                 Eat(TokenType.DOT);
+                while (currentToken.Type == TokenType.DOT)
+                {
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    Eat(TokenType.DOT);
+                    fileName.Add(new WordAST(token));
+                }
             }
             while (true)
             {
@@ -637,20 +633,16 @@ namespace Ligral.Syntax
             List<WordAST> fileName = new List<WordAST>();
             List<WordAST> symbols = new List<WordAST>();
             bool relative = false;
-            if (currentToken.Type == TokenType.CARET)
-            {
-                relative = true;
-                while (currentToken.Type == TokenType.CARET)
-                {
-                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
-                    Eat(TokenType.CARET);
-                    fileName.Add(new WordAST(token));
-                }
-            }
-            else if (currentToken.Type == TokenType.DOT)
+            if (currentToken.Type == TokenType.DOT)
             {
                 relative = true;
                 Eat(TokenType.DOT);
+                while (currentToken.Type == TokenType.DOT)
+                {
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    Eat(TokenType.DOT);
+                    fileName.Add(new WordAST(token));
+                }
             }
             while (true)
             {
