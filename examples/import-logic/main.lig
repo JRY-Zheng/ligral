@@ -70,36 +70,37 @@ using subfolder.sublib5 : lib;
 # 来自 library 1 的变量，using 子句引入的变量需要完整路径引用
 library1.hello -> Print;
 
-# 来自 library 2 的变量，import 子句引入的变量可以直接引用
+# 来自 library 2 的变量，import 子句导入的变量可以直接使用
 hello -> Print;
 
 # 来自 sublib 1 的变量，引用子文件夹中的 lig 文件
 # 因为是 using 子句，所以仍需要完整路径引用
 subfolder.sublib1.world -> Print;
 
-# library 1 引用了 sublib 2，sublib 2 又引用了 sublib 3
+# library 1 导入了 sublib 2，sublib 2 又导入了 sublib 3
 # 第一次引用是 using 子句，需要引用路径
-# 由于后两次引用都是 import 子句，所以不需要完整路径
+# 由于后两次导入都是 import 子句，所以不需要完整路径
 library1.world -> Print;
 
 # 来自 sublib 4 的变量。
-# 由于只引用了 world，unused是无法获取的，因此会被解释成一个 Node
+# 由于只导入了 world，unused是无法获取的，因此会被解释成一个 Node
 world -> Print;
 # unused -> Print;
 
-# 来自 sublib 5 的变量，sublib 5 的别名是 lib
+# 来自 sublib 5 的变量，sublib 5 的引用别名是 lib
+# 起了别名之后 sublib5 就不能使用了
 lib.world -> Print;
 
 # 来自 module 1 的变量，通过包引用，index 引用了 module 1
 # 由于两次都是 using 子句，所以两级的路径都需要完整引用
 package.module1.hey -> Print;
 
-# library 1 引用了 sublib 2，sublib 2 引用了上级目录下的包中的 lig 文件
-library1.ligral -> Print;
+# library 1 导入了 sublib 2，sublib 2 引用了上级目录下的包中的 lig 文件
+library1.package.module2.ligral -> Print;
 
-# node 1 和 node 2 模块存在循环引用，这是应该避免的
-# 在本例中，node 1 先声明了 b，再引用 node 2
-# node 2 引用 node 1，由于 node 1 已经被加载，这一步不会引发解释
+# node 1 和 node 2 模块存在循环引用/导入，这是应该避免的
+# 在本例中，node 1 先声明了 b，再导入 node 2
+# node 2 导入 node 1，由于 node 1 已经被加载，这一步不会引发解释
 # 随后 node 2 引用 b，因为恰好 b 已经被声明，所以没有报错
 # 接着 node 2 声明 a，被 node 1 调用
 using circular.node1;
