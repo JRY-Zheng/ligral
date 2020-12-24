@@ -1,0 +1,5 @@
+import .node1;
+
+b -> Print;
+
+let a = 1;

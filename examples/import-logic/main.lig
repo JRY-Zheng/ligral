@@ -53,6 +53,19 @@ using subfolder.sublib5 : lib;
 # │        ┌─────────────────────────────┐
 # │        │let ligral = 4;              │
 # │        └─────────────────────────────┘
+# ├───┬ circular:
+# │   ├──── node1.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │let b = 2;                   │
+# │   │    │import .node2;               │
+# │   │    │a -> Print;                  │
+# │   │    └─────────────────────────────┘
+# │   └──── node2.lig:
+# │        ┌─────────────────────────────┐
+# │        │import .node1;               │
+# │        │b -> Print;                  │
+# │        │let a = 1;                   │
+# │        └─────────────────────────────┘
 
 # 来自 library 1 的变量，using 子句引入的变量需要完整路径引用
 library1.hello -> Print;
@@ -78,11 +91,18 @@ world -> Print;
 lib.world -> Print;
 
 # 来自 module 1 的变量，通过包引用，index 引用了 module 1
-# 由于两次都是 using 子句，所以两级的路劲都需要完整引用
+# 由于两次都是 using 子句，所以两级的路径都需要完整引用
 package.module1.hey -> Print;
 
 # library 1 引用了 sublib 2，sublib 2 引用了上级目录下的包中的 lig 文件
 library1.ligral -> Print;
+
+# node 1 和 node 2 模块存在循环引用，这是应该避免的
+# 在本例中，node 1 先声明了 b，再引用 node 2
+# node 2 引用 node 1，由于 node 1 已经被加载，这一步不会引发解释
+# 随后 node 2 引用 b，因为恰好 b 已经被声明，所以没有报错
+# 接着 node 2 声明 a，被 node 1 调用
+using circular.node1;
 
 # 简化输出
 conf step_size = 1;

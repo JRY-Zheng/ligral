@@ -1,3 +1,3 @@
-Time, library1.hello, hello, subfolder.sublib1.world, library1.world, world, lib.world, package.module1.hey, library1.ligral
-0, 1, 2, 1, 2, 4, 5, 3, 4
-1, 1, 2, 1, 2, 4, 5, 3, 4
+Time, node2.b, circular/node1.a, library1.hello, hello, subfolder.sublib1.world, library1.world, world, lib.world, package.module1.hey, library1.ligral
+0, 2, 1, 1, 2, 1, 2, 4, 5, 3, 4
+1, 2, 1, 1, 2, 1, 2, 4, 5, 3, 4
