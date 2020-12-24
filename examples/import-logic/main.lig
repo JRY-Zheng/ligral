@@ -2,6 +2,8 @@ using library1;
 import library2;
 using subfolder.sublib1;
 using package;
+import subfolder.sublib4 : world;
+using subfolder.sublib5 : lib;
 
 # 目录结构及文件内容：
 
@@ -25,9 +27,17 @@ using package;
 # │   │    │import .sublib3;             │
 # │   │    │import ^package.module2;     │
 # │   │    └─────────────────────────────┘
-# │   └──── sublib3.lig:
+# │   ├──── sublib3.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │let world = 2;               │
+# │   │    └─────────────────────────────┘
+# │   ├──── sublib4.lig:
+# │   │    ┌─────────────────────────────┐
+# │   │    │let world = 4;               │
+# │   │    └─────────────────────────────┘
+# │   └──── sublib5.lig:
 # │        ┌─────────────────────────────┐
-# │        │let world = 2;               │
+# │        │let world = 5;               │
 # │        └─────────────────────────────┘
 # ├───┬ package:
 # │   ├──── index.lig:
@@ -58,6 +68,10 @@ subfolder.sublib1.world -> Print;
 # 第一次引用是 using 子句，需要引用路径
 # 由于后两次引用都是 import 子句，所以不需要完整路径
 library1.world -> Print;
+
+world -> Print;
+
+lib.world -> Print;
 
 # 来自 module 1 的变量，通过包引用，index 引用了 module 1
 # 由于两次都是 using 子句，所以两级的路劲都需要完整引用
