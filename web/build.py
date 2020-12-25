@@ -200,6 +200,7 @@ if __name__ == "__main__":
     soup = BeautifulSoup(text, features='lxml')
 
     set_article(soup, os.path.join(script_folder, '../README.md'))
+    migrate_img(soup, os.path.join(script_folder, '../doc/'))
     links = soup.find_all('a')
     for link in links:
         if link['href'].startswith('http'):

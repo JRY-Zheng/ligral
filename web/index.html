@@ -178,7 +178,7 @@
        <img alt="LOGO" src="https://sued-wind.cc/static/img/ligral/ligral.png"/>
       </p>
       <p>
-       Ligral是一个基于文本的仿真框图语言，旨在替代Simulink，编写、运行仿真程序。
+       Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
       </p>
       <p>
        <strong>
@@ -187,287 +187,29 @@
        ：v0.2.0
       </p>
       <h2>
-       语法
+       安装
       </h2>
-      <h3>
-       节点与连接
-      </h3>
       <p>
-       新建一个节点
-       <code>
-        Node
-       </code>
-       ，
-       <code>
-        [ ]
-       </code>
-       内可选地定义节点的变量名。
+       目前仅发布了
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta" target="_blank">
+        v0.1.0-beta
+       </a>
+       版，如需体验 v0.2.0 版本，请克隆本项目到本地编译。
       </p>
-      <pre><code>Node | Node[node1]
+      <pre><code>git clone https://gitee.com/junruoyu-zheng/ligral.git
+cd ligral
+dotnet build
+./bin/Debug/netcoreapp3.1/ligral
 </code></pre>
       <p>
-       为节点
-       <code>
-        Gain
-       </code>
-       添加参数
-       <code>
-        value
-       </code>
-       ，多个参数可用“
-       <code>
-        ,
-       </code>
-       ”隔开。
+       详细安装方法请参考
+       <a href="doc/quick-start/README.md">
+        快速开始
+       </a>
+       。
       </p>
-      <pre><code>Gain{value:1}
-</code></pre>
-      <p>
-       连接节点的输入输出，使用连接语句（chain）。支持顺序多次连接，行末需要加“
-       <code>
-        ;
-       </code>
-       ”。已经定义的节点可以通过变量名来引用。
-      </p>
-      <pre><code>node1 -&gt; Gain{value:1} -&gt; Integrator;
-</code></pre>
-      <p>
-       多输入输出节点的连接，可以使用“chain list”表达式：
-      </p>
-      <pre><code>(Constant{value:1}, Constant{value:2}) -&gt; Calculator{type:'+'};
-</code></pre>
-      <p>
-       Chain list中每一项均可以是一个连接语句，但不需要以“
-       <code>
-        ;
-       </code>
-       ”结尾，如下所示：
-      </p>
-      <pre><code>(
-    Constant{value:1} -&gt; Gain{value:2}, 
-    Constant{value:-2} -&gt; Abs
-) -&gt; Calculator{type:'+'};
-</code></pre>
-      <p>
-       连接语句还可以基于端口（port），例如
-       <code>
-        ThresholdSwitch
-       </code>
-       的输入有三个端口，可以写作：
-      </p>
-      <pre><code>node1 -&gt; ThresholdSwitch[switch]:condition;
-1 -&gt; switch:first; 
-2 -&gt; switch:second;
-</code></pre>
-      <h3>
-       定义语句
-      </h3>
-      <p>
-       常量定义由以下语句完成（
-       <em>
-        注意：
-        <code>
-         digit
-        </code>
-        关键字和
-        <code>
-         &lt;-
-        </code>
-        符号将于下个版本废弃
-       </em>
-       ），目前支持 scalar 和二维的 matrix。
-      </p>
-      <pre><code>let a = 1;
-let vec = [1, 2]
-let mat = [-a, 2; vec];
-</code></pre>
-      <p>
-       节点定义由以下语句完成：
-      </p>
-      <pre><code>route NodeName(parameters;in_ports;out_ports)
-    some_chains;
-end
-</code></pre>
-      <p>
-       其中
-       <code>
-        parameters
-       </code>
-       是该节点所需的参数，参数之间由“
-       <code>
-        ,
-       </code>
-       ”分隔。如果参数有默认值，则其为可选参数，否则是必选参数。若参数未指定类型，则参数是scalar，否则该参数必须是指定类型或其继承类型。
-      </p>
-      <pre><code># parameters:
-param1, param2:Node, param3=2
-</code></pre>
-      <p>
-       如果指定一个类型继承另一个类型，可以写作：
-      </p>
-      <pre><code>route NodeName:Gain(parameters;input;output)...
-</code></pre>
-      <p>
-       指定继承关系后，子类型的输入输出端口必须和父类型一致，但参数可以不一致，如
-       <code>
-        Gain
-       </code>
-       的输入输出端口分别是
-       <code>
-        input
-       </code>
-       和
-       <code>
-        output
-       </code>
-       。指定了继承关系并不意味着继承了信号处理逻辑，如需用到父类的逻辑，可以在内部调用父类。
-      </p>
-      <h3>
-       引用
-      </h3>
-      <p>
-       导入另一个
-       <code>
-        .lig
-       </code>
-       文件的全部内容，使用
-       <code>
-        import
-       </code>
-       语句：
-      </p>
-      <pre><code>import module;
-</code></pre>
-      <p>
-       以命名空间的方式引用，使用
-       <code>
-        using
-       </code>
-       语句：
-      </p>
-      <pre><code>using module;
-module.MyNode -&gt; Scope;
-</code></pre>
-      <h3>
-       自动装箱
-      </h3>
-      <p>
-       连接语句中的
-       <code>
-        1
-       </code>
-       会被自动装箱成
-       <code>
-        Constant{value:1}
-       </code>
-       。此外，如果是一个符号，如
-      </p>
-      <pre><code>let a = 1;
-a -&gt; Print;
-</code></pre>
-      <p>
-       此处的
-       <code>
-        a
-       </code>
-       也会被自动装箱。除了数字以外，矩阵也会被自动装箱，但是只有矩阵符号会被装箱，如下两个表达是等价的。
-      </p>
-      <pre><code>let a = [1, 2];
-a -&gt; Print;
-Constant{value:a} -&gt; Print;
-</code></pre>
-      <h3>
-       运算符
-      </h3>
-      <p>
-       在常量定义语句中，支持
-       <code>
-        +
-       </code>
-       ,
-       <code>
-        -
-       </code>
-       ,
-       <code>
-        *
-       </code>
-       ,
-       <code>
-        /
-       </code>
-       和
-       <code>
-        ^
-       </code>
-       等常见的运算符。
-      </p>
-      <p>
-       在连接语句中，这些运算符将被解析成以下结构：
-      </p>
-      <pre><code>let a = 1;
-
-a + 1 -&gt; Print;
-(a, 1) -&gt; Calculate{type:'+'} -&gt; Print;
-
--a -&gt; Print;
-(0, a) -&gt; Calculate{type:'-'} -&gt; Print;
-</code></pre>
-      <h3>
-       矩阵构建解构器
-      </h3>
-      <p>
-       直接在连接语句中定义的“矩阵”则不会被直接装箱，因为该“矩阵”所包含的不一定是常数。通常，在连接语句中的“矩阵”我们称之为矩阵构建解构器，根据其位置（句首、句中、句尾）又分为构建器、构建解构器和解构器。以构建解构器为例，解释器将其解释成如下结构，提供了语法层面的便利。
-      </p>
-      <pre><code>let vec = [1, -2];
-vec -&gt; [Node, Abs] -&gt; Print;
-vec -&gt; VSplit -&gt; Split -&gt; (Node, Abs) -&gt; HStack -&gt; VStack -&gt; Print;
-</code></pre>
-      <p>
-       其中
-       <code>
-        VSplit
-       </code>
-       将矩阵按行分解成单行的矩阵，
-       <code>
-        Split
-       </code>
-       将矩阵分解成数字；
-       <code>
-        HStack
-       </code>
-       将元素横向堆叠成矩阵，
-       <code>
-        VStack
-       </code>
-       将元素纵向堆叠成矩阵。构建解构器的本质就是对一个矩阵信号结构后进行逐元素遍历，再重新构建成一个矩阵的过程，因此要求元素行列数与矩阵信号一致，且均为但输入输出的节点。
-      </p>
-      <p>
-       位于句尾的解构器则允许出现非单输出的节点，即对输出节点数目不做限制，也不会自动构建 Stack 族的节点。位于句首的构建器则更加灵活，还允许出现表达式。
-      </p>
-      <pre><code>let mat = [1, 2];
-[mat; 2*mat] -&gt; [_, _; Print, _];
-</code></pre>
-      <p>
-       此处的
-       <code>
-        _
-       </code>
-       是弃元，解释器将其解释成一个特殊的节点，在运行过程中该节点不会执行任何语句，用于声明放弃使用一些信号。上述例子中，构建器内包含一些运算，嵌套了一些矩阵，输出的矩阵信号被解构器解析，并打印左下角的值。
-      </p>
-      <h3>
-       设置语句
-      </h3>
-      <p>
-       可以在脚本中对求解器进行配置。目前支持的字段如下所示：
-      </p>
-      <pre><code>conf step_size = 0.01;
-conf stop_time = 10;
-conf variable_step = false;
-conf output_folder = 'output';
-</code></pre>
       <h2>
-       用法
+       使用
       </h2>
       <p>
        使用以下语句运行
@@ -577,26 +319,127 @@ conf output_folder = 'output';
        示例
       </h2>
       <p>
-       以下是一个弹簧阻尼质量块系统的仿真。
+       以下是一个弹簧阻尼质量块系统的仿真（
+       <a href="examples/mass-spring-damper/main.lig">
+        代码
+       </a>
+       ）。
       </p>
-      <pre><code>route MassSpringDamper(m,k,d,x0,v0; F; x,v)
+      <pre><code># 定义一个路由 MassSpringDamper
+route MassSpringDamper(m, k, d, x0, v0; F; x, v)
     F-k*x-d*v -&gt; Gain{value:1/m} -&gt; Integrator{initial:v0} -&gt; v;
     v -&gt; Integrator{initial:x0} -&gt; x;
 end
 
-SineWave[F]{ampl:10, omega:pi, phi:pi/4};
-MassSpringDamper[sys]{m:10, k:1, d:0.1, x0:0, v0: 0};
+# 定义一个 Step 信号
+Step[F]{start:3, level:5};
 
+# 实例化一个 MassSpringDamper 对象
+MassSpringDamper[sys]{m:0.1, k:10, d:0.3, x0:1, v0: 0};
+
+# 连接模块
 F -&gt; sys;
-sys:x -&gt; Scope{name:'position'};
-(sys:x, sys:v) -&gt; PhaseDiagram{name:'phase plot'};
+sys:x[position] -&gt; Scope;
+(sys:x, sys:v[velocity]) -&gt; PhaseDiagram;
 
+# 设置定步长仿真配置参数
 conf step_size = 0.001;
 conf stop_time = 10;
+
+# 设置输出文件夹
+conf output_folder = 'out';
 </code></pre>
       <p>
-       <img alt="plots" src="https://pic4.zhimg.com/80/v2-b648e7e15562f2ccdc6fe87c21cbc873_720w.jpg?source=c8b7c179"/>
+       <img alt="plots!!" src="web/img/mass-spring-damper.gif" style="max-width:100%;"/>
       </p>
+      <p>
+       更多例子参见
+       <a href="examples/">
+        examples
+       </a>
+      </p>
+      <h2>
+       语法
+      </h2>
+      <p>
+       语法参见
+       <a href="doc/user-guide/README.md">
+        用户指引
+       </a>
+       ，目前已编写完成的文档如下：
+      </p>
+      <ul>
+       <li>
+        <a href="doc/user-guide/terms.md">
+         术语定义
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/config.md">
+         设置语句
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/const.md">
+         声明常量
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/node.md">
+         声明节点
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/link.md">
+         节点连接
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/matrix.md">
+         矩阵运算
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/route.md">
+         路由类型
+        </a>
+       </li>
+       <li>
+        <a href="doc/user-guide/import.md">
+         引用依赖
+        </a>
+       </li>
+      </ul>
+      <h2>
+       开发
+      </h2>
+      <p>
+       目前开发文档还在努力编撰中。如有 bug 反馈或其他建议，请提交
+       <a href="https://gitee.com/junruoyu-zheng/ligral/issues" target="_blank">
+        issue
+       </a>
+       。
+      </p>
+      <p>
+       开发计划：
+      </p>
+      <ul>
+       <li>
+        增加龙格库塔求解器
+       </li>
+       <li>
+        支持通过加载插件的方式扩展模块库
+       </li>
+       <li>
+        增加科学计算语法，进行仿真前处理、后处理
+       </li>
+       <li>
+        修复 bugs
+       </li>
+       <li>
+        ...
+       </li>
+      </ul>
      </article>
     </div>
     <!-- Sidebar -->
