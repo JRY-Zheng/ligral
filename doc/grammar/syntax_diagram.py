@@ -3,6 +3,13 @@ from railroad import *
 
 folder = os.path.dirname(__file__)
 
+originalZeroOrMore = ZeroOrMore
+def ZeroOrMore(item, sep=None):
+    if sep:
+        return originalZeroOrMore(item, sep)
+    else:
+        return OneOrMore(Skip(), item)
+
 def draw(name, *args):
     d = Diagram(Start('simple', name), *args)
     with open(os.path.join(folder, f'{name}.svg'), 'w') as f:
@@ -73,5 +80,9 @@ draw("RouteParameter", Sequence("ID", Stack(Optional(Sequence("COLON", "ID")),
     Optional(Sequence("FROM", NonTerminal("ValueExpr"))))
 ))
 draw("RoutePorts", OneOrMore("ID", "COMMA"))
-draw("Using", Sequence("USING", OneOrMore("ID", "DOT")))
-draw("Import", Sequence("IMPORT", OneOrMore("ID", "DOT")))
+draw("Using", Sequence("USING", ZeroOrMore("DOT"), OneOrMore("ID", "DOT"),
+    Optional(Sequence("COLON", "ID"))
+))
+draw("Import", Sequence("IMPORT", ZeroOrMore("DOT"), OneOrMore("ID", "DOT"), 
+    Optional(Sequence("COLON", OneOrMore("ID", "COMMA")))
+))

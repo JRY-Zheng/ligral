@@ -241,13 +241,13 @@ RoutePorts: ID(COMMA ID)*
 ## Using
 
 ~~~
-Using: USING ID(DOT ID)*
+Using: USING DOT*ID(DOT ID)*(COLON ID)?
 ~~~
 ![Using](Using.svg)
 
 ## Import
 
 ~~~
-Import: Import ID(DOT ID)*
+Import: Import DOT*ID(DOT ID)*(COLON ID(DOT ID)*)?
 ~~~
 ![Import](Import.svg)
