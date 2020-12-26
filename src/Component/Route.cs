@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component
 {
@@ -110,42 +111,34 @@ namespace Ligral.Component
             foreach (RouteParam routeParam in parameters)
             {
                 object value;
-                if (routeParam.DefaultValue==null)
+                if (dictionary.ContainsKey(routeParam.Name))
                 {
-                    if (dictionary.ContainsKey(routeParam.Name))
-                    {
-                        value = dictionary[routeParam.Name];
-                    }
-                    else
-                    {
-                        throw new LigralException(string.Format("Parameter {0} is required but not provided.", routeParam.Name));
-                    }
+                    value = dictionary[routeParam.Name];
+                }
+                else if (routeParam.DefaultValue!=null)
+                {
+                    value = routeParam.DefaultValue;
                 }
                 else
                 {
-                    if (dictionary.ContainsKey(routeParam.Name))
-                    {
-                        value = dictionary[routeParam.Name];
-                    }
-                    else
-                    {
-                        value = routeParam.DefaultValue;
-                    }
+                    throw new LigralException(string.Format("Parameter {0} is required but not provided.", routeParam.Name));
                 }
                 if (routeParam.Type==null)
                 {
-                    double digit;
-                    try
+                    switch (value)
                     {
-                        digit = (double) value;
+                    case double digit:
+                        TypeSymbol digitType = RouteScope.Lookup("DIGIT") as TypeSymbol;
+                        DigitSymbol digitSymbol = new DigitSymbol(routeParam.Name, digitType, digit);
+                        RouteScope.Insert(digitSymbol);
+                        break;
+                    case Matrix<double> matrix:
+                        TypeSymbol matrixType = RouteScope.Lookup("MATRIX") as TypeSymbol;
+                        MatrixSymbol matrixSymbol = new MatrixSymbol(routeParam.Name, matrixType, matrix);
+                        break;
+                    default:
+                        throw new LigralException($"Type inconsistency of {routeParam.Name}, digit or matrix expected");
                     }
-                    catch
-                    {
-                        throw new LigralException($"Type inconsistency of {routeParam.Name}, digit expected");
-                    }
-                    TypeSymbol digitType = RouteScope.Lookup("DIGIT") as TypeSymbol;
-                    DigitSymbol digitSymbol = new DigitSymbol(routeParam.Name, digitType, digit);
-                    RouteScope.Insert(digitSymbol);
                 }
                 else
                 {
