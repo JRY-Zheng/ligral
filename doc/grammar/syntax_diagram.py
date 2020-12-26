@@ -18,20 +18,19 @@ def draw(name, *args):
 
 draw("Program", NonTerminal("Statements"))
 draw("Statements", OneOrMore(Skip(), NonTerminal("Statement")))
-draw("Statement", Choice(0,
-    Sequence(Choice(4,
-        NonTerminal("ProgramConfig"),
-        NonTerminal("Define"),
-        NonTerminal("Using"),
-        NonTerminal("Import"),
-        NonTerminal("Chain")
-    ), "SEMIC"),
+draw("Statement", Choice(4,
+    NonTerminal("ProgramConfig"),
+    NonTerminal("Define"),
+    NonTerminal("Using"),
+    NonTerminal("Import"),
+    Sequence(NonTerminal("Chain"), "SEMIC"),
+    NonTerminal("Signature"),
     NonTerminal("Route")
 ))
 draw("ProgramConfig", Sequence("CONF", "ID", "FROM",
-    Choice(3, "TRUE", "FALSE", "STRING", NonTerminal("ValueExpr"))
+    Choice(3, "TRUE", "FALSE", "STRING", NonTerminal("ValueExpr")), "SEMIC"
 ))
-draw("Define", Sequence("ASSIGN", "ID", "FROM", NonTerminal("ValueExpr")))
+draw("Define", Sequence("ASSIGN", "ID", "FROM", NonTerminal("ValueExpr"), "SEMIC"))
 draw("ValueExpr", OneOrMore(NonTerminal("ValueFactor"), Choice(0, "PLUS", "MINUS")))
 draw("ValueFactor", OneOrMore(NonTerminal("ValueEntity"), Choice(0, "MUL", "DIV")))
 draw("ValueEntity", OneOrMore(NonTerminal("Value"), "CARET"))
@@ -68,6 +67,10 @@ draw("Configure", Sequence("LBRC",
 ))
 draw("Parameter", Sequence("ID", "COLON", Choice(1, "STRING", NonTerminal("ValueExpr"))))
 draw("BlockParameter", Sequence("ID", "COLON", NonTerminal("Block")))
+draw("Signature", Stack(Sequence("SIGNATURE", "ID", "LPAR"), 
+    Sequence(Optional(NonTerminal("RoutePorts")), "SEMIC"), 
+    Sequence(Optional(NonTerminal("RoutePorts")), "RPAR", "SEMIC")
+))
 draw("Route", Stack(Sequence("ROUTE", NonTerminal("Inherit"), "LPAR"), 
     Sequence(Optional(NonTerminal("RouteParameters")),"SEMIC"), 
     Sequence(Optional(NonTerminal("RoutePorts")), "SEMIC"), 
@@ -81,8 +84,8 @@ draw("RouteParameter", Sequence("ID", Stack(Optional(Sequence("COLON", "ID")),
 ))
 draw("RoutePorts", OneOrMore("ID", "COMMA"))
 draw("Using", Sequence("USING", ZeroOrMore("DOT"), OneOrMore("ID", "DOT"),
-    Optional(Sequence("COLON", "ID"))
+    Optional(Sequence("COLON", "ID")), "SEMIC"
 ))
 draw("Import", Sequence("IMPORT", ZeroOrMore("DOT"), OneOrMore("ID", "DOT"), 
-    Optional(Sequence("COLON", OneOrMore("ID", "COMMA")))
+    Optional(Sequence("COLON", OneOrMore("ID", "COMMA"))), "SEMIC"
 ))

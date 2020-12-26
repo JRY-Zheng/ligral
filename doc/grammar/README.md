@@ -17,21 +17,21 @@ Statements: Statement*
 ## Statement
 
 ~~~
-Statement: (ProgramConfig|Define|Using|Import|Chain) SEMIC|Route
+Statement: ProgramConfig|Define|Using|Import|(Chain SEMIC)|Signature|Route
 ~~~
 ![Statement](Statement.svg)
 
 ## ProgramConfig
 
 ~~~
-ProgramConfig: CONF ID FROM (TRUE|FALSE|STRING|ValueExpr)
+ProgramConfig: CONF ID FROM (TRUE|FALSE|STRING|ValueExpr)SEMIC
 ~~~
 ![ProgramConfig](ProgramConfig.svg)
 
 ## Define
 
 ~~~
-Define: ASSIGN ID FROM ValueExpr
+Define: ASSIGN ID FROM ValueExprn SEMIC
 ~~~
 ![Define](Define.svg)
 
@@ -203,6 +203,13 @@ BlockParameter: ID COLON Block
 ~~~
 ![BlockParameter](BlockParameter.svg)
 
+## Signature
+
+~~~
+Signature: SIGNATURE ID LPAR RoutePorts?SEMIC RoutePorts?RPAR SEMIC
+~~~
+![Route](Signature.svg)
+
 ## Route
 
 ~~~
@@ -241,13 +248,13 @@ RoutePorts: ID(COMMA ID)*
 ## Using
 
 ~~~
-Using: USING DOT*ID(DOT ID)*(COLON ID)?
+Using: USING DOT*ID(DOT ID)*(COLON ID)?SEMIC
 ~~~
 ![Using](Using.svg)
 
 ## Import
 
 ~~~
-Import: Import DOT*ID(DOT ID)*(COLON ID(DOT ID)*)?
+Import: Import DOT*ID(DOT ID)*(COLON ID(DOT ID)*)?SEMIC
 ~~~
 ![Import](Import.svg)
