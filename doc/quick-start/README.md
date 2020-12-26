@@ -73,6 +73,8 @@ Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windo
 
 ### 其他配置
 
+#### Python 绘图工具包
+
 由于 ligral 中的绘图模块依赖于 python3 的 matplotlib，因此如果您需要用到绘图时，还需要下载 python3，并且安装 numpy、matplotlib、pandas 三个包。目前暂不清楚对这三个包的最低版本要求是什么，但是较新版本都应是可用的。
 
 Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows/)下载，安装时最好把“添加到环境变量”；Linux 则一般自带 python，也可以通过命令安装（视系统不同选用的命令也可能不同）：
@@ -93,6 +95,10 @@ Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows
 使用腾讯镜像。
 
 如果您不需要用到绘图工具，仅需要将仿真的结果保存到 CSV 文件，您也可以忽略此步骤，程序仍然可以正确运行。
+
+#### VSCode 语法高亮
+
+在`plugins/vscode`文件夹下有一个`ligral`文件夹，包含了一个简单的 VSCode 插件，提供了 ligral 语言的语法高亮功能。如果您使用 VSCode 作为编辑器的话，可以将整个`ligral`文件夹复制到用户目录下的`.vscode/extensions`文件夹下，重启 VSCode 即可。
 
 ## 第一次运行
 

@@ -234,6 +234,9 @@ Time Elapsed 00:00:02.30
       <h3>
        其他配置
       </h3>
+      <h4>
+       Python 绘图工具包
+      </h4>
       <p>
        由于 ligral 中的绘图模块依赖于 python3 的 matplotlib，因此如果您需要用到绘图时，还需要下载 python3，并且安装 numpy、matplotlib、pandas 三个包。目前暂不清楚对这三个包的最低版本要求是什么，但是较新版本都应是可用的。
       </p>
@@ -268,6 +271,28 @@ pip install pandas
       </p>
       <p>
        如果您不需要用到绘图工具，仅需要将仿真的结果保存到 CSV 文件，您也可以忽略此步骤，程序仍然可以正确运行。
+      </p>
+      <h4>
+       VSCode 语法高亮
+      </h4>
+      <p>
+       在
+       <code>
+        plugins/vscode
+       </code>
+       文件夹下有一个
+       <code>
+        ligral
+       </code>
+       文件夹，包含了一个简单的 VSCode 插件，提供了 ligral 语言的语法高亮功能。如果您使用 VSCode 作为编辑器的话，可以将整个
+       <code>
+        ligral
+       </code>
+       文件夹复制到用户目录下的
+       <code>
+        .vscode/extensions
+       </code>
+       文件夹下，重启 VSCode 即可。
       </p>
       <h2>
        第一次运行
