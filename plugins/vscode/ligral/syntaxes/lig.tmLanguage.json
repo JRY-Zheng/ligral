@@ -5,6 +5,9 @@
 	"foldingStopMarker": "^\\s*end",
 	"patterns": [
 		{
+			"include": "#signatures"
+		},
+		{
 			"include": "#routes"
 		},
 		{
