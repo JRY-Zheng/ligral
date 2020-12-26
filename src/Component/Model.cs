@@ -56,6 +56,14 @@ namespace Ligral.Component
         public string GivenName;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
+        public List<string> InPortsName 
+        {
+            get {return InPortList.ConvertAll(InPort => InPort.Name);}
+        }
+        public List<string> OutPortsName 
+        {
+            get {return OutPortList.ConvertAll(InPort => InPort.Name);}
+        }
         // public bool Initializeable = false;
         // protected bool Initialized = false;
         public List<Signal> Results;
@@ -186,7 +194,7 @@ namespace Ligral.Component
         {
             if (inPortNO>=InPortCount())
             {
-                throw new LigralException($"In port number {inPortNO} exceeds boundary");
+                throw new LigralException($"In port number {inPortNO} exceeds boundary in {Name}");
             }
             else
             {

@@ -210,9 +210,11 @@ namespace Ligral.Syntax
                 case "conf":
                     return new StringToken(TokenType.CONF, word, lineNO, columnNO);
                 case "true":
-                    return new BoolToken(TokenType.CONF, true, lineNO, columnNO);
+                    return new BoolToken(TokenType.TRUE, true, lineNO, columnNO);
                 case "false":
-                    return new BoolToken(TokenType.CONF, false, lineNO, columnNO);
+                    return new BoolToken(TokenType.FALSE, false, lineNO, columnNO);
+                case "signature":
+                    return new BoolToken(TokenType.SIGN, false, lineNO, columnNO);
                 default:
                     return new StringToken(TokenType.ID, word, lineNO, columnNO);
                 }

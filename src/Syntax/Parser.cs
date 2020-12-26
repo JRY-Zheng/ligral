@@ -59,36 +59,21 @@ namespace Ligral.Syntax
         }
         private AST Statement()
         {
-            if (currentToken.Type==TokenType.CONF)
+            switch (currentToken.Type)
             {
-                ConfAST confAST = ProgramConfig();
-                Eat(TokenType.SEMIC);
-                return confAST;
-            }
-            else if (currentToken.Type==TokenType.ASSIGN)
-            {
-                FromOpAST fromOpAST = Define();
-                Eat(TokenType.SEMIC);
-                return fromOpAST;
-            }
-            else if (currentToken.Type==TokenType.USING)
-            {
-                UsingAST usingAST = Using();
-                Eat(TokenType.SEMIC);
-                return usingAST;
-            }
-            else if (currentToken.Type==TokenType.IMPORT)
-            {
-                ImportAST importAST = Import();
-                Eat(TokenType.SEMIC);
-                return importAST;
-            }
-            else if (currentToken.Type==TokenType.ROUTE)
-            {
+            case TokenType.CONF:
+                return ProgramConfig();
+            case TokenType.ASSIGN:
+                return Define();
+            case TokenType.USING:
+                return Using();
+            case TokenType.IMPORT:
+                return Import();
+            case TokenType.SIGN:
+                return Signature();
+            case TokenType.ROUTE:
                 return Route();
-            }
-            else
-            {
+            default:
                 ChainAST chainAST = Chain();
                 Eat(TokenType.SEMIC);
                 return chainAST;
@@ -115,7 +100,7 @@ namespace Ligral.Syntax
             {
                 valueAST = ValueExpr();
             }
-            
+            Eat(TokenType.SEMIC);
             return new ConfAST(wordAST, valueAST);
         }
         private FromOpAST Define()
@@ -125,6 +110,7 @@ namespace Ligral.Syntax
             WordAST wordAST = new WordAST(idToken);
             Eat(TokenType.FROM);
             AST valueExprAST = ValueExpr();
+            Eat(TokenType.SEMIC);
             return new FromOpAST(wordAST, valueExprAST);
         }
         private AST ValueExpr()
@@ -481,6 +467,35 @@ namespace Ligral.Syntax
             AST valueAST = Block();
             return new KeyValuePairAST(keyAST, valueAST);
         }
+        private SignatureAST Signature()
+        {
+            Eat(TokenType.SIGN);
+            StringToken typeNameToken = Eat(TokenType.ID) as StringToken;
+            WordAST typeName = new WordAST(typeNameToken);
+            Eat(TokenType.LPAR);
+            RoutePortAST inPortAST;
+            if (currentToken.Type!=TokenType.SEMIC)
+            {
+                inPortAST = RoutePorts();
+            }
+            else
+            {
+                inPortAST = new RoutePortAST(new List<WordAST>());
+            }
+            Eat(TokenType.SEMIC);
+            RoutePortAST outPortAST;
+            if (currentToken.Type!=TokenType.RPAR)
+            {
+                outPortAST = RoutePorts();
+            }
+            else
+            {
+                outPortAST = new RoutePortAST(new List<WordAST>());
+            }
+            Eat(TokenType.RPAR);
+            Eat(TokenType.SEMIC);
+            return new SignatureAST(typeName, inPortAST, outPortAST);
+        }
         private RouteAST Route()
         {
             Eat(TokenType.ROUTE);
@@ -625,6 +640,7 @@ namespace Ligral.Syntax
                 StringToken moduleToken = Eat(TokenType.ID) as StringToken;
                 moduleName = new WordAST(moduleToken);
             }
+            Eat(TokenType.SEMIC);
             return new UsingAST(fileName, moduleName, relative);
         }
         private ImportAST Import()
@@ -676,6 +692,7 @@ namespace Ligral.Syntax
                     }
                 }
             }
+            Eat(TokenType.SEMIC);
             return new ImportAST(fileName, relative, symbols);
         }
     }

@@ -183,6 +183,8 @@ namespace Ligral.Syntax
                 return Visit(routePortAST);
             case RouteAST routeAST:
                 return Visit(routeAST);
+            case SignatureAST signatureAST:
+                return Visit(signatureAST);
             case null:
                 return null;
             default:
@@ -435,40 +437,39 @@ namespace Ligral.Syntax
         {
             string key = Visit(keyValuePairAST.Key);
             object value = Visit(keyValuePairAST.Value);
+            if (value is ILinkable linkable && !linkable.IsConfigured)
+            {
+                linkable.Configure(new Dict());
+            }
             return new KeyValuePair<string, object>(key, value);
         }
         private ILinkable Visit(DeclareAST declareAST)
         {
             string id = Visit(declareAST.Id);
-            Symbol valueSymbol = currentScope.Lookup(id, false);
-            if (valueSymbol!=null)
+            AST modelTypeAST = declareAST.ModelType;
+            ILinkable linkable = Visit(modelTypeAST) as ILinkable;
+            if (linkable!=null)
             {
-                throw new SemanticException(declareAST.Id.ReferenceToken, $"Duplicated ID {id}");
+                switch (linkable)
+                {
+                case Model model:
+                    model.Name = id;
+                    break;
+                case Route route:
+                    route.Name = id;
+                    break;
+                }
+                TypeSymbol typeSymbol = currentScope.Lookup(linkable.GetTypeName()) as TypeSymbol;
+                ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, linkable);
+                if (!currentScope.Insert(modelSymbol, false))
+                {
+                    throw new SemanticException(declareAST.Id.ReferenceToken, $"Duplicated ID {id}");
+                }
+                return linkable;
             }
             else
             {
-                AST modelTypeAST = declareAST.ModelType;
-                ILinkable linkable = Visit(modelTypeAST) as ILinkable;
-                if (linkable!=null)
-                {
-                    switch (linkable)
-                    {
-                    case Model model:
-                        model.Name = id;
-                        break;
-                    case Route route:
-                        route.Name = id;
-                        break;
-                    }
-                    TypeSymbol typeSymbol = currentScope.Lookup(linkable.GetTypeName()) as TypeSymbol;
-                    ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, linkable);
-                    currentScope.Insert(modelSymbol);
-                    return linkable;
-                }
-                else
-                {
-                    throw new SemanticException(modelTypeAST.FindToken(), $"Invalid type");
-                }
+                throw new SemanticException(modelTypeAST.FindToken(), $"Invalid type");
             }
         }
         private ILinkable Visit(ConfigureAST configureAST)
@@ -597,30 +598,25 @@ namespace Ligral.Syntax
             object value;
             TypeSymbol typeSymbol;
             value = Visit(fromOpAST.Expression);
-            Symbol symbol = currentScope.Lookup(id, false);
-            if (symbol!=null)
+            Symbol symbol;
+            switch (value)
+            {
+            case Matrix<double> matrix:
+                typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
+                symbol = new MatrixSymbol(id, typeSymbol, matrix);
+                break;
+            case double val:
+                typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
+                symbol = new DigitSymbol(id, typeSymbol, val);
+                break;
+            default:
+                throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
+            }
+            if (!currentScope.Insert(symbol, false))
             {
                 throw new SemanticException(fromOpAST.Id.FindToken(), $"Duplicated ID {id}");
             }
-            else
-            {
-                switch (value)
-                {
-                case Matrix<double> matrix:
-                    typeSymbol = currentScope.Lookup("MATRIX") as TypeSymbol;
-                    MatrixSymbol matrixSymbol = new MatrixSymbol(id, typeSymbol, matrix);
-                    currentScope.Insert(matrixSymbol);
-                    break;
-                case double val:
-                    typeSymbol = currentScope.Lookup("DIGIT") as TypeSymbol;
-                    DigitSymbol digitSymbol = new DigitSymbol(id, typeSymbol, val);
-                    currentScope.Insert(digitSymbol);
-                    break;
-                default:
-                    throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
-                }
-                return value;
-            }
+            return value;
         }
         private Group Visit(GotoOpAST gotoOpAST)
         {
@@ -658,7 +654,10 @@ namespace Ligral.Syntax
                     {
                         throw new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} from {importAST.FileName.Last()}");
                     }
-                    mainScope.Insert(symbol);
+                    if (!mainScope.Insert(symbol, false))
+                    {
+                        throw new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} since it has already exists");
+                    }
                 }
                 currentScope = mainScope;
             }
@@ -694,7 +693,10 @@ namespace Ligral.Syntax
                     {
                         var temp = new ScopeSymbolTable(folder.Word, 0);
                         scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
-                        scopeSymbolTable.Insert(scopeSymbol);
+                        if (!scopeSymbolTable.Insert(scopeSymbol, false))
+                        {
+                            throw new SemanticException(folder.FindToken(), $"Cannot using {folder.Word} since it has already exists, consider rename it.");
+                        }
                         scopeSymbolTable = temp;
                     }
                 }
@@ -702,7 +704,10 @@ namespace Ligral.Syntax
             folder = usingAST.Relative ? relativeFolder : rootFolder;
             Interpret(fileName);
             scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
-            scopeSymbolTable.Insert(scopeSymbol);
+            if (!scopeSymbolTable.Insert(scopeSymbol, false))
+            {
+                throw new SemanticException((usingAST.ModuleName??usingAST.FileName.Last()).FindToken(), $"Cannot using {module} since it has already exists.");
+            }
             currentScope = mainScope;
             return null;
         }
@@ -743,14 +748,12 @@ namespace Ligral.Syntax
                             outPort.SignalName = signalName;
                             node.Name = outPort.SignalName;
                             outPort.Bind(node.Expose(0));
-                            Symbol valueSymbol = currentScope.Lookup(signalName, false);
-                            if (valueSymbol!=null)
+                            TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
+                            ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
+                            if (!currentScope.Insert(modelSymbol, false))
                             {
                                 throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
                             }
-                            TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
-                            ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
-                            currentScope.Insert(modelSymbol);
                         }
                         Group group = new Group();
                         group.AddInputModel(linkable);
@@ -795,6 +798,10 @@ namespace Ligral.Syntax
             RouteInherit routeInherit = new RouteInherit();
             routeInherit.Name = Visit(inheritAST.Name);
             routeInherit.Type = Visit(inheritAST.Type);
+            if (!(currentScope.Lookup(routeInherit.Type) is TypeSymbol typeSymbol && typeSymbol.Type.Name == "SIGN"))
+            {
+                throw new SemanticException(inheritAST.Type.FindToken(), $"{routeInherit.Type} is not a valid signature");
+            }
             return routeInherit;
         }
         private RouteParam Visit(RouteParamAST routeParamAST)
@@ -802,27 +809,31 @@ namespace Ligral.Syntax
             RouteParam routeParam = new RouteParam();
             routeParam.Name = Visit(routeParamAST.Name);
             routeParam.Type = Visit(routeParamAST.Type);
+            if (routeParam.Type != null)
+            {
+                TypeSymbol baseTypeSymbol = currentScope.Lookup(routeParam.Type) as TypeSymbol;
+                if (baseTypeSymbol == null || baseTypeSymbol.Type.Name != "SIGN")
+                {
+                    throw new SemanticException(routeParamAST.Type.FindToken(), "Explicit type of a parameter must be a signature.");
+                }
+            }
             if (routeParamAST.DefaultValue!=null)
             {
-                routeParam.DefaultValue = Visit(routeParamAST.DefaultValue);
+                object defaultValue = Visit(routeParamAST.DefaultValue);
                 if (routeParam.Type==null)
                 {
-                    try
+                    if (defaultValue is double || defaultValue is Matrix<double>)
                     {
-                        double digit = (double) routeParam.DefaultValue;
+                        routeParam.DefaultValue = defaultValue;
                     }
-                    catch
+                    else
                     {
-                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency of {routeParam.Name}, digit expected");
+                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency of {routeParam.Name}, digit or matrix expected");
                     }
                 }
                 else
                 {
-                    ILinkable linkable = routeParam.DefaultValue as ILinkable;// validation in interpreter
-                    if (linkable==null || !currentScope.IsInheritFrom(linkable.GetTypeName(), routeParam.Type))
-                    {
-                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency for {routeParam.Name}, {routeParam.Type} expected");
-                    }
+                    throw new SemanticException(routeParamAST.DefaultValue.FindToken(), "Default value not supported when type is model or route.");
                 }
             }
             return routeParam;
@@ -838,11 +849,31 @@ namespace Ligral.Syntax
         private object Visit(RouteAST routeAST)
         {
             RouteConstructor routeConstructor = new RouteConstructor();
+            List<string> inPortNameList = Visit(routeAST.InPorts);
+            List<string> outPortNameList = Visit(routeAST.OutPorts);
+            if (routeAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
+            {
+                throw new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports");
+            }
+            if (routeAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
+            {
+                throw new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique");
+            }
+            if (routeAST.OutPorts.Ports.Find(port => outPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedOutPort)
+            {
+                throw new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique");
+            }
             object definition = Visit(routeAST.Definition);
             switch (definition)
             {
             case RouteInherit routeInherit:
                 routeConstructor.SetUp(routeInherit);
+                TypeSymbol typeSymbol = (TypeSymbol) currentScope.Lookup(routeInherit.Type);
+                Signature signature = (Signature) typeSymbol.GetValue();
+                if (!signature.Validate(inPortNameList, outPortNameList))
+                {
+                    throw new SemanticException(((InheritAST)routeAST.Definition).Type.FindToken(), $"Inconsistency between in ports/out ports and the signature {routeConstructor.Type}");
+                }
                 break;
             case string routeName:
                 routeConstructor.SetUp(routeName);
@@ -850,21 +881,55 @@ namespace Ligral.Syntax
             default:
                 throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
             }
-            Symbol symbol = currentScope.Lookup(routeConstructor.Name, false);
-            if (symbol != null)
-            {
-                throw new SemanticException(routeAST.Definition.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists.");
-            }
             routeConstructor.SetUp(currentScope.scopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
+            if (routeAST.Parameters.Parameters.Find(parameter => inPortNameList.Contains(Visit(parameter).Name)) is RouteParamAST duplicatedParamInPort)
+            {
+                throw new SemanticException(duplicatedParamInPort.FindToken(), "In ports should be distinguished from parameters");
+            }
+            if (routeAST.Parameters.Parameters.Find(parameter => outPortNameList.Contains(Visit(parameter).Name)) is RouteParamAST duplicatedParamOutPort)
+            {
+                throw new SemanticException(duplicatedParamOutPort.FindToken(), "Out ports should be distinguished from parameters");
+            }
+            if (routeAST.Parameters.Parameters.Find(parameter => parameters.Count(param => param.Name==Visit(parameter).Name)>1) is RouteParamAST duplicatedParam)
+            {
+                throw new SemanticException(duplicatedParam.FindToken(), "Parameters should be unique");
+            }
             routeConstructor.SetUp(parameters);
-            List<string> inPortNameList = Visit(routeAST.InPorts);
-            List<string> outPortNameList = Visit(routeAST.OutPorts);
             routeConstructor.SetUp(inPortNameList, outPortNameList);
             routeConstructor.SetUp(routeAST.Statements);
             TypeSymbol routeType = currentScope.Lookup(routeConstructor.Type) as TypeSymbol;
             TypeSymbol routeSymbol = new TypeSymbol(routeConstructor.Name, routeType, routeConstructor);
-            currentScope.Insert(routeSymbol);
+            if (!currentScope.Insert(routeSymbol, false))
+            {
+                throw new SemanticException(routeAST.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists.");
+            }
+            return null;
+        }
+        private object Visit(SignatureAST signatureAST)
+        {
+            string name = Visit(signatureAST.TypeName);
+            List<string> inPortNameList = Visit(signatureAST.InPorts);
+            List<string> outPortNameList = Visit(signatureAST.OutPorts);
+            if (signatureAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
+            {
+                throw new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports");
+            }
+            if (signatureAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
+            {
+                throw new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique");
+            }
+            if (signatureAST.OutPorts.Ports.Find(port => outPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedOutPort)
+            {
+                throw new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique");
+            }
+            Signature signature = new Signature(name, inPortNameList, outPortNameList);
+            TypeSymbol typeSymbol = (TypeSymbol) currentScope.Lookup("SIGN");
+            TypeSymbol signatureSymbol = new TypeSymbol(name, typeSymbol, signature);
+            if (!currentScope.Insert(signatureSymbol, false))
+            {
+                throw new SemanticException(signatureAST.FindToken(), $"Cannot declare {name} since it already exists.");
+            }
             return null;
         }
     }

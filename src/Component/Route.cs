@@ -135,6 +135,7 @@ namespace Ligral.Component
                     case Matrix<double> matrix:
                         TypeSymbol matrixType = RouteScope.Lookup("MATRIX") as TypeSymbol;
                         MatrixSymbol matrixSymbol = new MatrixSymbol(routeParam.Name, matrixType, matrix);
+                        RouteScope.Insert(matrixSymbol);
                         break;
                     default:
                         throw new LigralException($"Type inconsistency of {routeParam.Name}, digit or matrix expected");
@@ -142,16 +143,36 @@ namespace Ligral.Component
                 }
                 else
                 {
-                    ILinkable linkable = value as ILinkable;// validation in interpreter
-                    if (linkable!=null && RouteScope.IsInheritFrom(linkable.GetTypeName(), routeParam.Type))
+                    TypeSymbol typeSymbol = (TypeSymbol) RouteScope.Lookup(routeParam.Type);
+                    Signature signature = (Signature) typeSymbol.GetValue();
+                    switch (value)
                     {
-                        TypeSymbol modelType = RouteScope.Lookup(routeParam.Type) as TypeSymbol;
-                        ModelSymbol modelSymbol = new ModelSymbol(routeParam.Name, modelType, linkable);
-                        RouteScope.Insert(modelSymbol);
-                    }
-                    else
-                    {
-                        throw new LigralException($"Type inconsistency for {routeParam.Name}, {routeParam.Type} expected");
+                    case Model model:
+                        if (signature.Derive(model))
+                        {
+                            TypeSymbol matrixType = RouteScope.Lookup("MODEL") as TypeSymbol;
+                            ModelSymbol modelSymbol = new ModelSymbol(routeParam.Name, typeSymbol, model);
+                            RouteScope.Insert(modelSymbol);
+                            break;
+                        }
+                        else
+                        {
+                            throw new ModelException(model, $"Type inconsistency for {routeParam.Name} in {Name}, in ports or out ports of model {model.GetTypeName()} is not the same as {routeParam.Type}'s.");
+                        }
+                    case Route route:
+                        if (signature.Derive(route))
+                        {
+                            TypeSymbol matrixType = RouteScope.Lookup(route.Type) as TypeSymbol;
+                            ModelSymbol modelSymbol = new ModelSymbol(routeParam.Name, typeSymbol, route);
+                            RouteScope.Insert(modelSymbol);
+                            break;
+                        }
+                        else
+                        {
+                            throw new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, {route.GetTypeName()} is not derived from {routeParam.Type}'s.");
+                        }
+                    default:
+                        throw new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, model or route expected.");
                     }
                 }
             }

@@ -46,13 +46,16 @@ namespace Ligral.Syntax
         public TypeSymbol(string name, TypeSymbol type, object value) : base(name, type, value) {}
         public override object GetValue()
         {
-            try
+            switch (Value)
             {
-                return ModelManager.Create((string)Value);
-            }
-            catch
-            {
-                return (Value as RouteConstructor).Construct();
+            case string modelType:
+                return ModelManager.Create(modelType);
+            case RouteConstructor routeConstructor:
+                return routeConstructor.Construct();
+            case Signature signature:
+                return signature;
+            default:
+                throw new LigralException($"Invalid type symbol with value {Value.GetType()}");
             }
         }
     }
@@ -101,6 +104,7 @@ namespace Ligral.Syntax
             Insert(new TypeSymbol("SCOPE", null, null));
             Insert(new TypeSymbol("MODEL", null, null));
             Insert(new TypeSymbol("ROUTE", null, null));
+            Insert(new TypeSymbol("SIGN", null, null));
             TypeSymbol modelType = Lookup("MODEL") as TypeSymbol;
             foreach (string modelName in ModelManager.ModelTypePool.Keys)
             {
@@ -110,9 +114,17 @@ namespace Ligral.Syntax
             Insert(new DigitSymbol("pi", digitType, Math.PI));
             Insert(new DigitSymbol("e", digitType, Math.E));
         }
-        public void Insert(Symbol symbol)
+        public bool Insert(Symbol symbol, bool canOverride=true)
         {
-            Symbols[symbol.Name] = symbol;
+            if (!canOverride && Lookup(symbol.Name, false)!=null)
+            {
+                return false;
+            }
+            else
+            {
+                Symbols[symbol.Name] = symbol;
+                return true;
+            }
         }
         public Symbol Lookup(string name, bool recursively = true)
         {
@@ -136,19 +148,6 @@ namespace Ligral.Syntax
                 Insert(symbol);
             }
             return this;
-        }
-        public bool IsInheritFrom(string inheritType, string baseType)
-        {
-            while (inheritType!=baseType)
-            {
-                TypeSymbol typeSymbol = Lookup(inheritType) as TypeSymbol;
-                inheritType = typeSymbol.Type.Name;
-                if (inheritType==null)
-                {
-                    return false;
-                }
-            }
-            return true;
         }
         public override string ToString()
         {
