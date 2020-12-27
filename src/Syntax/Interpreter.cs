@@ -16,6 +16,7 @@ namespace Ligral.Syntax
         private string relativeFolder;
         private string folder;
         private string currentFileName;
+        public string CurrentFileName {get => currentFileName;}
         private ScopeSymbolTable currentScope;
         private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
         private static Interpreter instance;

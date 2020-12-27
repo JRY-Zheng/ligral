@@ -85,9 +85,9 @@ namespace Ligral
             {
                 string text = File.ReadAllText(options.InputFile);
                 Syntax.Parser parser = new Syntax.Parser();
+                Interpreter interpreter = Interpreter.GetInstance(options.InputFile);
                 parser.Load(text);
                 ProgramAST p = parser.Parse();
-                Interpreter interpreter = Interpreter.GetInstance(options.InputFile);
                 interpreter.Interpret(p);
                 if (options.OutputFolder!=null)
                 {
