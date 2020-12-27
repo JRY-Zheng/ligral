@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 using Ligral.Tools.Protocols;
 
 namespace Ligral.Tools
@@ -69,6 +70,30 @@ namespace Ligral.Tools
                     Receive(curvePacket.Data);
                     break;
                 }
+            }
+        }
+        public void Invoke<T>(T dataPacket) where T: struct
+        {
+            switch (dataPacket)
+            {
+            case FigureProtocol.FigureConfig figureConfig:
+                Receive(figureConfig);
+                break;
+            case FigureProtocol.PlotConfig plotConfig:
+                Receive(plotConfig);
+                break;
+            case FigureProtocol.ShowCommand showCommand:
+                Receive(showCommand);
+                break;
+            case FigureProtocol.DataFile dataFile:
+                Receive(dataFile);
+                break;
+            case FigureProtocol.Data data:
+                Receive(data);
+                break;
+            case FigureProtocol.Curve curve:
+                Receive(curve);
+                break;
             }
         }
         public virtual void Receive(FigureProtocol.FigureConfig figureConfig)
