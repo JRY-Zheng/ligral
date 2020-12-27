@@ -109,3 +109,6 @@ using circular.node1;
 # 简化输出
 conf step_size = 1;
 conf stop_time = 1;
+
+# 设置输出文件夹
+conf output_folder = 'out';

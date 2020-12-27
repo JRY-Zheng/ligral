@@ -37,3 +37,6 @@ gearBox:motor_speed -> Scope;
 # 设置仿真步长和时长，注意最好不要超过回放时长
 conf step_size = 0.01;
 conf stop_time = 10;
+
+# 设置输出文件夹
+conf output_folder = 'out';
