@@ -37,7 +37,7 @@ namespace Ligral
         }
         public override string ToString()
         {
-            string errorMessage = $"Invalid Syntax at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value}) in file {Interpreter.GetInstance().CurrentFileName}";
+            string errorMessage = $"Invalid Syntax ({ErrorToken.Value}) in file {Interpreter.GetInstance().CurrentFileName}:line {ErrorToken.Line} column {ErrorToken.Column}";
             if (Message!="")
             {
                 return $"{errorMessage}\n{Message}";
@@ -62,7 +62,7 @@ namespace Ligral
         }
         public override string ToString()
         {
-            string errorMessage = $"Invalid Semantics at line {ErrorToken.Line} column {ErrorToken.Column} ({ErrorToken.Value}) in file {Interpreter.GetInstance().CurrentFileName}";
+            string errorMessage = $"Invalid Semantics ({ErrorToken.Value}) in file {Interpreter.GetInstance().CurrentFileName}:line {ErrorToken.Line} column {ErrorToken.Column}";
             if (Message!="")
             {
                 return $"{errorMessage}\n{Message}";
