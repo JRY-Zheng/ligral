@@ -1,0 +1,39 @@
+import components.motor;
+import components.brake;
+import components.gearBox;
+import car;
+
+# 本例是一个模块化的汽车仿真工程
+# 仿真的模型很简单，就是一个只能直线运动的汽车
+# 由于只有一个维度，所以没有方向盘，只有油门和刹车两个输入
+
+# 下面是汽车本体的一些参数：
+# 轮径（车轮比较简单，就没有当作一个子系统）
+let wheel_diameter = 0.4;
+# 全车质量，假设是一个常数
+let mass = 2000;
+# 风阻面积，阻力计算公式：D=1/2*rho*Sd*v^2
+# 其中 rho 是空气密度，v 是速度
+let Sd = 15;
+
+# 发动机模型，签名是 MotorSignature
+Motor[motor]{gain:5e5, saturation:5e5};
+# 刹车模型，签名是 BrakeSignature
+Brake[brake]{gain:4e4, gain2order:4e4};
+# 变速箱模型，签名是 GearBoxSignature
+GearBox[gearBox];
+# 全车模型，由发动机、刹车和变速箱组成
+Car[car]{motor:motor, brake:brake, gearBox:gearBox, 
+    wheel_diameter:wheel_diameter, mass:mass, Sd:Sd};
+
+# 以下分别是油门和刹车的回放文件，用来模拟输入
+Playback[throttle]{file:'throttle.csv'} -> Scope;
+Playback[brake_cmd]{file:'brake.csv'} -> Scope;
+
+# 将回放信号输入给全车模型，并获取数据绘图查看
+(throttle, brake_cmd) -> car -> (Gain{value:3.6} -> Scope{name:'velocity'}, Scope);
+gearBox:motor_speed -> Scope;
+
+# 设置仿真步长和时长，注意最好不要超过回放时长
+conf step_size = 0.01;
+conf stop_time = 10;

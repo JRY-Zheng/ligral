@@ -1,0 +1,7 @@
+import ..component;
+
+route Brake:BrakeSignature(gain, gain2order; brake_cmd, wheel_speed; moment)
+    # 刹车模型是个二次函数，刹车力矩和刹车踏板输入时非线性关系
+    # 刹车仅在车速大于 0 时才生效，车速等于 0 时刹车为 0
+    (wheel_speed, -brake_cmd*gain-brake_cmd^2*gain2order, 0) -> ThresholdSwitch -> moment;
+end

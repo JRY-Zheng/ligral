@@ -1,0 +1,8 @@
+import ..component;
+
+route Motor:MotorSignature(gain, saturation; throttle, motor_speed; moment)
+    # 这里的发动机很简单，就是把油门（0~1）乘上增益
+    # 直接映射成发动机的功率，功率 = 发动机转速 * 变速箱输入力矩
+    throttle*gain -> Saturation{upper:saturation, lower:0} -> power;
+    power/motor_speed -> moment;
+end

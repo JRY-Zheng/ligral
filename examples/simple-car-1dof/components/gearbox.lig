@@ -1,0 +1,27 @@
+import ..component;
+
+route GearBox:GearBoxSignature(threshold=3000, idling=800; 
+    wheel_speed, motor_moment; motor_speed, wheel_moment)
+    # 本例实现了一个三个档位的自动变速箱，分别是 400:1、250:1 和 150:1
+    let first_gear = 400;
+    let second_gear = 250;
+    let third_gear = 150;
+
+    # 设置一个自动抬离合的逻辑，啮合程度（0~1）只和车速有关
+    # 启动时离合为 0.20，车速 10 m/s 时约为 1
+    (wheel_speed/3+0.2 -> Tanh) -> clutch;
+    
+    # 升档的逻辑是转速超过门限值就升档
+    # 降档的逻辑是如果降档转速不超过门限值就降档
+    (wheel_speed*second_gear, third_gear, second_gear) -> 
+        ThresholdSwitch{threshold:threshold} -> high_gear;
+    (wheel_speed*first_gear, high_gear, first_gear) -> 
+        ThresholdSwitch{threshold:threshold} -> gear;
+
+    # 离合完全啮合时，发动机转速 = 轮速 * 齿比
+    # 离合完全断开时，发动机转速 = 怠速
+    wheel_speed*gear*clutch+idling*(1-clutch) -> motor_speed;
+
+    # 轮上驱动矩 = 发动机驱动矩 * 齿比 * 离合
+    motor_moment*gear*clutch -> wheel_moment;
+end

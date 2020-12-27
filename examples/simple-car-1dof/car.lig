@@ -1,0 +1,20 @@
+import component;
+
+route Car(motor:MotorSignature, brake:BrakeSignature, gearBox:GearBoxSignature,
+          wheel_diameter, mass, Sd;
+          throttle, brake_cmd; v, x)
+    # 定义了空气密度，这个量也可以放在参数中，这样的话调用者可以修改
+    let rho = 1.225;
+
+    # 连接三个子系统：发动机、刹车和变速箱
+    (throttle, motor_speed) -> motor;
+    (brake_cmd, wheel_speed) -> brake;
+    (wheel_speed, motor:moment) -> gearBox -> (motor_speed, wheel_moment);
+
+    # 汽车本体运动学模型：轮速和车速的关系
+    v/(pi*wheel_diameter) -> wheel_speed;
+
+    # 汽车本体动力学模型：力矩和驱动力的关系
+    (wheel_moment+brake:moment)/(pi*wheel_diameter) - Sd/2*rho*v^2 -> F;
+    F/mass -> Integrator -> v -> Integrator -> x;
+end

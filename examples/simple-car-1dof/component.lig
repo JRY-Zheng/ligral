@@ -1,0 +1,14 @@
+# 发动机模型签名
+#   输入：油门、发动机转速
+#   输出：发动机驱动矩
+signature MotorSignature(throttle, motor_speed; moment);
+
+# 刹车模型签名
+#   输入：刹车指令、轮速
+#   输出：轮上刹车矩
+signature BrakeSignature(brake_cmd, wheel_speed; moment);
+
+# 变速箱模型签名
+#   输入：轮速、发动机驱动矩
+#   输出：发动机转速、轮上驱动矩
+signature GearBoxSignature(wheel_speed, motor_moment; motor_speed, wheel_moment);
