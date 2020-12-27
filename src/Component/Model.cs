@@ -215,7 +215,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException("Undefined port name "+portName);
+                throw new LigralException($"Undefined port name {portName} in {GetType().Name} {Name}");
             }
         }
         public int InPortCount()
