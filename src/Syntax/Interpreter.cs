@@ -590,7 +590,14 @@ namespace Ligral.Syntax
                 throw new SemanticException(confAST.FindToken(), "Only digit, boolean and string are accepted");
             }
             Settings settings = Settings.GetInstance();
-            settings.AddSetting(id, value);
+            try
+            {
+                settings.AddSetting(id, value);
+            }
+            catch (System.InvalidCastException)
+            {
+                throw new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}");
+            }
             return null;
         }
         private object Visit(FromOpAST fromOpAST)

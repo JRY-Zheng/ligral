@@ -104,7 +104,20 @@ namespace Ligral
         public string IPAddress { get => iPAddress; set => iPAddress = value; }
         public int Port { get => port; set => port = value; }
         public bool RealTimeDrawing { get => realTimeDrawing; set => realTimeDrawing = value; }
+        public bool EnableInnerPlotter 
+        { 
+            get => enableInnerPlotter; 
+            set  
+            {
+                enableInnerPlotter = value;
+                if (enableInnerPlotter)
+                {
+                    
+                }
+            }
+        }
 
+        private bool enableInnerPlotter = true;
         private string iPAddress = "127.0.0.1";
         private int port = 8783;
         private bool realTimeDrawing = false;
@@ -125,6 +138,8 @@ namespace Ligral
                 Port = (int) val; break;
             case "realtime_draw":
                 RealTimeDrawing = (bool) val; break;
+            case "enable_inner_plotter":
+                EnableInnerPlotter = (bool) val; break;
             default:
                 throw new LigralException($"Unsupported setting {item}");
             }
