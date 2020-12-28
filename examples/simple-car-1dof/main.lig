@@ -40,3 +40,4 @@ conf stop_time = 10;
 
 # 设置输出文件夹
 conf output_folder = 'out';
+conf enable_inner_plotter = true;

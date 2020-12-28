@@ -112,7 +112,7 @@ namespace Ligral
                 enableInnerPlotter = value;
                 if (enableInnerPlotter)
                 {
-                    
+                    Tools.Publisher.AddHooks(new Tools.Plotter());
                 }
             }
         }

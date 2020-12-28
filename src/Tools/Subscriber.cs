@@ -28,7 +28,7 @@ namespace Ligral.Tools
             Id = count;
             count++;
         }
-        public void Stop()
+        public virtual void Stop()
         {
             running = false;
         }
@@ -72,53 +72,55 @@ namespace Ligral.Tools
                 }
             }
         }
-        public void Invoke<T>(T dataPacket) where T: struct
+        public bool Invoke<T>(T dataPacket) where T: struct
         {
             switch (dataPacket)
             {
             case FigureProtocol.FigureConfig figureConfig:
                 Receive(figureConfig);
-                break;
+                return true;
             case FigureProtocol.PlotConfig plotConfig:
                 Receive(plotConfig);
-                break;
+                return true;
             case FigureProtocol.ShowCommand showCommand:
                 Receive(showCommand);
-                break;
+                return true;
             case FigureProtocol.DataFile dataFile:
                 Receive(dataFile);
-                break;
+                return true;
             case FigureProtocol.Data data:
                 Receive(data);
-                break;
+                return true;
             case FigureProtocol.Curve curve:
                 Receive(curve);
-                break;
+                return true;
+            default:
+                return false;
             }
         }
-        public virtual void Receive(FigureProtocol.FigureConfig figureConfig)
+        protected virtual bool Receive(FigureProtocol.FigureConfig figureConfig)
         {
-
+            return false;
         }
-        public virtual void Receive(FigureProtocol.PlotConfig plotConfig)
+        protected virtual bool Receive(FigureProtocol.PlotConfig plotConfig)
         {
-
+            return false;
         }
-        public virtual void Receive(FigureProtocol.ShowCommand showCommand)
+        protected virtual bool Receive(FigureProtocol.ShowCommand showCommand)
         {
-
+            return false;
         }
-        public virtual void Receive(FigureProtocol.DataFile dataFile)
+        protected virtual bool Receive(FigureProtocol.DataFile dataFile)
         {
-
+            return false;
         }
-        public virtual void Receive(FigureProtocol.Data data)
+        protected virtual bool Receive(FigureProtocol.Data data)
         {
-
+            return false;
         }
-        public virtual void Receive(FigureProtocol.Curve curve)
+        protected virtual bool Receive(FigureProtocol.Curve curve)
         {
-
+            return false;
         }
     }
 }
