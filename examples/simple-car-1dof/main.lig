@@ -40,4 +40,6 @@ conf stop_time = 10;
 
 # 设置输出文件夹
 conf output_folder = 'out';
+
+# 启用内部绘图模块
 conf enable_inner_plotter = true;
