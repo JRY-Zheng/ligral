@@ -51,9 +51,9 @@ import pandas as pd
             ScriptsStream.WriteLine(command);
             PythonProcess.StandardInput.WriteLine(command);
         }
-        public override void Stop()
+        public override void Unsubscribe()
         {
-            base.Stop();
+            base.Unsubscribe();
             Execute("exit()");
             // PythonProcess.WaitForExit();
             ScriptsStream.Close();
@@ -158,7 +158,7 @@ ax.grid()
             Execute($@"
 plt.show()
 ");
-            Stop();
+            Unsubscribe();
             return true;
         }
         protected override bool Receive(FigureProtocol.Curve curve)

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Linq;
-using System;
+using System.Collections.Generic;
 using Ligral.Tools.Protocols;
 
 namespace Ligral.Tools
@@ -22,18 +22,37 @@ namespace Ligral.Tools
         static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().Port);
         private static int count = 0;
         public int Id;
-        private bool running = true;
+        private static bool running = true;
+        protected static List<Subscriber> subscribers = new List<Subscriber>();
         public Subscriber()
         {
             Id = count;
             count++;
+            subscribers.Add(this);
         }
-        public virtual void Stop()
+        public static void Stop()
         {
             running = false;
+            if (socket.IsBound)
+            {
+                socket.Shutdown(SocketShutdown.Receive);
+                socket.Close();
+            }
         }
-        public async void Serve()
+        public virtual void Unsubscribe()
         {
+            if (subscribers.Contains(this))
+            {
+                subscribers.Remove(this);
+            }
+            if (subscribers.Count == 0)
+            {
+                Stop();
+            }
+        }
+        public static async void Serve()
+        {
+            if (running) return;
             running = true;
             EndPoint senderRemote = (EndPoint)endPoint;
             try
@@ -54,27 +73,63 @@ namespace Ligral.Tools
                 {
                 case FigureProtocol.FigureConfigLabel:
                     var figureConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.FigureConfig>>(packetString);
-                    Receive(figureConfigPacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(figureConfigPacket.Data))
+                        {
+                            break;
+                        }
+                    }
                     break;
                 case FigureProtocol.PlotConfigLabel:
                     var plotConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.PlotConfig>>(packetString);
-                    Receive(plotConfigPacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(plotConfigPacket.Data))
+                        {
+                            break;
+                        }
+                    };
                     break;
                 case FigureProtocol.ShowCommandLabel:
                     var showCommandPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.ShowCommand>>(packetString);
-                    Receive(showCommandPacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(showCommandPacket.Data))
+                        {
+                            break;
+                        }
+                    };
                     break;
                 case FigureProtocol.DataFileLabel:
                     var dataFilePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.DataFile>>(packetString);
-                    Receive(dataFilePacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(dataFilePacket.Data))
+                        {
+                            break;
+                        }
+                    };
                     break;
                 case FigureProtocol.DataLabel:
                     var dataPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Data>>(packetString);
-                    Receive(dataPacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(dataPacket.Data))
+                        {
+                            break;
+                        }
+                    };
                     break;
                 case FigureProtocol.CurveLabel:
                     var curvePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Curve>>(packetString);
-                    Receive(curvePacket.Data);
+                    foreach (Subscriber subscriber in subscribers)
+                    {
+                        if (subscriber.Receive(curvePacket.Data))
+                        {
+                            break;
+                        }
+                    };
                     break;
                 }
             }
@@ -84,23 +139,17 @@ namespace Ligral.Tools
             switch (dataPacket)
             {
             case FigureProtocol.FigureConfig figureConfig:
-                Receive(figureConfig);
-                return true;
+                return Receive(figureConfig);
             case FigureProtocol.PlotConfig plotConfig:
-                Receive(plotConfig);
-                return true;
+                return Receive(plotConfig);
             case FigureProtocol.ShowCommand showCommand:
-                Receive(showCommand);
-                return true;
+                return Receive(showCommand);
             case FigureProtocol.DataFile dataFile:
-                Receive(dataFile);
-                return true;
+                return Receive(dataFile);
             case FigureProtocol.Data data:
-                Receive(data);
-                return true;
+                return Receive(data);
             case FigureProtocol.Curve curve:
-                Receive(curve);
-                return true;
+                return Receive(curve);
             default:
                 return false;
             }
