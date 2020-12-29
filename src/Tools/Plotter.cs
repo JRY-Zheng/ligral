@@ -28,7 +28,14 @@ namespace Ligral.Tools
                     RedirectStandardError = true
                 }
             };
-            PythonProcess.Start();
+            try
+            {
+                PythonProcess.Start();
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                throw new LigralException("Python is not installed or not callable.");
+            }
             Settings settings = Settings.GetInstance();
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             string scripts = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "plot.py");
