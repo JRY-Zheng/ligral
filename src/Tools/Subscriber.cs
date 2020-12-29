@@ -32,11 +32,18 @@ namespace Ligral.Tools
         {
             running = false;
         }
-        public async Task Serve()
+        public async void Serve()
         {
             running = true;
             EndPoint senderRemote = (EndPoint)endPoint;
-            socket.Bind(endPoint);
+            try
+            {
+                socket.Bind(endPoint);
+            }
+            catch(SocketException e)
+            {
+                throw new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}");
+            }
             while (running)
             {
                 byte[] buffer = new byte[1024];
