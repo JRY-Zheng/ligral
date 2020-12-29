@@ -83,12 +83,8 @@ namespace Ligral
             }
             else if (options.InputFile!=null)
             {
-                string text = File.ReadAllText(options.InputFile);
-                Syntax.Parser parser = new Syntax.Parser();
                 Interpreter interpreter = Interpreter.GetInstance(options.InputFile);
-                parser.Load(text);
-                ProgramAST p = parser.Parse();
-                interpreter.Interpret(p);
+                interpreter.Interpret();
                 if (options.OutputFolder!=null)
                 {
                     settings.OutputFolder = options.OutputFolder;

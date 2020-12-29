@@ -56,6 +56,10 @@ namespace Ligral.Syntax
             return instance;
         }
         private Interpreter() {}
+        public void Interpret()
+        {
+            Interpret(Path.GetFileName(GetInstance().currentFileName), true);
+        }
         public void Interpret(ProgramAST programAST)
         {
             Visit(programAST);
@@ -64,24 +68,14 @@ namespace Ligral.Syntax
         {
             Visit(statementsAST);
         }
-        public void AppendInterpret(ProgramAST programAST)
-        {
-            if (currentScope==null)
-            {
-                Visit(programAST);
-            }
-            else
-            {
-                Visit(programAST.Statements);
-            }
-        }
-        public void Interpret(string fileName)
+        public void Interpret(string fileName, bool global=false)
         {
             string fullFileName = Path.Join(folder, fileName);
             if (Directory.Exists(fullFileName))
             {
                 fullFileName = Path.Join(fullFileName, "index.lig");
             }
+            else if (File.Exists(fullFileName)){}
             else
             {
                 fullFileName += ".lig";
@@ -99,7 +93,15 @@ namespace Ligral.Syntax
             relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();
             parser.Load(text);
-            ProgramAST programAST = parser.Parse(fileName);
+            ProgramAST programAST;
+            if (global)
+            {
+                programAST = parser.Parse();
+            }
+            else
+            {
+                programAST = parser.Parse(fileName);
+            }
             Interpret(programAST);
         }
         public ScopeSymbolTable SetScope(ScopeSymbolTable scope)
