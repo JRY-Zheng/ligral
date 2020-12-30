@@ -87,7 +87,7 @@ fig{figureConfig.FigureId}.suptitle('{figureConfig.Title}')
             case 0:
                 Execute($@"
 ax{plotConfig.FigureId}.set_xlabel('{plotConfig.XLabel}')
-ax{plotConfig.FigureId}.set_ylabel('{plotConfig.XLabel}')
+ax{plotConfig.FigureId}.set_ylabel('{plotConfig.YLabel}')
 ax{plotConfig.FigureId}.grid()
 ");
                 break;
@@ -96,7 +96,7 @@ ax{plotConfig.FigureId}.grid()
                 Execute($@"
 ax = ax{plotConfig.FigureId}[{index}]
 ax.set_xlabel({plotConfig.XLabel})
-ax.set_ylabel({plotConfig.XLabel})
+ax.set_ylabel({plotConfig.YLabel})
 ax.grid()
 ");
                 break;
@@ -104,7 +104,7 @@ ax.grid()
                 Execute($@"
 ax = ax{plotConfig.FigureId}[{plotConfig.RowNO}, {plotConfig.ColumnNO}]
 ax.set_xlabel({plotConfig.XLabel})
-ax.set_ylabel({plotConfig.XLabel})
+ax.set_ylabel({plotConfig.YLabel})
 ax.grid()
 ");
                 break;

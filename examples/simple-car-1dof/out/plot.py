@@ -9,7 +9,7 @@ fig4.suptitle('components/gearBox.gearBox.motor_speed')
 
 
 ax4.set_xlabel('time/s')
-ax4.set_ylabel('time/s')
+ax4.set_ylabel('components/gearBox.gearBox.motor_speed')
 ax4.grid()
 
 
@@ -18,7 +18,7 @@ fig3.suptitle('car.car.x')
 
 
 ax3.set_xlabel('time/s')
-ax3.set_ylabel('time/s')
+ax3.set_ylabel('car.car.x')
 ax3.grid()
 
 
@@ -27,7 +27,7 @@ fig2.suptitle('velocity')
 
 
 ax2.set_xlabel('time/s')
-ax2.set_ylabel('time/s')
+ax2.set_ylabel('velocity')
 ax2.grid()
 
 
@@ -36,7 +36,7 @@ fig0.suptitle('throttle')
 
 
 ax0.set_xlabel('time/s')
-ax0.set_ylabel('time/s')
+ax0.set_ylabel('throttle')
 ax0.grid()
 
 
@@ -45,11 +45,11 @@ fig1.suptitle('brake_cmd')
 
 
 ax1.set_xlabel('time/s')
-ax1.set_ylabel('time/s')
+ax1.set_ylabel('brake_cmd')
 ax1.grid()
 
 
-df0 = pd.read_csv(r'C:\Users\zheng\Documents\ligral\examples\simple-car-1dof\out\Data.csv', skipinitialspace=True)
+df0 = pd.read_csv(r'C:\Users\zheng\Documents\programming\ligral\examples\simple-car-1dof\out\Data.csv', skipinitialspace=True)
 
 
 x = df0['Time'].values
