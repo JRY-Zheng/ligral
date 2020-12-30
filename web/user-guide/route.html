@@ -204,16 +204,16 @@ y=$(echo $x | sin | abs)
        路由的属性
       </h3>
       <p>
-       通常路由定义语句的第一行包含了路由的属性，包括路由的名称、接口、参数、输入输出端口，其中父类、参数和输入输出都是可省的，语法如下：
+       通常路由定义语句的第一行包含了路由的属性，包括路由的名称、签名、参数、输入输出端口，其中父类、参数和输入输出都是可省的，语法如下：
       </p>
       <pre><code>route RouteName(;;) ...
 route RouteName:Interface(;;) ...
 route RouteName(parameters; inputs; outputs) ...
 </code></pre>
       <p>
-       第一行显示了省略所有可省部分的语法。第二行展示了如何声明一个路由继承自一个接口，关于接口的具体使用请查看
-       <a href="inherit">
-        接口继承
+       第一行显示了省略所有可省部分的语法。第二行展示了如何声明一个路由声明签名，关于签名的具体使用请查看
+       <a href="signature">
+        接口签名
        </a>
        小节，此处仅介绍语法。
       </p>
@@ -221,21 +221,21 @@ route RouteName(parameters; inputs; outputs) ...
        第三行说明了参数和输入的顺序，它们都在一对圆括号里，被两个分号分别分开。即使其中任何一个被省略了，分号也不能省略。输入和输出的语法十分简单，就是用逗号分隔端口名，端口的书写顺序就是编号顺序。
       </p>
       <p>
-       参数的语法稍微复杂一些。首先，参数从可省性上分为可省参数和不可省参数，可省参数需要指定参数名和默认参数值，不可省参数只要指定参数名；其次，从参数类型又可分为常量参数和节点参数，顾名思义，常量参数接受一个常量，节点参数接受符合特定接口的节点。节点参数必须指定接口类型，常量参数无需指定。
+       参数的语法稍微复杂一些。首先，参数从可省性上分为可省参数和不可省参数，可省参数需要指定参数名和默认参数值，不可省参数只要指定参数名；其次，从参数类型又可分为常量参数和节点参数，顾名思义，常量参数接受一个常量，节点参数接受声明特定签名的节点。节点参数必须指定签名，常量参数无需指定。
       </p>
       <pre><code># 常量不可省参数
 param1,
 # 常量可省参数
 param2 = 0,
 # 节点不可省参数
-param3:Interface, ...
+param3:NodeSignature, ...
 </code></pre>
       <p>
        节点参数只能是不可省参数，因为参数的默认值在路由类型（而不是其实例）被创建的时候就被创建了，因此全局仅有一份拷贝。如果您为这个路由声明了两个实例，两个实例的这个参数均绑定到同一个节点上，必然会造成
        <code>
         Duplicated binding of InPort.
        </code>
-       错误（目前解释器暂时还不能在创建路由时发现此错误，因此如果恰好您只声明了一个实例，是可以运行的）。
+       错误。
       </p>
       <h3>
        路由的主体
@@ -250,7 +250,7 @@ param3:Interface, ...
        一个完整的例子
       </h3>
       <p>
-       本节暂不讨论和接口继承有关的内容。以一个 PID 控制器为例，展示如何定义一个路由（
+       本节暂不讨论和接口签名有关的内容。以一个 PID 控制器为例，展示如何定义一个路由（
        <code>
         TransferFunction
        </code>
@@ -730,8 +730,8 @@ end
         <a class="list-group-item active" href="/ligral/user-guide/route.html">
          路由类型
         </a>
-        <a class="list-group-item" href="/ligral/user-guide/inherit.html">
-         接口继承
+        <a class="list-group-item" href="/ligral/user-guide/signature.html">
+         接口签名
         </a>
         <a class="list-group-item" href="/ligral/user-guide/import.html">
          引用依赖

@@ -221,7 +221,7 @@ if __name__ == "__main__":
             '节点连接': 'user-guide/link',
             '矩阵运算': 'user-guide/matrix',
             '路由类型': 'user-guide/route',
-            '接口继承': 'user-guide/inherit',
+            '接口签名': 'user-guide/signature',
             '引用依赖': 'user-guide/import',
         },
         '开发文档': {
