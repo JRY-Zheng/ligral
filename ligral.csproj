@@ -8,6 +8,7 @@
   </PropertyGroup> 
   <PropertyGroup>
     <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
