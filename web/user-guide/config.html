@@ -320,7 +320,65 @@
         <code>
          conf realtime_draw = true;
         </code>
-        ，将端口设置为 8783。
+        ，启用实时绘图。
+       </li>
+      </ul>
+      <h3>
+       内部绘图工具
+      </h3>
+      <p>
+       <strong>
+        定义：
+       </strong>
+       该项设置了绘图模块是否应发送数据至内部绘图工具，不通过网关。目前该功能需要 python 3 支持。
+      </p>
+      <p>
+       <strong>
+        默认：
+       </strong>
+       不使用内部绘图工具。
+      </p>
+      <p>
+       <strong>
+        设置方法：
+       </strong>
+      </p>
+      <ul>
+       <li>
+        可以在 lig 文件中写下
+        <code>
+         conf enable_inner_plotter = true;
+        </code>
+        ，启用内部绘图工具。
+       </li>
+      </ul>
+      <h3>
+       实时绘图
+      </h3>
+      <p>
+       <strong>
+        定义：
+       </strong>
+       该项设置了 Python 可执行程序的路径和文件名，如果已经在系统目录，也可以只指定文件名。在 Windows 系统下，默认的 python 即可，在 Linux 下一般需要改成 python3。未来可能考虑识别系统信息，修改默认值。
+      </p>
+      <p>
+       <strong>
+        默认：
+       </strong>
+       python
+      </p>
+      <p>
+       <strong>
+        设置方法：
+       </strong>
+      </p>
+      <ul>
+       <li>
+        可以在 lig 文件中写下
+        <code>
+         conf python = 'python';
+        </code>
+        ，启用实时绘图。
        </li>
       </ul>
      </article>
