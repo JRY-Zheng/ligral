@@ -120,9 +120,9 @@ namespace Ligral
 Hi, Ligral is a textual language for simulation.
 
 Usage:
-    ligral main.lig         to parse and simulate main.lig model
+    ligral main.lig         to parse and simulate main.lig project
     ligral -d Node          to view the document of Node model
-    ligral -D               to view documents of all the model
+    ligral -D               to view documents of all the models
     
 Learn more:
     Visit https://gitee.com/junruoyu-zheng/ligral
