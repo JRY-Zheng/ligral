@@ -109,6 +109,24 @@ namespace Ligral
             }
             else
             {
+                Console.WriteLine(@"
+                    __    _                  __
+                   / /   (_)___ __________ _/ /
+                  / /   / / __ `/ ___/ __ `/ / 
+                 / /___/ / /_/ / /  / /_/ / /  
+                /_____/_/\__, /_/   \__,_/__/   
+                        /____/                 
+----------------------------------------------------------------
+Hi, Ligral is a textual language for simulation.
+
+Usage:
+    ligral main.lig         to parse and simulate main.lig model
+    ligral -d Node          to view the document of Node model
+    ligral -D               to view documents of all the model
+    
+Learn more:
+    Visit https://gitee.com/junruoyu-zheng/ligral
+    also available at https://github.com/JRY-Zheng/ligral");
             }
             return null;
         }
