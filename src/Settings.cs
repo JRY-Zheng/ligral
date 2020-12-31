@@ -117,6 +117,10 @@ namespace Ligral
             }
         }
 
+        public string PythonExecutable { get => pythonExecutable; set => pythonExecutable = value; }
+
+        private string pythonExecutable = "python";
+
         private bool enableInnerPlotter = true;
         private string iPAddress = "127.0.0.1";
         private int port = 8783;
@@ -140,6 +144,8 @@ namespace Ligral
                 RealTimeDrawing = (bool) val; break;
             case "enable_inner_plotter":
                 EnableInnerPlotter = (bool) val; break;
+            case "python":
+                PythonExecutable = (string) val; break;
             default:
                 throw new LigralException($"Unsupported setting {item}");
             }

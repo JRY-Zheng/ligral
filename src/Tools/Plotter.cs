@@ -16,11 +16,12 @@ namespace Ligral.Tools
         protected StreamWriter ScriptsStream;
         public Plotter()
         {
+            Settings settings = Settings.GetInstance();
             PythonProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "python",
+                    FileName = settings.PythonExecutable,
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardInput = true,
@@ -36,7 +37,6 @@ namespace Ligral.Tools
             {
                 throw new LigralException("Python is not installed or not callable.");
             }
-            Settings settings = Settings.GetInstance();
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             string scripts = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "plot.py");
             ScriptsStream = new StreamWriter(scripts);
