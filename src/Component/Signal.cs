@@ -21,6 +21,19 @@ namespace Ligral.Component
                 }
             }
         }
+        protected Logger loggerInstance;
+        private static Logger signalLogger = new Logger("Signal");
+        protected Logger logger
+        {
+            get
+            {
+                if (loggerInstance is null)
+                {
+                    loggerInstance = new Logger(Name);
+                }
+                return loggerInstance;
+            }
+        }
         private OutPort outPort;
         private double doubleValue = 0;
         private Matrix<double> matrixValue;
@@ -34,7 +47,7 @@ namespace Ligral.Component
             {
                 if (!Packed)
                 {
-                    throw new LigralException("Signal is unpacked");
+                    throw logger.Error(new LigralException("Signal is unpacked"));
                 }
                 if (IsMatrix)
                 {
@@ -326,7 +339,7 @@ namespace Ligral.Component
         {
             if (right.IsMatrix)
             {
-                throw new LigralException("Matrix power matrix base is not supported.");
+                throw signalLogger.Error(new LigralException("Matrix power matrix base is not supported."));
             }
             else
             {
@@ -498,7 +511,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException("Double cannot be compared with matrix");
+                throw logger.Error(new LigralException("Double cannot be compared with matrix"));
             }
         }
     }

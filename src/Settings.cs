@@ -9,6 +9,7 @@ namespace Ligral
         #region Singleton
         private static Settings settingsInstance;
         private static object locker = new object();
+        private Logger logger = new Logger("Settings");
         private Settings()
         { }
 
@@ -53,11 +54,11 @@ namespace Ligral
             { 
                 if (value <= 0)
                 {
-                    throw new SettingException("step_size", value, "step size must be positive nonzero.");
+                    throw logger.Error(new SettingException("step_size", value, "step size must be positive nonzero."));
                 }
                 else if (value > stopTime)
                 {
-                    throw new SettingException("step_size", value, "step size must be small than stop time.");
+                    throw logger.Error(new SettingException("step_size", value, "step size must be small than stop time."));
                 }
                 stepSize = value;
             }
@@ -70,11 +71,11 @@ namespace Ligral
             { 
                 if (value <= 0)
                 {
-                    throw new SettingException("stop_time", value, "step size must be positive nonzero.");
+                    throw logger.Error(new SettingException("stop_time", value, "step size must be positive nonzero."));
                 }
                 else if (value < stepSize)
                 {
-                    throw new SettingException("stop_time", value, "step size must be larger than step size.");
+                    throw logger.Error(new SettingException("stop_time", value, "step size must be larger than step size."));
                 }
                 stopTime = value;
             }
@@ -147,7 +148,7 @@ namespace Ligral
             case "python":
                 PythonExecutable = (string) val; break;
             default:
-                throw new LigralException($"Unsupported setting {item}");
+                throw logger.Error(new LigralException($"Unsupported setting {item}"));
             }
         }
         #endregion

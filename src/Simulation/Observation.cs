@@ -15,6 +15,18 @@ namespace Ligral.Simulation
         public static event SteppedHandler Stepped;
         public delegate void StoppedHandler();
         public static event StoppedHandler Stopped;
+        private Logger loggerInstance;
+        protected Logger logger
+        {
+            get
+            {
+                if (loggerInstance is null)
+                {
+                    loggerInstance = new Logger(Name);
+                }
+                return loggerInstance;
+            }
+        }
         public static List<(string, Observation)> ObservationPool = new List<(string, Observation)>();
         public static Observation CreateObservation(string name = null)
         {
@@ -22,7 +34,7 @@ namespace Ligral.Simulation
             observation.Name = name??$"{ObservationPool.Count}";
             if (ObservationPool.Exists(item => item.Item1 == observation.Name))
             {
-                // throw new LigralException($"Observation name conflict: {observation.Name}");
+                // throw logger.Error(new LigralException($"Observation name conflict: {observation.Name}"));
                 // [TODO] add log system to warn override
                 return ObservationPool.Find(item => item.Item1 == observation.Name).Item2;
             }
@@ -47,7 +59,7 @@ namespace Ligral.Simulation
             }
             else
             {
-                throw new LigralException($"Duplicate commits in Observation {Name}");
+                throw logger.Error(new LigralException($"Duplicate commits in Observation {Name}"));
             }
         }
         public static void OnStepped()

@@ -7,11 +7,12 @@ namespace Ligral.Simulation
     {
         private List<Model> routine = new List<Model>();
         private List<Model> allNodes = new List<Model>();
+        private Logger logger = new Logger("Inspector");
         private void Visit(Model node)
         {
             if (!allNodes.Contains(node))
             {
-                throw new LigralException($"Schematic Error: {node.Name} is not in inspection list.");
+                throw logger.Error(new LigralException($"Schematic Error: {node.Name} is not in inspection list."));
             }
             if(node.IsReady())
             {
@@ -49,7 +50,7 @@ namespace Ligral.Simulation
                 {
                     List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
                     throw new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
-                                              "chematic Error: Algebraic loop exists.");
+                                              "schematic Error: Algebraic loop exists.");
                 }
             }
             return routine;

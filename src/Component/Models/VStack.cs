@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
                 firstMatrix = m.Dense(1, 1, value);
                 break;
             default:
-                throw new LigralException("Signal with undefined type");
+                throw logger.Error(new LigralException("Signal with undefined type"));
             }
             foreach(Signal signal in values.Skip(1))
             {

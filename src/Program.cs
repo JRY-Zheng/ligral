@@ -13,6 +13,7 @@ namespace Ligral
 {
     class Program
     {
+        private static Logger logger = new Logger("Inspector");
         static void Main(string[] args)
         {
             Options options = new Options(args);
@@ -131,7 +132,7 @@ Learn more:
                 }
                 else
                 {
-                    throw new OptionException(modelName, $"No model named {modelName}");
+                    throw logger.Error(new OptionException(modelName, $"No model named {modelName}"));
                 }
             }
             else
@@ -162,7 +163,7 @@ Learn more:
             {
                 if (!(document.OutputFolder is null))
                 {
-                    throw new OptionException("Output folder is only needed when mdl.json is requested.");
+                    throw logger.Error(new OptionException("Output folder is only needed when mdl.json is requested."));
                 }
                 foreach (Model model in models)
                 {

@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
                     }
                     else
                     {
-                        throw new ModelException(this,"Invalid calculation operator " + operType);
+                        throw logger.Error(new ModelException(this,"Invalid calculation operator " + operType));
                     }
                 })}
             };

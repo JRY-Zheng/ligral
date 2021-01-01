@@ -43,7 +43,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, "Type conflict");
+                throw logger.Error(new ModelException(this, "Type conflict"));
             }
         }
         // protected override void AfterConfigured()
@@ -75,7 +75,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, "Type conflict");
+                throw logger.Error(new ModelException(this, "Type conflict"));
             }
             return Results;
         }

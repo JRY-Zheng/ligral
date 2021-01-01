@@ -35,7 +35,7 @@ namespace Ligral.Tools
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                throw new LigralException("Python is not installed or not callable.");
+                throw logger.Error(new LigralException("Python is not installed or not callable."));
             }
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             string scripts = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "plot.py");

@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
                     case "right":
                         leftProduct = false; break;
                     default:
-                        throw new ModelException(this, $"Invalid enum prod {prod}");
+                        throw logger.Error(new ModelException(this, $"Invalid enum prod {prod}"));
                     }
                 }, ()=>{})}
             };

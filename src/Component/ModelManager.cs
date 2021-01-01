@@ -8,6 +8,7 @@ namespace Ligral.Component
     {
         private static Dictionary<string,int> modelCount = new Dictionary<string, int>();
         public static List<Model> ModelPool = new List<Model>();
+        private static Logger logger = new Logger("ModelManager");
         public static Dictionary<string,System.Func<Model>> ModelTypePool = new Dictionary<string, System.Func<Model>>()
         {
             {"Node", ()=>new Node()},
@@ -72,7 +73,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException("No model named "+modelType);
+                throw logger.Error(new LigralException("No model named "+modelType));
             }
             if (modelCount.ContainsKey(modelType))
             {

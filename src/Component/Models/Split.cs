@@ -24,11 +24,11 @@ namespace Ligral.Component.Models
             Signal inputSignal = values[0];
             if (!inputSignal.IsMatrix)
             {
-                throw new ModelException(this, "Double cannot be splitted.");
+                throw logger.Error(new ModelException(this, "Double cannot be splitted."));
             }
             else if (inputSignal.Count() != Results.Count)
             {
-                throw new ModelException(this, "Item count inconsistency.");
+                throw logger.Error(new ModelException(this, "Item count inconsistency."));
             }
             else
             {

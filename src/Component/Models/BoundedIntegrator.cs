@@ -41,7 +41,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, "Type conflict");
+                throw logger.Error(new ModelException(this, "Type conflict"));
             }
         }
         private double GetBoundedDerivative(State state, double deriv)

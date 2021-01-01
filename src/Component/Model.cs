@@ -56,6 +56,19 @@ namespace Ligral.Component
         public string GivenName;
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
+        protected Logger loggerInstance;
+        private static Logger modelLogger = new Logger("Model");
+        protected Logger logger
+        {
+            get
+            {
+                if (loggerInstance is null)
+                {
+                    loggerInstance = new Logger(Name);
+                }
+                return loggerInstance;
+            }
+        }
         public List<string> InPortsName 
         {
             get {return InPortList.ConvertAll(InPort => InPort.Name);}
@@ -148,14 +161,14 @@ namespace Ligral.Component
             // ConfigureAction(dictionary);
             dictionary.Keys.Except(Parameters.Keys).ToList().ForEach(unknownParameterName=>
             {
-                throw new LigralException($"Unknown Parameter {unknownParameterName}");
+                throw logger.Error(new LigralException($"Unknown Parameter {unknownParameterName}"));
             });
             Parameters.Keys.Except(dictionary.Keys).ToList().ForEach(defaultParameterName=>
             {
                 Parameter parameter = Parameters[defaultParameterName];
                 if (parameter.Required)
                 {
-                    throw new LigralException($"The parameter {defaultParameterName} requires value assignment");
+                    throw logger.Error(new LigralException($"The parameter {defaultParameterName} requires value assignment"));
                 }
                 else
                 {
@@ -172,7 +185,7 @@ namespace Ligral.Component
                 // }
                 // catch (System.Exception e)
                 // {
-                //     throw new LigralException($"type of {value} is unsupported for {parameterName} of {Name}\n{e}");
+                //     throw logger.Error(new LigralException($"type of {value} is unsupported for {parameterName} of {Name}\n{e}"));
                 // }
             });
             AfterConfigured();
@@ -183,7 +196,7 @@ namespace Ligral.Component
         {
             if (outPortNO >= OutPortCount())
             {
-                throw new LigralException($"Out port number {outPortNO} exceed boundary");
+                throw logger.Error(new LigralException($"Out port number {outPortNO} exceed boundary"));
             }
             else
             {
@@ -194,7 +207,7 @@ namespace Ligral.Component
         {
             if (inPortNO>=InPortCount())
             {
-                throw new LigralException($"In port number {inPortNO} exceeds boundary in {Name}");
+                throw logger.Error(new LigralException($"In port number {inPortNO} exceeds boundary in {Name}"));
             }
             else
             {
@@ -215,7 +228,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException($"Undefined port name {portName} in {GetType().Name} {Name}");
+                throw logger.Error(new LigralException($"Undefined port name {portName} in {GetType().Name} {Name}"));
             }
         }
         public int InPortCount()
@@ -259,7 +272,7 @@ namespace Ligral.Component
             List<Signal> outputs = Calculate(inputs);
             if(outputs.Count != OutPortList.Count)
             {
-                throw new LigralException($"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}. in {Name}");
+                throw logger.Error(new LigralException($"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}. in {Name}"));
             }
             else
             {
@@ -282,7 +295,7 @@ namespace Ligral.Component
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when adding together");
+                throw modelLogger.Error(new LigralException("Out port number should be 1 when adding together"));
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '+'}};
@@ -306,7 +319,7 @@ namespace Ligral.Component
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when subtracting");
+                throw modelLogger.Error(new LigralException("Out port number should be 1 when subtracting"));
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '-'}};
@@ -334,7 +347,7 @@ namespace Ligral.Component
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when multiplying");
+                throw modelLogger.Error(new LigralException("Out port number should be 1 when multiplying"));
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '*'}};
@@ -351,7 +364,7 @@ namespace Ligral.Component
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when dividing");
+                throw modelLogger.Error(new LigralException("Out port number should be 1 when dividing"));
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '/'}};
@@ -368,7 +381,7 @@ namespace Ligral.Component
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                throw new LigralException("Out port number should be 1 when powering");
+                throw modelLogger.Error(new LigralException("Out port number should be 1 when powering"));
             }
             Calculator calculator = ModelManager.Create("Calculator") as Calculator;
             Dict dictionary = new Dict(){{"type", '^'}};

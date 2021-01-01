@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
                     table = new Storage((string)value, true);
                     if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")
                     {
-                        throw new ModelException(this,"Invalid playback file");
+                        throw logger.Error(new ModelException(this,"Invalid playback file"));
                     }
                 })},
                 {"col", new Parameter(ParameterType.Signal , value=>
@@ -72,7 +72,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, $"Invalid playback input at time {Solver.Time}");
+                throw logger.Error(new ModelException(this, $"Invalid playback input at time {Solver.Time}"));
             }
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
@@ -92,7 +92,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, $"Inconsistency of row, col and playback");
+                throw logger.Error(new ModelException(this, $"Inconsistency of row, col and playback"));
             }
             return Results;
         }

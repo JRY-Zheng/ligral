@@ -46,6 +46,7 @@ namespace Ligral
     {
         private string[] args;
         private int index = 0;
+        private Logger logger = new Logger("Options");
         private string arg 
         { 
             get 
@@ -119,7 +120,7 @@ namespace Ligral
             }
             catch
             {
-                throw new OptionException(arg, "Cannot be converted to double");
+                throw logger.Error(new OptionException(arg, "Cannot be converted to double"));
             }
         }
         private bool GetBoolean()
@@ -201,7 +202,7 @@ namespace Ligral
             {
                 if (index < args.Length)
                 {
-                    throw new OptionException(arg, $"Unknown option {arg}.");
+                    throw logger.Error(new OptionException(arg, $"Unknown option {arg}."));
                 }
             }
         }

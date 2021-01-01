@@ -8,6 +8,7 @@ namespace Ligral.Syntax
         private Lexer lexer;
         private Token currentToken;
         private Token currentTokenBackup;
+        private Logger logger = new Logger("Parser");
         public Parser() {}
         public void Load(string text)
         {
@@ -30,7 +31,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new SyntaxException(currentToken, $"{tokenType.ToString()} expected");
+                throw logger.Error(new SyntaxException(currentToken, $"{tokenType.ToString()} expected"));
             }
         }
         private void Backup()
@@ -347,7 +348,7 @@ namespace Ligral.Syntax
             numberParsed = items.Count;
             if (numberRequired != null && numberRequired != numberParsed)
             {
-                throw new SyntaxException(currentToken, "Inconsistency rows of a DeMux block");
+                throw logger.Error(new SyntaxException(currentToken, "Inconsistency rows of a DeMux block"));
             }
             return new RowDeMuxAST(items);
         }

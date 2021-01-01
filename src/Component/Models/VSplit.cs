@@ -25,11 +25,11 @@ namespace Ligral.Component.Models
             Matrix<double> matrix = inputSignal.Unpack() as Matrix<double>;
             if (matrix == null)
             {
-                throw new ModelException(this, "Double cannot be splitted.");
+                throw logger.Error(new ModelException(this, "Double cannot be splitted."));
             }
             else if (matrix.RowCount != Results.Count)
             {
-                throw new ModelException(this, "Row count inconsistency.");
+                throw logger.Error(new ModelException(this, "Row count inconsistency."));
             }
             else
             {

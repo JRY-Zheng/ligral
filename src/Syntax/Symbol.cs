@@ -10,6 +10,7 @@ namespace Ligral.Syntax
         public string Name;
         public TypeSymbol Type;
         protected object Value;
+        protected Logger logger = new Logger("Inspector");
         public Symbol(string name, TypeSymbol type, object value)
         {
             Name = name;
@@ -55,7 +56,7 @@ namespace Ligral.Syntax
             case Signature signature:
                 return signature;
             default:
-                throw new LigralException($"Invalid type symbol with value {Value.GetType()}");
+                throw logger.Error(new LigralException($"Invalid type symbol with value {Value.GetType()}"));
             }
         }
     }

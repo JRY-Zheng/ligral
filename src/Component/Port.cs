@@ -7,10 +7,12 @@ namespace Ligral.Component
         public string Name;
         public Model FatherModel;
         protected Signal Value;
+        protected Logger logger;
         protected Port(string name, Model model)
         {
             Name = name;
             FatherModel = model;
+            logger = new Logger($"Port({Name})");
         }
 
         public bool IsConfigured { get; set; }
@@ -74,7 +76,7 @@ namespace Ligral.Component
         }
         public override void Connect(int outPortNO, InPort inPort)
         {
-            throw new ModelException(FatherModel, "Cannot link in port to in port");
+            throw logger.Error(new ModelException(FatherModel, "Cannot link in port to in port"));
         }
 
         public override InPort Expose(int inPortNO)
@@ -85,13 +87,13 @@ namespace Ligral.Component
             }
             else
             {
-                throw new ModelException(FatherModel, "Cannot link multiple signals to single in port");
+                throw logger.Error(new ModelException(FatherModel, "Cannot link multiple signals to single in port"));
             }
         }
 
         public override Port Expose(string portName)
         {
-            throw new ModelException(FatherModel, "Cannot expose ports from out port");
+            throw logger.Error(new ModelException(FatherModel, "Cannot expose ports from out port"));
         }
 
         public override string GetTypeName()
@@ -165,7 +167,7 @@ namespace Ligral.Component
         {
             if(inPort.Source!=null)
             {
-                throw new LigralException("Duplicated binding of InPort.");
+                throw logger.Error(new LigralException("Duplicated binding of InPort."));
             }
             else
             {
@@ -194,18 +196,18 @@ namespace Ligral.Component
             }
             else
             {
-                throw new ModelException(FatherModel, "Out port has only single signal");
+                throw logger.Error(new ModelException(FatherModel, "Out port has only single signal"));
             }
         }
 
         public override InPort Expose(int inPortNO)
         {
-            throw new ModelException(FatherModel, "Out port has no in port");
+            throw logger.Error(new ModelException(FatherModel, "Out port has no in port"));
         }
 
         public override Port Expose(string portName)
         {
-            throw new ModelException(FatherModel, "Cannot expose ports from out port");
+            throw logger.Error(new ModelException(FatherModel, "Cannot expose ports from out port"));
         }
 
         public override string GetTypeName()

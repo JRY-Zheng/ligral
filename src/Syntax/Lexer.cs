@@ -11,6 +11,7 @@ namespace Ligral.Syntax
         private char currentCharBackup;
         private int lineNOBackup = 1;
         private int columnNOBackup = 1;
+        private Logger logger = new Logger("Lexer");
         public void Backup()
         {
             positionBackup = position;
@@ -31,7 +32,7 @@ namespace Ligral.Syntax
             if (text.Length==0)
             {
                 currentChar = '\0';
-                // throw new LigralException("Lexer Error: No text given.");
+                // throw logger.Error(new LigralException("Lexer Error: No text given."));
             }
             else
             {
@@ -127,7 +128,7 @@ namespace Ligral.Syntax
                 }
                 else
                 {
-                    throw new LigralException($"Lexer Error: Incomplete string at line {lineNO}");
+                    throw logger.Error(new LigralException($"Lexer Error: Incomplete string at line {lineNO}"));
                 }
             }
             int endPosition = position;
@@ -323,7 +324,7 @@ namespace Ligral.Syntax
             }
             else 
             {
-                throw new LigralException($"Lexer Error: Unexpected char {currentChar} at line {lineNO} column {columnNO}");
+                throw logger.Error(new LigralException($"Lexer Error: Unexpected char {currentChar} at line {lineNO} column {columnNO}"));
             }
         }
     }

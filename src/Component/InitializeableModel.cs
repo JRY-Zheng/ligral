@@ -60,7 +60,7 @@ namespace Ligral.Component
                 }
                 else if (initial.IsMatrix)
                 {
-                    throw new ModelException(this, $"Matrix row and col should be positive non-zero: {colNo}x{rowNo}");
+                    throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero: {colNo}x{rowNo}"));
                 }
                 else // initial is double
                 { }
@@ -78,12 +78,12 @@ namespace Ligral.Component
                     Matrix<double> initialMatrix = initial.Unpack() as Matrix<double>;
                     if (colNo != initialMatrix.ColumnCount || rowNo != initialMatrix.RowCount)
                     {
-                        throw new ModelException(this, $"Inconsistency between initial value and shape");
+                        throw logger.Error(new ModelException(this, $"Inconsistency between initial value and shape"));
                     }
                 }
                 else // initial is double
                 {
-                    throw new ModelException(this, $"For scalar, row and col should be 0: {colNo}x{rowNo}");
+                    throw logger.Error(new ModelException(this, $"For scalar, row and col should be 0: {colNo}x{rowNo}"));
                 }
             }
             else if (colNo == -1 && rowNo == -1) // implicit
@@ -108,7 +108,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new ModelException(this, $"Matrix row and col should be positive non-zero, for scalar both zeros\n but we get: {colNo}x{rowNo}");
+                throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero, for scalar both zeros\n but we get: {colNo}x{rowNo}"));
             }
         }
     }

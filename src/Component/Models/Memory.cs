@@ -24,7 +24,7 @@ namespace Ligral.Component.Models
                 int delayedFrame = Convert.ToInt32(value);
                 if (delayedFrame < 1)
                 {
-                    throw new ModelException(this, "Delay should be greater than 1");
+                    throw logger.Error(new ModelException(this, "Delay should be greater than 1"));
                 }
                 for (int i = 0; i <= delayedFrame; i++)
                 {

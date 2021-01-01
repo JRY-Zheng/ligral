@@ -110,7 +110,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa.");
+                throw logger.Error(new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa."));
             }
             Calculate = PostCalculate;
             return Calculate(values);

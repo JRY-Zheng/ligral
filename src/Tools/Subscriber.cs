@@ -24,11 +24,14 @@ namespace Ligral.Tools
         public int Id;
         private static bool running = true;
         protected static List<Subscriber> subscribers = new List<Subscriber>();
+        protected Logger logger;
+        private static Logger subscriberLogger = new Logger("Subscriber");
         public Subscriber()
         {
             Id = count;
             count++;
             subscribers.Add(this);
+            logger = new Logger(GetType().Name);
         }
         public static void Stop()
         {
@@ -61,7 +64,7 @@ namespace Ligral.Tools
             }
             catch(SocketException e)
             {
-                throw new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}");
+                throw subscriberLogger.Error(new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}"));
             }
             while (running)
             {

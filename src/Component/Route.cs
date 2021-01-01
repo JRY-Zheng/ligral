@@ -26,6 +26,18 @@ namespace Ligral.Component
         private List<string> inPortNameList;
         private List<string> outPortNameList;
         private StatementsAST statementsAST;
+        protected Logger loggerInstance;
+        protected Logger logger
+        {
+            get
+            {
+                if (loggerInstance is null)
+                {
+                    loggerInstance = new Logger(Name);
+                }
+                return loggerInstance;
+            }
+        }
         public void SetUp(
             string type, 
             string baseType, 
@@ -74,11 +86,11 @@ namespace Ligral.Component
             var innerModels = ModelManager.ModelPool.Skip(modelsCount);
             if (inputModels.Find(model => ((Model)model).IsConnected()) is Model connectedModel)
             {
-                throw new ModelException(connectedModel, "Input cannot be connected inside the route.");
+                throw logger.Error(new ModelException(connectedModel, "Input cannot be connected inside the route."));
             }
             if (outputModels.Union(innerModels).ToList().Find(model => !((Model)model).IsConnected()) is Model unconnectedModel)
             {
-                throw new ModelException(unconnectedModel, "models inside the route apart from inputs cannot be unconnected");
+                throw logger.Error(new ModelException(unconnectedModel, "models inside the route apart from inputs cannot be unconnected"));
             }
             interpreter.SetScope(scope);
         }
@@ -96,7 +108,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw new LigralException($"No port named {portName} in {Type}");
+                throw logger.Error(new LigralException($"No port named {portName} in {Type}"));
             }
         }
         public override void Configure(Dictionary<string, object> dictionary)
@@ -121,7 +133,7 @@ namespace Ligral.Component
                 }
                 else
                 {
-                    throw new LigralException(string.Format("Parameter {0} is required but not provided.", routeParam.Name));
+                    throw logger.Error(new LigralException(string.Format("Parameter {0} is required but not provided.", routeParam.Name)));
                 }
                 if (routeParam.Type==null)
                 {
@@ -138,7 +150,7 @@ namespace Ligral.Component
                         RouteScope.Insert(matrixSymbol);
                         break;
                     default:
-                        throw new LigralException($"Type inconsistency of {routeParam.Name}, digit or matrix expected");
+                        throw logger.Error(new LigralException($"Type inconsistency of {routeParam.Name}, digit or matrix expected"));
                     }
                 }
                 else
@@ -157,7 +169,7 @@ namespace Ligral.Component
                         }
                         else
                         {
-                            throw new ModelException(model, $"Type inconsistency for {routeParam.Name} in {Name}, in ports or out ports of model {model.GetTypeName()} is not the same as {routeParam.Type}'s.");
+                            throw logger.Error(new ModelException(model, $"Type inconsistency for {routeParam.Name} in {Name}, in ports or out ports of model {model.GetTypeName()} is not the same as {routeParam.Type}'s."));
                         }
                     case Route route:
                         if (signature.Derive(route))
@@ -169,10 +181,10 @@ namespace Ligral.Component
                         }
                         else
                         {
-                            throw new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, {route.GetTypeName()} is not derived from {routeParam.Type}'s.");
+                            throw logger.Error(new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, {route.GetTypeName()} is not derived from {routeParam.Type}'s."));
                         }
                     default:
-                        throw new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, model or route expected.");
+                        throw logger.Error(new LigralException($"Type inconsistency for {routeParam.Name} in {Name}, model or route expected."));
                     }
                 }
             }

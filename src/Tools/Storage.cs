@@ -15,6 +15,7 @@ namespace Ligral.Tools
         private Regex headerRegex;
         private Regex doubleRegex;
         private Regex dataRegex;
+        private Logger logger = new Logger("Storage");
         public Storage()
         {
             string columnString = @"[^,\s]+";
@@ -44,19 +45,19 @@ namespace Ligral.Tools
             {
                 if (text.Count == 0)
                 {
-                    throw new CSVFormatError("CSV file has no line, cannot read header");
+                    throw logger.Error(new CSVFormatError("CSV file has no line, cannot read header"));
                 }
                 Match headerMatch = headerRegex.Match(text[0]);
                 if (!headerMatch.Success)
                 {
-                    throw new CSVFormatError("Invalid CSV header");
+                    throw logger.Error(new CSVFormatError("Invalid CSV header"));
                 }
                 Columns = columnRegex.Matches(text[0]).OfType<Match>().Select(m => m.Value).ToList();
                 text.RemoveAt(0);
             }
             if (text.Count == 0)
             {
-                throw new CSVFormatError("CSV file has no data");
+                throw logger.Error(new CSVFormatError("CSV file has no data"));
             }
             else
             {
@@ -67,12 +68,12 @@ namespace Ligral.Tools
                 Match dataMatch = dataRegex.Match(line);
                 if (!dataMatch.Success)
                 {
-                    throw new CSVFormatError($"Data format error in line {Data.Count + (hasHeader ? 2 : 1)}: {line}");
+                    throw logger.Error(new CSVFormatError($"Data format error in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
                 List<double> row = doubleRegex.Matches(line).OfType<Match>().Select(m => double.Parse(m.Value)).ToList();
                 if (row.Count != Columns.Count)
                 {
-                    throw new CSVFormatError($"Column number inconsistency in line {Data.Count + (hasHeader ? 2 : 1)}: {line}");
+                    throw logger.Error(new CSVFormatError($"Column number inconsistency in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
                 Data.Add(row);
             }
@@ -103,14 +104,14 @@ namespace Ligral.Tools
             }
             else
             {
-                throw new InvalidOperationException($"Insert position {pos} is invalid");
+                throw logger.Error(new LigralException($"Insert position {pos} is invalid"));
             }
         }
         public void AddRow(List<double> row, int pos = -1)
         {
             if (row.Count != Columns.Count)
             {
-                throw new CSVFormatError("Column number inconsistency");
+                throw logger.Error(new CSVFormatError("Column number inconsistency"));
             }
             AddToList(Data, row, pos);
         }
@@ -123,7 +124,7 @@ namespace Ligral.Tools
             }
             else if (values.Count != Data.Count)
             {
-                throw new CSVFormatError("row number inconsistency");
+                throw logger.Error(new CSVFormatError("row number inconsistency"));
             }
             else
             {
@@ -143,7 +144,7 @@ namespace Ligral.Tools
             }
             else
             {
-                throw new InvalidOperationException($"Number {index} exceeds limits");
+                throw logger.Error(new LigralException($"Number {index} exceeds limits"));
             }
         }
         public List<double> GetRow(int index)

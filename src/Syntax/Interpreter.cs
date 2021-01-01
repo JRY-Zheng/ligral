@@ -20,6 +20,7 @@ namespace Ligral.Syntax
         private ScopeSymbolTable currentScope;
         private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
         private static Interpreter instance;
+        private Logger logger = new Logger("Interpreter");
         public static string ScopeName 
         {
             get 
@@ -88,7 +89,7 @@ namespace Ligral.Syntax
             }
             catch (IOException)
             {
-                throw new LigralException($"File {fullFileName} not found.");
+                throw logger.Error(new LigralException($"File {fullFileName} not found."));
             }
             relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();
@@ -191,7 +192,7 @@ namespace Ligral.Syntax
             case null:
                 return null;
             default:
-                throw new LigralException($"Unknown AST {ast.GetType().Name}");
+                throw logger.Error(new LigralException($"Unknown AST {ast.GetType().Name}"));
             }
         }
         private object Visit(ProgramAST programAST)
@@ -224,7 +225,7 @@ namespace Ligral.Syntax
                 ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
                 currentScope.Insert(modelSymbol);
                 return node;
-                // throw new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}");
+                // throw logger.Error(new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}"));
             }
             else
             {
@@ -253,7 +254,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new SemanticException(rowAST.FindToken(), "Null matrix.");
+                throw logger.Error(new SemanticException(rowAST.FindToken(), "Null matrix."));
             }
             foreach(AST item in rowAST.Items.GetRange(1, rowAST.Items.Count-1))
             {
@@ -277,7 +278,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new SemanticException(matrixAST.FindToken(), "Null matrix.");
+                throw logger.Error(new SemanticException(matrixAST.FindToken(), "Null matrix."));
             }
             foreach(RowAST row in matrixAST.Rows.GetRange(1, matrixAST.Rows.Count-1))
             {
@@ -295,7 +296,7 @@ namespace Ligral.Syntax
                 case ILinkable linkable:
                     if (linkable.OutPortCount() != 1)
                     {
-                        throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port");
+                        throw logger.Error(new SemanticException(rowMuxAST.Items[i].FindToken(), "Model in matrix mux should have only single out port"));
                     }
                     else
                     {
@@ -303,7 +304,7 @@ namespace Ligral.Syntax
                     }
                     break;
                 default:
-                    throw new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected");
+                    throw logger.Error(new SemanticException(rowMuxAST.Items[i].FindToken(), "Model or port expected"));
                 } 
             }
             Group group = new Group();
@@ -318,7 +319,7 @@ namespace Ligral.Syntax
                 Group rowGroup = Visit(matrixMuxAST.Rows[i]);
                 if (rowGroup.OutPortCount() != 1)
                 {
-                    throw new SemanticException(matrixMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single out port");
+                    throw logger.Error(new SemanticException(matrixMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single out port"));
                 }
                 else
                 {
@@ -342,7 +343,7 @@ namespace Ligral.Syntax
                     modelList.Add(linkable);
                     if (linkable.InPortCount() != 1)
                     {
-                        throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port");
+                        throw logger.Error(new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model in matrix demux should have only single in port"));
                     }
                     else
                     {
@@ -351,7 +352,7 @@ namespace Ligral.Syntax
                     }
                     break;
                 default:
-                    throw new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model expected");
+                    throw logger.Error(new SemanticException(rowDeMuxAST.Items[i].FindToken(), "Model expected"));
                 } 
             }
             Group group = new Group();
@@ -379,7 +380,7 @@ namespace Ligral.Syntax
                 groupList.Add(rowGroup);
                 if (rowGroup.InPortCount() != 1)
                 {
-                    throw new SemanticException(matrixDeMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single in port");
+                    throw logger.Error(new SemanticException(matrixDeMuxAST.Rows[i].FindToken(), "Group in matrix mux should have only single in port"));
                 }
                 else
                 {
@@ -466,13 +467,13 @@ namespace Ligral.Syntax
                 ModelSymbol modelSymbol = new ModelSymbol(id, typeSymbol, linkable);
                 if (!currentScope.Insert(modelSymbol, false))
                 {
-                    throw new SemanticException(declareAST.Id.ReferenceToken, $"Duplicated ID {id}");
+                    throw logger.Error(new SemanticException(declareAST.Id.ReferenceToken, $"Duplicated ID {id}"));
                 }
                 return linkable;
             }
             else
             {
-                throw new SemanticException(modelTypeAST.FindToken(), $"Invalid type");
+                throw logger.Error(new SemanticException(modelTypeAST.FindToken(), $"Invalid type"));
             }
         }
         private ILinkable Visit(ConfigureAST configureAST)
@@ -503,7 +504,7 @@ namespace Ligral.Syntax
             }
             catch (LigralException ex)
             {
-                throw new SemanticException(configureAST.FindToken(), ex.Message);
+                throw logger.Error(new SemanticException(configureAST.FindToken(), ex.Message));
             }
             return linkable;
         }
@@ -526,7 +527,7 @@ namespace Ligral.Syntax
             case '^':
                 return left^right;
             default:
-                throw new SemanticException(binOpAST.FindToken(), "Invalid operator");
+                throw logger.Error(new SemanticException(binOpAST.FindToken(), "Invalid operator"));
             }
         }
         private Group Visit(UnaryOpAST unaryOpAST)
@@ -539,7 +540,7 @@ namespace Ligral.Syntax
             case '-':
                 return -value;
             default:
-                throw new SemanticException(unaryOpAST.FindToken(), "Invalid operator");
+                throw logger.Error(new SemanticException(unaryOpAST.FindToken(), "Invalid operator"));
             }
         }
         private object Visit(ValBinOpAST valBinOpAST)
@@ -557,13 +558,13 @@ namespace Ligral.Syntax
             case '/':
                 if (right.Unpack() is double v && v == 0)
                 {
-                    throw new SemanticException(valBinOpAST.Right.FindToken(), "0 Division");
+                    throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
                 }
                 return (left/right).Unpack();
             case '^':
                 return (left^right).Unpack();
             default:
-                throw new SemanticException(valBinOpAST.FindToken(), "Invalid operator");
+                throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
             }
         }
         private double Visit(ValUnaryOpAST valUnaryOpAST)
@@ -576,7 +577,7 @@ namespace Ligral.Syntax
             case '-':
                 return -value;
             default:
-                throw new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator");
+                throw logger.Error(new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator"));
             }
         }
         private object Visit(ConfAST confAST)
@@ -589,7 +590,7 @@ namespace Ligral.Syntax
             }
             catch 
             {
-                throw new SemanticException(confAST.FindToken(), "Only digit, boolean and string are accepted");
+                throw logger.Error(new SemanticException(confAST.FindToken(), "Only digit, boolean and string are accepted"));
             }
             Settings settings = Settings.GetInstance();
             try
@@ -598,7 +599,7 @@ namespace Ligral.Syntax
             }
             catch (System.InvalidCastException)
             {
-                throw new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}");
+                throw logger.Error(new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}"));
             }
             return null;
         }
@@ -620,11 +621,11 @@ namespace Ligral.Syntax
                 symbol = new DigitSymbol(id, typeSymbol, val);
                 break;
             default:
-                throw new SemanticException(fromOpAST.FindToken(), "Only digit is accepted");
+                throw logger.Error(new SemanticException(fromOpAST.FindToken(), "Only digit is accepted"));
             }
             if (!currentScope.Insert(symbol, false))
             {
-                throw new SemanticException(fromOpAST.Id.FindToken(), $"Duplicated ID {id}");
+                throw logger.Error(new SemanticException(fromOpAST.Id.FindToken(), $"Duplicated ID {id}"));
             }
             return value;
         }
@@ -638,7 +639,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new SemanticException(gotoOpAST.FindToken(), "Invalid connection");
+                throw logger.Error(new SemanticException(gotoOpAST.FindToken(), "Invalid connection"));
             }
             Group group = new Group();
             group.AddInputModel(source);
@@ -662,11 +663,11 @@ namespace Ligral.Syntax
                     var symbol = currentScope.Lookup(Visit(symbolName), false);
                     if (symbol == null)
                     {
-                        throw new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} from {importAST.FileName.Last()}");
+                        throw logger.Error(new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} from {importAST.FileName.Last()}"));
                     }
                     if (!mainScope.Insert(symbol, false))
                     {
-                        throw new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} since it has already exists");
+                        throw logger.Error(new SemanticException(symbolName.FindToken(), $"Cannot import {Visit(symbolName)} since it has already exists"));
                     }
                 }
                 currentScope = mainScope;
@@ -705,7 +706,7 @@ namespace Ligral.Syntax
                         scopeSymbol = new ScopeSymbol(folder.Word, scopeType, temp);
                         if (!scopeSymbolTable.Insert(scopeSymbol, false))
                         {
-                            throw new SemanticException(folder.FindToken(), $"Cannot using {folder.Word} since it has already exists, consider rename it.");
+                            throw logger.Error(new SemanticException(folder.FindToken(), $"Cannot using {folder.Word} since it has already exists, consider rename it."));
                         }
                         scopeSymbolTable = temp;
                     }
@@ -716,7 +717,7 @@ namespace Ligral.Syntax
             scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
             if (!scopeSymbolTable.Insert(scopeSymbol, false))
             {
-                throw new SemanticException((usingAST.ModuleName??usingAST.FileName.Last()).FindToken(), $"Cannot using {module} since it has already exists.");
+                throw logger.Error(new SemanticException((usingAST.ModuleName??usingAST.FileName.Last()).FindToken(), $"Cannot using {module} since it has already exists."));
             }
             currentScope = mainScope;
             return null;
@@ -734,7 +735,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new SemanticException(pointerAST.ScopeName.FindToken(), "Scope expected");
+                throw logger.Error(new SemanticException(pointerAST.ScopeName.FindToken(), "Scope expected"));
             }
         }
         private ILinkable Visit(SelectAST selectAST)
@@ -762,7 +763,7 @@ namespace Ligral.Syntax
                             ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
                             if (!currentScope.Insert(modelSymbol, false))
                             {
-                                throw new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}");
+                                throw logger.Error(new SemanticException(selectAST.Port.PortName.ReferenceToken, $"Duplicated ID {signalName}"));
                             }
                         }
                         Group group = new Group();
@@ -770,17 +771,17 @@ namespace Ligral.Syntax
                         group.AddOutputModel(outPort);
                         return group;
                     default:
-                        throw new SemanticException(selectAST.Port.FindToken(), "Ambiguous port");
+                        throw logger.Error(new SemanticException(selectAST.Port.FindToken(), "Ambiguous port"));
                     }
                 }
                 catch (LigralException ex)
                 {
-                    throw new SemanticException(selectAST.Port.FindToken(), ex.Message);
+                    throw logger.Error(new SemanticException(selectAST.Port.FindToken(), ex.Message));
                 }
             }
             else
             {
-                throw new SemanticException(selectAST.ModelObject.FindToken(), "Non model object");
+                throw logger.Error(new SemanticException(selectAST.ModelObject.FindToken(), "Non model object"));
             }
         }
         private Group Visit(ChainAST chainAST)
@@ -800,7 +801,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw new LigralException($"Unknown type {linkable}");
+                throw logger.Error(new LigralException($"Unknown type {linkable}"));
             }
         }
         private RouteInherit Visit(InheritAST inheritAST)
@@ -810,7 +811,7 @@ namespace Ligral.Syntax
             routeInherit.Type = Visit(inheritAST.Type);
             if (!(currentScope.Lookup(routeInherit.Type) is TypeSymbol typeSymbol && typeSymbol.Type.Name == "SIGN"))
             {
-                throw new SemanticException(inheritAST.Type.FindToken(), $"{routeInherit.Type} is not a valid signature");
+                throw logger.Error(new SemanticException(inheritAST.Type.FindToken(), $"{routeInherit.Type} is not a valid signature"));
             }
             return routeInherit;
         }
@@ -824,7 +825,7 @@ namespace Ligral.Syntax
                 TypeSymbol baseTypeSymbol = currentScope.Lookup(routeParam.Type) as TypeSymbol;
                 if (baseTypeSymbol == null || baseTypeSymbol.Type.Name != "SIGN")
                 {
-                    throw new SemanticException(routeParamAST.Type.FindToken(), "Explicit type of a parameter must be a signature.");
+                    throw logger.Error(new SemanticException(routeParamAST.Type.FindToken(), "Explicit type of a parameter must be a signature."));
                 }
             }
             if (routeParamAST.DefaultValue!=null)
@@ -838,12 +839,12 @@ namespace Ligral.Syntax
                     }
                     else
                     {
-                        throw new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency of {routeParam.Name}, digit or matrix expected");
+                        throw logger.Error(new SemanticException(routeParamAST.DefaultValue.FindToken(), $"Type inconsistency of {routeParam.Name}, digit or matrix expected"));
                     }
                 }
                 else
                 {
-                    throw new SemanticException(routeParamAST.DefaultValue.FindToken(), "Default value not supported when type is model or route.");
+                    throw logger.Error(new SemanticException(routeParamAST.DefaultValue.FindToken(), "Default value not supported when type is model or route."));
                 }
             }
             return routeParam;
@@ -863,15 +864,15 @@ namespace Ligral.Syntax
             List<string> outPortNameList = Visit(routeAST.OutPorts);
             if (routeAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
             {
-                throw new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports");
+                throw logger.Error(new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports"));
             }
             if (routeAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
             {
-                throw new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique");
+                throw logger.Error(new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique"));
             }
             if (routeAST.OutPorts.Ports.Find(port => outPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedOutPort)
             {
-                throw new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique");
+                throw logger.Error(new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique"));
             }
             object definition = Visit(routeAST.Definition);
             switch (definition)
@@ -882,28 +883,28 @@ namespace Ligral.Syntax
                 Signature signature = (Signature) typeSymbol.GetValue();
                 if (!signature.Validate(inPortNameList, outPortNameList))
                 {
-                    throw new SemanticException(((InheritAST)routeAST.Definition).Type.FindToken(), $"Inconsistency between in ports/out ports and the signature {routeConstructor.Type}");
+                    throw logger.Error(new SemanticException(((InheritAST)routeAST.Definition).Type.FindToken(), $"Inconsistency between in ports/out ports and the signature {routeConstructor.Type}"));
                 }
                 break;
             case string routeName:
                 routeConstructor.SetUp(routeName);
                 break;
             default:
-                throw new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition");
+                throw logger.Error(new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition"));
             }
             routeConstructor.SetUp(currentScope.scopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
             if (routeAST.Parameters.Parameters.Find(parameter => inPortNameList.Contains(Visit(parameter).Name)) is RouteParamAST duplicatedParamInPort)
             {
-                throw new SemanticException(duplicatedParamInPort.FindToken(), "In ports should be distinguished from parameters");
+                throw logger.Error(new SemanticException(duplicatedParamInPort.FindToken(), "In ports should be distinguished from parameters"));
             }
             if (routeAST.Parameters.Parameters.Find(parameter => outPortNameList.Contains(Visit(parameter).Name)) is RouteParamAST duplicatedParamOutPort)
             {
-                throw new SemanticException(duplicatedParamOutPort.FindToken(), "Out ports should be distinguished from parameters");
+                throw logger.Error(new SemanticException(duplicatedParamOutPort.FindToken(), "Out ports should be distinguished from parameters"));
             }
             if (routeAST.Parameters.Parameters.Find(parameter => parameters.Count(param => param.Name==Visit(parameter).Name)>1) is RouteParamAST duplicatedParam)
             {
-                throw new SemanticException(duplicatedParam.FindToken(), "Parameters should be unique");
+                throw logger.Error(new SemanticException(duplicatedParam.FindToken(), "Parameters should be unique"));
             }
             routeConstructor.SetUp(parameters);
             routeConstructor.SetUp(inPortNameList, outPortNameList);
@@ -912,7 +913,7 @@ namespace Ligral.Syntax
             TypeSymbol routeSymbol = new TypeSymbol(routeConstructor.Name, routeType, routeConstructor);
             if (!currentScope.Insert(routeSymbol, false))
             {
-                throw new SemanticException(routeAST.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists.");
+                throw logger.Error(new SemanticException(routeAST.FindToken(), $"Cannot declare {routeConstructor.Name} since it already exists."));
             }
             return null;
         }
@@ -923,22 +924,22 @@ namespace Ligral.Syntax
             List<string> outPortNameList = Visit(signatureAST.OutPorts);
             if (signatureAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
             {
-                throw new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports");
+                throw logger.Error(new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports"));
             }
             if (signatureAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
             {
-                throw new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique");
+                throw logger.Error(new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique"));
             }
             if (signatureAST.OutPorts.Ports.Find(port => outPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedOutPort)
             {
-                throw new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique");
+                throw logger.Error(new SemanticException(duplicatedOutPort.FindToken(), "Out ports should be unique"));
             }
             Signature signature = new Signature(name, inPortNameList, outPortNameList);
             TypeSymbol typeSymbol = (TypeSymbol) currentScope.Lookup("SIGN");
             TypeSymbol signatureSymbol = new TypeSymbol(name, typeSymbol, signature);
             if (!currentScope.Insert(signatureSymbol, false))
             {
-                throw new SemanticException(signatureAST.FindToken(), $"Cannot declare {name} since it already exists.");
+                throw logger.Error(new SemanticException(signatureAST.FindToken(), $"Cannot declare {name} since it already exists."));
             }
             return null;
         }
