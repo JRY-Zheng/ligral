@@ -35,6 +35,7 @@ namespace Ligral
         public static List<LogMessage> Logs = new List<LogMessage>();
         private string source;
         public static bool PrintOut = true;
+        public static bool PrintOutPlainText = true;
         public static LogLevel MinPrintOutLevel = LogLevel.Warning;
         public static string LogFile = null;
         public static LogLevel MinLogFileLevel = LogLevel.Info;
@@ -48,7 +49,14 @@ namespace Ligral
             Logs.Add(message);
             if (PrintOut && message.Level >= MinPrintOutLevel)
             {
-                Console.WriteLine(message);
+                if (PrintOutPlainText)
+                {
+                    Console.WriteLine(message.Message);
+                }
+                else
+                {
+                    Console.WriteLine(message);
+                }
             }
             if (LogFile is string logFile && message.Level >= MinLogFileLevel)
             {
