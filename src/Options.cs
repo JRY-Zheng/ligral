@@ -88,7 +88,12 @@ namespace Ligral
                     break;
                 case "-o":
                 case "--output":
-                    document.OutputFolder = GetString();
+                    string folder = GetString();
+                    if (folder is null)
+                    { 
+                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
+                    }
+                    document.OutputFolder = folder;
                     break;
                 default:
                     metUnknownOption = document.ModelName != null;
@@ -147,7 +152,12 @@ namespace Ligral
                 {
                 case "-o":
                 case "--output":
-                    simulationProject.OutputFolder = GetString();
+                    string folder = GetString();
+                    if (folder is null)
+                    { 
+                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
+                    }
+                    simulationProject.OutputFolder = folder;
                     break;
                 case "-s":
                 case "--step-size":
