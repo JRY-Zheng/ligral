@@ -49,13 +49,14 @@ namespace Ligral
             Logs.Add(message);
             if (PrintOut && message.Level >= MinPrintOutLevel)
             {
+                TextWriter textWriter = message.Level == LogLevel.Error ? Console.Error : Console.Out;
                 if (PrintOutPlainText)
                 {
-                    Console.WriteLine(message.Message);
+                    textWriter.WriteLine(message.Message);
                 }
                 else
                 {
-                    Console.WriteLine(message);
+                    textWriter.WriteLine(message);
                 }
             }
             if (LogFile is string logFile && message.Level >= MinLogFileLevel)
