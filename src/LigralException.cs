@@ -124,6 +124,28 @@ namespace Ligral
         }
     }
     [System.Serializable]
+    class OptionException : LigralException
+    {
+        private string errorOption;
+        // private string errorMessage;
+        public OptionException(string optionName, string message="") : base(message)
+        {
+            errorOption = optionName;
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Invalid option {errorOption}";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
+    [System.Serializable]
     class CSVFormatError : LigralException
     {
         public CSVFormatError(string message) : base(message)

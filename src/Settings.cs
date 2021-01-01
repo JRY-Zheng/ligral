@@ -79,7 +79,7 @@ namespace Ligral
                 stopTime = value;
             }
         }
-        private string outputFolder = null;
+        private string outputFolder = ".";
         public string OutputFolder { get { return outputFolder;} set { outputFolder = value;}}
         private bool needOutput = false;
         public bool NeedOutput 
