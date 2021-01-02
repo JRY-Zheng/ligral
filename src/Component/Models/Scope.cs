@@ -121,7 +121,7 @@ namespace Ligral.Component.Models
         public override void Refresh()
         {
             Settings settings = Settings.GetInstance();
-            if (settings.RealTimeDrawing)
+            if (settings.RealTimeSimulation)
             {
                 for (int i=0; i<observations.Count; i++)
                 {

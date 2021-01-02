@@ -3,25 +3,18 @@ using System.Linq;
 
 namespace Ligral.Simulation.Solvers
 {
-    class EulerSolver : Solver
+    class EulerSolver : FixedStepSolver
     {
-        public override void Solve(Problem problem)
+        protected override List<double> Step(Problem problem, double stepSize, List<double> states)
         {
-            List<double> states = problem.InitialValues();
-            Settings settings = Settings.GetInstance();
-            for (Time=0; Time<=settings.StopTime; Time+=settings.StepSize)
+            List<double> stateDerivatives = problem.SystemDynamicFunction(states);
+            return States.Zip(stateDerivatives).ToList().ConvertAll(pair => 
             {
-                List<double> stateDerivatives = problem.SystemDynamicFunction(states);
-                states = states.Zip(stateDerivatives).ToList().ConvertAll(pair => 
-                {
-                    var state = pair.First;
-                    var deriv = pair.Second;
-                    state += deriv*settings.StepSize;
-                    return state;
-                });
-                problem.ObservationFunction();
-            }
-            Observation.OnStopped();
+                var state = pair.First;
+                var deriv = pair.Second;
+                state += deriv*stepSize;
+                return state;
+            });
         }
     }
 }

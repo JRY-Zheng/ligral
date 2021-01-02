@@ -15,7 +15,7 @@ namespace Ligral.Component.Models
             }
         }
         private static int maxLength = 10;
-        private static string format = "Time: {0,-6:0.00} {1,10} = {2:0.00}";
+        private static string format = "Time: {0,-8:0.0000} {1,10} = {2:0.00}";
         private static int length
         {
             set
@@ -23,7 +23,7 @@ namespace Ligral.Component.Models
                 if (value > maxLength)
                 {
                     maxLength = value;
-                    format = "Time: {0,-6:0.00} {1,"+ maxLength +"} = {2:0.00}";
+                    format = "Time: {0,-8:0.0000} {1,"+ maxLength +"} = {2:0.00}";
                 }
             }
         }
