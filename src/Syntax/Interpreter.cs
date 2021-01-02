@@ -163,6 +163,8 @@ namespace Ligral.Syntax
                 return Visit(valUnaryOpAST);
             case ConfAST confAST:
                 return Visit(confAST);
+            case ConfListAST confListAST:
+                return Visit(confListAST);
             case FromOpAST fromOpAST:
                 return Visit(fromOpAST);
             case GotoOpAST gotoOpAST:
@@ -580,7 +582,7 @@ namespace Ligral.Syntax
                 throw logger.Error(new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator"));
             }
         }
-        private object Visit(ConfAST confAST)
+        private Dictionary<string, object> Visit(ConfAST confAST)
         {
             string id = Visit(confAST.Id);
             object value;
@@ -590,18 +592,36 @@ namespace Ligral.Syntax
             }
             catch 
             {
-                throw logger.Error(new SemanticException(confAST.FindToken(), "Only digit, boolean and string are accepted"));
+                throw logger.Error(new SemanticException(confAST.FindToken(), "Only digit, boolean, string and nested conf are accepted"));
             }
-            Settings settings = Settings.GetInstance();
-            try
+            if (!confAST.Nested)
             {
-                settings.AddSetting(id, value);
+                Settings settings = Settings.GetInstance();
+                try
+                {
+                    settings.AddSetting(id, value);
+                }
+                catch (System.InvalidCastException)
+                {
+                    throw logger.Error(new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}"));
+                }
             }
-            catch (System.InvalidCastException)
+            var dict = new Dictionary<string, object>();
+            dict.Add(id, value);
+            return dict;
+        }
+        private Dictionary<string, object> Visit(ConfListAST confListAST)
+        {
+            var dict = new Dictionary<string, object>();
+            foreach (var conf in confListAST.Confs)
             {
-                throw logger.Error(new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}"));
+                var singleConfDict = Visit(conf);
+                foreach (string key in singleConfDict.Keys)
+                {
+                    dict[key] = singleConfDict[key];
+                }
             }
-            return null;
+            return dict;
         }
         private object Visit(FromOpAST fromOpAST)
         {

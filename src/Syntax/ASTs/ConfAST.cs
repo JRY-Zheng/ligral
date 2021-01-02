@@ -7,10 +7,12 @@ namespace Ligral.Syntax.ASTs
     {
         public WordAST Id;
         public AST Expression;
-        public ConfAST(WordAST id, AST expression)
+        public bool Nested;
+        public ConfAST(WordAST id, AST expression, bool nested)
         {
             Id = id;
             Expression = expression;
+            Nested = nested;
         }
         public override Token FindToken()
         {

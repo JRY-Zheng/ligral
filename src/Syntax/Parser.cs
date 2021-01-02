@@ -80,29 +80,52 @@ namespace Ligral.Syntax
                 return chainAST;
             }
         }
-        private ConfAST ProgramConfig()
+        private ConfAST ProgramConfig(bool nested=false)
         {
-            Eat(TokenType.CONF);
+            if (!nested) Eat(TokenType.CONF);
             StringToken idToken = Eat(TokenType.ID) as StringToken;
             WordAST wordAST = new WordAST(idToken);
-            Eat(TokenType.FROM);
             AST valueAST;
-            if (currentToken.Type == TokenType.TRUE || currentToken.Type == TokenType.FALSE)
+            if (currentToken.Type == TokenType.FROM)
             {
-                BoolToken valueToken = Eat(currentToken.Type) as BoolToken;
-                valueAST = new BoolAST(valueToken);
+                Eat(TokenType.FROM);
+                if (currentToken.Type == TokenType.TRUE || currentToken.Type == TokenType.FALSE)
+                {
+                    BoolToken valueToken = Eat(currentToken.Type) as BoolToken;
+                    valueAST = new BoolAST(valueToken);
+                }
+                else if (currentToken.Type == TokenType.STRING)
+                {
+                    StringToken valueToken = Eat(TokenType.STRING) as StringToken;
+                    valueAST = new StringAST(valueToken);
+                }
+                else
+                {
+                    valueAST = ValueExpr();
+                }
+                Eat(TokenType.SEMIC);
             }
-            else if (currentToken.Type == TokenType.STRING)
+            else if (currentToken.Type == TokenType.DOT)
             {
-                StringToken valueToken = Eat(TokenType.STRING) as StringToken;
-                valueAST = new StringAST(valueToken);
+                Eat(TokenType.DOT);
+                valueAST = ProgramConfig(true);
             }
             else
             {
-                valueAST = ValueExpr();
+                Eat(TokenType.COLON);
+                valueAST = ConfList();
+                Eat(TokenType.END);
             }
-            Eat(TokenType.SEMIC);
-            return new ConfAST(wordAST, valueAST);
+            return new ConfAST(wordAST, valueAST, nested);
+        }
+        private ConfListAST ConfList()
+        {
+            List<ConfAST> confList = new List<ConfAST>();
+            while (currentToken.Type!=TokenType.EOF&&currentToken.Type!=TokenType.END)
+            {
+                confList.Add(ProgramConfig(true));
+            }
+            return new ConfListAST(confList);
         }
         private FromOpAST Define()
         {
