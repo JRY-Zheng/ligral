@@ -20,6 +20,7 @@ namespace Ligral.Simulation
     {
         public override void Solve(Problem problem)
         {
+            Solver.OnStarting();
             Settings settings = Settings.GetInstance();
             States = problem.InitialValues();
             if (settings.RealTimeSimulation)
@@ -43,6 +44,7 @@ namespace Ligral.Simulation
                     timer.Start();
                     States = Step(problem, actualStepSize, States);
                     Outputs = problem.ObservationFunction();
+                    Solver.OnStepped();
                     thisTime = DateTime.Now;
                     actualStepSize = (thisTime - lastTime).TotalSeconds;
                     logger.Debug($"Calculation comsumed {timer.Interval} second.");
@@ -79,11 +81,12 @@ namespace Ligral.Simulation
                 {
                     States = Step(problem, settings.StepSize, States);
                     Outputs = problem.ObservationFunction();
+                    Solver.OnStepped();
                     logger.Debug($"Calculation comsumed {(DateTime.Now - LastTime).TotalSeconds} seconds.");
                     LastTime = DateTime.Now;
                 }
             }
-            Observation.OnStopped();
+            Solver.OnStopped();
             logger.Info("Simulation stoped.");
         }
         protected virtual List<double> Step(Problem problem, double stepSize, List<double> states)

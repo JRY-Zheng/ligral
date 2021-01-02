@@ -597,14 +597,7 @@ namespace Ligral.Syntax
             if (!confAST.Nested)
             {
                 Settings settings = Settings.GetInstance();
-                try
-                {
-                    settings.AddSetting(id, value);
-                }
-                catch (System.InvalidCastException)
-                {
-                    throw logger.Error(new SemanticException(confAST.FindToken(), $"Invalid type {value.GetType()} for setting {id}"));
-                }
+                settings.AddSetting(id, value);
             }
             var dict = new Dictionary<string, object>();
             dict.Add(id, value);

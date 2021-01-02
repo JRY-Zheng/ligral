@@ -1,9 +1,14 @@
 using System.IO;
+using System.Collections.Generic;
 using Ligral.Syntax;
 using Ligral.Syntax.ASTs;
 
 namespace Ligral
 {
+    interface IConfigure
+    {
+        void Configure(Dictionary<string, object> dict);
+    }
     class Settings
     {
         #region Singleton
@@ -105,16 +110,18 @@ namespace Ligral
         public string IPAddress { get => iPAddress; set => iPAddress = value; }
         public int Port { get => port; set => port = value; }
         public bool RealTimeSimulation { get => realTimeSimulation; set => realTimeSimulation = value; }
-        public bool EnableInnerPlotter 
+        private Tools.Plotter plotter;
+        public Dictionary<string, object> InnerPlotterConfiguration 
         { 
-            get => enableInnerPlotter; 
+            get => innerPlotterConfiguration; 
             set  
             {
-                enableInnerPlotter = value;
-                if (enableInnerPlotter)
+                innerPlotterConfiguration = value;
+                if (plotter is null)
                 {
-                    Tools.Publisher.AddHooks(new Tools.Plotter());
+                    plotter = new Tools.Plotter();
                 }
+                plotter.Configure(value);
             }
         }
 
@@ -122,33 +129,41 @@ namespace Ligral
 
         private string pythonExecutable = "python";
 
-        private bool enableInnerPlotter = true;
+        private Dictionary<string, object> innerPlotterConfiguration;
         private string iPAddress = "127.0.0.1";
         private int port = 8783;
         private bool realTimeSimulation = false;
 
         public void AddSetting(string item, object val)
         {
-            switch (item)
+            try
             {
-            case "step_size":
-                StepSize = (double) val; break;
-            case "stop_time":
-                StopTime = (double) val; break;
-            case "output_folder":
-                OutputFolder = (string) val; break;
-            case "ip_address":
-                IPAddress = (string) val; break;
-            case "port":
-                Port = (int) val; break;
-            case "realtime":
-                RealTimeSimulation = (bool) val; break;
-            case "enable_inner_plotter":
-                EnableInnerPlotter = (bool) val; break;
-            case "python":
-                PythonExecutable = (string) val; break;
-            default:
-                throw logger.Error(new LigralException($"Unsupported setting {item}"));
+                switch (item)
+                {
+                case "step_size":
+                    StepSize = (double) val; break;
+                case "stop_time":
+                    StopTime = (double) val; break;
+                case "output_folder":
+                    OutputFolder = (string) val; break;
+                case "ip_address":
+                    IPAddress = (string) val; break;
+                case "port":
+                    Port = (int) val; break;
+                case "realtime":
+                    RealTimeSimulation = (bool) val; break;
+                case "python":
+                    PythonExecutable = (string) val; break;
+                case "inner_plotter":
+                    InnerPlotterConfiguration = (Dictionary<string, object>) val;
+                    break;
+                default:
+                    throw logger.Error(new SettingException(item, val, "Unsupported setting."));
+                }
+            }
+            catch (System.InvalidCastException)
+            {
+                throw logger.Error(new SettingException(item, val, $"Invalid type {val.GetType()}"));
             }
         }
         #endregion

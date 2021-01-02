@@ -43,5 +43,13 @@ namespace Ligral.Tools
         {
             hooks.Add(subscriber);
         }
+        public static bool ContainsHooks(Subscriber subscriber)
+        {
+            return hooks.Contains(subscriber);
+        }
+        public static void RemoveHooks(Subscriber subscriber)
+        {
+            hooks.Remove(subscriber);
+        }
     }
 }
