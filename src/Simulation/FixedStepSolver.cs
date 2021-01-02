@@ -84,7 +84,7 @@ namespace Ligral.Simulation
                 }
             }
             Observation.OnStopped();
-            logger.Warn("Simulation stoped.");
+            logger.Info("Simulation stoped.");
         }
         protected virtual List<double> Step(Problem problem, double stepSize, List<double> states)
         {
