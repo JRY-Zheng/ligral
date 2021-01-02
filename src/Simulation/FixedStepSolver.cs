@@ -24,6 +24,13 @@ namespace Ligral.Simulation
             States = problem.InitialValues();
             if (settings.RealTimeSimulation)
             {
+                bool keepRunning = true;
+                Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
+                {
+                    e.Cancel = true;
+                    keepRunning = false;
+                    logger.Warn("User stop the simulation before the demanded stop time.");
+                };
                 Timer timer = new Timer(){ Interval=settings.StepSize};
                 DateTime StartTime = DateTime.Now;
                 Time = 0;
@@ -31,7 +38,7 @@ namespace Ligral.Simulation
                 DateTime thisTime;
                 double stepSize = settings.StepSize;
                 double actualStepSize = stepSize;
-                while (Time < settings.StopTime)
+                while (keepRunning && Time < settings.StopTime)
                 {
                     timer.Start();
                     States = Step(problem, actualStepSize, States);
@@ -77,6 +84,7 @@ namespace Ligral.Simulation
                 }
             }
             Observation.OnStopped();
+            logger.Warn("Simulation stoped.");
         }
         protected virtual List<double> Step(Problem problem, double stepSize, List<double> states)
         {
