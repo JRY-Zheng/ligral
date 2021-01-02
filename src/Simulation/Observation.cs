@@ -11,11 +11,17 @@ namespace Ligral.Simulation
         private bool isCommitted = true;
         public string Name;
         public static string DataFile;
+        private Logger loggerInstance;
         public delegate void SteppedHandler();
         public static event SteppedHandler Stepped;
         public delegate void StoppedHandler();
         public static event StoppedHandler Stopped;
-        private Logger loggerInstance;
+
+        static Observation()
+        {
+            Solver.Stepped += OnStepped;
+            Solver.Stopped += OnStopped;
+        }
         protected Logger logger
         {
             get
@@ -66,7 +72,7 @@ namespace Ligral.Simulation
         {
             ObservationPool.ForEach(item => item.Item2.Commit());
             TimeList.Add(Solver.Time);
-            if (Stepped != null) Stepped();
+            if (Stepped != null) Stepped(); 
         }
         public static void OnStopped()
         {

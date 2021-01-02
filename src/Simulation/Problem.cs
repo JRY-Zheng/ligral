@@ -31,7 +31,7 @@ namespace Ligral.Simulation
         }
         public List<double> ObservationFunction()
         {
-            Observation.OnStepped();
+            Solver.OnStepped();
             return Observation.ObservationPool.ConvertAll(item => item.Item2.OutputVariable);
         }
     }
