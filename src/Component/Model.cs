@@ -161,14 +161,14 @@ namespace Ligral.Component
             // ConfigureAction(dictionary);
             dictionary.Keys.Except(Parameters.Keys).ToList().ForEach(unknownParameterName=>
             {
-                throw logger.Error(new LigralException($"Unknown Parameter {unknownParameterName}"));
+                throw logger.Error(new ModelException(this, $"Unknown Parameter {unknownParameterName}"));
             });
             Parameters.Keys.Except(dictionary.Keys).ToList().ForEach(defaultParameterName=>
             {
                 Parameter parameter = Parameters[defaultParameterName];
                 if (parameter.Required)
                 {
-                    throw logger.Error(new LigralException($"The parameter {defaultParameterName} requires value assignment"));
+                    throw logger.Error(new ModelException(this, $"The parameter {defaultParameterName} requires value assignment"));
                 }
                 else
                 {
@@ -179,14 +179,7 @@ namespace Ligral.Component
             {
                 Parameter parameter = Parameters[parameterName];
                 object value = dictionary[parameterName];
-                // try
-                // {
-                    parameter.OnSet(value);
-                // }
-                // catch (System.Exception e)
-                // {
-                //     throw logger.Error(new LigralException($"type of {value} is unsupported for {parameterName} of {Name}\n{e}"));
-                // }
+                parameter.OnSet(value);
             });
             AfterConfigured();
         }
@@ -196,18 +189,27 @@ namespace Ligral.Component
         {
             if (outPortNO >= OutPortCount())
             {
-                throw logger.Error(new LigralException($"Out port number {outPortNO} exceed boundary"));
+                throw logger.Error(new ModelException(this, $"Out port number {outPortNO} exceed boundary"));
             }
             else
             {
                 OutPortList[outPortNO].Bind(inPort);
             }
         }
+        public virtual void Connect(string outPortName, InPort inPort)
+        {
+            int outPortNO = OutPortList.FindIndex(outPort=>outPort.Name==outPortName);
+            if (outPortNO < 0)
+            {
+                throw logger.Error(new ModelException(this, $"Out port {outPortName} not found."));
+            }
+            Connect(outPortNO, inPort);
+        }
         public virtual InPort Expose(int inPortNO)
         {
             if (inPortNO>=InPortCount())
             {
-                throw logger.Error(new LigralException($"In port number {inPortNO} exceeds boundary in {Name}"));
+                throw logger.Error(new ModelException(this, $"In port number {inPortNO} exceeds boundary."));
             }
             else
             {
@@ -228,7 +230,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw logger.Error(new LigralException($"Undefined port name {portName} in {GetType().Name} {Name}"));
+                throw logger.Error(new ModelException(this, $"Undefined port name {portName} in {GetType().Name}"));
             }
         }
         public int InPortCount()
@@ -272,7 +274,7 @@ namespace Ligral.Component
             List<Signal> outputs = Calculate(inputs);
             if(outputs.Count != OutPortList.Count)
             {
-                throw logger.Error(new LigralException($"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}. in {Name}"));
+                throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}."));
             }
             else
             {

@@ -99,8 +99,16 @@ Learn more:
         {
             Settings settings = Settings.GetInstance();
             settings.GetDefaultSettings();
-            Interpreter interpreter = Interpreter.GetInstance(simulationProject.FileName);
-            interpreter.Interpret();
+            if (simulationProject.IsJsonFile is bool isJsonFile && isJsonFile)
+            {
+                JsonLoader jsonLoader = new JsonLoader();
+                jsonLoader.Load(simulationProject.FileName);
+            }
+            else
+            {
+                Interpreter interpreter = Interpreter.GetInstance(simulationProject.FileName);
+                interpreter.Interpret();
+            }
             if (simulationProject.OutputFolder is string jsonOutputFolder)
             {
                 settings.OutputFolder = jsonOutputFolder;
