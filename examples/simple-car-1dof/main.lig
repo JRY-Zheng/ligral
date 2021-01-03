@@ -42,4 +42,4 @@ conf stop_time = 10;
 conf output_folder = 'out';
 
 # 启用内部绘图模块
-conf enable_inner_plotter = true;
+conf inner_plotter.enable = true;
