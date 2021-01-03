@@ -2,6 +2,7 @@ using System.IO;
 using System.Collections.Generic;
 using Ligral.Syntax;
 using Ligral.Syntax.ASTs;
+using Ligral.Simulation;
 
 namespace Ligral
 {
@@ -16,7 +17,9 @@ namespace Ligral
         private static object locker = new object();
         private Logger logger = new Logger("Settings");
         private Settings()
-        { }
+        {
+            Solver.Starting += ApplySetting;
+        }
 
         public static Settings GetInstance()
         {
@@ -51,88 +54,17 @@ namespace Ligral
         }
         
         #region Settings
-        private double stepSize = 0.01;
-        public double StepSize 
-        { 
-            get { return stepSize;} 
-            set 
-            { 
-                if (value <= 0)
-                {
-                    throw logger.Error(new SettingException("step_size", value, "step size must be positive nonzero."));
-                }
-                else if (value > stopTime)
-                {
-                    throw logger.Error(new SettingException("step_size", value, "step size must be small than stop time."));
-                }
-                stepSize = value;
-            }
-        }
-        private double stopTime = 10;
-        public double StopTime 
-        { 
-            get { return stopTime;} 
-            set 
-            { 
-                if (value <= 0)
-                {
-                    throw logger.Error(new SettingException("stop_time", value, "step size must be positive nonzero."));
-                }
-                else if (value < stepSize)
-                {
-                    throw logger.Error(new SettingException("stop_time", value, "step size must be larger than step size."));
-                }
-                stopTime = value;
-            }
-        }
-        private string outputFolder = ".";
-        public string OutputFolder { get { return outputFolder;} set { outputFolder = value;}}
-        private bool needOutput = false;
-        public bool NeedOutput 
-        {
-            get
-            {
-                return needOutput;
-            }
-            set
-            {
-                if (value)
-                {
-                    if (!Directory.Exists(OutputFolder))
-                    {
-                        Directory.CreateDirectory(OutputFolder);
-                    }
-                }
-                needOutput = value;
-            }
-        }
-
-        public string IPAddress { get => iPAddress; set => iPAddress = value; }
-        public int Port { get => port; set => port = value; }
-        public bool RealTimeSimulation { get => realTimeSimulation; set => realTimeSimulation = value; }
+        public double StepSize {get; set;} = 0.01;
+        public double StopTime {get; set;} = 10;
+        public string OutputFolder { get; set;} = ".";
+        public bool NeedOutput {get; set;} = false;
+        public string IPAddress { get; set; } = "127.0.0.1";
+        public int Port { get; set; } = 8783;
+        public bool RealTimeSimulation { get; set; } = false;
         private Tools.Plotter plotter;
-        public Dictionary<string, object> InnerPlotterConfiguration 
-        { 
-            get => innerPlotterConfiguration; 
-            set  
-            {
-                innerPlotterConfiguration = value;
-                if (plotter is null)
-                {
-                    plotter = new Tools.Plotter();
-                }
-                plotter.Configure(value);
-            }
-        }
+        public Dictionary<string, object> InnerPlotterConfiguration {get; set;}
 
-        public string PythonExecutable { get => pythonExecutable; set => pythonExecutable = value; }
-
-        private string pythonExecutable = "python";
-
-        private Dictionary<string, object> innerPlotterConfiguration;
-        private string iPAddress = "127.0.0.1";
-        private int port = 8783;
-        private bool realTimeSimulation = false;
+        public string PythonExecutable { get; set; } = "python";
 
         public void AddSetting(string item, object val)
         {
@@ -167,5 +99,37 @@ namespace Ligral
             }
         }
         #endregion
+
+        private void ApplySetting()
+        {
+            if (StepSize <= 0)
+            {
+                throw logger.Error(new SettingException("step_size", StepSize, "step size must be positive nonzero."));
+            }
+            if (StepSize > StopTime)
+            {
+                throw logger.Error(new SettingException("step_size", StepSize, $"step size must be small than stop time {StopTime}."));
+            }
+            if (StopTime <= 0)
+            {
+                throw logger.Error(new SettingException("stop_time", StopTime, "step size must be positive nonzero."));
+            }
+            if (NeedOutput && !Directory.Exists(OutputFolder))
+            {
+                Directory.CreateDirectory(OutputFolder);
+            }
+            if (!(InnerPlotterConfiguration is null))
+            {
+                if (RealTimeSimulation)
+                {
+                    plotter = new Tools.RTPlotter();
+                }
+                else
+                {
+                    plotter = new Tools.Plotter();
+                }
+                plotter.Configure(InnerPlotterConfiguration);
+            }
+        }
     }
 }
