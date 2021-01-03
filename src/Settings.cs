@@ -63,7 +63,7 @@ namespace Ligral
         public bool RealTimeSimulation { get; set; } = false;
         private Tools.Plotter plotter;
         public Dictionary<string, object> InnerPlotterConfiguration {get; set;}
-
+        public string SolverName {get; set;} = "ode4";
         public string PythonExecutable { get; set; } = "python";
 
         public void AddSetting(string item, object val)
@@ -86,6 +86,8 @@ namespace Ligral
                     RealTimeSimulation = (bool) val; break;
                 case "python":
                     PythonExecutable = (string) val; break;
+                case "solver":
+                    SolverName = (string) val; break;
                 case "inner_plotter":
                     InnerPlotterConfiguration = (Dictionary<string, object>) val;
                     break;

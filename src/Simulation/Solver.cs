@@ -1,4 +1,5 @@
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Simulation.Solvers;
 
 namespace Ligral.Simulation
 {
@@ -16,6 +17,19 @@ namespace Ligral.Simulation
         public Solver()
         {
             logger = new Logger(GetType().Name);
+        }
+        public static Solver GetSolver(string solverName)
+        {
+            switch (solverName)
+            {
+            case "ode1":
+            case "euler":
+                return new EulerSolver();
+            case "ode4":
+                return new FixedStepRK4Solver();
+            default:
+                throw new SettingException("solver", solverName, "No such solver.");
+            }
         }
         public abstract void Solve(Problem problem);
         public static void OnStarting()
