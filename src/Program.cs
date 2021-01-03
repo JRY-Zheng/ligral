@@ -116,7 +116,7 @@ Learn more:
             Inspector inspector = new Inspector();
             List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
             Problem problem = new Problem(routine);
-            Solver solver = new EulerSolver();
+            Solver solver = new FixedStepRK4Solver();
             solver.Solve(problem);
         }
         private static void Run(Document document)

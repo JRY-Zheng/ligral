@@ -1,9 +1,18 @@
 using System.Collections.Generic;
 using Ligral.Component;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
+    static class MatrixUtils
+    {
+        public static Matrix<double> ToColumnVector(this List<double> list)
+        {
+            MatrixBuilder<double> m = Matrix<double>.Build;
+            return m.DenseOfRowMajor(list.Count, 1, list);
+        }
+    }
     class Problem
     {
         private List<Model> routine;
@@ -11,27 +20,26 @@ namespace Ligral.Simulation
         {
             this.routine = routine;
         }
-        public List<double> InitialValues()
+        public Matrix<double> InitialValues()
         {
-            return State.StatePool.ConvertAll(state => state.InitialValue);
+            return State.StatePool.ConvertAll(state => state.InitialValue).ToColumnVector();
         }
-        public List<double> SystemDynamicFunction(List<double> states)
+        public Matrix<double> SystemDynamicFunction(Matrix<double> states)
         {
-            State.StatePool.Zip(states).ToList().ForEach(pair => 
+            var stateArray = states.AsColumnMajorArray();
+            for (int i = 0; i < stateArray.Length; i++)
             {
-                var state = pair.First;
-                var value = pair.Second;
-                state.StateVariable = value;
-            });
+                State.StatePool[i].StateVariable = stateArray[i];
+            }
             foreach(Model node in routine)
             {
                 node.Propagate();
             }
-            return State.StatePool.ConvertAll(state => state.Derivative);
+            return State.StatePool.ConvertAll(state => state.Derivative).ToColumnVector();
         }
-        public List<double> ObservationFunction()
+        public Matrix<double> ObservationFunction()
         {
-            return Observation.ObservationPool.ConvertAll(item => item.Item2.OutputVariable);
+            return Observation.ObservationPool.ConvertAll(item => item.Item2.OutputVariable).ToColumnVector();
         }
     }
 }

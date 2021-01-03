@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
@@ -43,7 +44,6 @@ namespace Ligral.Simulation
                 {
                     timer.Start();
                     States = Step(problem, actualStepSize, States);
-                    Outputs = problem.ObservationFunction();
                     Solver.OnStepped();
                     thisTime = DateTime.Now;
                     actualStepSize = (thisTime - lastTime).TotalSeconds;
@@ -80,7 +80,6 @@ namespace Ligral.Simulation
                 for (Time=0; Time<=settings.StopTime; Time+=settings.StepSize)
                 {
                     States = Step(problem, settings.StepSize, States);
-                    Outputs = problem.ObservationFunction();
                     Solver.OnStepped();
                     logger.Debug($"Calculation comsumed {(DateTime.Now - LastTime).TotalSeconds} seconds.");
                     LastTime = DateTime.Now;
@@ -89,7 +88,7 @@ namespace Ligral.Simulation
             Solver.OnStopped();
             logger.Info("Simulation stoped.");
         }
-        protected virtual List<double> Step(Problem problem, double stepSize, List<double> states)
+        protected virtual Matrix<double> Step(Problem problem, double stepSize, Matrix<double> states)
         {
             throw new System.NotImplementedException();
         }

@@ -1,12 +1,11 @@
-using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
     abstract class Solver
     {
         public static double Time;
-        public List<double> States;
-        public List<double> Outputs;
+        public Matrix<double> States;
         protected Logger logger;
         public delegate void StartingHandler();
         public static event StartingHandler Starting;

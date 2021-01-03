@@ -1,20 +1,14 @@
-using System.Collections.Generic;
-using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation.Solvers
 {
     class EulerSolver : FixedStepSolver
     {
-        protected override List<double> Step(Problem problem, double stepSize, List<double> states)
+        protected override Matrix<double> Step(Problem problem, double stepSize, Matrix<double> states)
         {
-            List<double> stateDerivatives = problem.SystemDynamicFunction(states);
-            return States.Zip(stateDerivatives).ToList().ConvertAll(pair => 
-            {
-                var state = pair.First;
-                var deriv = pair.Second;
-                state += deriv*stepSize;
-                return state;
-            });
+            Matrix<double> stateDerivatives = problem.SystemDynamicFunction(states);
+            problem.ObservationFunction();
+            return states + stateDerivatives * stepSize;
         }
     }
 }
