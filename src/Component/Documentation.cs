@@ -21,5 +21,9 @@ namespace Ligral.Component
         public string[] InPorts { get; set; }
         [JsonPropertyName("out-ports")]
         public string[] OutPorts { get; set; }
+        [JsonPropertyName("in-port-variable")]
+        public bool InPortVariable { get; set; }
+        [JsonPropertyName("out-port-variable")]
+        public bool OutPortVariable { get; set; }
     }
 }

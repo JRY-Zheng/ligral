@@ -108,10 +108,14 @@ namespace Ligral.Component
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(GetType().Name);
             stringBuilder.AppendLine(DocString);
-            stringBuilder.Append("Input Port:\t");
+            stringBuilder.Append("Input Port:\t\t");
             stringBuilder.AppendLine(string.Join(',',InPortList.ConvertAll(inPort=>inPort.Name)));
-            stringBuilder.Append("Output Port:\t");
+            stringBuilder.Append("Output Port:\t\t");
             stringBuilder.AppendLine(string.Join(',',OutPortList.ConvertAll(outPort=>outPort.Name)));
+            stringBuilder.Append("Input Port Variable:\t");
+            stringBuilder.AppendLine((this is InPortVariableModel).ToString());
+            stringBuilder.Append("Output Port Variable:\t");
+            stringBuilder.AppendLine((this is OutPortVariableModel).ToString());
             stringBuilder.AppendLine("Parameter list:");
             foreach(string parameterName in Parameters.Keys)
             {
@@ -135,6 +139,8 @@ namespace Ligral.Component
                 }).ToArray(),
                 InPorts = InPortList.ConvertAll(inPort => inPort.Name).ToArray(),
                 OutPorts = OutPortList.ConvertAll(outPort => outPort.Name).ToArray(),
+                InPortVariable = this is InPortVariableModel,
+                OutPortVariable = this is OutPortVariableModel
             };
         }
         protected virtual void SetUpParameters() 
