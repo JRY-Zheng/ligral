@@ -86,6 +86,7 @@ namespace Ligral.Simulation
                 }
                 Settings settings = Settings.GetInstance();
                 settings.NeedOutput = true;
+                settings.ApplySetting();
                 string currentDirectory = System.IO.Directory.GetCurrentDirectory();
                 DataFile = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
                 table.DumpFile(DataFile, true);

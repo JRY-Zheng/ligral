@@ -102,7 +102,7 @@ namespace Ligral
         }
         #endregion
 
-        private void ApplySetting()
+        public void ApplySetting()
         {
             if (StepSize <= 0)
             {
@@ -120,7 +120,7 @@ namespace Ligral
             {
                 Directory.CreateDirectory(OutputFolder);
             }
-            if (!(InnerPlotterConfiguration is null))
+            if (!(InnerPlotterConfiguration is null) && (plotter is null))
             {
                 if (RealTimeSimulation)
                 {
