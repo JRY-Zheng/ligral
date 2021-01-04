@@ -1,0 +1,34 @@
+# 本例实现了一个最简单的负反馈系统，其系统框图如下所示：
+
+# ╭───╮           ┌───────┐      ┌─────┐x       ╭───╮
+# │ u ├───►(x)───►│ 1/tau ├─────►│ 1/s ├──┬────►│ x │
+# ╰───╯     ▲-    └───────┘      └─────┘  │     ╰───╯
+#           │                             │
+#           └─────────────────────────────┘
+
+# 定义一个常量的输入
+let u = 1;
+
+# 定义时间常数
+let tau = 1;
+
+# 进行模块之间的连接
+(u - x) / tau -> Integrator -> x;
+
+# 绘图
+x -> Scope;
+
+# 以下这些设置项也可以放在`default.lig`会更加方便
+# 设置仿真步长和时长
+conf step_size = 0.01;
+conf stop_time = 5;
+
+# 设置输出文件夹
+conf output_folder = 'out';
+
+# 设置绘图工具
+conf inner_plotter :
+    enable = true;
+    output_script = true;
+    save_figure = true;
+end
