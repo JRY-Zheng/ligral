@@ -43,7 +43,7 @@ namespace Ligral.Component.Models
             }
             else
             {
-                throw logger.Error(new ModelException(this, "Type conflict"));
+                throw logger.Error(new ModelException(this, "Type conflict. If a matrix is passed to the integrator, the size must be declared."));
             }
         }
         // protected override void AfterConfigured()

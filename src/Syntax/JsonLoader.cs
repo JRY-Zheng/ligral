@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using Ligral.Component;
 
 namespace Ligral.Syntax
@@ -129,6 +132,46 @@ namespace Ligral.Syntax
                 {
                     string text = jsonElement.GetString();
                     dict[jParameter.Name] = text;
+                }
+                else if (jsonElement.ValueKind == JsonValueKind.Array)
+                {
+                    Matrix<double> matrix = null;
+                    foreach (var row in jsonElement.EnumerateArray())
+                    {
+                        if (row.ValueKind != JsonValueKind.Array)
+                        {
+                            throw logger.Error(new ModelException(model, "Parameter must be a matrix rather than vector of number or string or object."));
+                        }
+                        Matrix<double> vector = null;
+                        foreach (var item in row.EnumerateArray())
+                        {
+                            if (item.ValueKind != JsonValueKind.Number)
+                            {
+                                throw logger.Error(new ModelException(model, "Parameter must be a matrix of number."));
+                            }
+                            if (vector == null)
+                            {
+                                vector = DenseMatrix.Create(1, 1, item.GetDouble());
+                            }
+                            else
+                            {
+                                vector = vector.Append(DenseMatrix.Create(1, 1, item.GetDouble()));
+                            }
+                        }
+                        if (matrix == null)
+                        {
+                            matrix = vector;
+                        }
+                        else
+                        {
+                            matrix = matrix.Stack(vector);
+                        }
+                    }
+                    dict[jParameter.Name] = matrix;
+                }
+                else
+                {
+                    throw logger.Error(new ModelException(model, $"Unsupported type {jsonElement.ValueKind} in parameter"));
                 }
             }
             model.Configure(dict);
