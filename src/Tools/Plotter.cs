@@ -146,16 +146,16 @@ ax{plotConfig.FigureId}.grid()
                 int index = plotConfig.RowNO > plotConfig.ColumnNO ? plotConfig.RowNO : plotConfig.ColumnNO;
                 Execute($@"
 ax = ax{plotConfig.FigureId}[{index}]
-ax.set_xlabel({plotConfig.XLabel})
-ax.set_ylabel({plotConfig.YLabel})
+ax.set_xlabel('{plotConfig.XLabel}')
+ax.set_ylabel('{plotConfig.YLabel}')
 ax.grid()
 ");
                 break;
             case AxesShapeType.Matrix:
                 Execute($@"
 ax = ax{plotConfig.FigureId}[{plotConfig.RowNO}, {plotConfig.ColumnNO}]
-ax.set_xlabel({plotConfig.XLabel})
-ax.set_ylabel({plotConfig.YLabel})
+ax.set_xlabel('{plotConfig.XLabel}')
+ax.set_ylabel('{plotConfig.YLabel}')
 ax.grid()
 ");
                 break;
