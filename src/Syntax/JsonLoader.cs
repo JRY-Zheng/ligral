@@ -42,6 +42,20 @@ namespace Ligral.Syntax
         [JsonPropertyName("out-ports")]
         public JOutPort[] OutPorts {get; set;}
     }
+    struct JConfig
+    {
+        [JsonPropertyName("item")]
+        public string Item {get; set;}
+        [JsonPropertyName("value")]
+        public object Value {get; set;}
+    }
+    struct JProject
+    {
+        [JsonPropertyName("settings")]
+        public JConfig[] Settings {get; set;}
+        [JsonPropertyName("models")]
+        public JModel[] Models {get; set;}
+    }
     class JsonLoader
     {
         private Logger logger = new Logger("JsonCoder");
@@ -53,15 +67,89 @@ namespace Ligral.Syntax
                 throw logger.Error(new LigralException($"File {fileName} not found."));
             }
             string text = File.ReadAllText(fileName);
-            JModel[] models;
+            JProject project;
             try
             {
-                models = JsonSerializer.Deserialize<JModel[]>(text);
+                project = JsonSerializer.Deserialize<JProject>(text);
             }
             catch (Exception e)
             {
                 throw logger.Error(new LigralException($"Json deserialize failed.\n{e.Message}"));
             }
+            if (project.Settings == null)
+            {
+                throw new LigralException("Property `settings` not found.");
+            }
+            if (project.Models == null)
+            {
+                throw new LigralException("Property `settings` not found.");
+            }
+            Apply(project.Settings);
+            Declare(project.Models);
+        }
+        private void Apply(JConfig[] configs)
+        {
+            Settings settings = Settings.GetInstance();
+            foreach (JConfig config in configs)
+            {
+                if (config.Item == null)
+                {
+                    throw new LigralException("Property `item` not found.");
+                }
+                if (config.Value == null)
+                {
+                    throw new LigralException("Property `value` not found.");
+                }
+                var jsonElement = (JsonElement) config.Value;
+                switch (jsonElement.ValueKind)
+                {
+                case JsonValueKind.Number:
+                    settings.AddSetting(config.Item, jsonElement.GetDouble());
+                    break;
+                case JsonValueKind.String:
+                    settings.AddSetting(config.Item, jsonElement.GetString());
+                    break;
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    settings.AddSetting(config.Item, jsonElement.GetBoolean());
+                    break;
+                case JsonValueKind.Object:
+                    Dictionary<string, object> dict = new Dictionary<string, object>();
+                    foreach (var item in jsonElement.EnumerateObject())
+                    {
+                        dict[item.Name] = GetSettingValue(item.Name, item.Value);
+                    }
+                    settings.AddSetting(config.Item, dict);
+                    break;
+                default:
+                    throw logger.Error(new SettingException(config.Item, jsonElement, "Unsupported type"));
+                }
+            }
+        }
+        private object GetSettingValue(string name, JsonElement jsonElement)
+        {
+            switch (jsonElement.ValueKind)
+            {
+            case JsonValueKind.Number:
+                return jsonElement.GetDouble();
+            case JsonValueKind.String:
+                return jsonElement.GetString();
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return jsonElement.GetBoolean();
+            case JsonValueKind.Object:
+                Dictionary<string, object> dict = new Dictionary<string, object>();
+                foreach (var item in jsonElement.EnumerateObject())
+                {
+                    dict[item.Name] = GetSettingValue(name, item.Value);
+                }
+                return dict;
+            default:
+                throw logger.Error(new SettingException(name, jsonElement, "Unsupported type"));
+            }
+        }
+        private void Declare(JModel[] models)
+        {
             foreach (JModel model in models)
             {
                 Rigister(model);
