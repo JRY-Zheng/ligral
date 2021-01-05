@@ -14,11 +14,11 @@ Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windo
 
 #### Windows 系统
 
-目前，Ligral v0.1.0 beta 发行版在 [Gitee](https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta) 开放下载。打开链接就可以看到打包好了的 ligral.exe。
+目前，Ligral v0.2.0 beta 发行版在 [Gitee](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.0-beta) 和 [GitHub](https://github.com/jry-zheng/ligral/releases/v0.2.0-beta) 开放下载。打开链接就可以看到打包好了的 ligral-v0.2.0-beta-win10-x64.exe。
 
-![v0.1.0-beta](figures/v0.1.0-beta.png)
+![v0.2.0-beta](figures/v0.2.0-beta.png)
 
-下载到本地就可以运行了，但是十分建议您把 ligral 添加到环境变量。具体操作为
+下载到本地就可以运行了，但是十分建议您创建一个符号链接或者把可执行程序重命名为 ligral.exe，再把 ligral 所在文件夹添加到环境变量。具体操作为
 
 - 按下开始建，输入控制面板；
 - 在控制面板右上方搜索环境变量；
@@ -29,17 +29,30 @@ Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windo
 
 安装成功后，您可以在任意文件夹打开 cmd（强烈建议 Windows 10 用户下载安装 Windows Terminal），输入`ligral`，应当能看到如下输出：
 
-    Ligral is a Literal and Graphical Simulation Language.
-            Use --help option to get help infomation.
-    *******************************************************
-    Type your ligral script below, and use 'run' command to execute.
-    >>>
+    Copyright (c) Ligral Tech. All rights reserved.
+                        __    _                  __
+                       / /   (_)___ __________ _/ /
+                      / /   / / __ `/ ___/ __ `/ /
+                     / /___/ / /_/ / /  / /_/ / /
+                    /_____/_/\__, /_/   \__,_/__/
+                            /____/
+    ----------------------------------------------------------------
+    Hi, Ligral is a textual language for simulation.
 
-这是 v0.1.0 版本中带有的一个 ligral shell 环境，在此您可以逐行输入代码并即使解析。但是考虑到这项功能没有应用场景，在未来的版本中可能会删除。
+    Usage:
+        ligral main.lig         to parse and simulate main.lig project.
+        ligral doc Node         to view the document of Node model.
+        ligral doc              to view documents of all the models.
+
+    Learn more:
+        Visit https://junruoyu-zheng.gitee.io/ligral
+        also available at https://JRY-Zheng.github.io/ligral
+
+列举了一些常用的使用方法，更多命令请使用`ligral --help`命令查看。注意，如果您直接双击运行可执行程序，窗体只会一闪而过。
 
 #### Linux 系统
 
-此版本暂未提供 Linux 系统的打包程序，请跳转至源码安装。
+Linux 版本的 ligral 也在 [Gitee](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.0-beta)  和 [GitHub](https://github.com/jry-zheng/ligral/releases/v0.2.0-beta) 上提供了。与 Windows 版本类似，您只要下载 ligral-v0.2.0-beta-linux-x64 即可使用。同样，建议您创建软连接 ligral 指向该程序，并且复制到`/usr/local/bin`文件夹下。
 
 ### 源码安装
 
@@ -49,6 +62,10 @@ Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windo
 
     git clone https://gitee.com/junruoyu-zheng/ligral.git
     git clone https://github.com/jry-zheng/ligral.git
+
+然后切换到稳定的 master 分支。当然如果您愿意体验开发中的版本，也可以使用 dev 分支。切换到 master 的命令如下：
+
+    git checkout master
 
 如果没有安装 git，您可以去 [Gitee](https://gitee.com/junruoyu-zheng/ligral) 或者 [GitHub](https://github.com/jry-zheng/ligral) 网站上点击下载 ligral。以 Gitee 为例：
 
@@ -179,4 +196,4 @@ Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows
 
 ## 结束
 
-到此为止，恭喜您完成了快速开始的全部内容！需要继续深入了解 ligral 语法等问题，请看用户指引。如果有问题，可以发 [Issue](https://gitee.com/junruoyu-zheng/ligral/issues) 或者[给我写信](mailto:zhengjry@outlook.com)。
+到此为止，恭喜您完成了快速开始的全部内容！需要继续深入了解 ligral 语法等问题，请看[用户指引](user-guide)。如果有问题，可以发 [Issue](https://gitee.com/junruoyu-zheng/ligral/issues) 或者[给我写信](mailto:zhengjry@outlook.com)。

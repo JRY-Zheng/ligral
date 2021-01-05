@@ -3,7 +3,6 @@
      Distributed under MIT license.
      See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 -->
-
 <!DOCTYPE html>
 <html lang="en">
  <head>
@@ -126,17 +125,21 @@
        Windows 系统
       </h4>
       <p>
-       目前，Ligral v0.1.0 beta 发行版在
-       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta" target="_blank">
+       目前，Ligral v0.2.0 beta 发行版在
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.0-beta" target="_blank">
         Gitee
        </a>
-       开放下载。打开链接就可以看到打包好了的 ligral.exe。
+       和
+       <a href="https://github.com/jry-zheng/ligral/releases/v0.2.0-beta" target="_blank">
+        GitHub
+       </a>
+       开放下载。打开链接就可以看到打包好了的 ligral-v0.2.0-beta-win10-x64.exe。
       </p>
       <p>
-       <img alt="v0.1.0-beta" src="img/v0.1.0-beta.png"/>
+       <img alt="v0.2.0-beta" src="img/v0.2.0-beta.png"/>
       </p>
       <p>
-       下载到本地就可以运行了，但是十分建议您把 ligral 添加到环境变量。具体操作为
+       下载到本地就可以运行了，但是十分建议您创建一个符号链接或者把可执行程序重命名为 ligral.exe，再把 ligral 所在文件夹添加到环境变量。具体操作为
       </p>
       <ul>
        <li>
@@ -162,20 +165,49 @@
        </code>
        ，应当能看到如下输出：
       </p>
-      <pre><code>Ligral is a Literal and Graphical Simulation Language.
-        Use --help option to get help infomation.
-*******************************************************
-Type your ligral script below, and use 'run' command to execute.
-&gt;&gt;&gt;
+      <pre><code>Copyright (c) Ligral Tech. All rights reserved.
+                    __    _                  __
+                   / /   (_)___ __________ _/ /
+                  / /   / / __ `/ ___/ __ `/ /
+                 / /___/ / /_/ / /  / /_/ / /
+                /_____/_/\__, /_/   \__,_/__/
+                        /____/
+----------------------------------------------------------------
+Hi, Ligral is a textual language for simulation.
+
+Usage:
+    ligral main.lig         to parse and simulate main.lig project.
+    ligral doc Node         to view the document of Node model.
+    ligral doc              to view documents of all the models.
+
+Learn more:
+    Visit https://junruoyu-zheng.gitee.io/ligral
+    also available at https://JRY-Zheng.github.io/ligral
 </code></pre>
       <p>
-       这是 v0.1.0 版本中带有的一个 ligral shell 环境，在此您可以逐行输入代码并即使解析。但是考虑到这项功能没有应用场景，在未来的版本中可能会删除。
+       列举了一些常用的使用方法，更多命令请使用
+       <code>
+        ligral --help
+       </code>
+       命令查看。注意，如果您直接双击运行可执行程序，窗体只会一闪而过。
       </p>
       <h4>
        Linux 系统
       </h4>
       <p>
-       此版本暂未提供 Linux 系统的打包程序，请跳转至源码安装。
+       Linux 版本的 ligral 也在
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.0-beta" target="_blank">
+        Gitee
+       </a>
+       和
+       <a href="https://github.com/jry-zheng/ligral/releases/v0.2.0-beta" target="_blank">
+        GitHub
+       </a>
+       上提供了。与 Windows 版本类似，您只要下载 ligral-v0.2.0-beta-linux-x64 即可使用。同样，建议您创建软连接 ligral 指向该程序，并且复制到
+       <code>
+        /usr/local/bin
+       </code>
+       文件夹下。
       </p>
       <h3>
        源码安装
@@ -196,6 +228,11 @@ Type your ligral script below, and use 'run' command to execute.
       </p>
       <pre><code>git clone https://gitee.com/junruoyu-zheng/ligral.git
 git clone https://github.com/jry-zheng/ligral.git
+</code></pre>
+      <p>
+       然后切换到稳定的 master 分支。当然如果您愿意体验开发中的版本，也可以使用 dev 分支。切换到 master 的命令如下：
+      </p>
+      <pre><code>git checkout master
 </code></pre>
       <p>
        如果没有安装 git，您可以去
@@ -416,7 +453,11 @@ sys:x[position] -&gt; Scope;
        结束
       </h2>
       <p>
-       到此为止，恭喜您完成了快速开始的全部内容！需要继续深入了解 ligral 语法等问题，请看用户指引。如果有问题，可以发
+       到此为止，恭喜您完成了快速开始的全部内容！需要继续深入了解 ligral 语法等问题，请看
+       <a href="user-guide">
+        用户指引
+       </a>
+       。如果有问题，可以发
        <a href="https://gitee.com/junruoyu-zheng/ligral/issues" target="_blank">
         Issue
        </a>
