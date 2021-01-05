@@ -14,6 +14,7 @@ namespace Ligral
     class Program
     {
         private static Logger logger = new Logger("Main");
+        private static string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         static void Main(string[] args)
         {
             Options options = new Options(args);
@@ -86,7 +87,7 @@ Parameter: --version & -v:
     No values           print the current version of ligral.");
                 break;
             case Version version:
-                Console.WriteLine("Ligral "+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+                Console.WriteLine("Ligral "+version);
                 break;
             case Main main:
                 Console.WriteLine(@"Copyright (c) Ligral Tech. All rights reserved. 
@@ -114,6 +115,7 @@ Learn more:
         {
             Settings settings = Settings.GetInstance();
             settings.GetDefaultSettings();
+            logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
             if (simulationProject.IsJsonFile is bool isJsonFile && isJsonFile)
             {
                 JsonLoader jsonLoader = new JsonLoader();
@@ -179,7 +181,10 @@ Learn more:
                 {
                     settings.OutputFolder = outputFolder;
                 }
-                settings.NeedOutput = true;
+                if (!Directory.Exists(settings.OutputFolder))
+                {
+                    Directory.CreateDirectory(settings.OutputFolder);
+                }
                 foreach (Model model in models)
                 {
                     ModelDocument modelDocument = model.GetDocStruct();

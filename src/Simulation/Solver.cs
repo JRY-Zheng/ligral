@@ -8,6 +8,7 @@ namespace Ligral.Simulation
         public static double Time;
         public Matrix<double> States;
         protected Logger logger;
+        private static Logger solverLogger = new Logger("Solver");
         public delegate void StartingHandler();
         public static event StartingHandler Starting;
         public delegate void SteppedHandler();
@@ -35,6 +36,7 @@ namespace Ligral.Simulation
         public static void OnStarting()
         {
             if (Starting != null) Starting();
+            solverLogger.Info("Simulation started.");
         }
         public static void OnStepped()
         {
@@ -43,6 +45,7 @@ namespace Ligral.Simulation
         public static void OnStopped()
         {
             if (Stopped != null) Stopped();
+            solverLogger.Info("Simulation stoped.");
         }
     }
 }

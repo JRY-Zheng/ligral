@@ -86,7 +86,6 @@ namespace Ligral.Simulation
                 }
             }
             Solver.OnStopped();
-            logger.Info("Simulation stoped.");
         }
         protected virtual Matrix<double> Step(Problem problem, double stepSize, Matrix<double> states)
         {

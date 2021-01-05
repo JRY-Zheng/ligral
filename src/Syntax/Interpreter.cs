@@ -63,6 +63,7 @@ namespace Ligral.Syntax
         }
         public void Interpret(ProgramAST programAST)
         {
+            logger.Info($"Interpreter started at {currentFileName}");
             Visit(programAST);
         }
         public void Interpret(StatementsAST statementsAST)
@@ -199,11 +200,6 @@ namespace Ligral.Syntax
         }
         private object Visit(ProgramAST programAST)
         {
-            if (modules.ContainsKey(currentFileName))
-            {
-                currentScope = modules[currentFileName];
-                return null;
-            }
             currentScope = new ScopeSymbolTable(programAST.Name, 0);
             modules[currentFileName] = currentScope;
             return Visit(programAST.Statements);

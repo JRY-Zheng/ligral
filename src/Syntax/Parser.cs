@@ -18,6 +18,7 @@ namespace Ligral.Syntax
         }
         public ProgramAST Parse(string name = "<global>")
         {
+            logger.Info($"Parser started at {name}.");
             return Program(name);
         }
         private Token Feed() => lexer.GetNextToken();

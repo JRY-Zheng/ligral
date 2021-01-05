@@ -53,6 +53,7 @@ namespace Ligral.Simulation
                                               "schematic Error: Algebraic loop exists.");
                 }
             }
+            logger.Info("Inspection passed.");
             return routine;
         }
         private void DirectFeedThroughAdvance(Model root, Model node, List<Model> loop)

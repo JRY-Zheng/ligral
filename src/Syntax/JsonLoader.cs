@@ -84,6 +84,7 @@ namespace Ligral.Syntax
             {
                 throw new LigralException("Property `settings` not found.");
             }
+            logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
             Declare(project.Models);
         }

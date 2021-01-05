@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Ligral.Tools;
 
 namespace Ligral.Simulation
@@ -85,10 +86,12 @@ namespace Ligral.Simulation
                     table.AddColumn(name, observation.ObservationList);
                 }
                 Settings settings = Settings.GetInstance();
-                settings.NeedOutput = true;
-                settings.ApplySetting();
+                if (!Directory.Exists(settings.OutputFolder))
+                {
+                    Directory.CreateDirectory(settings.OutputFolder);
+                }
                 string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-                DataFile = System.IO.Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
+                DataFile = Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
                 table.DumpFile(DataFile, true);
             }
             if (Stopped != null) Stopped();

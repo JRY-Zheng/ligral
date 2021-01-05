@@ -51,6 +51,7 @@ namespace Ligral
                 Interpreter interpreter = Interpreter.GetInstance(defaultSetting);
                 interpreter.Interpret(p);
             }
+            ApplySetting();
         }
         
         #region Settings
@@ -120,19 +121,18 @@ namespace Ligral
             {
                 throw logger.Error(new SettingException("stop_time", StopTime, "step size must be positive nonzero."));
             }
-            if (NeedOutput && !Directory.Exists(OutputFolder))
+            if (!(InnerPlotterConfiguration is null))
             {
-                Directory.CreateDirectory(OutputFolder);
-            }
-            if (!(InnerPlotterConfiguration is null) && (plotter is null))
-            {
-                if (RealTimeSimulation)
+                if (plotter is null)
                 {
-                    plotter = new Tools.RTPlotter();
-                }
-                else
-                {
-                    plotter = new Tools.Plotter();
+                    if (RealTimeSimulation)
+                    {
+                        plotter = new Tools.RTPlotter();
+                    }
+                    else
+                    {
+                        plotter = new Tools.Plotter();
+                    }
                 }
                 plotter.Configure(InnerPlotterConfiguration);
             }
