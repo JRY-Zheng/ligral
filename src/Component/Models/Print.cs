@@ -104,7 +104,7 @@ namespace Ligral.Component.Models
         public override void Refresh()
         {
             if (Solver.Time > end || Solver.Time < start) return;
-            System.Console.WriteLine(string.Format(format, Solver.Time, varName, inputSignal.ToStringInLine()));
+            logger.Prompt(string.Format(format, Solver.Time, varName, inputSignal.ToStringInLine()));
         }
     }
 }

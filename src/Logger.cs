@@ -9,7 +9,9 @@ namespace Ligral
         Debug = 0,
         Info = 1,
         Warning = 2,
-        Error = 3
+        Prompt = 3,
+        Error = 4,
+        Fatal = 5
     }
     struct LogMessage
     {
@@ -39,7 +41,8 @@ namespace Ligral
         public static LogLevel MinPrintOutLevel = LogLevel.Warning;
         public static string LogFile = null;
         public static LogLevel MinLogFileLevel = LogLevel.Info;
-        private static ConsoleColor defaultColor = Console.ForegroundColor;
+        private static ConsoleColor defaultForeGroundColor = Console.ForegroundColor;
+        private static ConsoleColor defaultBackGroundColor = Console.BackgroundColor;
         public Logger(string source)
         {
             this.source = source;
@@ -86,19 +89,30 @@ namespace Ligral
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Log(new LogMessage(source, LogLevel.Warning, message));
-            Console.ForegroundColor = defaultColor;
+            Console.ForegroundColor = defaultForeGroundColor;
+        }
+        public void Prompt(string message)
+        {
+            Log(new LogMessage(source, LogLevel.Prompt, message));
         }
         public LigralException Error(LigralException exception)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Log(new LogMessage(source, LogLevel.Error, exception.ToString()));
-            Console.ForegroundColor = defaultColor;
+            Console.ForegroundColor = defaultForeGroundColor;
             return exception;
+        }
+        public void Fatal(string message, Exception exception)
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+            Log(new LogMessage(source, LogLevel.Fatal, message + ": " + exception.ToString()));
+            Console.ForegroundColor = defaultForeGroundColor;
+            Console.BackgroundColor = defaultBackGroundColor;
         }
 
         public void Configure(Dictionary<string, object> dict)
         {
-            
             foreach (string item in dict.Keys)
             {
                 object val = dict[item];

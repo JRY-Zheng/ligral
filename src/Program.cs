@@ -20,7 +20,22 @@ namespace Ligral
             switch (options.GetCommand())
             {
             case SimulationProject simulationProject:
-                Run(simulationProject);
+                try
+                {
+                    Run(simulationProject);
+                }
+                catch (LigralException)
+                {
+                    logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
+                }
+                catch (Exception e)
+                {
+                    if (Logger.LogFile is null)
+                    {
+                        Logger.LogFile = "ligral.log";
+                    }
+                    logger.Fatal($"Fatal error occurs, details in log {Logger.LogFile}", e);
+                }
                 break;
             case Document document:
                 Run(document);
@@ -124,13 +139,20 @@ Learn more:
             Inspector inspector = new Inspector();
             List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
             Problem problem = new Problem(routine);
-            Solver solver = Solver.GetSolver(settings.SolverName);
+            Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
             solver.Solve(problem);
         }
         private static void Run(Document document)
         {
             Settings settings = Settings.GetInstance();
-            settings.GetDefaultSettings();
+            try
+            {
+                settings.GetDefaultSettings();
+            }
+            catch (LigralException)
+            {
+                logger.Error(new LigralException("Default settings is not valid, ligral exited with errors."));
+            }
             List<Model> models = new List<Model>();
             if (document.ModelName is string modelName)
             {
@@ -140,7 +162,7 @@ Learn more:
                 }
                 else
                 {
-                    throw logger.Error(new OptionException(modelName, $"No model named {modelName}"));
+                    logger.Error(new OptionException(modelName, $"No model named {modelName}"));
                 }
             }
             else
@@ -164,14 +186,22 @@ Learn more:
                     string modelJson = JsonSerializer.Serialize<ModelDocument>(
                         modelDocument, new JsonSerializerOptions() {WriteIndented = true}
                     );
-                    File.WriteAllText(Path.Join(settings.OutputFolder, $"{modelDocument.Type}.mdl.json"), modelJson);
+                    string modelJsonFileName = Path.Join(settings.OutputFolder, $"{modelDocument.Type}.mdl.json");
+                    try
+                    {
+                        File.WriteAllText(modelJsonFileName, modelJson);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(new LigralException($"Cannot write to {modelJsonFileName}: {e.Message}"));
+                    }
                 }
             }
             else
             {
                 if (!(document.OutputFolder is null))
                 {
-                    throw logger.Error(new OptionException("Output folder is only needed when mdl.json is requested."));
+                    logger.Error(new OptionException("Output folder is only needed when mdl.json is requested."));
                 }
                 foreach (Model model in models)
                 {
