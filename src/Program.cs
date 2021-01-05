@@ -13,7 +13,7 @@ namespace Ligral
 {
     class Program
     {
-        private static Logger logger = new Logger("Inspector");
+        private static Logger logger = new Logger("Main");
         static void Main(string[] args)
         {
             Options options = new Options(args);
