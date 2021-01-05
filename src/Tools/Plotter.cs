@@ -63,7 +63,7 @@ namespace Ligral.Tools
         public int ColNO;
         public DateTime CachedTime;
     }
-    class Plotter : Subscriber, IConfigure
+    class Plotter : Subscriber, IConfigurable
     {
         protected Process PythonProcess;
         protected Dictionary<int, Figure> Figures = new Dictionary<int, Figure>();
@@ -251,7 +251,7 @@ plt.show()
                     switch (item)
                     {
                     case "enable":
-                        if ((bool) dict[item])
+                        if ((bool) val)
                         {
                             if (!Tools.Publisher.ContainsHooks(this))
                             {
@@ -268,12 +268,12 @@ plt.show()
                         break;
                     case "output_script":
                     case "output_scripts":
-                        OutputScript = (bool) dict[item]; break;
+                        OutputScript = (bool) val; break;
                     case "save_figure":
                     case "save_figures":
-                        SaveFigure = (bool) dict[item]; break;
+                        SaveFigure = (bool) val; break;
                     default:
-                        throw new SettingException(item, dict[item], "Unsupported setting in plotter.");
+                        throw new SettingException(item, val, "Unsupported setting in plotter.");
                     }
                 }
                 catch (System.InvalidCastException)
