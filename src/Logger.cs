@@ -29,7 +29,7 @@ namespace Ligral
             return string.Format("{0,-6:0.0000} {1,8} {2,10} {3}", Time, Source, '['+Level.ToString()+']', Message);
         }
     }
-    class Logger
+    class Logger : IConfigurable
     {
         public static DateTime StartUpTime = DateTime.Now;
         public static List<LogMessage> Logs = new List<LogMessage>();
@@ -94,6 +94,37 @@ namespace Ligral
             Log(new LogMessage(source, LogLevel.Error, exception.ToString()));
             Console.ForegroundColor = defaultColor;
             return exception;
+        }
+
+        public void Configure(Dictionary<string, object> dict)
+        {
+            
+            foreach (string item in dict.Keys)
+            {
+                object val = dict[item];
+                try
+                {
+                    switch (item)
+                    {
+                    case "print_out":
+                        PrintOut = (bool) val; break;
+                    case "min_print_out_level":
+                        MinPrintOutLevel = (LogLevel) Convert.ToInt32(val); break;
+                    case "min_log_file_level":
+                        MinLogFileLevel = (LogLevel) Convert.ToInt32(val); break;
+                    case "print_out_plain_text":
+                        PrintOutPlainText = (bool) val; break;
+                    case "log_file":
+                        LogFile = (string) val; break;
+                    default:
+                        throw new SettingException(item, val, "Unsupported setting in plotter.");
+                    }
+                }
+                catch (System.InvalidCastException)
+                {
+                    throw Error(new SettingException(item, val, $"Invalid type {val.GetType()} in plotter"));
+                }
+            }
         }
     }
 }

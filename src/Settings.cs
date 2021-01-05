@@ -6,7 +6,7 @@ using Ligral.Simulation;
 
 namespace Ligral
 {
-    interface IConfigure
+    interface IConfigurable
     {
         void Configure(Dictionary<string, object> dict);
     }
@@ -63,6 +63,7 @@ namespace Ligral
         public bool RealTimeSimulation { get; set; } = false;
         private Tools.Plotter plotter;
         public Dictionary<string, object> InnerPlotterConfiguration {get; set;}
+        public Dictionary<string, object> LoggerConfiguration {get; set;}
         public string SolverName {get; set;} = "ode4";
         public string PythonExecutable { get; set; } = "python";
 
@@ -90,6 +91,9 @@ namespace Ligral
                     SolverName = (string) val; break;
                 case "inner_plotter":
                     InnerPlotterConfiguration = (Dictionary<string, object>) val;
+                    break;
+                case "logger":
+                    LoggerConfiguration = (Dictionary<string, object>) val;
                     break;
                 default:
                     throw logger.Error(new SettingException(item, val, "Unsupported setting."));
@@ -131,6 +135,10 @@ namespace Ligral
                     plotter = new Tools.Plotter();
                 }
                 plotter.Configure(InnerPlotterConfiguration);
+            }
+            if (!(LoggerConfiguration is null))
+            {
+                logger.Configure(LoggerConfiguration);
             }
         }
     }
