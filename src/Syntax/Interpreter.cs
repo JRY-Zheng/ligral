@@ -83,6 +83,11 @@ namespace Ligral.Syntax
                 fullFileName += ".lig";
             }
             currentFileName = Path.GetFullPath(fullFileName);
+            if (modules.ContainsKey(currentFileName))
+            {
+                currentScope = modules[currentFileName];
+                return;
+            }
             string text;
             try
             {
