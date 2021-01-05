@@ -116,7 +116,15 @@ namespace Ligral.Component
             stringBuilder.AppendLine((this is InPortVariableModel).ToString());
             stringBuilder.Append("Output Port Variable:\t");
             stringBuilder.AppendLine((this is OutPortVariableModel).ToString());
-            stringBuilder.AppendLine("Parameter list:");
+            stringBuilder.Append("Parameter list:\t\t");
+            if (Parameters.Count == 0)
+            {
+                stringBuilder.AppendLine("No parameter");
+            }
+            else
+            {
+                stringBuilder.AppendLine("");
+            }
             foreach(string parameterName in Parameters.Keys)
             {
                 stringBuilder.Append("\t");
