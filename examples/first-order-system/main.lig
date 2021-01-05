@@ -1,3 +1,9 @@
+# Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+
 # 本例实现了一个最简单的负反馈系统，其系统框图如下所示：
 
 # ╭───╮           ┌───────┐      ┌─────┐x       ╭───╮

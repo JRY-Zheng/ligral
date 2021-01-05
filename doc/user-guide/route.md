@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 路由类型
 
 Ligral 是一个面向对象的仿真语言，您可以在 ligral 中创建路由类型，然后进行若干次实例化从而得到多个实例。我们相信这在仿真场景中是非常实用的。例如您设计了一个弹簧类，在进行某个机构仿真的时候，您可能需要引入多个弹簧模型，此时您可以声明多个弹簧实例，而不是把代码复制一遍。

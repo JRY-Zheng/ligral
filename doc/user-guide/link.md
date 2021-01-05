@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 节点连接
 
 在 ligral 中，所有的连接都是从一个输出端口到一个输入端口的有向边，表示从输出端口发出来的信号原封不动地注入至输入端口。因此，无论多么复杂的仿真模型，只要节点数目是有限的，ligral 总能以如下最基本的形式描述节点的连接情况：

@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 设置语句
 
 求解一个仿真模型需要用到许多设置参数，比如求解器的选择和配置、输出文件存放位置等。

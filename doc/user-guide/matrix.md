@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 矩阵计算
 
 Ligral 从 v0.2.0 开始支持矩阵。在目前的版本中，矩阵和标量是两个独立的概念，即$1\times 1$的矩阵不被视作为标量，日后可能会做出调整。关于矩阵常量的声明和一些简单的计算，已经在[声明常量](const)一节简要地介绍了，再次不再赘述。本节主要介绍矩阵在连接语句中的应用。

@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 引用依赖
 
 一个结构清晰的中大型仿真工程离不开引用依赖，不论这些依赖来自于内部或是引用自外部。在 ligral 中，您可以很方便地处理这些依赖关系并且引用到仿真工程中。本文涉及的所有例子均可在`/examples/import-logic/`下查看。

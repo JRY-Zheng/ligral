@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 快速开始
 
 Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windows 和 Linux 系统上*（Windows 10 以及 Ubuntu 20、Debian 10 测试通过，Mac 系统尚未测试）*。只要简单几个步骤就可以让 Ligral 运行在自己的机器上，让我们马上开始吧！

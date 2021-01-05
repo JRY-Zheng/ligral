@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 声明节点
 
 如前所述，节点包括模块和路由，它们的声明、使用方式是类似的，因此放在一起介绍。

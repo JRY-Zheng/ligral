@@ -1,3 +1,9 @@
+# Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+
 import sys, os, shutil, re
 import markdown
 from bs4 import BeautifulSoup, element

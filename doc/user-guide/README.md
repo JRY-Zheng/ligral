@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 用户文档
 
 “纸上得来终觉浅，绝知此事要躬行。”如果您刚刚开始了解这个项目，还没有看过[快速开始](../quick-start)的话，建议您先按照快速开始安装 ligral 并试着运行。Ligral 的语法和常见语言（C 和从 C 衍生出来语言，包括 Java、python 等等，函数式语言，SQL 语言，modelica 语言等等）的语法均不同，需要实操才能理解和熟悉。

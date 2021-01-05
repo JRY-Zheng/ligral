@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 术语定义
 
 本节介绍了 ligral 的一些术语及其定义，避免文档中出现含义不清的表述，让用户能更好地阅读文档，在遇到问题时能清楚地、规范地表达和搜索信息。

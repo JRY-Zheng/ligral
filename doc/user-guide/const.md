@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 声明常量
 
 仿真过程中通常会用到许多全局常量。如果您是 Simulink 用户，您可能用 MATLAB 定义过许多常量，然后在 Simulink 中通过`Constant`模块来调用。全局常量的引入使得模型更加健壮和一致，更方便调整参数，因此是很有必要的。

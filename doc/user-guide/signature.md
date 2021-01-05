@@ -1,3 +1,9 @@
+<!-- Copyright 2019-2020 Junruoyu Zheng. All rights reserved.
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+
 # 接口签名
 
 在一个规模宏大的仿真工程中，实现各个子系统之间的解耦的一种重要手段就是接口签名。接口签名实现了一种先定义后实现、定义与实现分离的建模方式。签名定义了一个节点在与其他节点交互时的全部接口信息，隐藏了内部实现逻辑。
