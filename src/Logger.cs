@@ -104,14 +104,30 @@ namespace Ligral
                 object val = dict[item];
                 try
                 {
-                    switch (item)
+                    switch (item.ToLower())
                     {
                     case "print_out":
                         PrintOut = (bool) val; break;
                     case "min_print_out_level":
-                        MinPrintOutLevel = (LogLevel) Convert.ToInt32(val); break;
+                        if (val is string minPrintOutLevelName)
+                        {
+                            MinPrintOutLevel = ConvertToLogLevel(minPrintOutLevelName);
+                        }
+                        else
+                        {
+                            MinPrintOutLevel = (LogLevel) Convert.ToInt32(val);
+                        }
+                        break;
                     case "min_log_file_level":
-                        MinLogFileLevel = (LogLevel) Convert.ToInt32(val); break;
+                        if (val is string minLogFileLevelName)
+                        {
+                            MinLogFileLevel = ConvertToLogLevel(minLogFileLevelName);
+                        }
+                        else
+                        {
+                            MinLogFileLevel = (LogLevel) Convert.ToInt32(val);
+                        }
+                        break;
                     case "print_out_plain_text":
                         PrintOutPlainText = (bool) val; break;
                     case "log_file":
@@ -124,6 +140,23 @@ namespace Ligral
                 {
                     throw Error(new SettingException(item, val, $"Invalid type {val.GetType()} in plotter"));
                 }
+            }
+        }
+        private LogLevel ConvertToLogLevel(string logName)
+        {
+            switch (logName.ToLower())
+            {
+            case "debug":
+                return LogLevel.Debug;
+            case "info":
+                return LogLevel.Info;
+            case "warn":
+            case "warning":
+                return LogLevel.Warning;
+            case "error":
+                return LogLevel.Debug;
+            default:
+                throw Error(new SettingException("log_level", logName, "Unknown log level"));
             }
         }
     }

@@ -248,7 +248,7 @@ plt.show()
                 object val = dict[item];
                 try
                 {
-                    switch (item)
+                    switch (item.ToLower())
                     {
                     case "enable":
                         if ((bool) val)

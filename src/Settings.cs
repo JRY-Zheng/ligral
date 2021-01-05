@@ -71,7 +71,7 @@ namespace Ligral
         {
             try
             {
-                switch (item)
+                switch (item.ToLower())
                 {
                 case "step_size":
                     StepSize = (double) val; break;
