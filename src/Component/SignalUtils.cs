@@ -29,8 +29,7 @@ namespace Ligral.Component
             {
                 Matrix<double> rightMatrix = right.Unpack() as Matrix<double>;
                 MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> result = m.DenseOfMatrix(rightMatrix);
-                left.Map2((l, r)=>l*r, rightMatrix, result);
+                Matrix<double> result = left.PointwiseMultiply(rightMatrix);
                 return new Signal(result);
             }
             else
@@ -47,6 +46,78 @@ namespace Ligral.Component
             else
             {
                 return new Signal(left*((double) right.Unpack()));
+            }
+        }
+        public static Signal BroadcastDivide(this Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>).BroadcastDivide(right);
+            }
+            else
+            {
+                return ((double) left.Unpack()).BroadcastDivide(right);
+            }
+        }
+        public static Signal BroadcastDivide(this Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                Matrix<double> rightMatrix = right.Unpack() as Matrix<double>;
+                MatrixBuilder<double> m = Matrix<double>.Build;
+                Matrix<double> result = left.PointwiseDivide(rightMatrix);
+                return new Signal(result);
+            }
+            else
+            {
+                return new Signal(left/((double) right.Unpack()));
+            }
+        }
+        public static Signal BroadcastDivide(this double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left/(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left/((double) right.Unpack()));
+            }
+        }
+        public static Signal BroadcastPower(this Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>).BroadcastPower(right);
+            }
+            else
+            {
+                return ((double) left.Unpack()).BroadcastPower(right);
+            }
+        }
+        public static Signal BroadcastPower(this Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                Matrix<double> rightMatrix = right.Unpack() as Matrix<double>;
+                MatrixBuilder<double> m = Matrix<double>.Build;
+                Matrix<double> result = left.PointwisePower(rightMatrix);
+                return new Signal(result);
+            }
+            else
+            {
+                return new Signal(left.PointwisePower((double)right.Unpack()));
+            }
+        }
+        public static Signal BroadcastPower(this double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal((right.Unpack() as Matrix<double>).Map(v => System.Math.Pow(left, v)));
+            }
+            else
+            {
+                return new Signal(System.Math.Pow(left, ((double) right.Unpack())));
             }
         }
         public static Signal RaiseToPower(this Signal left, Signal right)

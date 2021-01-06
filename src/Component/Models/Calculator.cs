@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
                 {"type", new Parameter(ParameterType.String, value=>
                 {
                     string operType = System.Convert.ToString(value);
-                    if (operType=="+"||operType=="-"||operType=="*"||operType=="/"||operType=="^"||operType==".*")
+                    if (operType=="+"||operType=="-"||operType=="*"||operType=="/"||operType=="^"||operType==".*"||operType=="./"||operType==".^")
                     {
                         type = operType;
                     }
@@ -60,6 +60,10 @@ namespace Ligral.Component.Models
                 Calculate = PowerCalculate; break;
             case ".*":
                 Calculate = BroadcastMultiplicationCalculate; break;
+            case "./":
+                Calculate = BroadcastDivisionCalculate; break;
+            case ".^":
+                Calculate = BroadcastPowerCalculate; break;
             }// validation of operator is done in configure
             return Calculate(values);
         }
@@ -109,6 +113,22 @@ namespace Ligral.Component.Models
             Signal rightSignal = values[1];
             Signal outputSignal = Results[0];
             outputSignal.Clone(leftSignal.BroadcastMultiply(rightSignal));
+            return Results;
+        }
+        private List<Signal> BroadcastDivisionCalculate(List<Signal> values)
+        {
+            Signal leftSignal = values[0];
+            Signal rightSignal = values[1];
+            Signal outputSignal = Results[0];
+            outputSignal.Clone(leftSignal.BroadcastDivide(rightSignal));
+            return Results;
+        }
+        private List<Signal> BroadcastPowerCalculate(List<Signal> values)
+        {
+            Signal leftSignal = values[0];
+            Signal rightSignal = values[1];
+            Signal outputSignal = Results[0];
+            outputSignal.Clone(leftSignal.BroadcastPower(rightSignal));
             return Results;
         }
     }
