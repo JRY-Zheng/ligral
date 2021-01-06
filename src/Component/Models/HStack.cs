@@ -55,9 +55,15 @@ namespace Ligral.Component.Models
                         break;
                     }
                 }
-                catch (System.ArgumentException)
+                catch (System.ArgumentException e)
                 {
-                    throw logger.Error(new ModelException(this, "Matrix row dimensions must agree."));
+                    string message = e.Message;
+                    int indexOfParenthesis = message.IndexOf('(');
+                    if (indexOfParenthesis>=0)
+                    {
+                        message = message.Substring(0, indexOfParenthesis);
+                    }
+                    throw logger.Error(new ModelException(this, message));
                 }
             }
             Results[0].Pack(firstMatrix);

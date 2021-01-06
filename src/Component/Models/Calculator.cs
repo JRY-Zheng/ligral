@@ -65,7 +65,20 @@ namespace Ligral.Component.Models
             case ".^":
                 Calculate = BroadcastPowerCalculate; break;
             }// validation of operator is done in configure
-            return Calculate(values);
+            try
+            {
+                return Calculate(values);
+            }
+            catch (System.ArgumentException e)
+            {
+                string message = e.Message;
+                int indexOfParenthesis = message.IndexOf('(');
+                if (indexOfParenthesis>=0)
+                {
+                    message = message.Substring(0, indexOfParenthesis);
+                }
+                throw logger.Error(new ModelException(this, message));
+            }
         }
         private List<Signal> AdditionCalculate(List<Signal> values)
         {
