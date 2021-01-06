@@ -41,7 +41,7 @@ namespace Ligral
                     {
                         Logger.LogFile = "ligral.log";
                     }
-                    logger.Fatal($"Fatal error occurs, details in log {Logger.LogFile}", e);
+                    logger.Fatal(e);
                 }
                 break;
             case Document document:

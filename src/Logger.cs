@@ -53,9 +53,9 @@ namespace Ligral
         {
             this.source = source;
         }
-        private void Log(LogMessage message)
+        private void Log(LogMessage message, bool cache = true)
         {
-            Logs.Add(message);
+            if (cache) Logs.Add(message);
             if (PrintOut && message.Level >= MinPrintOutLevel)
             {
                 TextWriter textWriter = message.Level == LogLevel.Error ? Console.Error : Console.Out;
@@ -108,11 +108,22 @@ namespace Ligral
             Console.ForegroundColor = defaultForeGroundColor;
             return exception;
         }
-        public void Fatal(string message, Exception exception)
+        public void Fatal(Exception exception)
         {
+            if (LogFile == null)
+            {
+                LogFile = "ligral.log";
+            }
+            MinLogFileLevel = LogLevel.Debug;
+            MinPrintOutLevel = LogLevel.Fatal;
+            foreach (var log in Logs)
+            {
+                Log(log, false);
+            }
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
-            Log(new LogMessage(source, LogLevel.Fatal, message + ": " + exception.ToString()));
+            // Log(new LogMessage(source, LogLevel.Fatal, ""));
+            Log(new LogMessage(source, LogLevel.Fatal, $"Fatal error occurs, details in log {Logger.LogFile}\n"+exception.ToString()));
             Console.ForegroundColor = defaultForeGroundColor;
             Console.BackgroundColor = defaultBackGroundColor;
         }
