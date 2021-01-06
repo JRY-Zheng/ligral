@@ -102,6 +102,12 @@ namespace Ligral
                 case "logger":
                     LoggerConfiguration = (Dictionary<string, object>) val;
                     break;
+                case "author":
+                case "date":
+                case "license":
+                case "email":
+                case "home_page":
+                    break;
                 default:
                     throw logger.Error(new SettingException(item, val, "Unsupported setting."));
                 }
