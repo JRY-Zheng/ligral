@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.2.1</Version>
   </PropertyGroup> 
