@@ -100,7 +100,7 @@ namespace Ligral.Component.Models
             Signal leftSignal = values[0];
             Signal rightSignal = values[1];
             Signal outputSignal = Results[0];
-            outputSignal.Clone(leftSignal.PowerOf(rightSignal));
+            outputSignal.Clone(leftSignal.RaiseToPower(rightSignal));
             return Results;
         }
         private List<Signal> BroadcastMultiplicationCalculate(List<Signal> values)

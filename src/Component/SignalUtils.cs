@@ -49,41 +49,46 @@ namespace Ligral.Component
                 return new Signal(left*((double) right.Unpack()));
             }
         }
-        public static Signal PowerOf(this Signal left, Signal right)
+        public static Signal RaiseToPower(this Signal left, Signal right)
         {
             if (left.IsMatrix)
             {
-                return (left.Unpack() as Matrix<double>).PowerOf(right);
+                return (left.Unpack() as Matrix<double>).RaiseToPower(right);
             }
             else
             {
-                return ((double) left.Unpack()).PowerOf(right);
+                return ((double) left.Unpack()).RaiseToPower(right);
             }
         }
-        public static Signal PowerOf(this Matrix<double> left, Signal right)
+        public static Signal RaiseToPower(this Matrix<double> left, Signal right)
         {
             if (right.IsMatrix)
             {
-                throw logger.Error(new LigralException("Matrix power matrix base is not supported."));
+                throw logger.Error(new LigralException("Matrix to the power of a matrix is not supported."));
             }
             else
             {
-                int index = System.Convert.ToInt32(right.Unpack());
+                double indexDouble = (double) right.Unpack();
+                int index = System.Convert.ToInt32(indexDouble);
+                if (indexDouble - index > double.Epsilon*10)
+                {
+                    throw logger.Error(new LigralException($"Index of a matrix must be integer but {indexDouble} received, which would make the result to be complex."));
+                }
                 MatrixBuilder<double> m = Matrix<double>.Build;
                 Matrix<double> result = m.DenseOfMatrix(left);
+                if (left.RowCount != left.ColumnCount)
+                {
+                    throw logger.Error(new LigralException($"Cannot raise non-square matrix ({left.RowCount}x{left.ColumnCount}) to the power of a scalar."));
+                }
                 left.Power(index, result);
                 return new Signal(result);
             }
         }
-        public static Signal PowerOf(this double left, Signal right)
+        public static Signal RaiseToPower(this double left, Signal right)
         {
             if (right.IsMatrix)
             {
-                Matrix<double> rightMatrix = right.Unpack() as Matrix<double>;
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> result = m.DenseOfMatrix(rightMatrix);
-                // [TODO] QR decomposition
-                return new Signal(left/(right.Unpack() as Matrix<double>));
+                throw logger.Error(new LigralException("Scalar to the power of a matrix is not supported, because the result can be a complex matrix."));
             }
             else
             {
