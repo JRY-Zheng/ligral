@@ -204,7 +204,7 @@ namespace Ligral.Component
         }
         public static Group Power(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "^*");
+            return Calculate(left, right, "^");
         }
         public static Group BroadcastMultiply(this ILinkable left, ILinkable right)
         {
