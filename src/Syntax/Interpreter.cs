@@ -571,7 +571,7 @@ namespace Ligral.Syntax
                 }
                 return (left/right).Unpack();
             case '^':
-                return (left^right).Unpack();
+                return (left.PowerOf(right)).Unpack();
             default:
                 throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
             }

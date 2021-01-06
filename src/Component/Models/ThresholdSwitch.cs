@@ -47,7 +47,7 @@ namespace Ligral.Component.Models
             Signal firstSignal = values[1];
             Signal secondSignal = values[2];
             Signal resultSignal = Results[0];
-            resultSignal.Clone((conditionSignal & firstSignal) + ((1 - conditionSignal) & secondSignal));
+            resultSignal.Clone(conditionSignal.BroadcastMultiply(firstSignal) + (1 - conditionSignal).BroadcastMultiply(secondSignal));
             return Results;
         }
     }
