@@ -12,7 +12,7 @@ namespace Ligral.Syntax
         FROM,GOTO,LPAR,RPAR,LBRC,RBRC,LBRK,RBRK,
         COMMA,COLON,SEMIC,DOT,CARET,
         ID,EOF,ASSIGN,ROUTE,END,USING,IMPORT,CONF,
-        TRUE,FALSE,TILDE,SIGN
+        TRUE,FALSE,TILDE,SIGN,BCMUL,BCDIV,BCPOW
     }
 
     class Token
@@ -48,9 +48,9 @@ namespace Ligral.Syntax
         }
     }
 
-    class CharToken : Token
+    class OperantToken : Token
     {
-        public CharToken(TokenType type, char value, int line, int column) : base(type, value, line, column)
+        public OperantToken(TokenType type, string value, int line, int column) : base(type, value, line, column)
         {
         }
     }

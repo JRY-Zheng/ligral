@@ -12,8 +12,8 @@ namespace Ligral.Syntax.ASTs
     class ValUnaryOpAST : AST
     {
         public AST Value;
-        public CharToken Operator;
-        public ValUnaryOpAST(CharToken op, AST value)
+        public OperantToken Operator;
+        public ValUnaryOpAST(OperantToken op, AST value)
         {
             Operator = op;
             Value = value;

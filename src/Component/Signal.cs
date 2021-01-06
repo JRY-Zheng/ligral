@@ -309,5 +309,137 @@ namespace Ligral.Component
                 throw logger.Error(new LigralException("Double cannot be compared with matrix"));
             }
         }
+        public static Signal operator+(Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>)+right;
+            }
+            else
+            {
+                return ((double) left.Unpack())+right;
+            }
+        }
+        public static Signal operator+(Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left+(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left+((double) right.Unpack()));
+            }
+        }
+        public static Signal operator+(double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left+(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left+((double) right.Unpack()));
+            }
+        }
+        public static Signal operator-(Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>)-right;
+            }
+            else
+            {
+                return ((double) left.Unpack())-right;
+            }
+        }
+        public static Signal operator-(Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left-(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left-((double) right.Unpack()));
+            }
+        }
+        public static Signal operator-(double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left-(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left-((double) right.Unpack()));
+            }
+        }
+        public static Signal operator*(Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>)*right;
+            }
+            else
+            {
+                return ((double) left.Unpack())*right;
+            }
+        }
+        public static Signal operator*(Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left*(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left*((double) right.Unpack()));
+            }
+        }
+        public static Signal operator*(double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left*(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left*((double) right.Unpack()));
+            }
+        }
+        public static Signal operator/(Signal left, Signal right)
+        {
+            if (left.IsMatrix)
+            {
+                return (left.Unpack() as Matrix<double>)/right;
+            }
+            else
+            {
+                return ((double) left.Unpack())/right;
+            }
+        }
+        public static Signal operator/(Matrix<double> left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left*(right.Unpack() as Matrix<double>).Inverse());
+            }
+            else
+            {
+                return new Signal(left/((double) right.Unpack()));
+            }
+        }
+        public static Signal operator/(double left, Signal right)
+        {
+            if (right.IsMatrix)
+            {
+                return new Signal(left/(right.Unpack() as Matrix<double>));
+            }
+            else
+            {
+                return new Signal(left/((double) right.Unpack()));
+            }
+        }
     }
 }

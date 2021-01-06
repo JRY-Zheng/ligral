@@ -242,91 +242,104 @@ namespace Ligral.Syntax
             else if (currentChar=='=')
             {
                 Advance();
-                return new CharToken(TokenType.FROM, '=', lineNO, columnNO);
+                return new OperantToken(TokenType.FROM, "=", lineNO, columnNO);
             }
             else if (currentChar=='(')
             {
                 Advance();
-                return new CharToken(TokenType.LPAR, '(', lineNO, columnNO);
+                return new OperantToken(TokenType.LPAR, "(", lineNO, columnNO);
             }
             else if (currentChar==')')
             {
                 Advance();
-                return new CharToken(TokenType.RPAR, ')', lineNO, columnNO);
+                return new OperantToken(TokenType.RPAR, ")", lineNO, columnNO);
             }
             else if (currentChar=='[')
             {
                 Advance();
-                return new CharToken(TokenType.LBRK, '[', lineNO, columnNO);
+                return new OperantToken(TokenType.LBRK, "[", lineNO, columnNO);
             }
             else if (currentChar==']')
             {
                 Advance();
-                return new CharToken(TokenType.RBRK, ']', lineNO, columnNO);
+                return new OperantToken(TokenType.RBRK, "]", lineNO, columnNO);
             }
             else if (currentChar=='{')
             {
                 Advance();
-                return new CharToken(TokenType.LBRC, '{', lineNO, columnNO);
+                return new OperantToken(TokenType.LBRC, "{", lineNO, columnNO);
             }
             else if (currentChar=='}')
             {
                 Advance();
-                return new CharToken(TokenType.RBRC, '}', lineNO, columnNO);
+                return new OperantToken(TokenType.RBRC, "}", lineNO, columnNO);
             }
             else if (currentChar=='+')
             {
                 Advance();
-                return new CharToken(TokenType.PLUS, '+', lineNO, columnNO);
+                return new OperantToken(TokenType.PLUS, "+", lineNO, columnNO);
             }
             else if (currentChar=='-')
             {
                 Advance();
-                return new CharToken(TokenType.MINUS, '-', lineNO, columnNO);
+                return new OperantToken(TokenType.MINUS, "-", lineNO, columnNO);
             }
             else if (currentChar=='*')
             {
                 Advance();
-                return new CharToken(TokenType.MUL, '*', lineNO, columnNO);
+                return new OperantToken(TokenType.MUL, "*", lineNO, columnNO);
             }
             else if (currentChar=='/')
             {
                 Advance();
-                return new CharToken(TokenType.DIV, '/', lineNO, columnNO);
+                return new OperantToken(TokenType.DIV, "/", lineNO, columnNO);
             }
             else if (currentChar==';')
             {
                 Advance();
-                return new CharToken(TokenType.SEMIC, ';', lineNO, columnNO);
+                return new OperantToken(TokenType.SEMIC, ";", lineNO, columnNO);
             }
             else if (currentChar==':')
             {
                 Advance();
-                return new CharToken(TokenType.COLON, ':', lineNO, columnNO);
+                return new OperantToken(TokenType.COLON, ":", lineNO, columnNO);
             }
             else if (currentChar==',')
             {
                 Advance();
-                return new CharToken(TokenType.COMMA, ',', lineNO, columnNO);
+                return new OperantToken(TokenType.COMMA, ",", lineNO, columnNO);
             }
             else if (currentChar=='.')
             {
                 Advance();
-                return new CharToken(TokenType.DOT, '.', lineNO, columnNO);
+                switch (currentChar)
+                {
+                case '*':
+                    Advance();
+                    return new OperantToken(TokenType.BCMUL, ".*", lineNO, columnNO);
+                case '/':
+                    Advance();
+                    return new OperantToken(TokenType.BCDIV, "./", lineNO, columnNO);
+                case '^':
+                    Advance();
+                    return new OperantToken(TokenType.BCPOW, ".^", lineNO, columnNO);
+                default:
+                    return new OperantToken(TokenType.DOT, ".", lineNO, columnNO);
+                }
             }
             else if (currentChar=='^')
             {
                 Advance();
-                return new CharToken(TokenType.CARET, '^', lineNO, columnNO);
+                return new OperantToken(TokenType.CARET, "^", lineNO, columnNO);
             }
             else if (currentChar=='~')
             {
                 Advance();
-                return new CharToken(TokenType.TILDE, '~', lineNO, columnNO);
+                return new OperantToken(TokenType.TILDE, "~", lineNO, columnNO);
             }
             else if (currentChar=='\0')
             {
-                return new CharToken(TokenType.EOF, '\0', lineNO, columnNO);
+                return new OperantToken(TokenType.EOF, "\0", lineNO, columnNO);
             }
             else 
             {

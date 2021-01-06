@@ -525,16 +525,38 @@ namespace Ligral.Syntax
             ILinkable right = rightObject as ILinkable;
             switch (binOpAST.Operator.Value)
             {
-            case '+':
-                return left+right;
-            case '-':
-                return left-right;
-            case '*':
-                return left*right;
-            case '/':
-                return left/right;
-            case '^':
-                return left^right;
+            case "+":
+                return left.Add(right);
+            case "-":
+                return left.Subtract(right);
+            case "*":
+                return left.Multiply(right);
+            case "/":
+                return left.Divide(right);
+            case "^":
+                return left.Power(right);
+            case ".*":
+                return left.BroadcastMultiply(right);
+            case "./":
+                return left.BroadcastDivide(right);
+            case ".^":
+                return left.BroadcastPower(right);
+            // case "+":
+            //     return left+right;
+            // case "-":
+            //     return left-right;
+            // case "*":
+            //     return left*right;
+            // case "/":
+            //     return left/right;
+            // case "^":
+            //     return left^right;
+            // case ".*":
+            //     return left*right;
+            // case "./":
+            //     return left/right;
+            // case ".^":
+            //     return left^right;
             default:
                 throw logger.Error(new SemanticException(binOpAST.FindToken(), "Invalid operator"));
             }
@@ -544,10 +566,10 @@ namespace Ligral.Syntax
             ILinkable value = Visit(unaryOpAST.Value) as ILinkable;
             switch (unaryOpAST.Operator.Value)
             {
-            case '+':
-                return +value;
-            case '-':
-                return -value;
+            case "+":
+                return value.Positive();
+            case "-":
+                return value.Negative();
             default:
                 throw logger.Error(new SemanticException(unaryOpAST.FindToken(), "Invalid operator"));
             }
@@ -558,20 +580,26 @@ namespace Ligral.Syntax
             Signal right = new Signal(Visit(valBinOpAST.Right));
             switch (valBinOpAST.Operator.Value)
             {
-            case '+':
+            case "+":
                 return (left+right).Unpack();
-            case '-':
+            case "-":
                 return (left-right).Unpack();
-            case '*':
+            case "*":
                 return (left*right).Unpack();
-            case '/':
+            case "/":
                 if (right.Unpack() is double v && v == 0)
                 {
                     throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
                 }
                 return (left/right).Unpack();
-            case '^':
+            case "^":
                 return (left.RaiseToPower(right)).Unpack();
+            case ".*":
+                return (left.BroadcastMultiply(right)).Unpack();
+            case "./":
+                return (left.BroadcastDivide(right)).Unpack();
+            case ".^":
+                return (left.BroadcastPower(right)).Unpack();
             default:
                 throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
             }
@@ -581,9 +609,9 @@ namespace Ligral.Syntax
             double value = (double) Visit(valUnaryOpAST.Value);
             switch (valUnaryOpAST.Operator.Value)
             {
-            case '+':
+            case "+":
                 return +value;
-            case '-':
+            case "-":
                 return -value;
             default:
                 throw logger.Error(new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator"));

@@ -5,13 +5,15 @@
 */
 
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Component.Models;
+using Dict=System.Collections.Generic.Dictionary<string,object>;
 
 namespace Ligral.Component
 {
     
-    static class SignalUtils
+    static class BroadcastUtils
     {
-        private static Logger logger = new Logger("SignalUtils");
+        private static Logger logger = new Logger("BroadcastUtils");
         public static Signal BroadcastMultiply(this Signal left, Signal right)
         {
             if (left.IsMatrix)
@@ -167,141 +169,75 @@ namespace Ligral.Component
                 return new Signal(System.Math.Pow(left, rightValue));
             }
         }
-    }
-    partial class Signal
-    {
-        
-        public static Signal operator+(Signal left, Signal right)
+        private static Group Calculate(this ILinkable left, ILinkable right, string operant)
         {
-            if (left.IsMatrix)
+            if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
-                return (left.Unpack() as Matrix<double>)+right;
+                throw logger.Error(new LigralException("Out port number should be 1 when calculated"));
             }
-            else
-            {
-                return ((double) left.Unpack())+right;
-            }
+            Calculator calculator = ModelManager.Create("Calculator") as Calculator;
+            Dict dictionary = new Dict(){{"type", operant}};
+            calculator.Configure(dictionary);
+            left.Connect(0, calculator.Expose(0));
+            right.Connect(0, calculator.Expose(1));
+            Group group = new Group();
+            group.AddInputModel(left);
+            group.AddInputModel(right);
+            group.AddOutputModel(calculator);
+            return group;
         }
-        public static Signal operator+(Matrix<double> left, Signal right)
+        public static Group Add(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left+(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left+((double) right.Unpack()));
-            }
+            return Calculate(left, right, "+");
         }
-        public static Signal operator+(double left, Signal right)
+        public static Group Subtract(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left+(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left+((double) right.Unpack()));
-            }
+            return Calculate(left, right, "-");
         }
-        public static Signal operator-(Signal left, Signal right)
+        public static Group Multiply(this ILinkable left, ILinkable right)
         {
-            if (left.IsMatrix)
-            {
-                return (left.Unpack() as Matrix<double>)-right;
-            }
-            else
-            {
-                return ((double) left.Unpack())-right;
-            }
+            return Calculate(left, right, "*");
         }
-        public static Signal operator-(Matrix<double> left, Signal right)
+        public static Group Divide(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left-(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left-((double) right.Unpack()));
-            }
+            return Calculate(left, right, "/");
         }
-        public static Signal operator-(double left, Signal right)
+        public static Group Power(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left-(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left-((double) right.Unpack()));
-            }
+            return Calculate(left, right, "^*");
         }
-        public static Signal operator*(Signal left, Signal right)
+        public static Group BroadcastMultiply(this ILinkable left, ILinkable right)
         {
-            if (left.IsMatrix)
-            {
-                return (left.Unpack() as Matrix<double>)*right;
-            }
-            else
-            {
-                return ((double) left.Unpack())*right;
-            }
+            return Calculate(left, right, ".*");
         }
-        public static Signal operator*(Matrix<double> left, Signal right)
+        public static Group BroadcastDivide(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left*(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left*((double) right.Unpack()));
-            }
+            return Calculate(left, right, "./");
         }
-        public static Signal operator*(double left, Signal right)
+        public static Group BroadcastPower(this ILinkable left, ILinkable right)
         {
-            if (right.IsMatrix)
-            {
-                return new Signal(left*(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left*((double) right.Unpack()));
-            }
+            return Calculate(left, right, ".^");
         }
-        public static Signal operator/(Signal left, Signal right)
+        public static Group Positive(this ILinkable linkable)
         {
-            if (left.IsMatrix)
-            {
-                return (left.Unpack() as Matrix<double>)/right;
-            }
-            else
-            {
-                return ((double) left.Unpack())/right;
-            }
+            Group group = new Group();
+            group.AddInputModel(linkable);
+            group.AddOutputModel(linkable);
+            return group;
         }
-        public static Signal operator/(Matrix<double> left, Signal right)
+        public static Group Negative(this ILinkable linkable)
         {
-            if (right.IsMatrix)
+            Group group = new Group();
+            group.AddInputModel(linkable);
+            for (int i = 0; i < linkable.OutPortCount(); i++)
             {
-                return new Signal(left*(right.Unpack() as Matrix<double>).Inverse());
+                Gain gain = ModelManager.Create("Gain") as Gain;
+                Dict dictionary = new Dict(){{"value", -1}};
+                gain.Configure(dictionary);
+                linkable.Connect(i, gain.Expose(0));
+                group.AddOutputModel(gain);
             }
-            else
-            {
-                return new Signal(left/((double) right.Unpack()));
-            }
-        }
-        public static Signal operator/(double left, Signal right)
-        {
-            if (right.IsMatrix)
-            {
-                return new Signal(left/(right.Unpack() as Matrix<double>));
-            }
-            else
-            {
-                return new Signal(left/((double) right.Unpack()));
-            }
+            return group;
         }
     }
 }

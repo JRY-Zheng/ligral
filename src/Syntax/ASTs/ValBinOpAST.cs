@@ -13,8 +13,8 @@ namespace Ligral.Syntax.ASTs
     {
         public AST Left;
         public AST Right;
-        public CharToken Operator;
-        public ValBinOpAST(AST left, CharToken op, AST right)
+        public OperantToken Operator;
+        public ValBinOpAST(AST left, OperantToken op, AST right)
         {
             Left = left;
             Operator = op;

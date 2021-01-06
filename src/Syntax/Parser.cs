@@ -149,7 +149,7 @@ namespace Ligral.Syntax
             AST valueFactorAST = ValueFactor();
             while (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 valueFactorAST = new ValBinOpAST(valueFactorAST, binOpToken, ValueFactor());
             }
             return valueFactorAST;
@@ -157,9 +157,9 @@ namespace Ligral.Syntax
         private AST ValueFactor()
         {
             AST valueAST = ValueEntity();
-            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV)
+            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 valueAST = new ValBinOpAST(valueAST, binOpToken, ValueEntity());
             }
             return valueAST;
@@ -167,9 +167,9 @@ namespace Ligral.Syntax
         private AST ValueEntity()
         {
             AST valueAST = Value();
-            while (currentToken.Type==TokenType.CARET)
+            while (currentToken.Type==TokenType.CARET||currentToken.Type==TokenType.BCPOW)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 valueAST = new ValBinOpAST(valueAST, binOpToken, Value());
             }
             return valueAST;
@@ -178,7 +178,7 @@ namespace Ligral.Syntax
         {
             if (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
-                CharToken unaryOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken unaryOpToken = Eat(currentToken.Type) as OperantToken;
                 return new ValUnaryOpAST(unaryOpToken, Value());
             }
             else if (currentToken.Type==TokenType.LPAR)
@@ -267,7 +267,7 @@ namespace Ligral.Syntax
             AST nodeFactorAST = NodeFactor(isFirstNode);
             while (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 nodeFactorAST = new BinOpAST(nodeFactorAST, binOpToken, NodeFactor(isFirstNode));
             }
             return nodeFactorAST;
@@ -275,9 +275,9 @@ namespace Ligral.Syntax
         private AST NodeFactor(bool isFirstNode)
         {
             AST nodeAST = NodeEntity(isFirstNode);
-            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV)
+            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 nodeAST = new BinOpAST(nodeAST, binOpToken, NodeEntity(isFirstNode));
             }
             return nodeAST;
@@ -285,9 +285,9 @@ namespace Ligral.Syntax
         private AST NodeEntity(bool isFirstNode)
         {
             AST nodeAST = Node(isFirstNode);
-            while (currentToken.Type==TokenType.CARET)
+            while (currentToken.Type==TokenType.CARET||currentToken.Type==TokenType.BCPOW)
             {
-                CharToken binOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken binOpToken = Eat(currentToken.Type) as OperantToken;
                 nodeAST = new BinOpAST(nodeAST, binOpToken, Node(isFirstNode));
             }
             return nodeAST;
@@ -296,7 +296,7 @@ namespace Ligral.Syntax
         {
             if (currentToken.Type==TokenType.PLUS||currentToken.Type==TokenType.MINUS)
             {
-                CharToken unaryOpToken = Eat(currentToken.Type) as CharToken;
+                OperantToken unaryOpToken = Eat(currentToken.Type) as OperantToken;
                 return new UnaryOpAST(unaryOpToken, Node(isFirstNode));
             }
             else if (currentToken.Type==TokenType.LPAR)
