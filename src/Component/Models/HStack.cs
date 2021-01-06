@@ -43,14 +43,21 @@ namespace Ligral.Component.Models
             }
             foreach(Signal signal in values.Skip(1))
             {
-                switch (signal.Unpack())
+                try
                 {
-                case Matrix<double> matrix:
-                    firstMatrix = firstMatrix.Append(matrix);
-                    break;
-                case double value:
-                    firstMatrix = firstMatrix.Append(m.Dense(1, 1, value));
-                    break;
+                    switch (signal.Unpack())
+                    {
+                    case Matrix<double> matrix:
+                        firstMatrix = firstMatrix.Append(matrix);
+                        break;
+                    case double value:
+                        firstMatrix = firstMatrix.Append(m.Dense(1, 1, value));
+                        break;
+                    }
+                }
+                catch (System.ArgumentException)
+                {
+                    throw logger.Error(new ModelException(this, "Matrix row dimensions must agree."));
                 }
             }
             Results[0].Pack(firstMatrix);

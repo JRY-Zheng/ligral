@@ -43,14 +43,21 @@ namespace Ligral.Component.Models
             }
             foreach(Signal signal in values.Skip(1))
             {
-                switch (signal.Unpack())
+                try
                 {
-                case Matrix<double> matrix:
-                    firstMatrix = firstMatrix.Stack(matrix);
-                    break;
-                case double value:
-                    firstMatrix = firstMatrix.Stack(m.Dense(1, 1, value));
-                    break;
+                    switch (signal.Unpack())
+                    {
+                    case Matrix<double> matrix:
+                        firstMatrix = firstMatrix.Stack(matrix);
+                        break;
+                    case double value:
+                        firstMatrix = firstMatrix.Stack(m.Dense(1, 1, value));
+                        break;
+                    }
+                }
+                catch (System.ArgumentException)
+                {
+                    throw logger.Error(new ModelException(this, "Matrix column dimensions must agree."));
                 }
             }
             Results[0].Pack(firstMatrix);
