@@ -31,6 +31,7 @@ namespace Ligral.Component
         private List<string> inPortNameList;
         private List<string> outPortNameList;
         private StatementsAST statementsAST;
+        private string routeFileName;
         private int scopeLevel;
         private ScopeSymbolTable enclosingScope;
         public void SetUp(RouteInherit routeInherit)
@@ -57,15 +58,16 @@ namespace Ligral.Component
             this.scopeLevel = scopeLevel;
             this.enclosingScope = enclosingScope;
         }
-        public void SetUp(StatementsAST statementsAST)
+        public void SetUp(StatementsAST statementsAST, string routeFileName)
         {
             this.statementsAST = statementsAST;
+            this.routeFileName = routeFileName;
         }
         public Route Construct()
         {
             Route route = new Route();
             ScopeSymbolTable routeScope = new ScopeSymbolTable(Name, scopeLevel, enclosingScope);
-            route.SetUp(Name, Type, routeScope, parameters, inPortNameList, outPortNameList, statementsAST);
+            route.SetUp(Name, Type, routeScope, parameters, inPortNameList, outPortNameList, statementsAST, routeFileName);
             route.Name = Name + id.ToString();
             id++;
             return route;

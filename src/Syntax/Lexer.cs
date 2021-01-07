@@ -17,6 +17,7 @@ namespace Ligral.Syntax
         private char currentCharBackup;
         private int lineNOBackup = 1;
         private int columnNOBackup = 1;
+        private int file;
         private Logger logger = new Logger("Lexer");
         public void Backup()
         {
@@ -32,9 +33,10 @@ namespace Ligral.Syntax
             lineNO = lineNOBackup;
             columnNO = columnNOBackup;
         }
-        public void Load(string text)
+        public void Load(string text, int file)
         {
             this.text = text;
+            this.file = file;
             if (text.Length==0)
             {
                 currentChar = '\0';
@@ -189,11 +191,11 @@ namespace Ligral.Syntax
             }
             if (char.IsDigit(currentChar))
             {
-                return new DigitToken(TokenType.DIGIT, Digit(), lineNO, columnNO);
+                return new DigitToken(TokenType.DIGIT, Digit(), lineNO, columnNO, file);
             }
             else if (currentChar=='\''||currentChar=='"')
             {
-                return new StringToken(TokenType.STRING, String(), lineNO, columnNO);
+                return new StringToken(TokenType.STRING, String(), lineNO, columnNO, file);
             }
             else if (char.IsLetter(currentChar)||currentChar=='_')
             {
@@ -203,33 +205,33 @@ namespace Ligral.Syntax
                 case "digit":
                     // supported in v0.2.0, unsupported in higher version
                     // replaced by `let`
-                    return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
+                    return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO, file);
                 case "let":
-                    return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO);
+                    return new StringToken(TokenType.ASSIGN, word, lineNO, columnNO, file);
                 case "route":
-                    return new StringToken(TokenType.ROUTE, word, lineNO, columnNO);
+                    return new StringToken(TokenType.ROUTE, word, lineNO, columnNO, file);
                 case "end":
-                    return new StringToken(TokenType.END, word, lineNO, columnNO);
+                    return new StringToken(TokenType.END, word, lineNO, columnNO, file);
                 case "import":
-                    return new StringToken(TokenType.IMPORT, word, lineNO, columnNO);
+                    return new StringToken(TokenType.IMPORT, word, lineNO, columnNO, file);
                 case "using":
-                    return new StringToken(TokenType.USING, word, lineNO, columnNO);
+                    return new StringToken(TokenType.USING, word, lineNO, columnNO, file);
                 case "conf":
-                    return new StringToken(TokenType.CONF, word, lineNO, columnNO);
+                    return new StringToken(TokenType.CONF, word, lineNO, columnNO, file);
                 case "true":
-                    return new BoolToken(TokenType.TRUE, true, lineNO, columnNO);
+                    return new BoolToken(TokenType.TRUE, true, lineNO, columnNO, file);
                 case "false":
-                    return new BoolToken(TokenType.FALSE, false, lineNO, columnNO);
+                    return new BoolToken(TokenType.FALSE, false, lineNO, columnNO, file);
                 case "signature":
-                    return new BoolToken(TokenType.SIGN, false, lineNO, columnNO);
+                    return new BoolToken(TokenType.SIGN, false, lineNO, columnNO, file);
                 default:
-                    return new StringToken(TokenType.ID, word, lineNO, columnNO);
+                    return new StringToken(TokenType.ID, word, lineNO, columnNO, file);
                 }
             }
             else if (currentChar=='-'&&Peek()=='>')
             {
                 Advance(2);
-                return new StringToken(TokenType.GOTO, "->", lineNO, columnNO);
+                return new StringToken(TokenType.GOTO, "->", lineNO, columnNO, file);
             }
             else if (currentChar=='<'&&Peek()=='-')
             {
@@ -237,77 +239,77 @@ namespace Ligral.Syntax
                 // replaced by `=`
                 // in v0.3.0 or higher logic expression will be supported
                 Advance(2);
-                return new StringToken(TokenType.FROM, "<-", lineNO, columnNO);
+                return new StringToken(TokenType.FROM, "<-", lineNO, columnNO, file);
             }
             else if (currentChar=='=')
             {
                 Advance();
-                return new OperantToken(TokenType.FROM, "=", lineNO, columnNO);
+                return new OperantToken(TokenType.FROM, "=", lineNO, columnNO, file);
             }
             else if (currentChar=='(')
             {
                 Advance();
-                return new OperantToken(TokenType.LPAR, "(", lineNO, columnNO);
+                return new OperantToken(TokenType.LPAR, "(", lineNO, columnNO, file);
             }
             else if (currentChar==')')
             {
                 Advance();
-                return new OperantToken(TokenType.RPAR, ")", lineNO, columnNO);
+                return new OperantToken(TokenType.RPAR, ")", lineNO, columnNO, file);
             }
             else if (currentChar=='[')
             {
                 Advance();
-                return new OperantToken(TokenType.LBRK, "[", lineNO, columnNO);
+                return new OperantToken(TokenType.LBRK, "[", lineNO, columnNO, file);
             }
             else if (currentChar==']')
             {
                 Advance();
-                return new OperantToken(TokenType.RBRK, "]", lineNO, columnNO);
+                return new OperantToken(TokenType.RBRK, "]", lineNO, columnNO, file);
             }
             else if (currentChar=='{')
             {
                 Advance();
-                return new OperantToken(TokenType.LBRC, "{", lineNO, columnNO);
+                return new OperantToken(TokenType.LBRC, "{", lineNO, columnNO, file);
             }
             else if (currentChar=='}')
             {
                 Advance();
-                return new OperantToken(TokenType.RBRC, "}", lineNO, columnNO);
+                return new OperantToken(TokenType.RBRC, "}", lineNO, columnNO, file);
             }
             else if (currentChar=='+')
             {
                 Advance();
-                return new OperantToken(TokenType.PLUS, "+", lineNO, columnNO);
+                return new OperantToken(TokenType.PLUS, "+", lineNO, columnNO, file);
             }
             else if (currentChar=='-')
             {
                 Advance();
-                return new OperantToken(TokenType.MINUS, "-", lineNO, columnNO);
+                return new OperantToken(TokenType.MINUS, "-", lineNO, columnNO, file);
             }
             else if (currentChar=='*')
             {
                 Advance();
-                return new OperantToken(TokenType.MUL, "*", lineNO, columnNO);
+                return new OperantToken(TokenType.MUL, "*", lineNO, columnNO, file);
             }
             else if (currentChar=='/')
             {
                 Advance();
-                return new OperantToken(TokenType.DIV, "/", lineNO, columnNO);
+                return new OperantToken(TokenType.DIV, "/", lineNO, columnNO, file);
             }
             else if (currentChar==';')
             {
                 Advance();
-                return new OperantToken(TokenType.SEMIC, ";", lineNO, columnNO);
+                return new OperantToken(TokenType.SEMIC, ";", lineNO, columnNO, file);
             }
             else if (currentChar==':')
             {
                 Advance();
-                return new OperantToken(TokenType.COLON, ":", lineNO, columnNO);
+                return new OperantToken(TokenType.COLON, ":", lineNO, columnNO, file);
             }
             else if (currentChar==',')
             {
                 Advance();
-                return new OperantToken(TokenType.COMMA, ",", lineNO, columnNO);
+                return new OperantToken(TokenType.COMMA, ",", lineNO, columnNO, file);
             }
             else if (currentChar=='.')
             {
@@ -316,30 +318,30 @@ namespace Ligral.Syntax
                 {
                 case '*':
                     Advance();
-                    return new OperantToken(TokenType.BCMUL, ".*", lineNO, columnNO);
+                    return new OperantToken(TokenType.BCMUL, ".*", lineNO, columnNO, file);
                 case '/':
                     Advance();
-                    return new OperantToken(TokenType.BCDIV, "./", lineNO, columnNO);
+                    return new OperantToken(TokenType.BCDIV, "./", lineNO, columnNO, file);
                 case '^':
                     Advance();
-                    return new OperantToken(TokenType.BCPOW, ".^", lineNO, columnNO);
+                    return new OperantToken(TokenType.BCPOW, ".^", lineNO, columnNO, file);
                 default:
-                    return new OperantToken(TokenType.DOT, ".", lineNO, columnNO);
+                    return new OperantToken(TokenType.DOT, ".", lineNO, columnNO, file);
                 }
             }
             else if (currentChar=='^')
             {
                 Advance();
-                return new OperantToken(TokenType.CARET, "^", lineNO, columnNO);
+                return new OperantToken(TokenType.CARET, "^", lineNO, columnNO, file);
             }
             else if (currentChar=='~')
             {
                 Advance();
-                return new OperantToken(TokenType.TILDE, "~", lineNO, columnNO);
+                return new OperantToken(TokenType.TILDE, "~", lineNO, columnNO, file);
             }
             else if (currentChar=='\0')
             {
-                return new OperantToken(TokenType.EOF, "\0", lineNO, columnNO);
+                return new OperantToken(TokenType.EOF, "\0", lineNO, columnNO, file);
             }
             else 
             {

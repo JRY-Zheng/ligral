@@ -22,9 +22,25 @@ namespace Ligral.Syntax
         private string relativeFolder;
         private string folder;
         private string currentFileName;
-        public string CurrentFileName {get => currentFileName;}
+        public string CurrentFileName 
+        {
+            get
+            {
+                return currentFileName;
+            }
+            set
+            {
+                currentFileName = value;
+                if (!files.Contains(currentFileName))
+                {
+                    files.Add(currentFileName);
+                }
+                logger.Debug($"Current file changed to {currentFileName}");
+            }
+        }
         private ScopeSymbolTable currentScope;
         private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
+        private List<string> files = new List<string>();
         private static Interpreter instance;
         private Logger logger = new Logger("Interpreter");
         public static string ScopeName 
@@ -47,7 +63,7 @@ namespace Ligral.Syntax
             {
                 instance = new Interpreter();
             }
-            instance.currentFileName = Path.GetFullPath(filename);
+            instance.CurrentFileName = Path.GetFullPath(filename);
             string folder = Path.GetDirectoryName(filename);
             instance.folder = folder;
             instance.rootFolder = folder;
@@ -65,11 +81,11 @@ namespace Ligral.Syntax
         private Interpreter() {}
         public void Interpret()
         {
-            Interpret(Path.GetFileName(GetInstance().currentFileName), true);
+            Interpret(Path.GetFileName(GetInstance().CurrentFileName), true);
         }
         public void Interpret(ProgramAST programAST)
         {
-            logger.Info($"Interpreter started at {currentFileName}");
+            logger.Info($"Interpreter started at {CurrentFileName}");
             Visit(programAST);
         }
         public void Interpret(StatementsAST statementsAST)
@@ -88,12 +104,14 @@ namespace Ligral.Syntax
             {
                 fullFileName += ".lig";
             }
-            currentFileName = Path.GetFullPath(fullFileName);
-            if (modules.ContainsKey(currentFileName))
+            string nextFileName = Path.GetFullPath(fullFileName);
+            if (modules.ContainsKey(nextFileName))
             {
-                currentScope = modules[currentFileName];
+                currentScope = modules[nextFileName];
                 return;
             }
+            string lastFileName = CurrentFileName;
+            CurrentFileName = nextFileName;
             string text;
             try
             {
@@ -105,7 +123,7 @@ namespace Ligral.Syntax
             }
             relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();
-            parser.Load(text);
+            parser.Load(text, files.IndexOf(CurrentFileName));
             ProgramAST programAST;
             if (global)
             {
@@ -116,12 +134,17 @@ namespace Ligral.Syntax
                 programAST = parser.Parse(fileName);
             }
             Interpret(programAST);
+            CurrentFileName = lastFileName;
         }
         public ScopeSymbolTable SetScope(ScopeSymbolTable scope)
         {
             ScopeSymbolTable originalScope = currentScope;
             currentScope = scope;
             return originalScope;
+        }
+        public string GetFileNameByIndex(int index)
+        {
+            return files[index];
         }
         private object Visit(AST ast)
         {
@@ -212,7 +235,7 @@ namespace Ligral.Syntax
         private object Visit(ProgramAST programAST)
         {
             currentScope = new ScopeSymbolTable(programAST.Name, 0);
-            modules[currentFileName] = currentScope;
+            modules[CurrentFileName] = currentScope;
             return Visit(programAST.Statements);
         }
         private object Visit(StatementsAST statementsAST)
@@ -511,9 +534,9 @@ namespace Ligral.Syntax
             {
                 linkable.Configure(Visit(configureAST.ModelParameters));
             }
-            catch (LigralException ex)
+            catch (LigralException)
             {
-                throw logger.Error(new SemanticException(configureAST.FindToken(), ex.Message));
+                throw logger.Error(new SemanticException(configureAST.FindToken()));
             }
             return linkable;
         }
@@ -822,9 +845,9 @@ namespace Ligral.Syntax
                         throw logger.Error(new SemanticException(selectAST.Port.FindToken(), "Ambiguous port"));
                     }
                 }
-                catch (LigralException ex)
+                catch (LigralException)
                 {
-                    throw logger.Error(new SemanticException(selectAST.Port.FindToken(), ex.Message));
+                    throw logger.Error(new SemanticException(selectAST.Port.FindToken()));
                 }
             }
             else
@@ -956,7 +979,7 @@ namespace Ligral.Syntax
             }
             routeConstructor.SetUp(parameters);
             routeConstructor.SetUp(inPortNameList, outPortNameList);
-            routeConstructor.SetUp(routeAST.Statements);
+            routeConstructor.SetUp(routeAST.Statements, CurrentFileName);
             TypeSymbol routeType = currentScope.Lookup(routeConstructor.Type) as TypeSymbol;
             TypeSymbol routeSymbol = new TypeSymbol(routeConstructor.Name, routeType, routeConstructor);
             if (!currentScope.Insert(routeSymbol, false))

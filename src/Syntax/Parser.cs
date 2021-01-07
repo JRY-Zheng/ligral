@@ -15,11 +15,13 @@ namespace Ligral.Syntax
         private Token currentToken;
         private Token currentTokenBackup;
         private Logger logger = new Logger("Parser");
+        private int file;
         public Parser() {}
-        public void Load(string text)
+        public void Load(string text, int file)
         {
             lexer = new Lexer();
-            lexer.Load(text);
+            lexer.Load(text, file);
+            this.file = file;
             currentToken = Feed();
         }
         public ProgramAST Parse(string name = "<global>")
@@ -230,7 +232,7 @@ namespace Ligral.Syntax
             if (currentToken.Type == TokenType.TILDE)
             {
                 Eat(TokenType.TILDE);
-                StringToken nodeToken = new StringToken(TokenType.ID, "Node", currentToken.Line, currentToken.Column);
+                StringToken nodeToken = new StringToken(TokenType.ID, "Node", currentToken.Line, currentToken.Column, file);
                 return new IdAST(nodeToken);
             }
             // StringToken idToken = Eat(TokenType.ID) as StringToken;
@@ -647,7 +649,7 @@ namespace Ligral.Syntax
                 Eat(TokenType.DOT);
                 while (currentToken.Type == TokenType.DOT)
                 {
-                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column, file);
                     Eat(TokenType.DOT);
                     fileName.Add(new WordAST(token));
                 }
@@ -686,7 +688,7 @@ namespace Ligral.Syntax
                 Eat(TokenType.DOT);
                 while (currentToken.Type == TokenType.DOT)
                 {
-                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column);
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column, file);
                     Eat(TokenType.DOT);
                     fileName.Add(new WordAST(token));
                 }

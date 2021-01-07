@@ -51,7 +51,7 @@ namespace Ligral
             {
                 string text = File.ReadAllText(defaultSetting);
                 Parser parser = new Parser();
-                parser.Load(text);
+                parser.Load(text, 0);
                 ProgramAST p = parser.Parse();
                 p.Statements.Statements.RemoveAll(ast => !(ast is ConfAST));
                 Interpreter interpreter = Interpreter.GetInstance(defaultSetting);

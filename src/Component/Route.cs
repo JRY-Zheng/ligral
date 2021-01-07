@@ -32,6 +32,7 @@ namespace Ligral.Component
         private List<string> inPortNameList;
         private List<string> outPortNameList;
         private StatementsAST statementsAST;
+        private string routeFileName;
         protected Logger loggerInstance;
         protected Logger logger
         {
@@ -51,7 +52,8 @@ namespace Ligral.Component
             List<RouteParam> parameters,
             List<string> inPortNameList, 
             List<string> outPortNameList, 
-            StatementsAST statementsAST)
+            StatementsAST statementsAST,
+            string routeFileName)
         {
             Type = type;
             Base = baseType;
@@ -60,6 +62,7 @@ namespace Ligral.Component
             this.outPortNameList = outPortNameList;
             this.parameters = parameters;
             this.statementsAST = statementsAST;
+            this.routeFileName = routeFileName;
         }
         public override string GetTypeName()
         {
@@ -68,6 +71,8 @@ namespace Ligral.Component
         private void Interpret()
         {
             Interpreter interpreter = Interpreter.GetInstance();
+            string lastFileName = interpreter.CurrentFileName;
+            interpreter.CurrentFileName = routeFileName;
             ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
             foreach (string inPortName in inPortNameList)
             {
@@ -99,6 +104,7 @@ namespace Ligral.Component
                 throw logger.Error(new ModelException(unconnectedModel, "models inside the route apart from inputs cannot be unconnected"));
             }
             interpreter.SetScope(scope);
+            interpreter.CurrentFileName = lastFileName;
         }
         public override Port Expose(string portName)
         {

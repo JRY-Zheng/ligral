@@ -68,7 +68,7 @@ namespace Ligral
         }
         public override string ToString()
         {
-            string errorMessage = $"Invalid Semantics ({ErrorToken.Value}) in file {Interpreter.GetInstance().CurrentFileName}:line {ErrorToken.Line} column {ErrorToken.Column}";
+            string errorMessage = $"Invalid Semantics ({ErrorToken.Value}) in file {Interpreter.GetInstance().GetFileNameByIndex(ErrorToken.File)}:line {ErrorToken.Line} column {ErrorToken.Column}";
             if (Message!="")
             {
                 return $"{errorMessage}\n{Message}";

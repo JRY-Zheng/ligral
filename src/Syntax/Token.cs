@@ -21,43 +21,45 @@ namespace Ligral.Syntax
         public object Value;
         public int Line;
         public int Column;
-        public Token(TokenType type, object value, int line, int column)
+        public int File;
+        public Token(TokenType type, object value, int line, int column, int file)
         {
             Type = type;
             Value = value;
             Line = line;
             Column = column;
+            File = file;
         }
         public override string ToString()
         {
-            return string.Format("Token({0}={1},at({2},{3}))",Type, Value, Line, Column);
+            return string.Format("Token({0}={1},in file {2}:line {3} column {4}",Type, Value, File, Line, Column);
         }
     }
 
     class DigitToken : Token
     {
-        public DigitToken(TokenType type, double value, int line, int column) : base(type, value, line, column)
+        public DigitToken(TokenType type, double value, int line, int column, int file) : base(type, value, line, column, file)
         {
         }
     }
 
     class StringToken : Token
     {
-        public StringToken(TokenType type, string value, int line, int column) : base(type, value, line, column)
+        public StringToken(TokenType type, string value, int line, int column, int file) : base(type, value, line, column, file)
         {
         }
     }
 
     class OperantToken : Token
     {
-        public OperantToken(TokenType type, string value, int line, int column) : base(type, value, line, column)
+        public OperantToken(TokenType type, string value, int line, int column, int file) : base(type, value, line, column, file)
         {
         }
     }
 
     class BoolToken : Token
     {
-        public BoolToken(TokenType type, bool value, int line, int column) : base(type, value, line, column)
+        public BoolToken(TokenType type, bool value, int line, int column, int file) : base(type, value, line, column, file)
         {
         }
     }
