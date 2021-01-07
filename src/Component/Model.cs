@@ -14,7 +14,7 @@ using Ligral.Simulation;
 
 namespace Ligral.Component
 {
-    class Model : ILinkable
+    public class Model : ILinkable
     {
         protected static int id = 0;
         public string Name 

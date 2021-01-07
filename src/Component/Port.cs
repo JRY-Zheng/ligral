@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Ligral.Component
 {
-    class Port : ILinkable
+    public class Port : ILinkable
     {
         public string Name;
         public Model FatherModel;
@@ -64,7 +64,7 @@ namespace Ligral.Component
         }
     }
 
-    class InPort : Port
+    public class InPort : Port
     {
         public bool Visited = false;
         public OutPort Source;
@@ -123,7 +123,7 @@ namespace Ligral.Component
         }
     }
 
-    class OutPort : Port
+    public class OutPort : Port
     {
         private List<InPort> destinationList;
         private string signalName;

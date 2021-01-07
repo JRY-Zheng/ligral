@@ -8,11 +8,11 @@ using System;
 
 namespace Ligral.Component
 {
-    enum ParameterType
+    public enum ParameterType
     {
         Signal, String
     }
-    class Parameter
+    public class Parameter
     {
         public bool Required = true;
         public ParameterType Type;

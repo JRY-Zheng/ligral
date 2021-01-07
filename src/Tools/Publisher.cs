@@ -21,7 +21,7 @@ namespace Ligral.Tools
         [JsonPropertyName("data")]
         public T Data { get; set; }
     }
-    class Publisher
+    public class Publisher
     {
         static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse(Settings.GetInstance().IPAddress);

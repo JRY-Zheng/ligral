@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Ligral
 {
-    enum LogLevel
+    public enum LogLevel
     {
         Debug = 0,
         Info = 1,
@@ -19,7 +19,7 @@ namespace Ligral
         Error = 4,
         Fatal = 5
     }
-    struct LogMessage
+    public struct LogMessage
     {
         public double Time;
         public string Source; 
@@ -37,7 +37,7 @@ namespace Ligral
             return string.Format("{0,-6:0.0000} {1,8} {2,10} {3}", Time, Source, '['+Level.ToString()+']', Message);
         }
     }
-    class Logger : IConfigurable
+    public class Logger : IConfigurable
     {
         public static DateTime StartUpTime = DateTime.Now;
         public static List<LogMessage> Logs = new List<LogMessage>();

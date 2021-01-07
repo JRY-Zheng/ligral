@@ -19,7 +19,7 @@ namespace Ligral.Simulation
             return m.DenseOfRowMajor(list.Count, 1, list);
         }
     }
-    class Problem
+    public class Problem
     {
         private List<Model> routine;
         public Problem(List<Model> routine)

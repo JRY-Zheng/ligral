@@ -6,7 +6,7 @@
 
 namespace Ligral.Component 
 {
-    class InPortVariableModel : Model
+    public class InPortVariableModel : Model
     {
         public override InPort Expose(int inPortNO)
         {

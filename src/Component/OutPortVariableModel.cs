@@ -6,7 +6,7 @@
 
 namespace Ligral.Component
 {
-    class OutPortVariableModel : Model
+    public class OutPortVariableModel : Model
     {
         
         protected override void SetUpPorts()

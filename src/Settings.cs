@@ -16,7 +16,7 @@ namespace Ligral
     {
         void Configure(Dictionary<string, object> dict);
     }
-    class Settings
+    public class Settings
     {
         #region Singleton
         private static Settings settingsInstance;

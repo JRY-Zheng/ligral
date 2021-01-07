@@ -17,7 +17,7 @@ using Ligral.Simulation.Solvers;
 
 namespace Ligral
 {
-    class Program
+    public class Program
     {
         private static Logger logger = new Logger("Main");
         private static string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();

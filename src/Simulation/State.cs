@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Ligral.Simulation
 {
-    class State
+    public class State
     {
         public double StateVariable;
         public double InitialValue;

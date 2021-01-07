@@ -10,7 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
-    class Timer
+    public class Timer
     {
         private DateTime start;
         public double Interval {get; set;}
@@ -23,7 +23,7 @@ namespace Ligral.Simulation
             while((DateTime.Now - start).TotalSeconds < Interval);
         }
     }
-    class FixedStepSolver : Solver
+    public class FixedStepSolver : Solver
     {
         public override void Solve(Problem problem)
         {

@@ -21,7 +21,7 @@ namespace Ligral.Tools
         [JsonPropertyName("label")]
         public int Label {get; set;}
     }
-    class Subscriber
+    public class Subscriber
     {
         static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse(Settings.GetInstance().IPAddress);

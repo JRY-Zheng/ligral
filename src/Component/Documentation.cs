@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Ligral.Component
 {
-    struct ParameterDocument
+    public struct ParameterDocument
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace Ligral.Component
         [JsonPropertyName("type")]
         public string Type { get; set; }
     }
-    struct ModelDocument
+    public struct ModelDocument
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }

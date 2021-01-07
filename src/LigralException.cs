@@ -10,7 +10,7 @@ using Ligral.Component;
 namespace Ligral
 {
     [System.Serializable]
-    class LigralException : System.Exception
+    public class LigralException : System.Exception
     {
         public LigralException() { }
         public LigralException(string message) : base(message) { }
@@ -34,7 +34,7 @@ namespace Ligral
     }
 
     [System.Serializable]
-    class SyntaxException : LigralException
+    internal class SyntaxException : LigralException
     {
         private Token ErrorToken;
         public SyntaxException(Token token, string message="") : base(message) 
@@ -56,11 +56,11 @@ namespace Ligral
     }
 
     [System.Serializable]
-    class SemanticException : LigralException
+    public class SemanticException : LigralException
     {
         private Token ErrorToken;
         // private string errorMessage;
-        public SemanticException(Token token, string message="") : base(message)
+        internal SemanticException(Token token, string message="") : base(message)
         {
             ErrorToken = token;
             // errorMessage = message;
@@ -81,7 +81,7 @@ namespace Ligral
     }
 
     [System.Serializable]
-    class ModelException : LigralException
+    public class ModelException : LigralException
     {
         private Model errorModel;
         // private string errorMessage;
@@ -106,7 +106,7 @@ namespace Ligral
     }
 
     [System.Serializable]
-    class SettingException : LigralException
+    public class SettingException : LigralException
     {
         private string errorSetting;
         private object errorValue;
@@ -130,7 +130,7 @@ namespace Ligral
         }
     }
     [System.Serializable]
-    class OptionException : LigralException
+    public class OptionException : LigralException
     {
         private string errorOption;
         // private string errorMessage;
@@ -152,7 +152,7 @@ namespace Ligral
         }
     }
     [System.Serializable]
-    class CSVFormatError : LigralException
+    public class CSVFormatError : LigralException
     {
         public CSVFormatError(string message) : base(message)
         {

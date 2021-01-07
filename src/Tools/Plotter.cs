@@ -13,11 +13,11 @@ using Ligral.Simulation;
 
 namespace Ligral.Tools
 {
-    enum AxesShapeType
+    public enum AxesShapeType
     {
         Scalar, Vector, Matrix
     }
-    class Figure
+    public class Figure
     {
         public bool Showed 
         {
@@ -59,7 +59,7 @@ namespace Ligral.Tools
         public AxesShapeType AxesShape;
         public Dictionary<int, Curve> Curves = new Dictionary<int, Curve>();
     }
-    class Curve
+    public class Curve
     {
         public List<double> CachedX = new List<double>();
         public List<double> CachedY = new List<double>();
@@ -69,7 +69,7 @@ namespace Ligral.Tools
         public int ColNO;
         public DateTime CachedTime;
     }
-    class Plotter : Subscriber, IConfigurable
+    public class Plotter : Subscriber, IConfigurable
     {
         protected Process PythonProcess;
         protected Dictionary<int, Figure> Figures = new Dictionary<int, Figure>();

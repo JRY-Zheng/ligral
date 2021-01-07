@@ -10,7 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component
 {
-    class InitializeableModel : Model
+    public class InitializeableModel : Model
     {
         protected Signal initial = new Signal();
         protected bool isMatrix {get {return initial.IsMatrix;}}

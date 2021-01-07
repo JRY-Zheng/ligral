@@ -8,7 +8,7 @@ using Dict=System.Collections.Generic.Dictionary<string,object>;
 
 namespace Ligral.Component
 {
-    interface ILinkable
+    public interface ILinkable
     {
         bool IsConfigured {get; set;}
         void Connect(ILinkable linkable)

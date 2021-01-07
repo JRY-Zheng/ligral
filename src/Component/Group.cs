@@ -11,7 +11,7 @@ using Ligral.Component.Models;
 
 namespace Ligral.Component
 {
-    class Group : ILinkable
+    public class Group : ILinkable
     {
         internal List<ILinkable> inputModels = new List<ILinkable>();
         internal List<ILinkable> outputModels = new List<ILinkable>();

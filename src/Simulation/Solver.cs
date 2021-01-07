@@ -9,7 +9,7 @@ using Ligral.Simulation.Solvers;
 
 namespace Ligral.Simulation
 {
-    abstract class Solver
+    public abstract class Solver
     {
         public static double Time;
         public Matrix<double> States;

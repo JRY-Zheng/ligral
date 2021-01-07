@@ -12,7 +12,7 @@ using Ligral.Tools.Protocols;
 
 namespace Ligral.Tools
 {
-    class RTPlotter : Plotter
+    public class RTPlotter : Plotter
     {
         protected double Interval = 2;
         public RTPlotter() : base()

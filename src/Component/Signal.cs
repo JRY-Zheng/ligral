@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Ligral.Component
 {
-    partial class Signal : IEnumerable<double>, IEnumerator<double>, System.IComparable<Signal>
+    public partial class Signal : IEnumerable<double>, IEnumerator<double>, System.IComparable<Signal>
     {
         public string Name
         {

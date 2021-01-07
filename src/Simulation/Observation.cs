@@ -10,7 +10,7 @@ using Ligral.Tools;
 
 namespace Ligral.Simulation
 {
-    class Observation
+    public class Observation
     {
         public static List<double> TimeList = new List<double>();
         public List<double> ObservationList = new List<double>();

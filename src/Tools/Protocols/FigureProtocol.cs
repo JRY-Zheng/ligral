@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Ligral.Tools.Protocols
 {
-    static class FigureProtocol
+    public static class FigureProtocol
     {
         public const int DataFileLabel = 0xfff0;
         public struct DataFile
