@@ -31,5 +31,5 @@ test/
 # soft link 
 ligral
 
-# temporally blocked
-plugins/control
+# backup
+*.bak
