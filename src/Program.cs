@@ -13,7 +13,7 @@ using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
 using Ligral.Component;
 using Ligral.Simulation;
-using Ligral.Simulation.Solvers;
+using Ligral.Extension;
 
 namespace Ligral
 {
