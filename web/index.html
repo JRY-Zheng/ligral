@@ -106,10 +106,10 @@
       <div class="carousel-item active">
        <div class="jumbotron">
         <h1 class="text-center">
-         Ligral 预览版 v0.1.0 已经上线
+         Ligral 正式版 v0.2.1 已经上线
         </h1>
         <p class="lead text-center">
-         此版本仅支持基于标量的仿真和欧拉定步长求解器。
+         此版本支持基于矩阵的仿真和龙格库塔求解器。
         </p>
         <p class="lead text-center">
          <a class="btn btn-primary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/wikis" role="button" target="_blank">
@@ -117,7 +117,7 @@
           </i>
           了解更多
          </a>
-         <a class="btn btn-secondary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta" role="button" target="_blank">
+         <a class="btn btn-secondary btn-lg" href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.1" role="button" target="_blank">
           <i class="fa fa-cloud-download-alt">
           </i>
           下载
@@ -195,11 +195,11 @@
        安装
       </h2>
       <p>
-       目前仅发布了
-       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.1.0-beta" target="_blank">
-        v0.1.0-beta
+       目前发布了
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.1" target="_blank">
+        v0.2.1
        </a>
-       版，如需体验 v0.2.0 版本，请克隆本项目到本地编译。
+       正式版，您也可以克隆本项目到本地编译。
       </p>
       <pre><code>git clone https://gitee.com/junruoyu-zheng/ligral.git
 cd ligral
@@ -414,6 +414,11 @@ conf output_folder = 'out';
          引用依赖
         </a>
        </li>
+       <li>
+        <a href="doc/user-guide/signature.md">
+         接口签名
+        </a>
+       </li>
       </ul>
       <h2>
        开发
@@ -430,13 +435,13 @@ conf output_folder = 'out';
       </p>
       <ul>
        <li>
-        增加龙格库塔求解器
-       </li>
-       <li>
-        支持通过加载插件的方式扩展模块库
+        增加单元测试
        </li>
        <li>
         增加科学计算语法，进行仿真前处理、后处理
+       </li>
+       <li>
+        统一数据格式为矩阵
        </li>
        <li>
         修复 bugs
@@ -477,7 +482,7 @@ conf output_folder = 'out';
        <a class="list-group-item" href="/ligral/product.html">
         产品
        </a>
-       <a class="list-group-item" href="#">
+       <a class="list-group-item" href="/ligral/contact.html">
         联系
        </a>
       </div>

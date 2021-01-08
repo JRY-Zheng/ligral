@@ -14,9 +14,9 @@ Ligral 基于 .NET core 3.1 开发，完美适配 .NET 5，可以运行在 Windo
 
 #### Windows 系统
 
-目前，Ligral v0.2.0 beta 发行版在 [Gitee](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.0-beta) 和 [GitHub](https://github.com/jry-zheng/ligral/releases/v0.2.0-beta) 开放下载。打开链接就可以看到打包好了的 ligral-v0.2.0-beta-win10-x64.exe。
+目前，Ligral v0.2.1 发行版在 [Gitee](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.1) 和 [GitHub](https://github.com/jry-zheng/ligral/releases/v0.2.1) 开放下载。打开链接就可以看到打包好了的 ligral-v0.2.0-beta-win10-x64.exe。
 
-![v0.2.0-beta](figures/v0.2.0-beta.png)
+![v0.2.1-beta](figures/v0.2.1.png)
 
 下载到本地就可以运行了，但是十分建议您创建一个符号链接或者把可执行程序重命名为 ligral.exe，再把 ligral 所在文件夹添加到环境变量。具体操作为
 
