@@ -18,6 +18,7 @@ namespace Ligral.Component
     static class ModelManager
     {
         private static Dictionary<string,int> modelCount = new Dictionary<string, int>();
+        private static Dictionary<string,Dictionary<string,int>> extendedModelCount = new Dictionary<string,Dictionary<string,int>>();
         public static List<Model> ModelPool = new List<Model>();
         private static Logger logger = new Logger("ModelManager");
         public static Dictionary<string,System.Func<Model>> ModelTypePool = new Dictionary<string, System.Func<Model>>()
@@ -97,6 +98,30 @@ namespace Ligral.Component
             model.DefaultName = modelType+modelCount[modelType].ToString();
             model.Scope = Interpreter.ScopeName;
             ModelPool.Add(model);
+            return model;
+        }
+        public static Model Create(ScopedModelType scopedModelType)
+        {
+            string scopeName = scopedModelType.ScopeName;
+            if (!ExtendedModelTypePool.ContainsKey(scopeName))
+            {
+                throw logger.Error(new LigralException($"Plugin {scopeName} not found"));
+            }
+            var mainModelTypePool = ModelTypePool;
+            ModelTypePool = ExtendedModelTypePool[scopeName];
+            var mainModelCount = modelCount;
+            if (extendedModelCount.ContainsKey(scopeName))
+            {
+                modelCount = extendedModelCount[scopeName];
+            }
+            else
+            {
+                modelCount = new Dictionary<string, int>();
+                extendedModelCount[scopeName] = modelCount;
+            }
+            Model model = Create(scopedModelType.ModelName);
+            ModelTypePool = mainModelTypePool;
+            modelCount = mainModelCount;
             return model;
         }
     }

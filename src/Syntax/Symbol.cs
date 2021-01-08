@@ -57,6 +57,8 @@ namespace Ligral.Syntax
             {
             case string modelType:
                 return ModelManager.Create(modelType);
+            case ScopedModelType scopedModelType:
+                return ModelManager.Create(scopedModelType);
             case RouteConstructor routeConstructor:
                 return routeConstructor.Construct();
             case Signature signature:
