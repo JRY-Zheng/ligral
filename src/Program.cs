@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+﻿/* Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
 
    Distributed under MIT license.
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
@@ -122,6 +122,8 @@ Learn more:
             Settings settings = Settings.GetInstance();
             settings.GetDefaultSettings();
             logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
+            PluginLoader pluginLoader = new PluginLoader();
+            pluginLoader.Load();
             if (simulationProject.IsJsonFile is bool isJsonFile && isJsonFile)
             {
                 JsonLoader jsonLoader = new JsonLoader();
@@ -161,6 +163,8 @@ Learn more:
             {
                 logger.Error(new LigralException("Default settings is not valid, ligral exited with errors."));
             }
+            PluginLoader pluginLoader = new PluginLoader();
+            pluginLoader.Load();
             List<Model> models = new List<Model>();
             if (document.ModelName is string modelName)
             {

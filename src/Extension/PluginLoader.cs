@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System;
 using Ligral.Component;
@@ -13,7 +14,23 @@ namespace Ligral.Extension
 {
     class PluginLoader
     {
-        public void Load(string dllFileName)
+        private Logger logger = new Logger("PluginLoader");
+        public void Load()
+        {
+            string executingPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string pluginsFolder = Path.Join(executingPath, "plugins");
+            if (!Directory.Exists(pluginsFolder))
+            {
+                logger.Warn($"No plugin folder was found in dir {executingPath}");
+                return;
+            }
+            foreach (var file in Directory.GetFiles(pluginsFolder))
+            {
+                if (!file.ToUpper().EndsWith(".DLL")) continue;
+                LoadPlugin(file);
+            }
+        }
+        public void LoadPlugin(string dllFileName)
         {
             Assembly assembly = Assembly.LoadFile(dllFileName);
             Type[] types = assembly.GetTypes();
