@@ -4,7 +4,6 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System;

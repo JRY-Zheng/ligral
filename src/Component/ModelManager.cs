@@ -10,6 +10,11 @@ using Ligral.Syntax;
 
 namespace Ligral.Component
 {
+    struct ScopedModelType
+    {
+        public string ScopeName;
+        public string ModelName;
+    }
     static class ModelManager
     {
         private static Dictionary<string,int> modelCount = new Dictionary<string, int>();
@@ -69,7 +74,7 @@ namespace Ligral.Component
             {"VSplit", ()=>new VSplit()},
             {"HSplit", ()=>new HSplit()}
         };
-
+        public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
         {
             Model model;

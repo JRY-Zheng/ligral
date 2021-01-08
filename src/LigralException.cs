@@ -6,6 +6,7 @@
 
 using Ligral.Syntax;
 using Ligral.Component;
+using Ligral.Extension;
 
 namespace Ligral
 {
@@ -141,6 +142,28 @@ namespace Ligral
         public override string ToString()
         {
             string errorMessage = $"Invalid option {errorOption}";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
+    [System.Serializable]
+    public class PluginException : LigralException
+    {
+        private IPlugin errorPlugin;
+        // private string errorMessage;
+        public PluginException(IPlugin plugin, string message="") : base(message)
+        {
+            errorPlugin = plugin;
+        }
+        public override string ToString()
+        {
+            string errorMessage = $"Error occurs in the plugin {errorPlugin.ReferenceName}";
             if (Message!="")
             {
                 return $"{errorMessage}: {Message}";
