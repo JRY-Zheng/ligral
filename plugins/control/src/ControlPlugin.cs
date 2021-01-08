@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Ligral.Component;
 using Ligral.Extension;
+using Ligral.Simulation;
 using LigralPlugins.Control.Models;
 
 namespace LigralPlugins.Control
@@ -18,5 +19,20 @@ namespace LigralPlugins.Control
         {
             {"TestModel", ()=>new TestModel()}
         };
+
+        public string ReferenceName => "control";
+
+        public int MajorVersion => 0;
+
+        public int MinerVersion => 1;
+
+        public int PatchVersion => 0;
+
+        public string Document => "This plugin contains some models for control system domain.";
+
+        public Solver GetSolver(string solverName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

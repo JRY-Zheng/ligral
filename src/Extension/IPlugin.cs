@@ -6,11 +6,18 @@
 
 using System.Collections.Generic;
 using Ligral.Component;
+using Ligral.Simulation;
 
 namespace Ligral.Extension
 {
     public interface IPlugin
     {
+        string ReferenceName {get;}
+        int MajorVersion {get;}
+        int MinerVersion {get;}
+        int PatchVersion {get;}
+        string Document {get;}
         Dictionary<string,System.Func<Model>> ModelTypePool {get;}
+        Solver GetSolver(string solverName);
     }
 }
