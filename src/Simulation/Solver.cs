@@ -6,6 +6,7 @@
 
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation.Solvers;
+using Ligral.Extension;
 
 namespace Ligral.Simulation
 {
@@ -37,7 +38,18 @@ namespace Ligral.Simulation
             case "ode4":
                 return new FixedStepRK4Solver();
             default:
-                throw new SettingException("solver", solverName, "No such solver.");
+                if (solverName.Contains('.'))
+                {
+                    int sep = solverName.IndexOf('.');
+                    string pluginName = solverName.Substring(0, sep);
+                    solverName = solverName.Substring(sep+1);
+                    return PluginManager.GetSolver(solverName, pluginName);
+                }
+                else
+                {
+                    return PluginManager.GetSolver(solverName);
+                }
+                // throw new SettingException("solver", solverName, "No such solver.");
             }
         }
         public abstract void Solve(Problem problem);

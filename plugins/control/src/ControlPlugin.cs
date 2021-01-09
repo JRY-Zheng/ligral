@@ -6,10 +6,12 @@
 
 using System;
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 using Ligral.Extension;
 using Ligral.Simulation;
 using LigralPlugins.Control.Models;
+using LigralPlugins.Control.Solvers;
 
 namespace LigralPlugins.Control
 {
@@ -32,7 +34,13 @@ namespace LigralPlugins.Control
 
         public Solver GetSolver(string solverName)
         {
-            throw new NotImplementedException();
+            switch (solverName)
+            {
+            case "ode2m":
+                return new FixedStepRK2MSolver();
+            default:
+                return null;
+            }
         }
     }
 }
