@@ -13,6 +13,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using Ligral.Component.Models;
 using Ligral.Syntax.ASTs;
 using Ligral.Component;
+using Ligral.Extension;
 
 namespace Ligral.Syntax
 {
@@ -719,6 +720,35 @@ namespace Ligral.Syntax
         }
         private object Visit(ImportAST importAST)
         {
+            try
+            {
+                ImportLocalFile(importAST);
+            }
+            catch (NotFoundException)
+            {
+                string pluginName = Visit(importAST.FileName.First());
+                if (!PluginManager.Plugins.ContainsKey(pluginName))
+                {
+                    throw logger.Error(new SemanticException(importAST.FindToken(), $"No local file nor plugin was found."));
+                }
+                if (importAST.FileName.Count > 1 || importAST.Relative)
+                {
+                    throw logger.Error(new SemanticException(importAST.FindToken(), "Plugin reference does not support path."));
+                }
+                if (importAST.Symbols.Count == 0)
+                {
+                    PluginManager.ImportPlugin(pluginName, currentScope);
+                }
+                else
+                {
+                    List<string> items = importAST.Symbols.ConvertAll(symbol => Visit(symbol));
+                    PluginManager.ImportPlugin(pluginName, currentScope, items);
+                }
+            }
+            return null;
+        }
+        private void ImportLocalFile(ImportAST importAST)
+        {
             ScopeSymbolTable mainScope = currentScope;
             string fileName = string.Join('/', importAST.FileName.ConvertAll(file=>Visit(file)));
             folder = importAST.Relative ? relativeFolder : rootFolder;
@@ -743,14 +773,45 @@ namespace Ligral.Syntax
                 }
                 currentScope = mainScope;
             }
-            return null;
         }
         private object Visit(UsingAST usingAST)
+        {
+            try
+            {
+                UsingLocalFile(usingAST);
+            }
+            catch (NotFoundException)
+            {
+                string pluginName = Visit(usingAST.FileName.First());
+                if (!PluginManager.Plugins.ContainsKey(pluginName))
+                {
+                    throw logger.Error(new SemanticException(usingAST.FindToken(), $"No local file nor plugin was found."));
+                }
+                if (usingAST.FileName.Count > 1 || usingAST.Relative)
+                {
+                    throw logger.Error(new SemanticException(usingAST.FindToken(), "Plugin reference does not support path."));
+                }
+                string module;
+                if (usingAST.ModuleName != null)
+                {
+                    module = Visit(usingAST.ModuleName);
+                }
+                else
+                {
+                    module = pluginName;
+                }
+                PluginManager.UsingPlugin(pluginName, currentScope, module);
+            }
+            return null;
+        }
+        private void UsingLocalFile(UsingAST usingAST)
         {
             string fileName = string.Join('/', usingAST.FileName.ConvertAll(file=>Visit(file)));
             TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
             ScopeSymbolTable mainScope = currentScope;
             ScopeSymbolTable scopeSymbolTable = mainScope;
+            folder = usingAST.Relative ? relativeFolder : rootFolder;
+            Interpret(fileName);
             ScopeSymbol scopeSymbol;
             string module;
             if (usingAST.ModuleName != null)
@@ -783,15 +844,12 @@ namespace Ligral.Syntax
                     }
                 }
             }
-            folder = usingAST.Relative ? relativeFolder : rootFolder;
-            Interpret(fileName);
             scopeSymbol = new ScopeSymbol(module, scopeType, currentScope);
             if (!scopeSymbolTable.Insert(scopeSymbol, false))
             {
                 throw logger.Error(new SemanticException((usingAST.ModuleName??usingAST.FileName.Last()).FindToken(), $"Cannot using {module} since it has already exists."));
             }
             currentScope = mainScope;
-            return null;
         }
         private object Visit(PointerAST pointerAST)
         {

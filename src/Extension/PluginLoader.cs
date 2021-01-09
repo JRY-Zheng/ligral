@@ -38,10 +38,7 @@ namespace Ligral.Extension
                 if (t.GetInterface("IPlugin")!=null)
                 {
                     IPlugin plugin = (IPlugin) assembly.CreateInstance(t.FullName);
-                    foreach (string modelName in plugin.ModelTypePool.Keys)
-                    {
-                        ModelManager.ModelTypePool.Add(modelName, plugin.ModelTypePool[modelName]);
-                    }
+                    PluginManager.Plugins.Add(plugin.ReferenceName, plugin);
                 }
             }
         }
