@@ -70,7 +70,7 @@ namespace Ligral.Syntax
         {
             if (!File.Exists(fileName))
             {
-                throw logger.Error(new LigralException($"File {fileName} not found."));
+                throw logger.Error(new NotFoundException($"File {fileName}"));
             }
             string text = File.ReadAllText(fileName);
             JProject project;
@@ -84,11 +84,11 @@ namespace Ligral.Syntax
             }
             if (project.Settings == null)
             {
-                throw new LigralException("Property `settings` not found.");
+                throw new NotFoundException("Property `settings`");
             }
             if (project.Models == null)
             {
-                throw new LigralException("Property `settings` not found.");
+                throw new NotFoundException("Property `settings`.");
             }
             logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
@@ -101,11 +101,11 @@ namespace Ligral.Syntax
             {
                 if (config.Item == null)
                 {
-                    throw new LigralException("Property `item` not found.");
+                    throw new NotFoundException("Property `item`");
                 }
                 if (config.Value == null)
                 {
-                    throw new LigralException("Property `value` not found.");
+                    throw new NotFoundException("Property `value`");
                 }
                 var jsonElement = (JsonElement) config.Value;
                 switch (jsonElement.ValueKind)
@@ -159,18 +159,18 @@ namespace Ligral.Syntax
         {
             foreach (JModel model in models)
             {
-                Rigister(model);
+                Register(model);
             }
             foreach (JModel model in models)
             {
                 Construct(model);
             }
         }
-        private void Rigister(JModel jModel)
+        private void Register(JModel jModel)
         {
             if (jModel.Type is null) 
             {
-                throw logger.Error(new LigralException("Property `type` not found."));
+                throw logger.Error(new NotFoundException("Property `type`"));
             }
             Model model = ModelManager.Create(jModel.Type);
             if (jModel.Id is null) 
@@ -192,7 +192,7 @@ namespace Ligral.Syntax
             ModelSymbol modelSymbol = symbolTable.Lookup(jModel.Id) as ModelSymbol;
             if (modelSymbol is null)
             {
-                throw logger.Error(new LigralException($"Reference {jModel.Id} not exist"));
+                throw logger.Error(new NotFoundException($"Reference {jModel.Id}"));
             }
             Model model = modelSymbol.GetValue() as Model;
             if (jModel.OutPorts is null) 

@@ -82,6 +82,34 @@ namespace Ligral
     }
 
     [System.Serializable]
+    public class NotFoundException : LigralException
+    {
+        private string item;
+        private string location;
+        // private string errorMessage;
+        internal NotFoundException(string item, string location=null) : base(location == null? $"{item} not found." : $"{item} in {location} not found.")
+        {
+            this.item = item;
+            if (location != null)
+            {
+                this.location = location;
+            }
+        }
+        public override string ToString()
+        {
+            string errorMessage = "Not found";
+            if (Message!="")
+            {
+                return $"{errorMessage}: {Message}";
+            }
+            else
+            {
+                return errorMessage;
+            }
+        }
+    }
+
+    [System.Serializable]
     public class ModelException : LigralException
     {
         private Model errorModel;

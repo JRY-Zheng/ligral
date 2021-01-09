@@ -45,7 +45,7 @@ namespace Ligral.Extension
             }
             else
             {
-                throw logger.Error(new LigralException($"Plugin {pluginName} not found."));
+                throw logger.Error(new NotFoundException($"Plugin {pluginName}"));
             }
         }
         public static void UsingPlugin(string pluginName, ScopeSymbolTable currentScope, string moduleName)
@@ -77,14 +77,14 @@ namespace Ligral.Extension
             }
             else
             {
-                throw logger.Error(new LigralException($"Plugin {pluginName} not found."));
+                throw logger.Error(new NotFoundException($"Plugin {pluginName}"));
             }
         }
         public static Solver GetSolver(string solverName, string pluginName)
         {
             if (!Plugins.ContainsKey(pluginName))
             {
-                throw logger.Error(new LigralException($"Plugin {pluginName} not found."));
+                throw logger.Error(new NotFoundException($"Plugin {pluginName}"));
             }
             else
             {
@@ -102,7 +102,7 @@ namespace Ligral.Extension
                     return solver;
                 }
             }
-            throw logger.Error(new LigralException($"Solver {solverName} not found."));
+            throw logger.Error(new NotFoundException($"Solver {solverName}."));
         }
     }
 }

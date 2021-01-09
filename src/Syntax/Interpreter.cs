@@ -119,7 +119,7 @@ namespace Ligral.Syntax
             }
             catch (IOException)
             {
-                throw logger.Error(new LigralException($"File {fullFileName} not found."));
+                throw logger.Error(new NotFoundException($"File {fullFileName}"));
             }
             relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();

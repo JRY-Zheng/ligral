@@ -105,7 +105,7 @@ namespace Ligral.Component
             string scopeName = scopedModelType.ScopeName;
             if (!ExtendedModelTypePool.ContainsKey(scopeName))
             {
-                throw logger.Error(new LigralException($"Plugin {scopeName} not found"));
+                throw logger.Error(new NotFoundException($"Plugin {scopeName}"));
             }
             var mainModelTypePool = ModelTypePool;
             ModelTypePool = ExtendedModelTypePool[scopeName];
