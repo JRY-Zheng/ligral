@@ -58,8 +58,9 @@ namespace Ligral.Simulation
             if (Starting != null) Starting();
             solverLogger.Info("Simulation started.");
         }
-        public static void OnStepped()
+        public static void OnStepped(double time)
         {
+            Time = time;
             if (Stepped != null) Stepped();
         }
         public static void OnStopped()

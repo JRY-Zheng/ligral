@@ -22,9 +22,6 @@ namespace Ligral.Simulation.Solvers
             var c3 = problem.SystemDynamicFunction(states + c2/2) * stepSize;
             Time = tn + stepSize;
             var c4 = problem.SystemDynamicFunction(states + c3) * stepSize;
-            // clear calculation cache for output
-            Time = tn;
-            problem.SystemDynamicFunction(states);
             return states + (c1+2*c2+2*c3+c4)/6;
         }
     }

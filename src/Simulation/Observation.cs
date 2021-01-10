@@ -15,6 +15,7 @@ namespace Ligral.Simulation
         public static List<double> TimeList = new List<double>();
         public List<double> ObservationList = new List<double>();
         public double OutputVariable {get; private set;}
+        private double cachedOutputVariable;
         private bool isCommitted = true;
         public string Name;
         public static string DataFile;
@@ -61,12 +62,13 @@ namespace Ligral.Simulation
         public void Cache(double value)
         {
             isCommitted = false;
-            OutputVariable = value;
+            cachedOutputVariable = value;
         }
         public void Commit()
         {
             if (!isCommitted)
             {
+                OutputVariable = cachedOutputVariable;
                 ObservationList.Add(OutputVariable);
                 isCommitted = true;
             }
@@ -77,8 +79,6 @@ namespace Ligral.Simulation
         }
         public static void OnStepped()
         {
-            ObservationPool.ForEach(item => item.Item2.Commit());
-            TimeList.Add(Solver.Time);
             if (Stepped != null) Stepped(); 
         }
         public static void OnStopped()

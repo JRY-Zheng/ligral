@@ -17,9 +17,6 @@ namespace Ligral.Simulation.Solvers
             problem.ObservationFunction();
             Time = tn + stepSize;
             var c2 = problem.SystemDynamicFunction(states + c1) * stepSize;
-            // clear calculation cache for output
-            Time = tn;
-            problem.SystemDynamicFunction(states);
             return states + (c1+c2)/2;
         }
     }

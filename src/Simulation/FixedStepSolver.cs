@@ -50,7 +50,7 @@ namespace Ligral.Simulation
                 {
                     timer.Start();
                     States = Step(problem, actualStepSize, States);
-                    Solver.OnStepped();
+                    Solver.OnStepped(Time);
                     thisTime = DateTime.Now;
                     actualStepSize = (thisTime - lastTime).TotalSeconds;
                     logger.Debug($"Calculation comsumed {timer.Interval} second.");
@@ -83,10 +83,11 @@ namespace Ligral.Simulation
             else
             {
                 DateTime LastTime = DateTime.Now;
-                for (Time=0; Time<=settings.StopTime; Time+=settings.StepSize)
+                for (double time = 0; time<=settings.StopTime; time+=settings.StepSize)
                 {
+                    Time = time;
                     States = Step(problem, settings.StepSize, States);
-                    Solver.OnStepped();
+                    Solver.OnStepped(time);
                     logger.Debug($"Calculation comsumed {(DateTime.Now - LastTime).TotalSeconds} seconds.");
                     LastTime = DateTime.Now;
                 }

@@ -6,6 +6,8 @@
 
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
 
@@ -36,6 +38,8 @@ namespace Ligral.Component.Models
         private string varName;
         private double start = 0;
         private double end = 0;
+        private int rowNo;
+        private int colNo;
         private Signal inputSignal;
         private List<Observation> observations = new List<Observation>();
         protected override void SetUpPorts()
@@ -83,7 +87,7 @@ namespace Ligral.Component.Models
                 }
             }
             length = varName.Length;
-            (int rowNo, int colNo) = inputSignal.Shape();
+            (rowNo, colNo) = inputSignal.Shape();
             if (inputSignal.IsMatrix)
             {
                 for(int i = 0; i < rowNo; i++)
@@ -109,8 +113,25 @@ namespace Ligral.Component.Models
         }
         public override void Refresh()
         {
-            if (Solver.Time > end || Solver.Time < start) return;
-            logger.Prompt(string.Format(format, Solver.Time, varName, inputSignal.ToStringInLine()));
+            Signal outputVariableSignal = new Signal();
+            if (rowNo==0 && colNo==0)
+            {
+                outputVariableSignal.Pack(observations[0].OutputVariable);
+            }
+            else
+            {
+                IEnumerable<double> row = observations.ConvertAll(observation => observation.OutputVariable);
+                MatrixBuilder<double> m = Matrix<double>.Build;
+                Matrix<double> mat = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
+                for (int i = 1; i < rowNo; i++)
+                {
+                    row = row.Skip(colNo);
+                    Matrix<double> vec = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
+                    mat = mat.Stack(vec);
+                }
+                outputVariableSignal.Pack(mat);
+            }
+            logger.Prompt(string.Format(format, Solver.Time, varName, outputVariableSignal.ToStringInLine()));
         }
     }
 }
