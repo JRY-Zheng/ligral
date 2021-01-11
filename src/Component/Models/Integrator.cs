@@ -38,6 +38,10 @@ namespace Ligral.Component.Models
         {
             if (isMatrix && inputSignal.IsMatrix)
             {
+                if (inputSignal.Shape() != (rowNo, colNo))
+                {
+                    throw logger.Error(new ModelException(this, $"Matrix shape inconsistency: {inputSignal.Shape()} received, which should be ({rowNo}, {colNo})"));
+                }
                 inputSignal.ZipApply<State>(states, (deriv, state) => {
                     state.Derivative = deriv;
                 });
