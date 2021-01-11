@@ -801,6 +801,7 @@ namespace Ligral.Syntax
                     module = pluginName;
                 }
                 PluginManager.UsingPlugin(pluginName, currentScope, module);
+                logger.Solve();
             }
             return null;
         }

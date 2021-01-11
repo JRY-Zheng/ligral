@@ -36,6 +36,14 @@ namespace Ligral
         {
             return string.Format("{0,-6:0.0000} {1,8} {2,10} {3}", Time, Source, '['+Level.ToString()+']', Message);
         }
+        public void Solve()
+        {
+            if (Level == LogLevel.Error)
+            {
+                Level = LogLevel.Debug;
+                Message = "Error is solved: " + Message;
+            }
+        }
     }
     public class Logger : IConfigurable
     {
@@ -103,10 +111,24 @@ namespace Ligral
         }
         public LigralException Error(LigralException exception)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Log(new LogMessage(source, LogLevel.Error, exception.ToString()));
-            Console.ForegroundColor = defaultForeGroundColor;
+            Logs.Add(new LogMessage(source, LogLevel.Error, exception.ToString()));
             return exception;
+        }
+        public void Solve()
+        {
+            foreach (var message in Logs.FindAll(msg => msg.Level == LogLevel.Error))
+            {
+                message.Solve();
+            }
+        }
+        public void Throw()
+        {
+            foreach (var message in Logs.FindAll(msg => msg.Level == LogLevel.Error))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Log(message, false);
+                Console.ForegroundColor = defaultForeGroundColor;
+            }
         }
         public void Fatal(Exception exception)
         {

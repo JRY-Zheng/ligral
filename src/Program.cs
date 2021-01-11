@@ -33,6 +33,7 @@ namespace Ligral
                 }
                 catch (LigralException)
                 {
+                    logger.Throw();
                     logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
                 }
                 catch (Exception e)
@@ -50,7 +51,7 @@ namespace Ligral
             case Help help:
                 Console.WriteLine(@"Help on ligral:
 Root:
-    Posotion parameter: 
+    Position parameter: 
         FileName            required string
             if is file      interpret the file and run simulation.
             or is folder    the folder must be a package.
