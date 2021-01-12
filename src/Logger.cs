@@ -19,7 +19,7 @@ namespace Ligral
         Error = 4,
         Fatal = 5
     }
-    public struct LogMessage
+    public class LogMessage
     {
         public double Time;
         public string Source; 

@@ -309,6 +309,26 @@ namespace Ligral.Component
                 throw logger.Error(new LigralException("Double cannot be compared with matrix"));
             }
         }
+        public static Signal operator+(Signal signal)
+        {
+            Signal _signal = new Signal();
+            _signal.Clone(signal);
+            return _signal;
+        }
+        public static Signal operator-(Signal signal)
+        {
+            Signal _signal = new Signal();
+            switch (signal.Unpack())
+            {
+            case double value:
+                _signal.Pack(-value);
+                break;
+            case Matrix<double> matrix:
+                _signal.Pack(-matrix);
+                break;
+            }
+            return _signal;
+        }
         public static Signal operator+(Signal left, Signal right)
         {
             if (left.IsMatrix)
