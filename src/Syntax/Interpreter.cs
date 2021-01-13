@@ -298,7 +298,14 @@ namespace Ligral.Syntax
                 {
                     _matrix = DenseMatrix.Create(1, 1, (double)obj);
                 }
-                matrix = matrix.Append(_matrix);
+                try
+                {
+                    matrix = matrix.Append(_matrix);
+                }
+                catch (System.ArgumentException e)
+                {
+                    throw logger.Error(new SemanticException(item.FindToken(), e.Message));
+                }
             }
             return matrix;
         }
@@ -315,7 +322,14 @@ namespace Ligral.Syntax
             }
             foreach(RowAST row in matrixAST.Rows.GetRange(1, matrixAST.Rows.Count-1))
             {
-                matrix = matrix.Stack(Visit(row));
+                try
+                {
+                    matrix = matrix.Stack(Visit(row));
+                }
+                catch (System.ArgumentException e)
+                {
+                    throw logger.Error(new SemanticException(row.FindToken(), e.Message));
+                }
             }
             return matrix;
         }
@@ -547,42 +561,37 @@ namespace Ligral.Syntax
             ILinkable left = leftObject as ILinkable;
             object rightObject = Visit(binOpAST.Right);
             ILinkable right = rightObject as ILinkable;
-            switch (binOpAST.Operator.Value)
+            try
             {
-            case "+":
-                return left.Add(right);
-            case "-":
-                return left.Subtract(right);
-            case "*":
-                return left.Multiply(right);
-            case "/":
-                return left.Divide(right);
-            case "^":
-                return left.Power(right);
-            case ".*":
-                return left.BroadcastMultiply(right);
-            case "./":
-                return left.BroadcastDivide(right);
-            case ".^":
-                return left.BroadcastPower(right);
-            // case "+":
-            //     return left+right;
-            // case "-":
-            //     return left-right;
-            // case "*":
-            //     return left*right;
-            // case "/":
-            //     return left/right;
-            // case "^":
-            //     return left^right;
-            // case ".*":
-            //     return left*right;
-            // case "./":
-            //     return left/right;
-            // case ".^":
-            //     return left^right;
-            default:
-                throw logger.Error(new SemanticException(binOpAST.FindToken(), "Invalid operator"));
+                switch (binOpAST.Operator.Value)
+                {
+                case "+":
+                    return left.Add(right);
+                case "-":
+                    return left.Subtract(right);
+                case "*":
+                    return left.Multiply(right);
+                case "/":
+                    return left.Divide(right);
+                case "^":
+                    return left.Power(right);
+                case ".*":
+                    return left.BroadcastMultiply(right);
+                case "./":
+                    return left.BroadcastDivide(right);
+                case ".^":
+                    return left.BroadcastPower(right);
+                default:
+                    throw logger.Error(new SemanticException(binOpAST.FindToken(), "Invalid operator"));
+                }
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new SemanticException(binOpAST.FindToken(), "Calculation fault"));
+            }
+            catch (System.Exception e)
+            {
+                throw logger.Error(new SemanticException(binOpAST.FindToken(), e.Message));
             }
         }
         private Group Visit(UnaryOpAST unaryOpAST)
@@ -602,41 +611,52 @@ namespace Ligral.Syntax
         {
             Signal left = new Signal(Visit(valBinOpAST.Left));
             Signal right = new Signal(Visit(valBinOpAST.Right));
-            switch (valBinOpAST.Operator.Value)
+            try
             {
-            case "+":
-                return (left+right).Unpack();
-            case "-":
-                return (left-right).Unpack();
-            case "*":
-                return (left*right).Unpack();
-            case "/":
-                if (right.Unpack() is double v && v == 0)
+                switch (valBinOpAST.Operator.Value)
                 {
-                    throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
+                case "+":
+                    return (left+right).Unpack();
+                case "-":
+                    return (left-right).Unpack();
+                case "*":
+                    return (left*right).Unpack();
+                case "/":
+                    if (right.Unpack() is double v && v == 0)
+                    {
+                        throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
+                    }
+                    return (left/right).Unpack();
+                case "^":
+                    return (left.RaiseToPower(right)).Unpack();
+                case ".*":
+                    return (left.BroadcastMultiply(right)).Unpack();
+                case "./":
+                    return (left.BroadcastDivide(right)).Unpack();
+                case ".^":
+                    return (left.BroadcastPower(right)).Unpack();
+                default:
+                    throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
                 }
-                return (left/right).Unpack();
-            case "^":
-                return (left.RaiseToPower(right)).Unpack();
-            case ".*":
-                return (left.BroadcastMultiply(right)).Unpack();
-            case "./":
-                return (left.BroadcastDivide(right)).Unpack();
-            case ".^":
-                return (left.BroadcastPower(right)).Unpack();
-            default:
-                throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Calculation fault"));
+            }
+            catch (System.Exception e)
+            {
+                throw logger.Error(new SemanticException(valBinOpAST.FindToken(), e.Message));
             }
         }
-        private double Visit(ValUnaryOpAST valUnaryOpAST)
+        private object Visit(ValUnaryOpAST valUnaryOpAST)
         {
-            double value = (double) Visit(valUnaryOpAST.Value);
+            Signal signal = new Signal(Visit(valUnaryOpAST.Value));
             switch (valUnaryOpAST.Operator.Value)
             {
             case "+":
-                return +value;
+                return (+signal).Unpack();
             case "-":
-                return -value;
+                return (-signal).Unpack();
             default:
                 throw logger.Error(new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator"));
             }
@@ -656,7 +676,14 @@ namespace Ligral.Syntax
             if (!confAST.Nested)
             {
                 Settings settings = Settings.GetInstance();
-                settings.AddSetting(id, value);
+                try
+                {
+                    settings.AddSetting(id, value);
+                }
+                catch (LigralException)
+                {
+                    throw logger.Error(new SemanticException(confAST.FindToken()));
+                }
             }
             var dict = new Dictionary<string, object>();
             dict.Add(id, value);
@@ -693,7 +720,7 @@ namespace Ligral.Syntax
                 symbol = new DigitSymbol(id, typeSymbol, val);
                 break;
             default:
-                throw logger.Error(new SemanticException(fromOpAST.FindToken(), "Only digit is accepted"));
+                throw logger.Error(new SemanticException(fromOpAST.FindToken(), "Only number or matrix is accepted"));
             }
             if (!currentScope.Insert(symbol, false))
             {
@@ -707,7 +734,14 @@ namespace Ligral.Syntax
             ILinkable destination = Visit(gotoOpAST.Destination) as ILinkable;
             if (source!=null && destination!=null)
             {
-                source.Connect(destination);
+                try
+                {
+                    source.Connect(destination);
+                }
+                catch (LigralException)
+                {
+                    throw logger.Error(new SemanticException(gotoOpAST.FindToken()));
+                }
             }
             else
             {
@@ -731,18 +765,26 @@ namespace Ligral.Syntax
                 {
                     throw logger.Error(new SemanticException(importAST.FindToken(), $"No local file nor plugin was found."));
                 }
+                logger.Solve();
                 if (importAST.FileName.Count > 1 || importAST.Relative)
                 {
                     throw logger.Error(new SemanticException(importAST.FindToken(), "Plugin reference does not support path."));
                 }
-                if (importAST.Symbols.Count == 0)
+                try
                 {
-                    PluginManager.ImportPlugin(pluginName, currentScope);
+                    if (importAST.Symbols.Count == 0)
+                    {
+                        PluginManager.ImportPlugin(pluginName, currentScope);
+                    }
+                    else
+                    {
+                        List<string> items = importAST.Symbols.ConvertAll(symbol => Visit(symbol));
+                        PluginManager.ImportPlugin(pluginName, currentScope, items);
+                    }
                 }
-                else
+                catch (PluginException)
                 {
-                    List<string> items = importAST.Symbols.ConvertAll(symbol => Visit(symbol));
-                    PluginManager.ImportPlugin(pluginName, currentScope, items);
+                    throw logger.Error(new SemanticException(importAST.FindToken(), $"Cannot import plugin {pluginName}"));
                 }
             }
             return null;
@@ -787,6 +829,7 @@ namespace Ligral.Syntax
                 {
                     throw logger.Error(new SemanticException(usingAST.FindToken(), $"No local file nor plugin was found."));
                 }
+                logger.Solve();
                 if (usingAST.FileName.Count > 1 || usingAST.Relative)
                 {
                     throw logger.Error(new SemanticException(usingAST.FindToken(), "Plugin reference does not support path."));
@@ -800,8 +843,14 @@ namespace Ligral.Syntax
                 {
                     module = pluginName;
                 }
-                PluginManager.UsingPlugin(pluginName, currentScope, module);
-                logger.Solve();
+                try
+                {
+                    PluginManager.UsingPlugin(pluginName, currentScope, module);
+                }
+                catch (PluginException)
+                {
+                    throw logger.Error(new SemanticException(usingAST.FindToken(), $"Cannot using plugin {pluginName}"));
+                }
             }
             return null;
         }

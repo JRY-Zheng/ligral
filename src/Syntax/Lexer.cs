@@ -231,7 +231,7 @@ namespace Ligral.Syntax
             else if (currentChar=='-'&&Peek()=='>')
             {
                 Advance(2);
-                return new StringToken(TokenType.GOTO, "->", lineNO, columnNO, file);
+                return new OperantToken(TokenType.GOTO, "->", lineNO, columnNO, file);
             }
             else if (currentChar=='<'&&Peek()=='-')
             {
@@ -239,7 +239,7 @@ namespace Ligral.Syntax
                 // replaced by `=`
                 // in v0.3.0 or higher logic expression will be supported
                 Advance(2);
-                return new StringToken(TokenType.FROM, "<-", lineNO, columnNO, file);
+                return new OperantToken(TokenType.FROM, "<-", lineNO, columnNO, file);
             }
             else if (currentChar=='=')
             {

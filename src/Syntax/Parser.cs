@@ -259,8 +259,9 @@ namespace Ligral.Syntax
             AST nodeExprAST = NodeExpr(true);
             while (currentToken.Type==TokenType.GOTO)
             {
+                OperantToken gotoToken = (OperantToken) currentToken;
                 Eat(TokenType.GOTO);
-                nodeExprAST = new GotoOpAST(nodeExprAST, NodeExpr(false));
+                nodeExprAST = new GotoOpAST(nodeExprAST, NodeExpr(false), gotoToken);
             }
             return new ChainAST(nodeExprAST);
         }
