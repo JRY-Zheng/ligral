@@ -188,7 +188,7 @@ Windows 系统可以从 [python 官网](https://www.python.org/downloads/windows
     sys:x[position] -> Scope;
     (sys:x, sys:v[velocity]) -> PhaseDiagram;
 
-其中`#`开头的语句是注释，执行中被忽略。更详尽的代码注释请看 examples 文件夹中的工程文件。您可以先尝试着复制这段代码粘贴到 test_msd.lig 文件中，并运行。您将看到这样的结果：
+其中`#`开头的语句是注释，执行中被忽略。更详尽的代码注释请看 examples 文件夹中的工程文件。您可以先尝试着复制这段代码粘贴到 test_msd.lig 文件中，并运行`ligral test_msd.lig`。您将看到这样的结果：
 
 ![ligral 运行动图!!](figures/mass-spring-damper.gif)
 
