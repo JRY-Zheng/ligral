@@ -12,7 +12,7 @@
 
 Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
 
-**版本**：v0.2.0
+**版本**：v0.2.1
 
 ## 安装
 
@@ -34,20 +34,34 @@ Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行�
 
 支持以下参数：
 
-|参数|作用|
-|--|--|
-|  -o, --output  | 输出重定向至给定文件夹 |
-|  -d, --doc     | 展示指定节点的文档 |
-|  -D, --docs    | 展示所有节点文档 |
-|  -h            | 展示示例程序 |
-|  -s, --size    | 设置仿真步长 |
-|  -t, --time    | 设置仿真时长 |
-|  --help        | 展示帮助 |
-|  --version     | 展示版本信息 |
+|   参数        | 作用           |
+|   --          | --            |
+|  -h, --help   | 展示帮助       |
+| -v, --version | 展示版本信息   |
+
+支持`doc`命令，该命令的别名为`document`，输出模块的文档或定义文件。该命令支持的参数有：
+
+|   参数        |   作用        |
+|   --          |   --         |
+|  [ModelName]? |指定输出某个`Model`的文档或定义文件，如果缺省则输出所有`Model`的定义文件         |
+|  -j, --json [bool]?    | 指定输出定义文件，如果缺省布尔值默认为`true`，如果缺省参数默认为输出文档|
+|  -o, --output [Folder] | 输出重定向至给定文件夹，仅在输出定义文件时有效                        |
+
+运行仿真需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
+
+|   参数        | 作用           |
+|   --          | --            |
+|  [ProjectFileName] |  仿真工程文件，只能是`.lig`和`.lig.json`文件      |
+|  -s, --step-size [StepSize]    | 设置仿真步长，仅在定步长求解器中生效   |
+|  -t, --stop-time [StopTime]    | 设置仿真时长 |
+|  -j, --json [bool]?    | 指定输入`.lig.json`文件，默认为输入`.lig`文件 |
+|  -o, --output [Folder] | 仿真输出重定向至给定文件夹                    |
+
+*注意：仿真工程文件的后缀名可以不是`.lig`或`.lig.json`，但建议使用标准后缀名。如果仿真文件后缀名为`.lig`，如`main.lig`，且所在文件夹不包含名为`main`的子文件夹，运行`ligral main`也可以，但是不建议这么用。如果仿真工程文件恰好命名为`doc.lig`，运行`ligral doc`会导致`ligral`将其识别成`doc`命令。*
 
 ## 依赖
 
-绘图模块`Scope`和`PhaseDiagram`需要 python 3 支持，且需要numpy、matplotlib、pandas包。
+如果启用内部绘图工具（`InnerPlotter`），绘图模块`Scope`和`PhaseDiagram`需要 python 3 支持，且需要numpy、matplotlib、pandas包。
 
 ## 示例
 

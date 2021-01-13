@@ -189,7 +189,7 @@
        <strong>
         版本
        </strong>
-       ：v0.2.0
+       ：v0.2.1
       </p>
       <h2>
        安装
@@ -242,55 +242,7 @@ dotnet build
        <tbody>
         <tr>
          <td>
-          -o, --output
-         </td>
-         <td>
-          输出重定向至给定文件夹
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -d, --doc
-         </td>
-         <td>
-          展示指定节点的文档
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -D, --docs
-         </td>
-         <td>
-          展示所有节点文档
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -h
-         </td>
-         <td>
-          展示示例程序
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -s, --size
-         </td>
-         <td>
-          设置仿真步长
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -t, --time
-         </td>
-         <td>
-          设置仿真时长
-         </td>
-        </tr>
-        <tr>
-         <td>
-          --help
+          -h, --help
          </td>
          <td>
           展示帮助
@@ -298,7 +250,7 @@ dotnet build
         </tr>
         <tr>
          <td>
-          --version
+          -v, --version
          </td>
          <td>
           展示版本信息
@@ -306,11 +258,194 @@ dotnet build
         </tr>
        </tbody>
       </table>
+      <p>
+       支持
+       <code>
+        doc
+       </code>
+       命令，该命令的别名为
+       <code>
+        document
+       </code>
+       ，输出模块的文档或定义文件。该命令支持的参数有：
+      </p>
+      <table>
+       <thead>
+        <tr>
+         <th>
+          参数
+         </th>
+         <th>
+          作用
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          [ModelName]?
+         </td>
+         <td>
+          指定输出某个
+          <code>
+           Model
+          </code>
+          的文档或定义文件，如果缺省则输出所有
+          <code>
+           Model
+          </code>
+          的定义文件
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -j, --json [bool]?
+         </td>
+         <td>
+          指定输出定义文件，如果缺省布尔值默认为
+          <code>
+           true
+          </code>
+          ，如果缺省参数默认为输出文档
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -o, --output [Folder]
+         </td>
+         <td>
+          输出重定向至给定文件夹，仅在输出定义文件时有效
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       运行仿真需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
+      </p>
+      <table>
+       <thead>
+        <tr>
+         <th>
+          参数
+         </th>
+         <th>
+          作用
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          [ProjectFileName]
+         </td>
+         <td>
+          仿真工程文件，只能是
+          <code>
+           .lig
+          </code>
+          和
+          <code>
+           .lig.json
+          </code>
+          文件
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -s, --step-size [StepSize]
+         </td>
+         <td>
+          设置仿真步长，仅在定步长求解器中生效
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -t, --stop-time [StopTime]
+         </td>
+         <td>
+          设置仿真时长
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -j, --json [bool]?
+         </td>
+         <td>
+          指定输入
+          <code>
+           .lig.json
+          </code>
+          文件，默认为输入
+          <code>
+           .lig
+          </code>
+          文件
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -o, --output [Folder]
+         </td>
+         <td>
+          仿真输出重定向至给定文件夹
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <em>
+        注意：仿真工程文件的后缀名可以不是
+        <code>
+         .lig
+        </code>
+        或
+        <code>
+         .lig.json
+        </code>
+        ，但建议使用标准后缀名。如果仿真文件后缀名为
+        <code>
+         .lig
+        </code>
+        ，如
+        <code>
+         main.lig
+        </code>
+        ，且所在文件夹不包含名为
+        <code>
+         main
+        </code>
+        的子文件夹，运行
+        <code>
+         ligral main
+        </code>
+        也可以，但是不建议这么用。如果仿真工程文件恰好命名为
+        <code>
+         doc.lig
+        </code>
+        ，运行
+        <code>
+         ligral doc
+        </code>
+        会导致
+        <code>
+         ligral
+        </code>
+        将其识别成
+        <code>
+         doc
+        </code>
+        命令。
+       </em>
+      </p>
       <h2>
        依赖
       </h2>
       <p>
-       绘图模块
+       如果启用内部绘图工具（
+       <code>
+        InnerPlotter
+       </code>
+       ），绘图模块
        <code>
         Scope
        </code>
