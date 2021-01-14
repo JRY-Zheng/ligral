@@ -300,19 +300,43 @@
        </li>
       </ul>
       <h3>
-       实时绘图
+       求解器
       </h3>
       <p>
        <strong>
         定义：
        </strong>
-       该项设置了绘图模块是否应实时发送数据至绘图工具，从而实现实时绘图。一般在实时仿真时使用，但目前 ligral 尚未支持实时仿真。
+       该项设置了仿真采用的求解器。目前支持的求解器包括：
+       <code>
+        ode1
+       </code>
+       (
+       <code>
+        euler
+       </code>
+       )、
+       <code>
+        ode2
+       </code>
+       、
+       <code>
+        ode2m
+       </code>
+       、
+       <code>
+        ode4
+       </code>
+       等，其中
+       <code>
+        ode2m
+       </code>
+       在 control 包中实现。
       </p>
       <p>
        <strong>
         默认：
        </strong>
-       不实时绘图。
+       ode4
       </p>
       <p>
        <strong>
@@ -323,25 +347,23 @@
        <li>
         可以在 lig 文件中写下
         <code>
-         conf realtime_draw = true;
+         conf solver = 'ode2';
         </code>
-        ，启用实时绘图。
+        ，设置求解器。
        </li>
       </ul>
       <h3>
-       内部绘图工具
+       实时仿真
       </h3>
       <p>
        <strong>
         定义：
        </strong>
-       该项设置了绘图模块是否应发送数据至内部绘图工具，不通过网关。目前该功能需要 python 3 支持。
-      </p>
-      <p>
+       该项设置了是否启用实时仿真。如果启用实时仿真，求解器必须数定步长求解器。如果启用了内部绘图模块，会自动调用实时绘图模块，如果使用外部绘图，则会实时发送数据至绘图工具，从而实现实时绘图。
        <strong>
         默认：
        </strong>
-       不使用内部绘图工具。
+       非实时仿真。
       </p>
       <p>
        <strong>
@@ -352,19 +374,19 @@
        <li>
         可以在 lig 文件中写下
         <code>
-         conf enable_inner_plotter = true;
+         conf realtime = true;
         </code>
-        ，启用内部绘图工具。
+        ，启用实时仿真。
        </li>
       </ul>
       <h3>
-       实时绘图
+       Python 解释器
       </h3>
       <p>
        <strong>
         定义：
        </strong>
-       该项设置了 Python 可执行程序的路径和文件名，如果已经在系统目录，也可以只指定文件名。在 Windows 系统下，默认的 python 即可，在 Linux 下一般需要改成 python3。未来可能考虑识别系统信息，修改默认值。
+       该项设置了 Python 可执行程序的路径（含文件名），如果已经在系统目录，也可以只指定文件名。在 Windows 系统下，默认的 python 即可，在 Linux 下一般需要改成 python3。未来可能考虑识别系统信息，修改默认值。
       </p>
       <p>
        <strong>
@@ -383,7 +405,229 @@
         <code>
          conf python = 'python';
         </code>
-        ，启用实时绘图。
+        ，设置解释器可执行文件路径。
+       </li>
+      </ul>
+      <h3>
+       内部绘图工具
+      </h3>
+      <p>
+       <strong>
+        定义：
+       </strong>
+       该项是一个设置集合，用来设置内部绘图工具的一些属性。
+      </p>
+      <p>
+       <strong>
+        设置项：
+       </strong>
+       ：
+      </p>
+      <ul>
+       <li>
+        <code>
+         enable
+        </code>
+        ：设置是否启用内部绘图模块
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        不启用
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf inner_plotter.enable = true;
+        </code>
+       </li>
+       <li>
+        <code>
+         output_script
+        </code>
+        ：设置是否将绘制图像的脚本保存，仅在非实时仿真有效
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        不输出脚本
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf inner_plotter.output_script = true;
+        </code>
+       </li>
+       <li>
+        <code>
+         save_figure
+        </code>
+        ：设置是否将绘制的图像保存
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        不保存图像
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf inner_plotter.save_figure = true;
+        </code>
+       </li>
+      </ul>
+      <h3>
+       日志系统
+      </h3>
+      <p>
+       <strong>
+        定义：
+       </strong>
+       该项是一个设置集合，用来设置日志系统的一些属性。
+      </p>
+      <p>
+       <strong>
+        设置项：
+       </strong>
+       ：
+      </p>
+      <ul>
+       <li>
+        <code>
+         print_out
+        </code>
+        ：设置是否将日志输出到屏幕
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        是
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf logger.print_out = true;
+        </code>
+       </li>
+       <li>
+        <code>
+         min_print_out_level
+        </code>
+        ：设置将日志输出到屏幕的最低等级（从低到高依次为
+        <code>
+         debug
+        </code>
+        、
+        <code>
+         info
+        </code>
+        、
+        <code>
+         warning
+        </code>
+        、
+        <code>
+         prompt
+        </code>
+        、
+        <code>
+         error
+        </code>
+        、
+        <code>
+         fatal
+        </code>
+        ）
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        <code>
+         warning
+        </code>
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf logger.min_print_out_level = 'warning';
+        </code>
+       </li>
+       <li>
+        <code>
+         min_log_file_level
+        </code>
+        ：设置将日志输出到文件的最低等级
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        <code>
+         info
+        </code>
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf logger.min_log_file_level = 'info';
+        </code>
+       </li>
+       <li>
+        <code>
+         print_out_plain_text
+        </code>
+        ：设置是否将日志元信息（如时间戳、发送方等）输出到屏幕
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        否
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf logger.print_out_plain_text = false;
+        </code>
+       </li>
+       <li>
+        <code>
+         log_file
+        </code>
+        ：设置日志输出文件，如果为空则不输出
+       </li>
+       <li>
+        <strong>
+         默认：
+        </strong>
+        是
+       </li>
+       <li>
+        <strong>
+         设置方法：
+        </strong>
+        <code>
+         conf logger.log_file = 'ligral.log';
+        </code>
        </li>
       </ul>
      </article>

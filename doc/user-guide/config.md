@@ -65,32 +65,69 @@
 
 - 可以在 lig 文件中写下`conf port = 8783;`，将端口设置为 8783。
 
-### 实时绘图
+### 求解器
 
-**定义：** 该项设置了绘图模块是否应实时发送数据至绘图工具，从而实现实时绘图。一般在实时仿真时使用，但目前 ligral 尚未支持实时仿真。
+**定义：** 该项设置了仿真采用的求解器。目前支持的求解器包括：`ode1`(`euler`)、`ode2`、`ode2m`、`ode4`等，其中`ode2m`在 control 包中实现。
 
-**默认：** 不实时绘图。
-
-**设置方法：**
-
-- 可以在 lig 文件中写下`conf realtime_draw = true;`，启用实时绘图。
-
-### 内部绘图工具
-
-**定义：** 该项设置了绘图模块是否应发送数据至内部绘图工具，不通过网关。目前该功能需要 python 3 支持。
-
-**默认：** 不使用内部绘图工具。
+**默认：** ode4
 
 **设置方法：**
 
-- 可以在 lig 文件中写下`conf enable_inner_plotter = true;`，启用内部绘图工具。
+- 可以在 lig 文件中写下`conf solver = 'ode2';`，设置求解器。
 
-### 实时绘图
+### 实时仿真
 
-**定义：** 该项设置了 Python 可执行程序的路径和文件名，如果已经在系统目录，也可以只指定文件名。在 Windows 系统下，默认的 python 即可，在 Linux 下一般需要改成 python3。未来可能考虑识别系统信息，修改默认值。
+**定义：** 该项设置了是否启用实时仿真。如果启用实时仿真，求解器必须数定步长求解器。如果启用了内部绘图模块，会自动调用实时绘图模块，如果使用外部绘图，则会实时发送数据至绘图工具，从而实现实时绘图。
+**默认：** 非实时仿真。
+
+**设置方法：**
+
+- 可以在 lig 文件中写下`conf realtime = true;`，启用实时仿真。
+
+### Python 解释器
+
+**定义：** 该项设置了 Python 可执行程序的路径（含文件名），如果已经在系统目录，也可以只指定文件名。在 Windows 系统下，默认的 python 即可，在 Linux 下一般需要改成 python3。未来可能考虑识别系统信息，修改默认值。
 
 **默认：** python
 
 **设置方法：**
 
-- 可以在 lig 文件中写下`conf python = 'python';`，启用实时绘图。
+- 可以在 lig 文件中写下`conf python = 'python';`，设置解释器可执行文件路径。
+
+### 内部绘图工具
+
+**定义：** 该项是一个设置集合，用来设置内部绘图工具的一些属性。
+
+**设置项：** ：
+
+- `enable`：设置是否启用内部绘图模块
+  - **默认：** 不启用
+  - **设置方法：** `conf inner_plotter.enable = true;`
+- `output_script`：设置是否将绘制图像的脚本保存，仅在非实时仿真有效
+  - **默认：** 不输出脚本
+  - **设置方法：** `conf inner_plotter.output_script = true;`
+- `save_figure`：设置是否将绘制的图像保存
+  - **默认：** 不保存图像
+  - **设置方法：** `conf inner_plotter.save_figure = true;`
+
+### 日志系统
+
+**定义：** 该项是一个设置集合，用来设置日志系统的一些属性。
+
+**设置项：** ：
+
+- `print_out`：设置是否将日志输出到屏幕
+  - **默认：** 是
+  - **设置方法：** `conf logger.print_out = true;`
+- `min_print_out_level`：设置将日志输出到屏幕的最低等级（从低到高依次为`debug`、`info`、`warning`、`prompt`、`error`、`fatal`）
+  - **默认：** `warning`
+  - **设置方法：** `conf logger.min_print_out_level = 'warning';`
+- `min_log_file_level`：设置将日志输出到文件的最低等级
+  - **默认：** `info`
+  - **设置方法：** `conf logger.min_log_file_level = 'info';`
+- `print_out_plain_text`：设置是否将日志元信息（如时间戳、发送方等）输出到屏幕
+  - **默认：** 否
+  - **设置方法：** `conf logger.print_out_plain_text = false;`
+- `log_file`：设置日志输出文件，如果为空则不输出
+  - **默认：** 是
+  - **设置方法：** `conf logger.log_file = 'ligral.log';`
