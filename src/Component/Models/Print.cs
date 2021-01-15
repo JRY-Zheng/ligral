@@ -113,6 +113,7 @@ namespace Ligral.Component.Models
         }
         public override void Refresh()
         {
+            if (Solver.Time > end || Solver.Time < start) return;
             Signal outputVariableSignal = new Signal();
             if (rowNo==0 && colNo==0)
             {
