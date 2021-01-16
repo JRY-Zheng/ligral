@@ -10,6 +10,8 @@
 
 ![LOGO](https://sued-wind.cc/static/img/ligral/ligral.png)
 
+[English version](README_en.md)
+
 Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
 
 **版本**：v0.2.1
@@ -27,12 +29,7 @@ Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行�
 
 ## 使用
 
-使用以下语句运行`.lig`文件：
-
-    ligral path/file.lig
-
-
-支持以下参数：
+运行`ligral`会看到欢迎页面。支持以下参数：
 
 |   参数        | 作用           |
 |   --          | --            |
@@ -47,11 +44,11 @@ Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行�
 |  -j, --json [bool]?    | 指定输出定义文件，如果缺省布尔值默认为`true`，如果缺省参数默认为输出文档|
 |  -o, --output [Folder] | 输出重定向至给定文件夹，仅在输出定义文件时有效                        |
 
-运行仿真需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
+运行仿真工程需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
 
 |   参数        | 作用           |
 |   --          | --            |
-|  [ProjectFileName] |  仿真工程文件，只能是`.lig`和`.lig.json`文件      |
+|  [ProjectFileName] |  仿真工程文件，一般是`.lig`和`.lig.json`文件      |
 |  -s, --step-size [StepSize]    | 设置仿真步长，仅在定步长求解器中生效   |
 |  -t, --stop-time [StopTime]    | 设置仿真时长 |
 |  -j, --json [bool]?    | 指定输入`.lig.json`文件，默认为输入`.lig`文件 |

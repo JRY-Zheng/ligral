@@ -183,6 +183,11 @@
        <img alt="LOGO" src="https://sued-wind.cc/static/img/ligral/ligral.png"/>
       </p>
       <p>
+       <a href="README_en.md">
+        English version
+       </a>
+      </p>
+      <p>
        Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
       </p>
       <p>
@@ -217,16 +222,11 @@ dotnet build
        使用
       </h2>
       <p>
-       使用以下语句运行
+       运行
        <code>
-        .lig
+        ligral
        </code>
-       文件：
-      </p>
-      <pre><code>ligral path/file.lig
-</code></pre>
-      <p>
-       支持以下参数：
+       会看到欢迎页面。支持以下参数：
       </p>
       <table>
        <thead>
@@ -320,7 +320,7 @@ dotnet build
        </tbody>
       </table>
       <p>
-       运行仿真需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
+       运行仿真工程需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
       </p>
       <table>
        <thead>
@@ -339,7 +339,7 @@ dotnet build
           [ProjectFileName]
          </td>
          <td>
-          仿真工程文件，只能是
+          仿真工程文件，一般是
           <code>
            .lig
           </code>
