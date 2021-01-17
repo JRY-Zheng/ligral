@@ -1,0 +1,744 @@
+<!-- Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+     Distributed under MIT license.
+     See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   开发文档
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- Main CSS -->
+  <link href="/ligral/css/style.css" rel="stylesheet"/>
+  <link href="/ligral/css/rolling.css" rel="stylesheet"/>
+  <link href="/ligral/css/custom.css" rel="stylesheet"/>
+  <link href="/ligral/css/katex.min.css" rel="stylesheet"/>
+  <link href="/ligral/avatar.png" rel="shortcut icon" type="image/x-icon"/>
+  <!-- Font Awesome -->
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/14294c79e2.js">
+  </script>
+ </head>
+ <body>
+  <!-- Header -->
+  <div class="header-wrap d-none d-md-block">
+   <div class="container">
+    <div class="row">
+     <!-- Left header box -->
+     <header class="col-6 text-left">
+      <h1 class="letter-wrap title">
+       Ligral
+      </h1>
+     </header>
+    </div>
+   </div>
+  </div>
+  <!-- Main navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+   <div class="container">
+    <!-- Company name shown on mobile -->
+    <a class="navbar-brand d-md-none d-lg-none d-xl-none" href="#">
+     Ligral
+    </a>
+    <!-- Mobile menu toggle -->
+    <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#mainNavbar" data-toggle="collapse" type="button">
+     <span class="navbar-toggler-icon">
+     </span>
+    </button>
+    <!-- Main navigation items -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/index.html">
+        主页
+        <span class="sr-only">
+         (current)
+        </span>
+       </a>
+      </li>
+      <li class="nav-item dropdown active">
+       <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        文档
+       </a>
+       <div class="dropdown-menu navbar-dark bg-primary">
+        <a class="dropdown-item" href="/ligral/quick-start.html">
+         快速开始
+        </a>
+        <a class="dropdown-item" href="/ligral/user-guide">
+         用户文档
+        </a>
+        <a class="dropdown-item" href="/ligral/dev-guide">
+         开发文档
+        </a>
+        <a class="dropdown-item" href="/ligral/interface/">
+         接口定义
+        </a>
+       </div>
+      </li>
+      <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                        </li> -->
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/product.html">
+        产品
+       </a>
+      </li>
+      <li class="nav-item">
+       <a class="nav-link" href="/ligral/contact.html">
+        联系我们
+       </a>
+      </li>
+     </ul>
+     <!-- <form class="form-inline header-search-form my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" size="10"  placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form> -->
+    </div>
+   </div>
+  </nav>
+  <!-- Jumbtron / Slider -->
+  <!-- Main content area -->
+  <main class="container">
+   <div class="row" style="flex-direction: row-reverse;">
+    <!-- Main content -->
+    <div class="col-sm-8">
+     <article>
+      <h1>
+       开发文档
+      </h1>
+      <p>
+       终于下定决心花点时间好好写一写开发文档。Ligral 现在的代码库日渐庞大，很多奇思妙想的细节已经不能完全在脑中容下，如果不把它们都记录下来，以后可能需要费好一番劲才能理解。而且囿于个人能力，代码肯定有很多不完善的细节，经过一番梳理也许能改善代码质量，解决一些历史遗留的小问题。
+      </p>
+      <p>
+       相比较于用户文档的正式，开发文档我可能没法那么严肃，因为我是抱着和大家一起学习、一起探讨的想法来写这份文档的，而并非是向大家介绍一种多么牛逼的东西。相比于开发者和用户之间天然的身份隔离，如果你看了这份开发文档，我就认同你是和我并肩作战的开发者战友，我会把 Ligral 开发过程中的所思所想合盘与你分享，希望能给你帮助的同时也能收获思维碰撞的火花。
+      </p>
+      <p>
+       这一篇文章中我会介绍一下我为什么会想要写 Ligral 这个程序，以及 Ligral 诞生之初的道路。关于目前仓库里代码的介绍，包括整个项目的框架结构、解释器的构思与实现、问题构建与求解器、可扩展架构等等我会放在之后的文章中展开介绍。
+      </p>
+      <h3>
+       为什么写 Ligral
+      </h3>
+      <p>
+       我在项目介绍里提到 Ligral 的目标是 Simulink 的替代品，可能很多人会以为 Ligral 是为了实现仿真的自主可控而诞生的，防止 Simulink 被禁运而导致没有趁手的工具。
+      </p>
+      <p>
+       但其实不是的，如果 Simulink 真的被禁运，其实替代的手段有很多，不少替代品都和 Simulink 的操作体验高度相似，比如 SciLab 实现了一个图形仿真语言，和 Simulink 一样通过拖拽模块并且连接从而搭建仿真模型。Pyminer 的项目成员联系我，想用 Ligral 做后端实现一个仿真程序替代 Simulink，也是采用了图形语言做前端。这些替代品的最大特点就在于从 Simulink 的迁移学习成本很低，这也是一个替代品的基本操守。
+      </p>
+      <p>
+       但 Ligral 诞生之初就选择了和 Simulink 理念背道而驰的一条路，它抛弃了做仿真司空见惯的图形语言，而采用了文本语言，这必然导致较高的迁移学习成本。从这里也可以看出我的初心，或者说野心，并不只是希望用户在用不了 Simulink 的时候能瞧一瞧 Ligral，也许修修补补凑合还能用；而是提出一种更先进、更方便、更强大的仿真工程构建方式，不说彻底革新、颠覆仿真工业，也至少为其带来崭新的面貌，增添新的活力。
+      </p>
+      <p>
+       我刚开始写 Ligral 的时候是 2019 年 8 月，彼时虽然贸易战打得正响，但似乎还没有人把注意力关注到 MATLAB、Simulink 这些工业软件上，我自然也没往这方面想。我开始写 Ligral 完全是因为在搭建 Simulink 模型时被图形语言繁复的操作和我自身的强迫症折磨得苦不堪言，当场写了一个
+       <code>
+        .lig
+       </code>
+       脚本的 demo，并且感叹要是仿真工程能这么搭建该有多好啊！
+      </p>
+      <p>
+       以下是珍贵史料（来自 2019 年 8 月 12 日的代码片段，注意不少语法和现在的不同）：
+      </p>
+      <pre><code>$ mu &lt;- 0.8;
+$ g &lt;- 9.8;
+$ M1 &lt;- 10*0.9+0.5*2;
+$ M2 &lt;- 12;
+$ k &lt;- 10;
+SignalGenerator[s]-Node[Frr1]-Node[F8] # Node is used as an output before it is inputted.
+    -&gt; Gain[Gain2]{value:1/M1} 
+    -&gt; Integrator 
+    -&gt; Distribute{number:3} 
+    -&gt; (
+        Gain[Gain1]{value:mu*g*M1} -&gt; Frr1,
+        Scope[x1_dot],
+        Integrator -&gt; Distribute{number:2}
+        -&gt; (
+            Scope[x1],
+            Node[nd_x1]
+        )
+    );
+F8-Node[Frr2]
+    -&gt; Gain{value:1/M2}
+    -&gt; Integrator[x2_dot]
+    -&gt; Distribute{number:2}
+    -&gt; (
+        Gain{value:mu*g*M2} -&gt; Frr2,
+        Integrator -&gt; Distribute{number:2}
+        -&gt; (
+            Scope[x2],
+            Node[nd_x2]
+        )
+    );
+nd_x1-nd_x2 -&gt; Gain{value:k} -&gt; F8;
+</code></pre>
+      <p>
+       虽然部分语法经过一年多的迭代已经被改掉了，但是最核心的一些语法比如“使用时声明”、节点连接、参数配置、“先借再还”等等都是在那一时灵光乍现想出来的。值得一提的是当时还没注意到先借再还的强大，还设计了一个
+       <code>
+        Distribute
+       </code>
+       模块来实现输出分发。
+      </p>
+      <p>
+       当时我最痛恨的几点就是：
+      </p>
+      <ul>
+       <li>
+        调整图形化语言模块的排列、连线之间的间距；
+       </li>
+       <li>
+        稍微修改一点就会导致原本美观的工程变丑；
+       </li>
+       <li>
+        大工程难免要跳转，否则就很乱，但是跳转的实现实在不够优美，反而很麻烦；
+       </li>
+       <li>
+        全局搜索太难用，定位一个模块要费半天劲；
+       </li>
+       <li>
+        拖模块太慢（当时用的是 2011 版，后来知道新版可以直接输入模块名唤出模块，所以确实还是文字好用）；
+       </li>
+       <li>
+        为了减少连线引入 Bus，可是 Bus 还是很麻烦，得一个个命名；
+       </li>
+       <li>
+        整个工程全写在一块，结构全靠分片；
+       </li>
+       <li>
+        虽然有 Subsystem，但是复制 Subsystem 之后修改其中一个，另一个却不会跟着变，令人困惑；
+       </li>
+       <li>
+        …
+       </li>
+      </ul>
+      <p>
+       Simulink 确实好用，但是说起来不好用的地方真实三天三夜也说不完。上面罗列的一些缺点，前面几个在改用文本语言后瞬间解决，后面的几点也凭着 Ligral 精妙的设计消除了。我为自己的奇思妙想感到无比兴奋，于是当即就用 python+ 正则表达式尝试解析这个 demo。当时完全没有写一个解释器的能力和勇气，正则表达式承受了它不该承受的重量，但好在这个 demo 也不是那么难，我磕磕绊绊地完成了对它的解析，并且画出了第一个响应图：它和 Simulink 给出的几乎完全一致（当然当时求解器是最简单的欧拉求解器，Simulink 上我也做了相同的设置）！这真是让人热情高涨！
+      </p>
+      <h3>
+       Ligral 初代版本
+      </h3>
+      <p>
+       不过显而易见，用正则表达式乱写的解释器几乎毫无可移植性，稍微改动一些语句就无法解析了，成了这一个 demo 的专用解释器（笑）。直到我看到了
+       <a href="https://ruslanspivak.com/lsbasi-part1/" target="_blank">
+        这个专栏
+       </a>
+       ，一个用 python 写解释器的教程，作者 Ruslan 用非常浅显的语言和易懂的代码向我们展示了通往解释器的大门也仅仅是虚掩的。虽然这个教程并没有写完，关于函数、类、控制流等等的实现都没写，但是它给了我极大的启发，让我开始用 python 构建 Ligral 的解释器。
+      </p>
+      <p>
+       这一尝试从当时的角度来看无疑是非常成功的，为今天的 Ligral 程序奠定了坚实的基础。我跟着 Ruslan 的教程，写了一个 LL(1) 的解析器，把 lig 脚本解析成抽象语法树，然后又写了一个解释器遍历语法树。在最开始的版本，我是一边遍历语法树一边执行运算的，因为一个普通的解释器往往就是这么做的，比如你先解析
+       <code>
+        1+1
+       </code>
+       这个语句，你就会得到这个语法树：
+      </p>
+      <pre><code>  +
+ / \
+1   1
+</code></pre>
+      <p>
+       遍历这个语法树，你自然就得到了 2。跟着 Ruslan 的教程，我也很自然地这么写了，但我很快就发现问题不对。
+      </p>
+      <p>
+       首先，遍历一次语法树，整个工程只被执行了一次，但是显然每一帧都要执行一次运算，才能得到最终的结果。如果每次都要遍历语法树，效率很低；
+      </p>
+      <p>
+       其次，由于一些节点先被引用了输出，在之后的语句才确定了输入（也就是所谓“先借再还”），导致运算根本无法执行下去。
+      </p>
+      <p>
+       我这才意识到，我所写的语言可能和常见的 C++、python 等都十分不同。这些语言中的每一条语句都可以看作是一个指令，但是 Ligral 中的语句却是一个描述。指令之间是相对独立的，因此不考虑优化和编译的话，解释器可以单独运行每一条指令。但是对于一个描述性的语言，解释和执行不能在一个层次完成，必须等待全部解释完成后，Ligral 才知道整个仿真系统的面貌，从而开始求解。
+      </p>
+      <p>
+       举一个简单的例子，比如上面所说的“先借再还”问题，虽然写 lig 脚本的时候可以先借，但是在真正执行的时候，肯定要先有输入才能计算输出，因此 Ligral 需要对计算顺序进行重排，把“借输出”的语句排到定义输入的语句之后，这必须至少在两个语句都出现后才能操作。
+      </p>
+      <p>
+       因此，我所写的第一个解释器就区别于普通的“两趟”解释器，它是一个“四趟”的解释器，分别为词法解析、语法解释、语序重排以及循环求解四个阶段。
+      </p>
+      <p>
+       此外，语序重排这一阶段还涉及到很多新鲜的概念。比如仿真中经常出现反馈，出现反馈必然会出现环。假设我们把模块 A 的输入来自于 B 的输出称之为 A 依赖于 B，那么环就是 A 依赖于 B，B 又依赖于 A。模块之间循环依赖，对于程序来说是没法直接求解的（需要用到很复杂的算法，而且还不一定有解）。但是我注意到大部分反馈环里都会有一个可以自启动的模块，比如积分模块或者延迟模块，它们的特点是有一个初始值，而这一帧的输入至少到下一帧才会用上，如果一个环中包括了这样的模块，这个环就是可启动的，否则就是不可启动的。
+      </p>
+      <p>
+       直到很后来我看到了 Simulink 的一些实现方法，才知道“不可自启动的”这一术语是 direct-feed-through，而不可启动的环则被称之为代数环（Algebraic Loop）。Simulink 也是采用类似地算法分析计算的顺序，从而能正确地运行仿真程序，我忽然有了一种殊途同归的感觉。虽然 Ligral 比 Simulink 晚了很多年，但我确实是独立研发出这些算法的。
+      </p>
+      <h3>
+       躲不过的重构
+      </h3>
+      <p>
+       我以前真的很喜欢 python，经常用 python 写一些小程序，开发过程十分高效，基本上可以做到一边思考一边写代码。然而，在编写 Ligral 解释器之前，我用 python 写过的最大的工程不过是同一个文件夹下五六个不超过三百行的源文件而已。在编写 Ligral 解释器的过程中，我很快发现我的 python 技能捉襟见肘了。
+      </p>
+      <p>
+       众所周知，python 是一个动态类型语言，对类型的约束只能靠作者的脑力和命名的规范（我到后来才知道 python 3.6 提供了一个让语法插件识别类型的语法，但不管怎么说 python 本身还是动态类型的）。编写解释器本身就是一个复杂的工作，大量运用到递归，拥有繁多的类型，无不对类型管理提出了很高的要求。加上我并不是英语母语使用者，为变量起名经常词不达意，经常造成混乱。
+      </p>
+      <p>
+       比如仿真模型和解释器都用到了“节点”（node）这一概念，导致我常常不知道我写的
+       <code>
+        node
+       </code>
+       到底是语法树上的“结点”，还是仿真框图中的“节点”。到了后期，代码中充斥着
+       <code>
+        node.node.left.node
+       </code>
+       这样的表达式，读起来让人一头雾水，一不留神还经常出现空对象引用报错。
+      </p>
+      <p>
+       开发难度大，也使得一些 bugs 非常难调，以致于 python 版本的 Ligral 最终还是没能实现一个支持设想的全部语法的稳定的解释器。
+      </p>
+      <p>
+       痛定思痛，我决定捡起以前学习的 C#，尤其是微软推出 .NET core 之后可以跨平台运行，我就觉得这会是比 python 更好的选择。C++ 我也不是没有考虑过，最近工作上我也正在用 C++ 开发程序，但是 C++ 虽然快，很多基础的数据结构需要自己完成，开发效率没有 C# 那么高，因此原来打算是先用 .NET core 开发，后期再考虑迁移到 C++。但微软推出 .NET 5 之后，我发现迁移到 C++ 的必要性好像并没有那么高，.NET 5 是个性能怪兽，以我渣渣水平写的 C++ 程序未必能超过微软精心优化的 .NET 程序。而且仿真程序对性能的要求并不是那么高，因为对性能要求高的实时仿真一般需要生成 C 代码完成，这些暂时不是现在应该考虑的事情。
+      </p>
+      <p>
+       但不管怎么样，重构还是免不了的。有了 python 版本作参照，C# 版本的 Ligral 初期开发非常顺利。这也和 2020 年的疫情有密不可分的关系。疫情期间，一切出行计划都泡汤了，我在毕业设计开始之前有一段空闲时间可以专心写程序，大约是 2020 年 3 月到 4 月这段时间，Ligral v0.1.0 诞生了（虽然发布到网上时间在很后面了）。在开发这个版本时，静态语言终于让我在调试期间发现了 bugs 的问题所在，思维和 bugs 碰撞出的火花让我设计出了非常巧妙的结构，最终实现了设想中的全部语法。这些内容我会放在后面的文章中展开讲。
+      </p>
+      <p>
+       好的程序离不开测试，我虽然彼时还不很了解如何去测试（现在也不甚了解），但那时我的毕设开始了，我不想用 Simulink，就和导师说我要用 Ligral，做出来再和 Simulink 结果对比。最开始的几次，我总能发现这样那样的 bugs，但是过了几周，我再使用 Ligral 中再也没发现不该有的报错，于是我知道，一个稳定版终于诞生了！
+      </p>
+      <p>
+       但是这个版本也是有很大问题的，最大的问题就是不支持矩阵，导致我在毕设的仿真工程中必须逐个输入矩阵的值，就像这样（为还原真实场景，此处使用了旧语法）：
+      </p>
+      <pre><code>digit a11 &lt;- 1;
+digit a12 &lt;- 2;
+digit a21 &lt;- 2;
+digit a22 &lt;- 1;
+
+a11*x1 + a12*x2 -&gt; xdot1;
+a21*x1 + a22*x2 -&gt; xdot2;
+</code></pre>
+      <p>
+       和目前的语法相比较一下就会发现实在是太繁琐了。
+      </p>
+      <pre><code>let a = [1,2; 2,1];
+a*x -&gt; xdot;
+</code></pre>
+      <p>
+       但支持矩阵是个特别麻烦的事，我疲于应付毕设一直没有时间处理，直到回国后再酒店进行十四天的隔离，机会来了。这段时间内我对 Ligral 的整个架构进行了升级，首先是支持了矩阵，对每个模块进行适配，不得不说这真是一项大工程。
+      </p>
+      <p>
+       另外一个非常重要的升级是对问题的提炼。以前的积分算法是放在每一个积分模块里的，求解整个仿真模型就是遍历一次所有模块。这么做有个问题在于积分算法只能拿到真实的导数，而诸如龙格库塔等算法经常要计算不同时间不同位置的导数，所以这个架构太过于简陋而天然无法支持高阶的算法。因此需要把输入、状态、输出分别独立出来，提炼成一个问题：
+      </p>
+      <p>
+       <span class="katex-display">
+        <span class="katex">
+         <span class="katex-mathml">
+          <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+           <semantics>
+            <mrow>
+             <mover accent="true">
+              <mi>
+               x
+              </mi>
+              <mo>
+               ˙
+              </mo>
+             </mover>
+             <mo>
+              =
+             </mo>
+             <mi>
+              f
+             </mi>
+             <mo stretchy="false">
+              (
+             </mo>
+             <mi>
+              x
+             </mi>
+             <mo separator="true">
+              ,
+             </mo>
+             <mi>
+              u
+             </mi>
+             <mo separator="true">
+              ,
+             </mo>
+             <mi>
+              t
+             </mi>
+             <mo stretchy="false">
+              )
+             </mo>
+             <mspace linebreak="newline">
+             </mspace>
+             <mi>
+              y
+             </mi>
+             <mo>
+              =
+             </mo>
+             <mi>
+              g
+             </mi>
+             <mo stretchy="false">
+              (
+             </mo>
+             <mi>
+              x
+             </mi>
+             <mo separator="true">
+              ,
+             </mo>
+             <mi>
+              u
+             </mi>
+             <mo separator="true">
+              ,
+             </mo>
+             <mi>
+              t
+             </mi>
+             <mo stretchy="false">
+              )
+             </mo>
+            </mrow>
+            <annotation encoding="application/x-tex">
+             \dot{x}=f(x,u,t)\\
+y=g(x,u,t)
+            </annotation>
+           </semantics>
+          </math>
+         </span>
+         <span aria-hidden="true" class="katex-html">
+          <span class="base">
+           <span class="strut" style="height:0.66786em;vertical-align:0em;">
+           </span>
+           <span class="mord accent">
+            <span class="vlist-t">
+             <span class="vlist-r">
+              <span class="vlist" style="height:0.66786em;">
+               <span style="top:-3em;">
+                <span class="pstrut" style="height:3em;">
+                </span>
+                <span class="mord">
+                 <span class="mord mathnormal">
+                  x
+                 </span>
+                </span>
+               </span>
+               <span style="top:-3em;">
+                <span class="pstrut" style="height:3em;">
+                </span>
+                <span class="accent-body" style="left:-0.11111000000000001em;">
+                 <span class="mord">
+                  ˙
+                 </span>
+                </span>
+               </span>
+              </span>
+             </span>
+            </span>
+           </span>
+           <span class="mspace" style="margin-right:0.2777777777777778em;">
+           </span>
+           <span class="mrel">
+            =
+           </span>
+           <span class="mspace" style="margin-right:0.2777777777777778em;">
+           </span>
+          </span>
+          <span class="base">
+           <span class="strut" style="height:1em;vertical-align:-0.25em;">
+           </span>
+           <span class="mord mathnormal" style="margin-right:0.10764em;">
+            f
+           </span>
+           <span class="mopen">
+            (
+           </span>
+           <span class="mord mathnormal">
+            x
+           </span>
+           <span class="mpunct">
+            ,
+           </span>
+           <span class="mspace" style="margin-right:0.16666666666666666em;">
+           </span>
+           <span class="mord mathnormal">
+            u
+           </span>
+           <span class="mpunct">
+            ,
+           </span>
+           <span class="mspace" style="margin-right:0.16666666666666666em;">
+           </span>
+           <span class="mord mathnormal">
+            t
+           </span>
+           <span class="mclose">
+            )
+           </span>
+          </span>
+          <span class="mspace newline">
+          </span>
+          <span class="base">
+           <span class="strut" style="height:0.625em;vertical-align:-0.19444em;">
+           </span>
+           <span class="mord mathnormal" style="margin-right:0.03588em;">
+            y
+           </span>
+           <span class="mspace" style="margin-right:0.2777777777777778em;">
+           </span>
+           <span class="mrel">
+            =
+           </span>
+           <span class="mspace" style="margin-right:0.2777777777777778em;">
+           </span>
+          </span>
+          <span class="base">
+           <span class="strut" style="height:1em;vertical-align:-0.25em;">
+           </span>
+           <span class="mord mathnormal" style="margin-right:0.03588em;">
+            g
+           </span>
+           <span class="mopen">
+            (
+           </span>
+           <span class="mord mathnormal">
+            x
+           </span>
+           <span class="mpunct">
+            ,
+           </span>
+           <span class="mspace" style="margin-right:0.16666666666666666em;">
+           </span>
+           <span class="mord mathnormal">
+            u
+           </span>
+           <span class="mpunct">
+            ,
+           </span>
+           <span class="mspace" style="margin-right:0.16666666666666666em;">
+           </span>
+           <span class="mord mathnormal">
+            t
+           </span>
+           <span class="mclose">
+            )
+           </span>
+          </span>
+         </span>
+        </span>
+       </span>
+      </p>
+      <p>
+       这样更有利于算法的开发。后来事实证明，这些前期漫长的铺垫为后来新功能的迅速开发功不可没。
+      </p>
+      <p>
+       对当前版本的 Ligral 暂且就介绍到这里，详细的部分会在后面的文章中展开介绍。
+      </p>
+     </article>
+    </div>
+    <!-- Sidebar -->
+    <aside class="col-sm-4">
+     <div class="sidebar-box">
+      <h4>
+       目录
+      </h4>
+      <div class="list-group list-group-root">
+       <a class="list-group-item" href="/ligral/quick-start.html">
+        快速开始
+       </a>
+       <a class="list-group-item" href="/ligral/user-guide/index.html">
+        用户文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/user-guide/terms.html">
+         术语定义
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/config.html">
+         设置语句
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/const.html">
+         声明常量
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/node.html">
+         声明节点
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/link.html">
+         节点连接
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/matrix.html">
+         矩阵运算
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/route.html">
+         路由类型
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/signature.html">
+         接口签名
+        </a>
+        <a class="list-group-item" href="/ligral/user-guide/import.html">
+         引用依赖
+        </a>
+       </div>
+       <a class="list-group-item active" href="/ligral/dev-guide/index.html">
+        开发文档
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/dev-guide/syntax.html">
+         语法解析
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/component.html">
+         模块组件
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/simulation.html">
+         问题抽象
+        </a>
+        <a class="list-group-item" href="/ligral/dev-guide/tools.html">
+         工具箱
+        </a>
+       </div>
+       <a class="list-group-item" href="/ligral/interface/index.html">
+        接口定义
+       </a>
+       <div class="list-group">
+        <a class="list-group-item" href="/ligral/interface/model.html">
+         模块接口
+        </a>
+        <a class="list-group-item" href="/ligral/interface/protocol.html">
+         数据接口
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="sidebar-box sidebar-box-bg">
+      <h4>
+       关于我们
+      </h4>
+      <p>
+       我们是一群有志于突破工业软件封锁、具有开源精神的开发者。本项目旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
+       <a class="readmore" href="https://gitee.com/junruoyu-zheng/ligral/wikis" target="_blank">
+        更多 »
+       </a>
+      </p>
+     </div>
+     <div class="sidebar-box">
+      <h4>
+       仓库链接
+      </h4>
+      <ul>
+       <li>
+        <a href="https://gitee.com/junruoyu-zheng/ligral" target="_blank" title="Gitee">
+         Gitee 仓库
+        </a>
+       </li>
+       <li>
+        <a href="https://github.com/JRY-Zheng/ligral" target="_blank" title="GitHub">
+         GitHub 仓库
+        </a>
+       </li>
+      </ul>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <!-- Footer -->
+  <footer class="footer">
+   <div class="footer-lists">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          联系我们
+         </h4>
+        </li>
+        <li>
+         <a href="mailto:zhengjry@outlook.com">
+          给我们发邮件
+         </a>
+        </li>
+        <li>
+         <a href="https://www.zhihu.com/people/LostFish" target="_blank">
+          来知乎关注我
+         </a>
+        </li>
+        <li>
+         <a href="https://web.okjike.com/u/105ad022-f646-48c0-8236-6007ee5179c5" target="_blank">
+          来即刻关注我
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          代码仓库
+         </h4>
+        </li>
+        <li>
+         <a href="https://gitee.com/junruoyu-zheng/ligral" target="_blank">
+          Gitee 仓库
+         </a>
+        </li>
+        <li>
+         <a href="https://github.com/JRY-Zheng/ligral" target="_blank">
+          GitHub 仓库
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <ul>
+        <li>
+         <h4>
+          合作伙伴
+         </h4>
+        </li>
+        <li>
+         <a href="http://pyminer.com" target="_blank">
+          PyMiner 官网
+         </a>
+        </li>
+        <li>
+         <a href="https://gitee.com/py2cn/pyminer" target="_blank">
+          PyMiner 仓库地址
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-sm">
+       <h4>
+        致谢
+       </h4>
+       <p>
+        Ligral 的开发得到了很多帮助，特在此致谢！感谢我的单位对创新的鼓励；感谢我的导师 James 对数值积分的指导；感谢 Gitee 对项目的支持，在刚开源不久就为我推荐；感谢 PyMiner 开发团队对我的鼓励和支持！
+       </p>
+       <p class="social-icons">
+        <a href="https://gitee.com/junruoyu-zheng/ligral/stargazers" style="text-decoration: none;" target="_blank">
+         <img alt="star" src="https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=dark"/>
+        </a>
+        <a href="https://www.zhihu.com/people/LostFish" target="_blank">
+         <i class="fab fa-zhihu fa-2x zhihu-icon">
+         </i>
+        </a>
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p class="text-center">
+     Copyright © 2021. Ligral All rights reserved. 梨果科技版权所有 © 2021
+    </p>
+    <p class="text-center">
+     <a href="#">
+      <i class="fa fa-arrow-up">
+      </i>
+      回到顶部
+     </a>
+    </p>
+   </div>
+  </footer>
+  <!-- Bootcamp JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="/ligral/js/jquery-3.2.1.slim.min.js">
+  </script>
+  <script src="/ligral/js/popper.min.js">
+  </script>
+  <script src="/ligral/js/bootstrap.min.js">
+  </script>
+  <script src="/ligral/js/TweenMax.min.js">
+  </script>
+  <script src="/ligral/js/rolling.js">
+  </script>
+ </body>
+</html>
