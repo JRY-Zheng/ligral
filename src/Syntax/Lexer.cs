@@ -223,7 +223,7 @@ namespace Ligral.Syntax
                 case "false":
                     return new BoolToken(TokenType.FALSE, false, lineNO, columnNO, file);
                 case "signature":
-                    return new BoolToken(TokenType.SIGN, false, lineNO, columnNO, file);
+                    return new StringToken(TokenType.SIGN, word, lineNO, columnNO, file);
                 default:
                     return new StringToken(TokenType.ID, word, lineNO, columnNO, file);
                 }
