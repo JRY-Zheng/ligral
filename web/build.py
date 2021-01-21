@@ -231,7 +231,8 @@ if __name__ == "__main__":
             '引用依赖': 'user-guide/import',
         },
         '开发文档': {
-            '语法解析': 'dev-guide/syntax',
+            '语法设计': 'dev-guide/syntax',
+            '解释器': 'dev-guide/interpreter',
             '模块组件': 'dev-guide/component',
             '问题抽象': 'dev-guide/simulation',
             '工具箱': 'dev-guide/tools'
