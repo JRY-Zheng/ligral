@@ -35,6 +35,8 @@ namespace Ligral.Simulation
                 return new EulerSolver();
             case "ode2":
                 return new FixedStepRK2Solver();
+            case "ode3":
+                return new FixedStepRK3Solver();
             case "ode4":
                 return new FixedStepRK4Solver();
             default:
