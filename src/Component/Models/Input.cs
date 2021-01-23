@@ -10,7 +10,7 @@ namespace Ligral.Component.Models
 {
     class Input : Model, IFixable
     {
-        private double? source;
+        private Signal source;
         protected override string DocString
         {
             get
@@ -18,16 +18,16 @@ namespace Ligral.Component.Models
                 return "This model is automatically used inside a route. Do not call it manually.";
             }
         }
-        public void SetDefaultSource(double source)
+        public void SetDefaultSource(Signal source)
         {
             this.source = source;
         }
         public bool FixConnection()
         {
-            if (source is double src)
+            if (source is Signal src)
             {
                 ILinkable constant = ModelManager.Create("Constant");
-                var dict = new Dictionary<string, object>() {{"value", src}};
+                var dict = new Dictionary<string, object>() {{"value", src.Unpack()}};
                 constant.Configure(dict);
                 constant.Connect(this);
                 return true;
