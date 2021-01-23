@@ -95,12 +95,12 @@
 
 虽然 ligral 鼓励使用者将连接串起来提高语言的简洁性，但是如果语句逻辑太过复杂，或者语义已经中断时，建议您拆分长语句，让代码更符合人的阅读习惯。必要的时候，将一些内部相关的语句整理到一个路由中，降低模块的耦合性。例如以下代码：
 
-    (f - k*x - c*v -> Intergrator -> v -> Integrator -> x)*Kp + (r-x -> Integrator)*Ki + v*Kd -> f;
+    (f - k*x - c*v -> Integrator -> v -> Integrator -> x)*Kp + (r-x -> Integrator)*Ki + v*Kd -> f;
 
 以上一行代码描述了用 PID 控制器控制一个二阶系统得到的闭环模型，由于逻辑过于复杂反而丧失了可读性。好的代码往往这么写：
 
     # model
-    f - k*x - c*v -> Intergrator -> v;
+    f - k*x - c*v -> Integrator -> v;
     v -> Integrator -> x;
 
     # reference tracking
