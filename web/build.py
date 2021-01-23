@@ -142,7 +142,7 @@ def set_item_active(soup, index):
 def migrate_img(soup, base_dir):
     images = soup.find_all('img')
     for image in images:
-        if image['alt'].endswith('!!'):
+        if image.get('alt','').endswith('!!'):
             image['style'] = 'max-width:100%;'
         src = image['src']
         src_file = os.path.join(base_dir, src)
