@@ -33,3 +33,6 @@ ligral
 
 # backup
 *.bak
+
+# dist
+dist
