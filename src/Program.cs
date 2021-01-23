@@ -114,7 +114,7 @@ Usage:
     
 Learn more:
     Visit https://junruoyu-zheng.gitee.io/ligral
-    also available at https://JRY-Zheng.github.io/ligral");
+    Clone the source at https://gitee.com/junruoyu-zheng/ligral");
                 break;
             }
         }
