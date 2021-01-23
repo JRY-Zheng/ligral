@@ -18,7 +18,7 @@ namespace Ligral.Simulation
         {
             if (!allNodes.Contains(node))
             {
-                throw logger.Error(new LigralException($"Schematic Error: {node.Name} is not in inspection list."));
+                throw logger.Error(new LigralException($"Schematic Error: {node.ScopedName} is not in inspection list."));
             }
             if(node.IsReady())
             {
@@ -43,7 +43,7 @@ namespace Ligral.Simulation
             if (notConnectedModels.Count>0)
             {
                 throw logger.Error(new LigralException("Schematic Error: Some nodes are not fully connected: "+
-                string.Join(", ", notConnectedModels.ConvertAll(node=>node.Name))));
+                string.Join(", ", notConnectedModels.ConvertAll(node=>node.ScopedName))));
                 // string.Join(", ", nodes.FindAll(node=>routine.FindAll(n=>n.Name==node.Name).Count==0).ConvertAll(node=>node.Name)));
             }
             // System.Console.WriteLine(string.Join(", ", allNodes.ConvertAll(node=>node.Name)));
