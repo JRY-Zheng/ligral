@@ -6,9 +6,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
-using MathNet.Numerics.LinearAlgebra;
+using Ligral.Component.Models;
 
 namespace Ligral.Component
 {
@@ -76,7 +77,7 @@ namespace Ligral.Component
             ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
             foreach (string inPortName in inPortNameList)
             {
-                Model model = ModelManager.Create("<Input>");
+                Input model = (Input) ModelManager.Create("<Input>");
                 model.Name = inPortName;
                 inputModels.Add(model);
                 TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;

@@ -37,6 +37,15 @@ namespace Ligral.Simulation
         public List<Model> Inspect(List<Model> nodes)
         {
             allNodes = nodes;
+            List<Model> notConnectedModels = nodes.FindAll(node=>(
+                !node.IsConnected() && !(node is IFixable fixable && fixable.FixConnection())
+            ));
+            if (notConnectedModels.Count>0)
+            {
+                throw new LigralException("Schematic Error: Some nodes are not fully connected: "+
+                string.Join(", ", notConnectedModels.ConvertAll(node=>node.Name)));
+                // string.Join(", ", nodes.FindAll(node=>routine.FindAll(n=>n.Name==node.Name).Count==0).ConvertAll(node=>node.Name)));
+            }
             // System.Console.WriteLine(string.Join(", ", allNodes.ConvertAll(node=>node.Name)));
             foreach(Model node in nodes)
             {
@@ -45,19 +54,9 @@ namespace Ligral.Simulation
             // System.Console.WriteLine(string.Join(", ", routine.ConvertAll(node=>node.Name)));
             if (routine.Count != nodes.Count)
             {
-                List<Model> notConnectedModels = nodes.FindAll(node=>!node.IsConnected());
-                if (notConnectedModels.Count>0)
-                {
-                    throw new LigralException("Schematic Error: Some nodes are not fully connected: "+
-                    string.Join(", ", notConnectedModels.ConvertAll(node=>node.Name)));
-                    // string.Join(", ", nodes.FindAll(node=>routine.FindAll(n=>n.Name==node.Name).Count==0).ConvertAll(node=>node.Name)));
-                }
-                else
-                {
-                    List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
-                    throw new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
-                                              "schematic Error: Algebraic loop exists.");
-                }
+                List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
+                throw new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
+                                            "schematic Error: Algebraic loop exists.");
             }
             logger.Info("Inspection passed.");
             return routine;
