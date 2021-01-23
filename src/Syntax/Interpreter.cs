@@ -223,6 +223,10 @@ namespace Ligral.Syntax
                 return Visit(routeParamsAST);
             case RoutePortAST routePortAST:
                 return Visit(routePortAST);
+            case RouteInPortAST routeInPortAST:
+                return Visit(routeInPortAST);
+            case RouteNullablePortAST routeNullablePortAST:
+                return Visit(routeNullablePortAST);
             case RouteAST routeAST:
                 return Visit(routeAST);
             case SignatureAST signatureAST:
@@ -1032,21 +1036,48 @@ namespace Ligral.Syntax
         {
             return routeParamsAST.Parameters.ConvertAll(routeParam=>Visit(routeParam));
         }
+        private RouteInPort Visit(RouteNullablePortAST routeNullablePortAST)
+        {
+            return new RouteInPort() 
+            {
+                Name = Visit(routeNullablePortAST.Id),
+                Nullable = true,
+                Default = new Signal(Visit(routeNullablePortAST.Expression)??0)
+            };
+        }
         private List<string> Visit(RoutePortAST routePortAST)
         {
             return routePortAST.Ports.ConvertAll(routePort=>(Visit(routePort)));
         }
+        private List<RouteInPort> Visit(RouteInPortAST routeInPortAST)
+        {
+            return routeInPortAST.Ports.ConvertAll(routePort=>
+                {
+                    switch (Visit(routePort))
+                    {
+                    case string name:
+                        return new RouteInPort() {Name = name, Nullable = false};
+                    case RouteInPort routeInPort:
+                        return routeInPort;
+                    default:
+                        throw logger.Error(new SemanticException(routePort.FindToken(), "Unknown type for in port."));
+                    }
+                });
+        }
         private object Visit(RouteAST routeAST)
         {
             RouteConstructor routeConstructor = new RouteConstructor();
-            List<string> inPortNameList = Visit(routeAST.InPorts);
+            List<RouteInPort> inPortList = Visit(routeAST.InPorts);
+            List<string> inPortNameList = inPortList.ConvertAll(inPort => inPort.Name);
             List<string> outPortNameList = Visit(routeAST.OutPorts);
             if (routeAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
             {
                 throw logger.Error(new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports"));
             }
-            if (routeAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
+            // if (routeAST.InPorts.Ports.Find(port => inPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedInPort)
+            if (inPortNameList.Find(inPortName => inPortNameList.Count(name => name == inPortName)>1) is string duplicatedName)
             {
+                var duplicatedInPort = routeAST.InPorts.Ports[(inPortNameList.IndexOf(duplicatedName))];
                 throw logger.Error(new SemanticException(duplicatedInPort.FindToken(), "In ports should be unique"));
             }
             if (routeAST.OutPorts.Ports.Find(port => outPortNameList.Count(name => name==Visit(port))>1) is WordAST duplicatedOutPort)
@@ -1086,7 +1117,7 @@ namespace Ligral.Syntax
                 throw logger.Error(new SemanticException(duplicatedParam.FindToken(), "Parameters should be unique"));
             }
             routeConstructor.SetUp(parameters);
-            routeConstructor.SetUp(inPortNameList, outPortNameList);
+            routeConstructor.SetUp(inPortList, outPortNameList);
             routeConstructor.SetUp(routeAST.Statements, CurrentFileName);
             TypeSymbol routeType = currentScope.Lookup(routeConstructor.Type) as TypeSymbol;
             TypeSymbol routeSymbol = new TypeSymbol(routeConstructor.Name, routeType, routeConstructor);

@@ -545,14 +545,14 @@ namespace Ligral.Syntax
                 routeParamsAST = new RouteParamsAST(new List<RouteParamAST>());
             }
             Eat(TokenType.SEMIC);
-            RoutePortAST inPortAST;
+            RouteInPortAST inPortAST;
             if (currentToken.Type!=TokenType.SEMIC)
             {
-                inPortAST = RoutePorts();
+                inPortAST = RouteInPorts();
             }
             else
             {
-                inPortAST = new RoutePortAST(new List<WordAST>());
+                inPortAST = new RouteInPortAST(new List<AST>());
             }
             Eat(TokenType.SEMIC);
             RoutePortAST outPortAST;
@@ -619,6 +619,41 @@ namespace Ligral.Syntax
             {
                 return new RouteParamAST(nameAST, typeAST);
             }
+        }
+        private RouteInPortAST RouteInPorts()
+        {
+            List<AST> ports = new List<AST>();
+            while (true)
+            {
+                StringToken portNameToken = Eat(TokenType.ID) as StringToken;
+                var name = new WordAST(portNameToken);
+                if (currentToken.Type==TokenType.QUE)
+                {
+                    Eat(TokenType.QUE);
+                    if (currentToken.Type != TokenType.COMMA && currentToken.Type != TokenType.SEMIC)
+                    {
+                        var value = ValueExpr();
+                        ports.Add(new RouteNullablePortAST(name, value));
+                    }
+                    else
+                    {
+                        ports.Add(new RouteNullablePortAST(name, null));
+                    }
+                }
+                else
+                {
+                    ports.Add(name);
+                }
+                if (currentToken.Type!=TokenType.COMMA)
+                {
+                    break;
+                }
+                else
+                {
+                    Eat(TokenType.COMMA);
+                }
+            }
+            return new RouteInPortAST(ports);
         }
         private RoutePortAST RoutePorts()
         {

@@ -13,10 +13,10 @@ namespace Ligral.Syntax.ASTs
     {
         public AST Definition;
         public RouteParamsAST Parameters;
-        public RoutePortAST InPorts;
+        public RouteInPortAST InPorts;
         public RoutePortAST OutPorts;
         public StatementsAST Statements;
-        public RouteAST(AST definition, RouteParamsAST parameters, RoutePortAST inPorts, RoutePortAST outPorts, StatementsAST statements)
+        public RouteAST(AST definition, RouteParamsAST parameters, RouteInPortAST inPorts, RoutePortAST outPorts, StatementsAST statements)
         {
             Definition = definition;
             Parameters = parameters;

@@ -339,6 +339,11 @@ namespace Ligral.Syntax
                 Advance();
                 return new OperantToken(TokenType.TILDE, "~", lineNO, columnNO, file);
             }
+            else if (currentChar=='?')
+            {
+                Advance();
+                return new OperantToken(TokenType.QUE, "?", lineNO, columnNO, file);
+            }
             else if (currentChar=='\0')
             {
                 return new OperantToken(TokenType.EOF, "\0", lineNO, columnNO, file);
