@@ -162,7 +162,7 @@ plt.show()
                     {
                     case "output_script":
                     case "output_scripts":
-                        throw new SettingException(item, val, "Realtime plotter cannot output scripts");
+                        throw logger.Error(new SettingException(item, val, "Realtime plotter cannot output scripts"));
                     case "frequency":
                     case "freq":
                         dict.Remove(item);

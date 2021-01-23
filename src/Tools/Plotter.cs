@@ -279,7 +279,7 @@ plt.show()
                     case "save_figures":
                         SaveFigure = (bool) val; break;
                     default:
-                        throw new SettingException(item, val, "Unsupported setting in plotter.");
+                        throw logger.Error(new SettingException(item, val, "Unsupported setting in plotter."));
                     }
                 }
                 catch (System.InvalidCastException)

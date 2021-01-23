@@ -42,8 +42,8 @@ namespace Ligral.Simulation
             ));
             if (notConnectedModels.Count>0)
             {
-                throw new LigralException("Schematic Error: Some nodes are not fully connected: "+
-                string.Join(", ", notConnectedModels.ConvertAll(node=>node.Name)));
+                throw logger.Error(new LigralException("Schematic Error: Some nodes are not fully connected: "+
+                string.Join(", ", notConnectedModels.ConvertAll(node=>node.Name))));
                 // string.Join(", ", nodes.FindAll(node=>routine.FindAll(n=>n.Name==node.Name).Count==0).ConvertAll(node=>node.Name)));
             }
             // System.Console.WriteLine(string.Join(", ", allNodes.ConvertAll(node=>node.Name)));
@@ -55,8 +55,8 @@ namespace Ligral.Simulation
             if (routine.Count != nodes.Count)
             {
                 List<Model> algebraicLoop = AlgebraicLoopDetect(allNodes.FindAll(node=>!routine.Contains(node)));
-                throw new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
-                                            "schematic Error: Algebraic loop exists.");
+                throw logger.Error(new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
+                                            "schematic Error: Algebraic loop exists."));
             }
             logger.Info("Inspection passed.");
             return routine;

@@ -84,11 +84,11 @@ namespace Ligral.Syntax
             }
             if (project.Settings == null)
             {
-                throw new NotFoundException("Property `settings`");
+                throw logger.Error(new NotFoundException("Property `settings`"));
             }
             if (project.Models == null)
             {
-                throw new NotFoundException("Property `settings`.");
+                throw logger.Error(new NotFoundException("Property `settings`."));
             }
             logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
@@ -101,11 +101,11 @@ namespace Ligral.Syntax
             {
                 if (config.Item == null)
                 {
-                    throw new NotFoundException("Property `item`");
+                    throw logger.Error(new NotFoundException("Property `item`"));
                 }
                 if (config.Value == null)
                 {
-                    throw new NotFoundException("Property `value`");
+                    throw logger.Error(new NotFoundException("Property `value`"));
                 }
                 var jsonElement = (JsonElement) config.Value;
                 switch (jsonElement.ValueKind)
