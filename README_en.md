@@ -11,7 +11,7 @@
 Ligral is a textual simulation language as an alternative to Simulink. The goal of ligral is to describe simulation models with a set of statements instead of a graphic implementation. The syntax of ligral ensures equally powerful ability of model description. Meanwhile, ligral provides various solvers to solve the ode problems given by the interpreter.
 
 <p>
-<img src="https://img.shields.io/badge/Version-0.2.1-brightgreen"></img>
+<a href="https://github.com/jry-zheng/ligral/releases/v0.2.1"><img src="https://img.shields.io/badge/Version-0.2.1-brightgreen"></img></a>
 <a href='https://github.com/JRY-Zheng/ligral/stargazers'><img src='https://img.shields.io/github/stars/JRY-Zheng/ligral' alt='star'></img></a>
 </p>
 
