@@ -6,15 +6,16 @@
 
 # Ligral
 
-<a href='https://gitee.com/junruoyu-zheng/ligral/stargazers'><img src='https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=gray' alt='star'></img></a>
-
 ![LOGO](https://sued-wind.cc/static/img/ligral/ligral.png)
 
 [English version](README_en.md)
 
 Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行仿真，通过与框图等效的文本语言描述仿真对象，并解释/编译而后求解。
 
-**版本**：v0.2.1
+<p>
+<img src="https://img.shields.io/badge/版本-0.2.1-brightgreen"></img>
+<a href='https://gitee.com/junruoyu-zheng/ligral/stargazers'><img src='https://gitee.com/junruoyu-zheng/ligral/badge/star.svg?theme=gray' alt='star'></img></a>
+</p>
 
 ## 安装
 
