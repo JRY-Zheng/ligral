@@ -109,7 +109,13 @@ See detailed syntax in [User Guide](doc/user-guide/README.md), which are written
 
 ## Development
 
-We are working hard to write development guide, but currently neither Chinese version nor English is available. If you found a bug please submit an [issue](https://gitee.com/junruoyu-zheng/ligral/issues).
+We are working hard to write [Development Guide](doc/dev-guide/README.md). Now the followings are available with Chinese version.
+
+- [Syntax design](doc/dev-guide/syntax.md)
+- [Interpreter Implementation](doc/dev-guide/interpreter.md)
+- ...
+
+If you found a bug please submit an [issue](https://gitee.com/junruoyu-zheng/ligral/issues).
 
 Development plan:
 

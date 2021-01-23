@@ -108,7 +108,13 @@ Ligral是一个基于文本的仿真语言，旨在旨在替代 Simulink 进行�
 
 ## 开发
 
-目前开发文档还在努力编撰中。如有 bug 反馈或其他建议，请提交 [issue](https://gitee.com/junruoyu-zheng/ligral/issues)。
+目前开发文档还在努力编撰中。
+
+- [语法设计](doc/dev-guide/syntax.md)
+- [解释器](doc/dev-guide/interpreter.md)
+- ...
+
+如有 bug 反馈或其他建议，请提交 [issue](https://gitee.com/junruoyu-zheng/ligral/issues)。
 
 开发计划：
 
