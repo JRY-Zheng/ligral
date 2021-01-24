@@ -50,9 +50,9 @@ namespace Ligral.Syntax
         }
     }
 
-    class OperantToken : Token
+    class OperatorToken : Token
     {
-        public OperantToken(TokenType type, string value, int line, int column, int file) : base(type, value, line, column, file)
+        public OperatorToken(TokenType type, string value, int line, int column, int file) : base(type, value, line, column, file)
         {
         }
     }

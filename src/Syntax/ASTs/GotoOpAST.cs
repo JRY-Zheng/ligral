@@ -13,8 +13,8 @@ namespace Ligral.Syntax.ASTs
     {
         public AST Source;
         public AST Destination;
-        public OperantToken GotoToken;
-        public GotoOpAST(AST source, AST destination, OperantToken gotoToken)
+        public OperatorToken GotoToken;
+        public GotoOpAST(AST source, AST destination, OperatorToken gotoToken)
         {
             Source = source;
             Destination = destination;
