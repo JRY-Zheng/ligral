@@ -10,7 +10,7 @@ namespace Ligral.Simulation
 {
     public class ControlInput
     {
-        public bool IsOpenLoop {get; set;} = false;
+        public static bool IsOpenLoop {get; set;} = false;
         public double OpenLoopInput {set => openLoopInput = value;}
         public double ClosedLoopInput {set => closedLoopInput = value;}
         private double openLoopInput;
