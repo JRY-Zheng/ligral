@@ -36,3 +36,6 @@ ligral
 
 # dist
 dist
+
+# python 
+__pycache__
