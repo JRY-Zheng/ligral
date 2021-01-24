@@ -241,6 +241,12 @@ namespace Ligral.Syntax
                 StringToken inputToken = new StringToken(TokenType.ID, "InputMarker", currentToken.Line, currentToken.Column, file);
                 return new IdAST(inputToken);
             }
+            else if (currentToken.Type == TokenType.DOLL)
+            {
+                Eat(TokenType.DOLL);
+                StringToken outputToken = new StringToken(TokenType.ID, "OutputSink", currentToken.Line, currentToken.Column, file);
+                return new IdAST(outputToken);
+            }
             StringToken idToken = Eat(TokenType.ID) as StringToken;
             AST pointerAST = new IdAST(idToken);
             while (currentToken.Type==TokenType.DOT)
