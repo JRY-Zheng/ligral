@@ -37,4 +37,4 @@ class Pendulum(Plant):
         return np.array([[x1dot], [x2dot]])
 
     def h(self, x, u, t):
-        return np.array([[x[0]]])
+        return np.array([x[0]])

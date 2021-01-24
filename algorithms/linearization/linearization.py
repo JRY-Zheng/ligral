@@ -35,14 +35,78 @@ class Linearizer:
         return vec
 
     def partial(self, func, d0):
-        slopes = []
-        d = d0
+        '''Obtain the partial derivative of the function func(d).
+        The initial bias is d0, then iterate half of the previous
+        bias until the slope gets stable at an asymptotic value.
+        '''
+        # Initial slope
+        vp = func(d0)
+        vn = func(-d0)
+        slopes = (vp-vn)/d0/2
+        d = d0/2
+        # Iterate at most 100 time to get slope-series
         for i in range(100):
             vp = func(d)
             vn = func(-d)
             slope = (vp-vn)/d/2
-            if slopes and (np.abs(slope-slopes[-1])<self.eps).all():
-                return slope
-            slopes.append(slope)
+            # If the difference between this slope and the previous
+            # slope is small enough, then stop iteration. But at least 
+            # calculate four slops
+            if (np.abs(slope.T[0]-slopes.T[-1])<self.eps).all():
+                if len(slopes.T)>3:
+                    break
+            slopes = np.hstack((slopes, slope))
             d = d/2
-        raise Exception('cannot converge')
+        print('slopes', slopes.shape)
+        # For each value in the slope vector, calculate the asymptotic
+        # value, and stack them back to a vector
+        return np.array([[self.asymptotic(slope)] for slope in np.array(slopes)])
+
+    def asymptotic(self, series):
+        '''Calculate the asymptotic value of a scalar series.
+        The series must be exponentially stable and monotonic
+        increasing or decreasing. Only the range of the tail
+        of the series where this condition is satisfied will
+        be taken into account for asymptotic value calculation.
+        '''
+        assert len(series) > 3
+        diff = series[-2] - series[-1]
+        # If the last two value are the same, they are the asymptotic value.
+        if diff == 0:
+            return series[-1]
+        # Otherwise, the difference between them defines whether the series
+        # should be monotonic increasing or decreasing.
+        mode = 1 if diff > 0 else -1
+        tail = np.array([diff*mode])
+        for i in range(-2, -len(series), -1):
+            diff = series[i-1] - series[i]
+            # Only the range where the condition is satisfied will be added
+            # to th tail series. Beside, the differences should be smaller 
+            # and smaller. Once these conditions are no longer satisfied,
+            # the tail series is cut off.
+            if diff*mode > tail[0]:
+                tail = np.hstack(([diff*mode], tail))
+            else:
+                break
+        assert len(tail)>3
+        # Since the series is assumed to be exponentially stable, it can be
+        # fitted by xi = B*A^i, where i=1...n. Let y = log(xn), x = i, we got
+        # y = log(A)*x + log(B), so that least squares regression method can
+        # be used here to estimate A and B.
+        n = len(tail)
+        y = np.log(tail)
+        x = np.arange(n)
+        ybar = sum(y)/n
+        xbar = sum(x)/n
+        khat = (sum(x*y)-n*xbar*ybar)/(sum(x*x)-n*xbar**2)
+        if khat>0:
+            raise Exception('series is not stable')
+        bhat = ybar-khat*xbar
+        B = np.exp(bhat)
+        A = np.exp(khat)
+        # Now we confirmed that the difference of slopes satisfies that
+        # diff[i] = B*A^i, and we have the slope at n `series[-1]`. We 
+        # have to calculate the sum of differences from n to infinity.
+        # They are diff[n], diff[n+1], diff[n+2], ..., diff[inf], and the 
+        # common ratio is A, so the sum of them is diff[n]/(1-A)
+        return series[-1]-mode*B*A**n/(1-A)
