@@ -45,7 +45,7 @@ namespace Ligral.Simulation
         public static Observation CreateObservation(string name = null)
         {
             Observation observation = new Observation();
-            observation.Name = name??$"{ObservationPool.Count}";
+            observation.Name = name??$"Output{ObservationPool.Count}";
             if (ObservationPool.Exists(item => item.Item1 == observation.Name))
             {
                 // throw logger.Error(new LigralException($"Observation name conflict: {observation.Name}"));
