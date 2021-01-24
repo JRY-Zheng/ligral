@@ -344,6 +344,11 @@ namespace Ligral.Syntax
                 Advance();
                 return new OperatorToken(TokenType.QUE, "?", lineNO, columnNO, file);
             }
+            else if (currentChar=='@')
+            {
+                Advance();
+                return new OperatorToken(TokenType.AT, "@", lineNO, columnNO, file);
+            }
             else if (currentChar=='\0')
             {
                 return new OperatorToken(TokenType.EOF, "\0", lineNO, columnNO, file);

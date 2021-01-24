@@ -235,15 +235,12 @@ namespace Ligral.Syntax
                 StringToken nodeToken = new StringToken(TokenType.ID, "Node", currentToken.Line, currentToken.Column, file);
                 return new IdAST(nodeToken);
             }
-            // StringToken idToken = Eat(TokenType.ID) as StringToken;
-            // StringToken scopeToken = null;
-            // if (currentToken.Type==TokenType.DOT)
-            // {
-            //     Eat(TokenType.DOT);
-            //     scopeToken = idToken;
-            //     idToken = Eat(TokenType.ID) as StringToken;
-            // }
-            // return new PointerAST(new IdAST(scopeToken), new WordAST(idToken));
+            else if (currentToken.Type == TokenType.AT)
+            {
+                Eat(TokenType.AT);
+                StringToken inputToken = new StringToken(TokenType.ID, "InputMarker", currentToken.Line, currentToken.Column, file);
+                return new IdAST(inputToken);
+            }
             StringToken idToken = Eat(TokenType.ID) as StringToken;
             AST pointerAST = new IdAST(idToken);
             while (currentToken.Type==TokenType.DOT)
