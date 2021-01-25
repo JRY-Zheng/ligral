@@ -20,14 +20,20 @@ class Tester:
 
     def test_optimization(self, optimizer:Optimizer) -> bool:
         cost = lambda x: sum(np.sin(x)+np.cos(2*x)*1.5+np.sin(1.3*x+0.3)*0.9+2.5)
-        test_x = np.matrix(np.arange(4.53, 4.56, 0.0001)).T
-        costs = [cost(x) for x in test_x]
+        test_x = np.matrix(np.arange(4.53, 4.56, 0.0001))
+        costs = [cost(x.T) for x in test_x.T]
         index = np.argmin(costs)
-        x_opt = test_x[index]
+        x_opt = test_x[:,index]
         optimizer.optimize(cost, np.matrix(3), np.matrix(-2), np.matrix(3))
         print('the theoretical optimal value is', x_opt, '\nand we got', optimizer.Pj)
         assert (np.abs(optimizer.Pj-x_opt)<self.eps).all()
         print('test passed!')
+
+    def test_trimmer(self, plant:Plant, condition:TrimCondition, trimmer:Trimmer) -> bool:
+        p = trimmer.trim(plant, condition)
+        x = p[:plant.n]
+        u = p[plant.n:]
+        print('x =', x, '\nu =', u)
 
 tester = Tester()
 linearizer = Linearizer()
@@ -36,3 +42,11 @@ tester.test_linearization(linearizer, pendulum)
 
 optimizer = Optimizer()
 tester.test_optimization(optimizer)
+
+condition = TrimCondition(pendulum)
+condition.x0[0,0] = 1
+condition.x_wgt[0,0] = 1
+condition.x_wgt[1,0] = 1
+condition.u_wgt[0,0] = 1
+trimmer = Trimmer(optimizer)
+tester.test_trimmer(pendulum, condition, trimmer)
