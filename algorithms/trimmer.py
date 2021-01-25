@@ -32,13 +32,15 @@ class Trimmer:
         def cost(p):
             assert p.shape == (condition.n+condition.p,1)
             x = p[:condition.n]
-            u = p[condition.n:]
-            x_der = plant.f(x, u, t)
-            y = plant.h(x, u, t)
-            return (condition.x_wgt*np.diag(x.T.tolist()[0])*x+
-                    condition.x_der_wgt*np.diag(x_der.T.tolist()[0])*x_der+
-                    condition.u_wgt*np.diag(u.T.tolist()[0])*u+
-                    condition.y_wgt*np.diag(y.T.tolist()[0])*y)
+            dx = x - condition.x0
+            u = p[condition.n:] - condition.u0
+            du = u - condition.u0
+            dx_der = plant.f(x, u, t) - condition.x_der
+            dy = plant.h(x, u, t) - condition.y0
+            return (condition.x_wgt*np.diag(dx.T.tolist()[0])*dx+
+                    condition.x_der_wgt*np.diag(dx_der.T.tolist()[0])*dx_der+
+                    condition.u_wgt*np.diag(du.T.tolist()[0])*du+
+                    condition.y_wgt*np.diag(dy.T.tolist()[0])*dy)
         p0 = np.vstack((condition.x0, condition.u0))
         p_max = np.vstack((condition.x_max, condition.u_max))
         p_min = np.vstack((condition.x_min, condition.u_min))

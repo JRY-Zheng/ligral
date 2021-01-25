@@ -34,10 +34,10 @@ class Tester:
     def test_trimmer(self, plant:Plant, condition:TrimCondition, trimmer:Trimmer):
         print('test trimmer')
         x, u = trimmer.trim(plant, condition)
-        print('x =', x, '\nu =', u)
+        print('x =\n', x, '\nu =\n', u)
         x_der = plant.f(x, u, 0)
         y = plant.h(x, u, 0)
-        print('xdot =', x_der, 'y =', y)
+        print('xdot =\n', x_der, '\ny =\n', y)
 
     def test(self):
         linearizer = Linearizer()

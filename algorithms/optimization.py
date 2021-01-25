@@ -13,7 +13,7 @@ class Optimizer:
 
     def optimize(self, cost, x0, xmax, xmin):
         x0 = np.matrix(x0)
-        self.x0s = x0 + (xmax-xmin)/10*(np.random.rand(1,self.m)*2-1)
+        self.x0s = x0 + (xmax-xmin).tolist()*(np.random.rand(len(x0),self.m)*2-1)/10
         self.xs = self.x0s.copy()
         self.vs = np.matrix(np.zeros_like(self.xs))
         self.Pij = self.x0s.copy()
@@ -35,3 +35,4 @@ class Optimizer:
             self.opt = np.argmin(self.Cij)
             self.Pj = self.Pij[:,self.opt]
             self.Cj = self.Cij[self.opt]
+            print(self.Cj)
