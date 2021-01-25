@@ -25,16 +25,16 @@ class Pendulum(Plant):
         self.g = 9.8
         self.l = 0.5
         self.I = 0.001
-        self.A = np.array([[0, 1], [-self.M*self.g*self.l/self.I, 0]])
-        self.B = np.array([[0], [1/self.I]])
-        self.C = np.array([[1, 0]])
+        self.A = np.matrix([[0, 1], [-self.M*self.g*self.l/self.I, 0]])
+        self.B = np.matrix([[0], [1/self.I]])
+        self.C = np.matrix([[1, 0]])
         self.D = np.zeros((1,1))
 
     def f(self, x, u, t):
         x1, x2 = x[:,0]
         x1dot = x2
         x2dot = -self.M*self.g*self.l/self.I*np.sin(x1)+u[0,0]/self.I
-        return np.array([[x1dot], [x2dot]])
+        return np.vstack((x1dot, x2dot))
 
     def h(self, x, u, t):
-        return np.array([x[0]])
+        return x[0]

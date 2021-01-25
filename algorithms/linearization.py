@@ -57,10 +57,9 @@ class Linearizer:
                     break
             slopes = np.hstack((slopes, slope))
             d = d/2
-        print('slopes', slopes.shape)
         # For each value in the slope vector, calculate the asymptotic
         # value, and stack them back to a vector
-        return np.array([[self.asymptotic(slope)] for slope in np.array(slopes)])
+        return np.vstack([self.asymptotic(slope.T) for slope in np.matrix(slopes)])
 
     def asymptotic(self, series):
         '''Calculate the asymptotic value of a scalar series.
@@ -77,7 +76,7 @@ class Linearizer:
         # Otherwise, the difference between them defines whether the series
         # should be monotonic increasing or decreasing.
         mode = 1 if diff > 0 else -1
-        tail = np.array([diff*mode])
+        tail = diff*mode
         for i in range(-2, -len(series), -1):
             diff = series[i-1] - series[i]
             # Only the range where the condition is satisfied will be added
@@ -85,7 +84,7 @@ class Linearizer:
             # and smaller. Once these conditions are no longer satisfied,
             # the tail series is cut off.
             if diff*mode > tail[0]:
-                tail = np.hstack(([diff*mode], tail))
+                tail = np.vstack((diff*mode, tail))
             else:
                 break
         assert len(tail)>3
