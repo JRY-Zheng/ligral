@@ -19,9 +19,13 @@ class Tester:
 
     def test_optimization(self, optimizer:Optimizer) -> bool:
         opt = Optimizer()
-        x_opt = np.array([[-1]])
-        opt.optimize(lambda x: sum((x+1)**2), np.array([[1]]), np.array([[-2]]), np.array([[3]]))
-        print('the theoretical optimal value is', opt.Pj, '\nand we got', x_opt)
+        cost = lambda x: sum(np.sin(x)+np.cos(2*x)*1.5+np.sin(1.3*x+0.3)*0.9+2.5)
+        test_x = np.arange(4.53, 4.56, 0.0001)
+        costs = [cost(np.array([[x]])) for x in test_x]
+        index = np.argmin(costs)
+        x_opt = np.array([[test_x[index]]])
+        opt.optimize(cost, np.array([[3]]), np.array([[-2]]), np.array([[3]]))
+        print('the theoretical optimal value is', x_opt, '\nand we got', opt.Pj)
         assert (np.abs(opt.Pj-x_opt)<self.eps).all()
         print('test passed!')
 
