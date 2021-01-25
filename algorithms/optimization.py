@@ -26,7 +26,7 @@ class Optimizer:
             c2 = self.c2min+g/self.gmax*(self.c2max-self.c2min)
             w = self.wmax-g/self.gmax*(self.wmax-self.wmin)
             for p in range(self.m):
-                self.vs[:,p] = w*self.vs[:,p]+c1*np.random.rand()*(self.Pij[:,p]-self.xs[:,p])+c2*np.random.rand()*(self.Pj[:,0]-self.xs[:,p])
+                self.vs[:,p] = w*self.vs[:,p]+c1*np.diag(np.random.rand(len(x0)))*(self.Pij[:,p]-self.xs[:,p])+c2*np.random.rand()*(self.Pj[:,0]-self.xs[:,p])
                 self.xs[:,p] = self.xs[:,p]+self.vs[:,p]
                 C = cost(self.xs[:,p])
                 if self.Cij[p]>C:
@@ -35,4 +35,3 @@ class Optimizer:
             self.opt = np.argmin(self.Cij)
             self.Pj = self.Pij[:,self.opt]
             self.Cj = self.Cij[self.opt]
-            print(self.Cj)
