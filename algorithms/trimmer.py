@@ -37,10 +37,10 @@ class Trimmer:
             du = u - condition.u0
             dx_der = plant.f(x, u, t) - condition.x_der
             dy = plant.h(x, u, t) - condition.y0
-            return (condition.x_wgt*np.diag(dx.T.tolist()[0])*dx+
-                    condition.x_der_wgt*np.diag(dx_der.T.tolist()[0])*dx_der+
-                    condition.u_wgt*np.diag(du.T.tolist()[0])*du+
-                    condition.y_wgt*np.diag(dy.T.tolist()[0])*dy)
+            return (condition.x_wgt*np.multiply(dx,dx)+
+                    condition.x_der_wgt*np.multiply(dx_der,dx_der)+
+                    condition.u_wgt*np.multiply(du,du)+
+                    condition.y_wgt*np.multiply(dy,dy))
         p0 = np.vstack((condition.x0, condition.u0))
         p_max = np.vstack((condition.x_max, condition.u_max))
         p_min = np.vstack((condition.x_min, condition.u_min))

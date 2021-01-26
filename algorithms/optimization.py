@@ -10,9 +10,9 @@ class Optimizer:
         self.c2min = 1.5
         self.gmax = 1000
         self.m = 20
-        self.count = 0
 
     def optimize(self, cost, x0, xmax, xmin):
+        count = 0
         x0 = np.matrix(x0)
         self.x0s = x0 + (xmax-xmin).tolist()*(np.random.rand(len(x0),self.m)*2-1)/10
         self.xs = self.x0s.copy()
@@ -36,10 +36,10 @@ class Optimizer:
             self.opt = np.argmin(self.Cij)
             self.Pj = self.Pij[:,self.opt]
             if self.Cj == self.Cij[self.opt]:
-                self.count += 1
-                if self.count > 20:
+                count += 1
+                if count > 20:
                     break
             else:
-                self.count = 0
+                count = 0
             self.Cj = self.Cij[self.opt]
         print('generations =', g)
