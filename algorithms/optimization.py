@@ -10,6 +10,7 @@ class Optimizer:
         self.c2min = 1.5
         self.gmax = 1000
         self.m = 20
+        self.max_repeat_count = 20
 
     def optimize(self, cost, x0, xmax, xmin):
         count = 0
@@ -37,7 +38,7 @@ class Optimizer:
             self.Pj = self.Pij[:,self.opt]
             if self.Cj == self.Cij[self.opt]:
                 count += 1
-                if count > 20:
+                if count > self.max_repeat_count:
                     break
             else:
                 count = 0
