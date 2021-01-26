@@ -8,8 +8,9 @@ class Optimizer:
         self.c1min = 1.5
         self.c2max = 2
         self.c2min = 1.5
-        self.gmax = 100
+        self.gmax = 1000
         self.m = 20
+        self.count = 0
 
     def optimize(self, cost, x0, xmax, xmin):
         x0 = np.matrix(x0)
@@ -34,4 +35,11 @@ class Optimizer:
                     self.Pij[:,p] = self.xs[:,p]
             self.opt = np.argmin(self.Cij)
             self.Pj = self.Pij[:,self.opt]
+            if self.Cj == self.Cij[self.opt]:
+                self.count += 1
+                if self.count > 20:
+                    break
+            else:
+                self.count = 0
             self.Cj = self.Cij[self.opt]
+        print('generations =', g)
