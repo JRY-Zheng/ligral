@@ -39,10 +39,10 @@ class Tester:
         x_der = plant.f(x, u, 0)
         y = plant.h(x, u, 0)
         print('xdot =\n', x_der, '\ny =\n', y)
-        assert (np.abs(np.multiply(np.sign(condition.x_wgt), x) - condition.x0) < self.eps).all()
-        assert (np.abs(np.multiply(np.sign(condition.x_der_wgt), x_der) - condition.x_der) < self.eps).all()
-        assert (np.abs(np.multiply(np.sign(condition.u_wgt), u) - condition.u0) < self.eps).all()
-        assert (np.abs(np.multiply(np.sign(condition.y_wgt), y) - condition.y0) < self.eps).all()
+        assert (np.abs(np.multiply(np.sign(condition.x_wgt), x - condition.x0)) < self.eps).all()
+        assert (np.abs(np.multiply(np.sign(condition.x_der_wgt), x_der - condition.x_der)) < self.eps).all()
+        assert (np.abs(np.multiply(np.sign(condition.u_wgt), u - condition.u0)) < self.eps).all()
+        assert (np.abs(np.multiply(np.sign(condition.y_wgt), y - condition.y0)) < self.eps).all()
         print('test passed!\n\n')
 
     def test(self):
