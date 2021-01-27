@@ -27,13 +27,12 @@ class Tester:
         index = np.argmin(costs)
         x_opt = test_x[:,index]
         optimizer.optimize(cost, np.matrix(3), np.matrix(-2), np.matrix(3))
-        print('the theoretical optimal value is', x_opt, '\nand we got', optimizer.Pj)
-        assert (np.abs(optimizer.Pj-x_opt)<self.eps).all()
+        print('the theoretical optimal value is', x_opt, '\nand we got', optimizer.results())
+        assert (np.abs(optimizer.results()-x_opt)<self.eps).all()
         print('test passed!\n\n')
 
     def test_trimmer(self, plant:Plant, condition:TrimCondition, trimmer:Trimmer):
         print('test trimmer')
-        trimmer.optimizer.max_repeat_count = 100
         x, u = trimmer.trim(plant, condition)
         print('x =\n', x, '\nu =\n', u)
         x_der = plant.f(x, u, 0)
@@ -50,7 +49,7 @@ class Tester:
         pendulum = Pendulum()
         self.test_linearization(linearizer, pendulum)
 
-        optimizer = Optimizer()
+        optimizer = PSO()
         self.test_optimization(optimizer)
 
         condition = TrimCondition(pendulum)
@@ -65,6 +64,7 @@ class Tester:
         condition.x_min[1,0] = -2
         condition.u_max[0,0] = 2
         condition.u_min[0,0] = -2
+        optimizer.max_repeat_count = 100
         trimmer = Trimmer(optimizer)
         self.test_trimmer(pendulum, condition, trimmer)
 

@@ -45,6 +45,6 @@ class Trimmer:
         p_max = np.vstack((condition.x_max, condition.u_max))
         p_min = np.vstack((condition.x_min, condition.u_min))
         self.optimizer.optimize(cost, p0, p_max, p_min)
-        x = self.optimizer.Pj[:plant.n]
-        u = self.optimizer.Pj[plant.n:]
+        x = self.optimizer.results()[:plant.n]
+        u = self.optimizer.results()[plant.n:]
         return x, u

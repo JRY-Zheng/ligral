@@ -1,6 +1,13 @@
 import numpy as np
 
 class Optimizer:
+    def optimize(self, cost, x0, xmax, xmin):
+        pass
+
+    def results(self):
+        return None
+
+class PSO(Optimizer):
     def __init__(self):
         self.wmax = 0.3
         self.wmin = 0.1
@@ -11,6 +18,9 @@ class Optimizer:
         self.gmax = 1000
         self.m = 20
         self.max_repeat_count = 20
+
+    def results(self):
+        return self.Pj
 
     def optimize(self, cost, x0, xmax, xmin):
         count = 0
