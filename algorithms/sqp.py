@@ -35,7 +35,7 @@ class SQP(Optimizer):
             assert cols == 1
             Ab = self.gradient(bound, x0).T
             Bb = bound(x0)
-            sel = np.array(Bb).T[0]>0
+            sel = np.array(Bb).T[0] >= self.eps
             A = np.vstack((Ae, Ab[sel]))
             B = np.vstack((Be, Bb[sel]))
             n_mu, cols = Bb[sel].shape
@@ -46,7 +46,11 @@ class SQP(Optimizer):
             lam = p[n_s:]
             x += s
             c_new = cost(x)
-            if (np.abs(lam) < self.tolerant).all() or (np.abs(c_new - c)<self.tolerant).all():
+            if (np.abs(lam) < self.tolerant).all():
+                print('optimal value found')
+                break 
+            elif (np.abs(c_new - c)<self.tolerant).all():
+                print('cannot found optimal value')
                 break
             else:
                 c = c_new
