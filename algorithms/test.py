@@ -91,9 +91,9 @@ class Tester:
         condition.x_min[1,0] = -2
         condition.u_max[0,0] = 2
         condition.u_min[0,0] = -2
-        optimizer.max_repeat_count = 100
+        # optimizer.max_repeat_count = 100
         trimmer = Trimmer(optimizer)
-        # self.test_trimmer(pendulum, condition, trimmer)
+        self.test_trimmer(pendulum, condition, trimmer)
 
         sqp = SQP()
         self.test_gradient(sqp.gradient)
