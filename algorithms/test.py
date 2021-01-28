@@ -1,6 +1,7 @@
 from linearization import *
 from optimization import *
 from trimmer import *
+from sqp import *
 
 class Tester:
     def __init__(self):
@@ -44,6 +45,22 @@ class Tester:
         assert (np.abs(np.multiply(np.sign(condition.y_wgt), y - condition.y0)) < self.eps).all()
         print('test passed!\n\n')
 
+    def test_gradient(self, gradient):
+        A = np.random.rand(3,2)
+        print('f(x) = Ax, where A =', A)
+        Ap = gradient(lambda x: A*x, np.matrix([1.,2.]).T)
+        print("we got gradient A' =", Ap)
+        assert (np.abs(A-Ap.T) < self.eps).all()
+        print('test passed')
+
+    def test_hessian(self, hessian):
+        A = np.random.rand(3,3)
+        print("f(x) = x'Ax, where A =", A)
+        H = hessian(lambda x: x.T*A*x, np.matrix([1.,2.,3.]).T)
+        print('we got hessian H =', H)
+        assert (np.abs(A+A.T-H) < self.eps).all()
+        print('test passed')
+
     def test(self):
         linearizer = Linearizer()
         pendulum = Pendulum()
@@ -66,7 +83,11 @@ class Tester:
         condition.u_min[0,0] = -2
         optimizer.max_repeat_count = 100
         trimmer = Trimmer(optimizer)
-        self.test_trimmer(pendulum, condition, trimmer)
+        # self.test_trimmer(pendulum, condition, trimmer)
+
+        sqp = SQP()
+        self.test_gradient(sqp.gradient)
+        self.test_hessian(sqp.hessian)
 
 
 tester = Tester()

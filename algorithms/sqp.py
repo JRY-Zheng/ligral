@@ -2,7 +2,7 @@ from optimization import *
 
 class SQP(Optimizer):
     def __init__(self):
-        self.eps = 1e-8
+        self.eps = 1e-5
         self.tolerant = 1e-6
 
     def gradient(self, f, x):
@@ -11,12 +11,13 @@ class SQP(Optimizer):
         fx = f(x)
         m, cols = fx.shape
         assert cols == 1
-        A = np.matrix(np.ones((m, n)))
+        A = np.matrix(np.ones((n, m)))
         for i in range(n):
             xp = x.copy()
             xp[i] = x[i]+self.eps
-            A[:,i] = (f(xp)-fx)/self.eps
+            A[i] = (f(xp)-fx).T/self.eps
         return A
 
     def hessian(self, f, x):
-        return self.gradient(lambda x: self.gradient(f, x).T, x)
+        return self.gradient(lambda x: self.gradient(f, x), x)
+
