@@ -1,7 +1,7 @@
 import numpy as np
 
 class Optimizer:
-    def optimize(self, cost, x0, xmax, xmin):
+    def optimize(self, cost, x0, equal, bound):
         pass
 
     def results(self):

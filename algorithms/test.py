@@ -20,7 +20,7 @@ class Tester:
         assert (np.abs(D-plant.D)<self.eps).all()
         print('test passed!\n\n')
 
-    def test_optimization(self, optimizer:Optimizer):
+    def test_pso(self, optimizer:Optimizer):
         print('test optimizer')
         cost = lambda x: sum(np.sin(x)+np.cos(2*x)*1.5+np.sin(1.3*x+0.3)*0.9+2.5)
         test_x = np.matrix(np.arange(4.53, 4.56, 0.0001))
@@ -28,6 +28,16 @@ class Tester:
         index = np.argmin(costs)
         x_opt = test_x[:,index]
         optimizer.optimize(cost, np.matrix(3), np.matrix(-2), np.matrix(3))
+        print('the theoretical optimal value is', x_opt, '\nand we got', optimizer.results())
+        assert (np.abs(optimizer.results()-x_opt)<self.eps).all()
+        print('test passed!\n\n')
+
+    def test_optimization(self, optimizer:Optimizer):
+        print('test optimizer')
+        cost = lambda x: x.T*x
+        x0 = np.matrix([1,2.]).T
+        x_opt = np.matrix([0,0]).T
+        optimizer.optimize(cost, x0, lambda x:x[0], lambda x: np.vstack((x[0]-3, 1-x[1])))
         print('the theoretical optimal value is', x_opt, '\nand we got', optimizer.results())
         assert (np.abs(optimizer.results()-x_opt)<self.eps).all()
         print('test passed!\n\n')
@@ -66,7 +76,7 @@ class Tester:
         pendulum = Pendulum()
         self.test_linearization(linearizer, pendulum)
 
-        optimizer = PSO()
+        optimizer = SQP()
         self.test_optimization(optimizer)
 
         condition = TrimCondition(pendulum)
