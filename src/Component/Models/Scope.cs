@@ -61,7 +61,7 @@ namespace Ligral.Component.Models
                 ColumnsCount = colNo==0 ? 1 : colNo
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
-            handle = new ObservationHandle(varName, rowNo, colNo);
+            handle = Observation.CreateObservation(varName, rowNo, colNo);
             if (inputSignal.IsMatrix)
             {
                 for(int i = 0; i < rowNo; i++)

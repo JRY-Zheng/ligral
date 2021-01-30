@@ -26,7 +26,7 @@ namespace Ligral.Component.Models
         {
             base.AfterConfigured();
             Results[0].Clone(initial);
-            handle = new StateHandle(Name, rowNo, colNo, initial);
+            handle = State.CreateState(Name, rowNo, colNo, initial);
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += DerivativeUpdate;
         }

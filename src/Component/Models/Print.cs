@@ -88,7 +88,7 @@ namespace Ligral.Component.Models
             }
             length = varName.Length;
             (rowNo, colNo) = inputSignal.Shape();
-            handle = new ObservationHandle(varName, rowNo, colNo);
+            handle = Observation.CreateObservation(varName, rowNo, colNo);
             Calculate = PostCalculate;
             return Calculate(values);
         }

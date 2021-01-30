@@ -84,8 +84,8 @@ namespace Ligral.Component.Models
             yName = yName ?? $"{varName}:y";
             (int xr, int xc) = xSignal.Shape();
             (int yr, int yc) = ySignal.Shape();
-            xHandle = new ObservationHandle(xName, xr, xc);
-            yHandle = new ObservationHandle(yName, yr, yc);
+            xHandle = Observation.CreateObservation(xName, xr, xc);
+            yHandle = Observation.CreateObservation(yName, yr, yc);
             if (!xSignal.IsMatrix && !ySignal.IsMatrix)
             {
                 FigureConfigDoubleScalar(xName, yName);
