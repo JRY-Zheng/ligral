@@ -45,9 +45,9 @@ namespace Ligral.Simulation
         }
         public Matrix<double> ObservationFunction()
         {
-            Observation.ObservationPool.ForEach(item => item.Item2.Commit());
+            Observation.ObservationPool.ForEach(observation => observation.Commit());
             Observation.TimeList.Add(Solver.Time);
-            return Observation.ObservationPool.ConvertAll(item => item.Item2.OutputVariable).ToColumnVector();
+            return Observation.ObservationPool.ConvertAll(observation => observation.OutputVariable).ToColumnVector();
         }
     }
 }

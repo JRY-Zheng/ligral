@@ -6,7 +6,10 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ligral.Tools;
+using MathNet.Numerics.LinearAlgebra;
+using Ligral.Component;
 
 namespace Ligral.Simulation
 {
@@ -30,35 +33,58 @@ namespace Ligral.Simulation
             Solver.Stepped += OnStepped;
             Solver.Stopped += OnStopped;
         }
-        protected Logger logger
+        static Logger logger = new Logger("Observation");
+        public static List<Observation> ObservationPool = new List<Observation>();
+        public static Dictionary<string, ObservationHandle> ObservationHandles = new Dictionary<string, ObservationHandle>();
+        public static Observation CreateObservation(string name)
         {
-            get
+            Observation observation = new Observation(name??$"Output{ObservationPool.Count}");
+            if (ObservationPool.Exists(obs => obs.Name == observation.Name))
             {
-                if (loggerInstance is null)
-                {
-                    loggerInstance = new Logger(Name);
-                }
-                return loggerInstance;
-            }
-        }
-        public static List<(string, Observation)> ObservationPool = new List<(string, Observation)>();
-        public static Observation CreateObservation(string name = null)
-        {
-            Observation observation = new Observation();
-            observation.Name = name??$"Output{ObservationPool.Count}";
-            if (ObservationPool.Exists(item => item.Item1 == observation.Name))
-            {
-                // throw logger.Error(new LigralException($"Observation name conflict: {observation.Name}"));
-                // [TODO] add log system to warn override
-                return ObservationPool.Find(item => item.Item1 == observation.Name).Item2;
+                logger.Warn($@"The signal {observation.Name} is logged more than once, but only a single output is stored. 
+Make sure you did not log two different signals under the same name.");
+                // This statement should not be error:
+                //     x -> Print; x -> Scope;
+                // We just print x and scope x, only one observation handle will be create.
+                // However, be careful about this case:
+                //     x -> Print; y -> Scope{name:'x'};
+                // Still only one observation handle will be create, so unexpected behaviour will occur.
+                return ObservationPool.Find(obs => obs.Name == observation.Name);
             }
             else
             {
-                ObservationPool.Add((observation.Name, observation));
+                ObservationPool.Add(observation);
                 return observation;
             }
         }
-        private Observation() {}
+        public static ObservationHandle CreateObservation(string name, int rowNo, int colNo)
+        {
+            name = name??$"Output{ObservationPool.Count}";
+            ObservationHandle handle;
+            if (ObservationHandles.ContainsKey(name))
+            {
+                handle = ObservationHandles[name];
+                if (handle.rowNo != rowNo && handle.colNo != colNo)
+                {
+                    throw logger.Error(new LigralException($"Two different signals are stored under the same name {name}"));
+                }
+                else
+                {
+                    logger.Warn($@"The signal {name} is logged more than once, but only a single output handle is generated. 
+Make sure you did not log two different signals under the same name.");
+                }
+            }
+            else
+            {
+                handle = new ObservationHandle(name, rowNo, colNo);
+                ObservationHandles.Add(name, handle);
+            }
+            return handle;
+        }
+        private Observation(string name) 
+        {
+            loggerInstance = new Logger(name);
+        }
         public void Cache(double value)
         {
             isCommitted = false;
@@ -87,9 +113,9 @@ namespace Ligral.Simulation
             {
                 Storage table = new Storage();
                 table.AddColumn("Time", Observation.TimeList);
-                foreach ((string name, var observation) in ObservationPool)
+                foreach (var observation in ObservationPool)
                 {
-                    table.AddColumn(name, observation.ObservationList);
+                    table.AddColumn(observation.Name, observation.ObservationList);
                 }
                 Settings settings = Settings.GetInstance();
                 if (!Directory.Exists(settings.OutputFolder))
@@ -101,6 +127,20 @@ namespace Ligral.Simulation
                 table.DumpFile(DataFile, true);
             }
             if (Stopped != null) Stopped();
+        }
+    }
+
+    public class ObservationHandle : Handle<Observation>
+    {
+        public ObservationHandle(string name, int rowNo, int colNo) : base(name, rowNo, colNo, Observation.CreateObservation)
+        { }
+        public void Cache(Signal signal)
+        {
+            SetSignal(signal, (observation, value) => observation.Cache(value));
+        }
+        public Signal GetObservation()
+        {
+            return GetSignal(observation => observation.OutputVariable);
         }
     }
 }
