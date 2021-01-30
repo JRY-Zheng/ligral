@@ -79,14 +79,8 @@ namespace Ligral.Simulation
             {
                 IEnumerable<double> row = space.ConvertAll(room => getValue(room));
                 MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> mat = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                for (int i = 1; i < rowNo; i++)
-                {
-                    row = row.Skip(colNo);
-                    Matrix<double> vec = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                    mat = mat.Stack(vec);
-                }
-                signal.Pack(mat);
+                Matrix<double> matrix = m.Dense(colNo, rowNo, row.ToArray()).Transpose();
+                signal.Pack(matrix);
             }
             return signal;
         }
