@@ -22,6 +22,7 @@ namespace Ligral.Simulation
     public class Problem
     {
         private List<Model> routine;
+        private Logger logger = new Logger("Problem");
         public Problem(List<Model> routine)
         {
             this.routine = routine;
@@ -42,6 +43,23 @@ namespace Ligral.Simulation
                 node.Propagate();
             }
             return State.StatePool.ConvertAll(state => state.Derivative).ToColumnVector();
+        }
+        public Matrix<double> SystemDynamicFunction(Matrix<double> states, Matrix<double> inputs)
+        {
+            if (!ControlInput.IsOpenLoop)
+            {
+                throw logger.Error(new LigralException("Only in open-loop mode can you define input"));
+            }
+            var inputArray = inputs.AsColumnMajorArray();
+            if (inputArray.Length != ControlInput.InputPool.Count)
+            {
+                throw logger.Error(new LigralException($"Control input number unmatched, {inputArray.Length} got but {ControlInput.InputPool.Count} expected."));
+            }
+            for (int i = 0; i < inputArray.Length; i++)
+            {
+                ControlInput.InputPool[i].OpenLoopInput = inputArray[i];
+            }
+            return SystemDynamicFunction(states);
         }
         public Matrix<double> ObservationFunction()
         {
