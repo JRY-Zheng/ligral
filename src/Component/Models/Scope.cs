@@ -22,7 +22,7 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private List<Observation> observations = new List<Observation>();
+        private ObservationHandle handle;
         private Publisher publisher = new Publisher();
         protected override void SetUpPorts()
         {
@@ -61,6 +61,7 @@ namespace Ligral.Component.Models
                 ColumnsCount = colNo==0 ? 1 : colNo
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
+            handle = new ObservationHandle(varName, rowNo, colNo);
             if (inputSignal.IsMatrix)
             {
                 for(int i = 0; i < rowNo; i++)
@@ -68,7 +69,6 @@ namespace Ligral.Component.Models
                     for (int j = 0; j < colNo; j++)
                     {
                         string observationName = $"{varName}({i}-{j})";
-                        observations.Add(Observation.CreateObservation(observationName));
                         FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
                         {
                             FigureId = publisher.Id,
@@ -91,7 +91,6 @@ namespace Ligral.Component.Models
             }
             else
             {
-                observations.Add(Observation.CreateObservation(varName));
                 FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
                 {
                     FigureId = publisher.Id,
@@ -121,7 +120,7 @@ namespace Ligral.Component.Models
         private List<Signal> PostCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
-            inputSignal.ZipApply<Observation>(observations, (value, observation) => observation.Cache(value));
+            handle.Cache(inputSignal);
             return Results;
         }
         public override void Refresh()
@@ -129,9 +128,9 @@ namespace Ligral.Component.Models
             Settings settings = Settings.GetInstance();
             if (settings.RealTimeSimulation)
             {
-                for (int i=0; i<observations.Count; i++)
+                for (int i=0; i<handle.space.Count; i++)
                 {
-                    Observation observation = observations[i];
+                    Observation observation = handle.space[i];
                     FigureProtocol.Data data = new FigureProtocol.Data()
                     {
                         FigureId = publisher.Id, 
@@ -145,9 +144,9 @@ namespace Ligral.Component.Models
         }
         public override void Release()
         {
-            for (int i=0; i<observations.Count; i++)
+            for (int i=0; i<handle.space.Count; i++)
             {
-                Observation observation = observations[i];
+                Observation observation = handle.space[i];
                 FigureProtocol.DataFile dataFile = new FigureProtocol.DataFile()
                 {
                     FigureId = publisher.Id, 

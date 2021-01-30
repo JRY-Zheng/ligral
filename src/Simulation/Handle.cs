@@ -18,7 +18,7 @@ namespace Ligral.Simulation
         
         public int rowNo {get; private set;}
         public int colNo {get; private set;}
-        private List<T> space = new List<T>();
+        public List<T> space {get;} = new List<T>();
         private string name;
         private Logger logger;
         public Handle(string name, int rowNo, int colNo, Func<string, T> create)

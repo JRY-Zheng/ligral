@@ -23,8 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private List<Observation> xObservations = new List<Observation>();
-        private List<Observation> yObservations = new List<Observation>();
+        private ObservationHandle xHandle;
+        private ObservationHandle yHandle;
         private Publisher publisher = new Publisher();
         private delegate void SendPacketHandler();
         private SendPacketHandler SendData;
@@ -84,6 +84,8 @@ namespace Ligral.Component.Models
             yName = yName ?? $"{varName}:y";
             (int xr, int xc) = xSignal.Shape();
             (int yr, int yc) = ySignal.Shape();
+            xHandle = new ObservationHandle(xName, xr, xc);
+            yHandle = new ObservationHandle(yName, yr, yc);
             if (!xSignal.IsMatrix && !ySignal.IsMatrix)
             {
                 FigureConfigDoubleScalar(xName, yName);
@@ -141,8 +143,8 @@ namespace Ligral.Component.Models
             Signal xSignal = values[0];
             Signal ySignal = values[1];
             (int xr, int xc) = xSignal.Shape();
-            xSignal.ZipApply<Observation>(xObservations, (val, obs) => obs.Cache(val));
-            ySignal.ZipApply<Observation>(yObservations, (val, obs) => obs.Cache(val));
+            xHandle.Cache(xSignal);
+            yHandle.Cache(ySignal);
             return Results;
         }
         #region double-scalar
@@ -156,8 +158,6 @@ namespace Ligral.Component.Models
                 ColumnsCount = 1
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
-            xObservations.Add(Observation.CreateObservation(xName));
-            yObservations.Add(Observation.CreateObservation(yName));
             FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
             {
                 FigureId = publisher.Id,
@@ -182,8 +182,8 @@ namespace Ligral.Component.Models
             {
                 FigureId = publisher.Id, 
                 CurveHandle = 0, 
-                XValue = xObservations[0].OutputVariable, 
-                YValue = yObservations[0].OutputVariable
+                XValue = xHandle.space[0].OutputVariable, 
+                YValue = yHandle.space[0].OutputVariable
             };
             publisher.Send(FigureProtocol.DataLabel, data);
         }
@@ -194,8 +194,8 @@ namespace Ligral.Component.Models
                 FigureId = publisher.Id, 
                 CurveHandle = 0, 
                 FileName = Observation.DataFile,
-                XColumn = xObservations[0].Name,
-                YColumn = yObservations[0].Name
+                XColumn = xHandle.space[0].Name,
+                YColumn = yHandle.space[0].Name
             };
             publisher.Send(FigureProtocol.DataFileLabel, dataFile);
         }
@@ -211,13 +211,11 @@ namespace Ligral.Component.Models
                 ColumnsCount = yr
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
-            xObservations.Add(Observation.CreateObservation(xName));
             for(int i = 0; i < yr; i++)
             {
                 for (int j = 0; j < yc; j++)
                 {
                     string observationName = $"{yName}({i}-{j})";
-                    yObservations.Add(Observation.CreateObservation(observationName));
                     FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
                     {
                         FigureId = publisher.Id,
@@ -240,29 +238,29 @@ namespace Ligral.Component.Models
         }
         private void SendDataScalarMatrix()
         {
-            for (int i=0; i<yObservations.Count; i++)
+            for (int i=0; i<yHandle.space.Count; i++)
             {
                 FigureProtocol.Data data = new FigureProtocol.Data()
                 {
                     FigureId = publisher.Id, 
                     CurveHandle = i, 
-                    XValue = xObservations[0].OutputVariable, 
-                    YValue = yObservations[i].OutputVariable
+                    XValue = xHandle.space[0].OutputVariable, 
+                    YValue = yHandle.space[i].OutputVariable
                 };
                 publisher.Send(FigureProtocol.DataLabel, data);
             }
         }
         private void SendFileScalarMatrix()
         {
-            for (int i=0; i<yObservations.Count; i++)
+            for (int i=0; i<yHandle.space.Count; i++)
             {
                 FigureProtocol.DataFile dataFile = new FigureProtocol.DataFile()
                 {
                     FigureId = publisher.Id, 
                     CurveHandle = i, 
                     FileName = Observation.DataFile,
-                    XColumn = xObservations[0].Name,
-                    YColumn = yObservations[i].Name
+                    XColumn = xHandle.space[0].Name,
+                    YColumn = yHandle.space[i].Name
                 };
                 publisher.Send(FigureProtocol.DataFileLabel, dataFile);
             }
@@ -284,7 +282,6 @@ namespace Ligral.Component.Models
                 for (int j = 0; j < xc; j++)
                 {
                     string observationName = $"{xName}({i}-{j})";
-                    xObservations.Add(Observation.CreateObservation(observationName));
                     FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
                     {
                         FigureId = publisher.Id,
@@ -304,33 +301,32 @@ namespace Ligral.Component.Models
                     publisher.Send(FigureProtocol.CurveLabel, curve);
                 }
             }
-            yObservations.Add(Observation.CreateObservation(yName));
         }
         private void SendDataMatrixScalar()
         {
-            for (int i=0; i<xObservations.Count; i++)
+            for (int i=0; i<xHandle.space.Count; i++)
             {
                 FigureProtocol.Data data = new FigureProtocol.Data()
                 {
                     FigureId = publisher.Id, 
                     CurveHandle = i, 
-                    XValue = xObservations[i].OutputVariable, 
-                    YValue = yObservations[0].OutputVariable
+                    XValue = xHandle.space[i].OutputVariable, 
+                    YValue = yHandle.space[0].OutputVariable
                 };
                 publisher.Send(FigureProtocol.DataLabel, data);
             }
         }
         private void SendFileMatrixScalar()
         {
-            for (int i=0; i<xObservations.Count; i++)
+            for (int i=0; i<xHandle.space.Count; i++)
             {
                 FigureProtocol.DataFile dataFile = new FigureProtocol.DataFile()
                 {
                     FigureId = publisher.Id, 
                     CurveHandle = i, 
                     FileName = Observation.DataFile,
-                    XColumn = xObservations[i].Name,
-                    YColumn = yObservations[0].Name
+                    XColumn = xHandle.space[i].Name,
+                    YColumn = yHandle.space[0].Name
                 };
                 publisher.Send(FigureProtocol.DataFileLabel, dataFile);
             }
@@ -350,12 +346,10 @@ namespace Ligral.Component.Models
             for (int i = 0; i < xc; i++)
             {
                 string observationName = $"{xName}({i})";
-                xObservations.Add(Observation.CreateObservation(observationName));
             }
             for (int i = 0; i < yr; i++)
             {
                 string observationName = $"{yName}({i})";
-                yObservations.Add(Observation.CreateObservation(observationName));
                 for (int j = 0; j < xc; j++)
                 {
                     FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
@@ -363,7 +357,7 @@ namespace Ligral.Component.Models
                         FigureId = publisher.Id,
                         RowNO = i,
                         ColumnNO = j,
-                        XLabel = xObservations[j].Name,
+                        XLabel = xHandle.space[j].Name,
                         YLabel = observationName
                     };
                     publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
@@ -380,16 +374,16 @@ namespace Ligral.Component.Models
         }
         private void SendDataHVectorVVector()
         {
-            for (int j = 0; j < yObservations.Count; j++)
+            for (int j = 0; j < yHandle.space.Count; j++)
             {
-                for (int i = 0; i< xObservations.Count; i++)
+                for (int i = 0; i< xHandle.space.Count; i++)
                 {
                     FigureProtocol.Data data = new FigureProtocol.Data()
                     {
                         FigureId = publisher.Id, 
-                        CurveHandle = j * xObservations.Count + i, 
-                        XValue = xObservations[i].OutputVariable, 
-                        YValue = yObservations[j].OutputVariable
+                        CurveHandle = j * xHandle.space.Count + i, 
+                        XValue = xHandle.space[i].OutputVariable, 
+                        YValue = yHandle.space[j].OutputVariable
                     };
                     publisher.Send(FigureProtocol.DataLabel, data);
                 }
@@ -397,17 +391,17 @@ namespace Ligral.Component.Models
         }
         private void SendFileHVectorVVector()
         {
-            for (int j = 0; j < yObservations.Count; j++)
+            for (int j = 0; j < yHandle.space.Count; j++)
             {
-                for (int i = 0; i< xObservations.Count; i++)
+                for (int i = 0; i< xHandle.space.Count; i++)
                 {
                     FigureProtocol.DataFile dataFile = new FigureProtocol.DataFile()
                     {
                         FigureId = publisher.Id, 
-                        CurveHandle = j * xObservations.Count + i, 
+                        CurveHandle = j * xHandle.space.Count + i, 
                         FileName = Observation.DataFile,
-                        XColumn = xObservations[i].Name, 
-                        YColumn = yObservations[j].Name
+                        XColumn = xHandle.space[i].Name, 
+                        YColumn = yHandle.space[j].Name
                     };
                     publisher.Send(FigureProtocol.DataFileLabel, dataFile);
                 }
@@ -428,12 +422,10 @@ namespace Ligral.Component.Models
             for (int i = 0; i < yc; i++)
             {
                 string observationName = $"{yName}({i})";
-                yObservations.Add(Observation.CreateObservation(observationName));
             }
             for (int i = 0; i < xr; i++)
             {
                 string observationName = $"{xName}({i})";
-                xObservations.Add(Observation.CreateObservation(observationName));
                 for (int j = 0; j < yc; j++)
                 {
                     FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
@@ -442,7 +434,7 @@ namespace Ligral.Component.Models
                         RowNO = i,
                         ColumnNO = j,
                         XLabel = observationName,
-                        YLabel = yObservations[j].Name
+                        YLabel = yHandle.space[j].Name
                     };
                     publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
                     FigureProtocol.Curve curve = new FigureProtocol.Curve()
@@ -458,16 +450,16 @@ namespace Ligral.Component.Models
         }
         private void SendDataVVectorHVector()
         {
-            for (int i = 0; i< xObservations.Count; i++)
+            for (int i = 0; i< xHandle.space.Count; i++)
             {
-                for (int j = 0; j < yObservations.Count; j++)
+                for (int j = 0; j < yHandle.space.Count; j++)
                 {
                     FigureProtocol.Data data = new FigureProtocol.Data()
                     {
                         FigureId = publisher.Id, 
-                        CurveHandle = i * yObservations.Count + j, 
-                        XValue = xObservations[i].OutputVariable, 
-                        YValue = yObservations[j].OutputVariable
+                        CurveHandle = i * yHandle.space.Count + j, 
+                        XValue = xHandle.space[i].OutputVariable, 
+                        YValue = yHandle.space[j].OutputVariable
                     };
                     publisher.Send(FigureProtocol.DataLabel, data);
                 }
@@ -475,17 +467,17 @@ namespace Ligral.Component.Models
         }
         private void SendFileVVectorHVector()
         {
-            for (int i = 0; i< xObservations.Count; i++)
+            for (int i = 0; i< xHandle.space.Count; i++)
             {
-                for (int j = 0; j < yObservations.Count; j++)
+                for (int j = 0; j < yHandle.space.Count; j++)
                 {
                     FigureProtocol.DataFile dataFile = new FigureProtocol.DataFile()
                     {
                         FigureId = publisher.Id, 
-                        CurveHandle = i * yObservations.Count + j, 
+                        CurveHandle = i * yHandle.space.Count + j, 
                         FileName = Observation.DataFile,
-                        XColumn = xObservations[i].Name, 
-                        YColumn = yObservations[j].Name
+                        XColumn = xHandle.space[i].Name, 
+                        YColumn = yHandle.space[j].Name
                     };
                     publisher.Send(FigureProtocol.DataFileLabel, dataFile);
                 }
