@@ -83,6 +83,7 @@ Make sure you did not log two different signals under the same name.");
         }
         private Observation(string name) 
         {
+            Name = name;
             loggerInstance = new Logger(name);
         }
         public void Cache(double value)

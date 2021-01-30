@@ -41,7 +41,7 @@ namespace Ligral.Component.Models
         private int rowNo;
         private int colNo;
         private Signal inputSignal;
-        private List<Observation> observations = new List<Observation>();
+        private ObservationHandle handle;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("input", this));
@@ -88,50 +88,20 @@ namespace Ligral.Component.Models
             }
             length = varName.Length;
             (rowNo, colNo) = inputSignal.Shape();
-            if (inputSignal.IsMatrix)
-            {
-                for(int i = 0; i < rowNo; i++)
-                {
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        observations.Add(Observation.CreateObservation($"{varName}({i}-{j})"));
-                    }
-                }
-            }
-            else
-            {
-                observations.Add(Observation.CreateObservation(varName));
-            }
+            handle = new ObservationHandle(varName, rowNo, colNo);
             Calculate = PostCalculate;
             return Calculate(values);
         }
         protected List<Signal> PostCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
-            inputSignal.ZipApply<Observation>(observations, (value, observation) => observation.Cache(value));
+            handle.Cache(inputSignal);
             return Results;
         }
         public override void Refresh()
         {
             if (Solver.Time > end || Solver.Time < start) return;
-            Signal outputVariableSignal = new Signal();
-            if (rowNo==0 && colNo==0)
-            {
-                outputVariableSignal.Pack(observations[0].OutputVariable);
-            }
-            else
-            {
-                IEnumerable<double> row = observations.ConvertAll(observation => observation.OutputVariable);
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> mat = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                for (int i = 1; i < rowNo; i++)
-                {
-                    row = row.Skip(colNo);
-                    Matrix<double> vec = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                    mat = mat.Stack(vec);
-                }
-                outputVariableSignal.Pack(mat);
-            }
+            Signal outputVariableSignal = handle.GetObservation();
             logger.Prompt(string.Format(format, Solver.Time, varName, outputVariableSignal.ToStringInLine()));
         }
     }

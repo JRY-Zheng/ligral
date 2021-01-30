@@ -19,13 +19,15 @@ namespace Ligral.Simulation
         public int rowNo {get; private set;}
         public int colNo {get; private set;}
         private List<T> space = new List<T>();
+        private string name;
         private Logger logger;
         public Handle(string name, int rowNo, int colNo, Func<string, T> create)
         {
+            this.name = name;
             logger = new Logger(name);
             if (rowNo < 0 || colNo < 0)
             {
-                throw logger.Error(new LigralException($"Invalid shape {rowNo}x{colNo}"));
+                throw logger.Error(new LigralException($"Invalid shape {rowNo}x{colNo} in {name}"));
             }
             this.rowNo = rowNo;
             this.colNo = colNo;
@@ -60,9 +62,9 @@ namespace Ligral.Simulation
         }
         public void SetSignal(Signal signal, Action<T, double> setValue)
         {
-            if (signal.CheckShape(rowNo, colNo))
+            if (!signal.CheckShape(rowNo, colNo))
             {
-                throw logger.Error(new LigralException($"Inconsistent shape {rowNo}x{colNo}, {signal.Shape()} expected."));
+                throw logger.Error(new LigralException($"Inconsistent shape {rowNo}x{colNo} in {name}, {signal.Shape()} expected."));
             }
             signal.ZipApply<T>(space, (value, room) => setValue(room, value));
         }
