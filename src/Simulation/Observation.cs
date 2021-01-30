@@ -38,10 +38,10 @@ namespace Ligral.Simulation
         public static Dictionary<string, ObservationHandle> ObservationHandles = new Dictionary<string, ObservationHandle>();
         public static Observation CreateObservation(string name)
         {
-            Observation observation = new Observation(name??$"Output{ObservationPool.Count}");
-            if (ObservationPool.Exists(obs => obs.Name == observation.Name))
+            name = name??$"Output{ObservationPool.Count}";
+            if (ObservationPool.Exists(obs => obs.Name == name))
             {
-                logger.Warn($@"The signal {observation.Name} is logged more than once, but only a single output is stored. 
+                logger.Warn($@"The signal {name} is logged more than once, but only a single output is stored. 
 Make sure you did not log two different signals under the same name.");
                 // This statement should not be error:
                 //     x -> Print; x -> Scope;
@@ -49,10 +49,11 @@ Make sure you did not log two different signals under the same name.");
                 // However, be careful about this case:
                 //     x -> Print; y -> Scope{name:'x'};
                 // Still only one observation handle will be create, so unexpected behaviour will occur.
-                return ObservationPool.Find(obs => obs.Name == observation.Name);
+                return ObservationPool.Find(obs => obs.Name == name);
             }
             else
             {
+                Observation observation = new Observation(name);
                 ObservationPool.Add(observation);
                 return observation;
             }
