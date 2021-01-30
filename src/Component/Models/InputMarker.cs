@@ -25,7 +25,7 @@ namespace Ligral.Component.Models
         private string varName;
         private int rowNo;
         private int colNo;
-        private List<ControlInput> controlInputs = new List<ControlInput>();
+        private ControlInputHandle handle;
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
@@ -52,20 +52,7 @@ namespace Ligral.Component.Models
                 }
             }
             (rowNo, colNo) = inputSignal.Shape();
-            if (inputSignal.IsMatrix)
-            {
-                for(int i = 0; i < rowNo; i++)
-                {
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        controlInputs.Add(ControlInput.CreateInput($"{varName}({i}-{j})"));
-                    }
-                }
-            }
-            else
-            {
-                controlInputs.Add(ControlInput.CreateInput(varName));
-            }
+            handle = new ControlInputHandle(varName, rowNo, colNo);
             Calculate = PostCalculate;
             return Calculate(values);
         }
@@ -73,24 +60,8 @@ namespace Ligral.Component.Models
         {
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];
-            inputSignal.ZipApply<ControlInput>(controlInputs, (value, controlInput) => controlInput.ClosedLoopInput = value);
-            if (rowNo==0 && colNo==0)
-            {
-                outputSignal.Pack(controlInputs[0].Input);
-            }
-            else
-            {
-                IEnumerable<double> row = controlInputs.ConvertAll(controlInput => controlInput.Input);
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> mat = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                for (int i = 1; i < rowNo; i++)
-                {
-                    row = row.Skip(colNo);
-                    Matrix<double> vec = m.DenseOfRowMajor(1, colNo, row.Take(colNo));
-                    mat = mat.Stack(vec);
-                }
-                outputSignal.Pack(mat);
-            }
+            handle.SetClosedLoopInput(inputSignal);
+            outputSignal.Clone(handle.GetInput());
             return Results;
         }
     }

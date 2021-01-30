@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using Ligral.Component;
 
 namespace Ligral.Simulation
 {
@@ -31,13 +32,59 @@ namespace Ligral.Simulation
             }
         }
         public static List<ControlInput> InputPool = new List<ControlInput>();
-        public static ControlInput CreateInput(string name=null)
+        public static Dictionary<string, ControlInputHandle> InputHandles = new Dictionary<string, ControlInputHandle>();
+        private static Logger logger = new Logger("ControlInput");
+        public static ControlInput CreateInput(string name)
         {
-            ControlInput controlInput = new ControlInput();
-            InputPool.Add(controlInput);
-            controlInput.Name = name ?? "Input"+InputPool.Count;
-            return controlInput;
+            name = name ?? "Input"+InputPool.Count;
+            if (InputPool.Exists(input => input.Name == name))
+            {
+                throw logger.Error(new LigralException($"Control input {name} has already existed."));
+            }
+            else
+            {
+                ControlInput controlInput = new ControlInput(name);
+                InputPool.Add(controlInput);
+                return controlInput;
+            }
         }
-        private ControlInput() {}
+        public static ControlInputHandle CreateState(string name, int rowNo, int colNo)
+        {
+            name = name??$"Input{InputPool.Count}";
+            if (InputHandles.ContainsKey(name))
+            {
+                throw logger.Error(new LigralException($"Control input handle {name} has already existed."));
+            }
+            else
+            {
+                var handle = new ControlInputHandle(name, rowNo, colNo);
+                InputHandles.Add(name, handle);
+                return handle;
+            }
+        }
+        private ControlInput(string name) 
+        {
+            Name = name;
+        }
+    }
+
+    public class ControlInputHandle : Handle<ControlInput>
+    {
+        public ControlInputHandle(string name, int rowNo, int colNo) : base(name, rowNo, colNo, ControlInput.CreateInput)
+        {}
+
+        public void SetOpenLoopInput(Signal inputSignal)
+        {
+            SetSignal(inputSignal, (control, input) => control.OpenLoopInput = input);
+        }
+
+        public void SetClosedLoopInput(Signal inputSignal)
+        {
+            SetSignal(inputSignal, (control, input) => control.ClosedLoopInput = input);
+        }
+        public Signal GetInput()
+        {
+            return GetSignal(control => control.Input);
+        }
     }
 }
