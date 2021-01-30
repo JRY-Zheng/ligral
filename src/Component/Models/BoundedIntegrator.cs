@@ -34,27 +34,13 @@ namespace Ligral.Component.Models
         }
         protected override void DerivativeUpdate(Signal inputSignal)
         {
-            if (isMatrix && inputSignal.IsMatrix)
-            {
-                inputSignal.ZipApply<State>(states, (deriv, state) => {
-                    state.Derivative = GetBoundedDerivative(state, deriv);
-                });
-            }
-            else if (!isMatrix && !inputSignal.IsMatrix)
-            {
-                State state = states[0];
-                state.Derivative = GetBoundedDerivative(state, (double) inputSignal.Unpack());
-            }
-            else
-            {
-                throw logger.Error(new ModelException(this, "Type conflict"));
-            }
+            handle.SetDerivative(inputSignal.ZipApply(handle.GetState(), GetBoundedDerivative));
         }
-        private double GetBoundedDerivative(State state, double deriv)
+        private double GetBoundedDerivative(double deriv, double state)
         {
-            if ((state.StateVariable < upper && state.StateVariable > lower) ||
-                (state.StateVariable >= upper && deriv < 0) ||
-                (state.StateVariable <= lower && deriv > 0))
+            if ((state < upper && state > lower) ||
+                (state >= upper && deriv < 0) ||
+                (state <= lower && deriv > 0))
             {
                 return deriv;
             }
@@ -63,16 +49,5 @@ namespace Ligral.Component.Models
                 return 0;
             }
         }
-        // protected override List<Signal> Calculate(List<Signal> values)
-        // {
-        //     if ((Results[0] < upper && Results[0] > lower) ||
-        //         (Results[0] >= upper && values[0] < 0) ||
-        //         (Results[0] <= lower && values[0] > 0))
-        //     {
-        //         Results[0] += values[0] * (time - lastTime);
-        //     }
-        //     lastTime = time;
-        //     return Results;
-        // }
     }
 }
