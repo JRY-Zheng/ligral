@@ -20,13 +20,21 @@ namespace Ligral.Component.Models
                 return "This model outputs the value of the integral of its input signal with respect to time.";
             }
         }
-        // private double lastTime = 0;
+        private string varName;
         protected StateHandle handle;
+        protected override void SetUpParameters()
+        {
+            base.SetUpParameters();
+            Parameters["name"] = new Parameter(ParameterType.Signal , value=>
+            {
+                varName=(string)value;
+            }, ()=>{});
+        }
         protected override void AfterConfigured()
         {
             base.AfterConfigured();
             Results[0].Clone(initial);
-            handle = State.CreateState(Name, rowNo, colNo, initial);
+            handle = State.CreateState(varName??Name, rowNo, colNo, initial);
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += DerivativeUpdate;
         }
