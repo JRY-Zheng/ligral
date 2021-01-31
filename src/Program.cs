@@ -177,10 +177,6 @@ Learn more:
                     Interpreter interpreter = Interpreter.GetInstance(linearization.FileName);
                     interpreter.Interpret();
                 }
-                if (linearization.OutputFolder is string outputFolder)
-                {
-                    settings.OutputFolder = outputFolder;
-                }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                 string problemName = Path.GetFileNameWithoutExtension(linearization.FileName);
@@ -188,7 +184,22 @@ Learn more:
                 Linearizer linearizer = new Linearizer();
                 settings.ApplySetting();
                 linearizer.Linearize(problem);
-                Console.Write(linearizer);
+                if (linearization.OutputFile is string outputFile)
+                {
+                    try
+                    {
+                        File.WriteAllText(outputFile, linearizer.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Prompt(linearizer.ToString());
+                        throw logger.Error(new LigralException($"Cannot write to {outputFile}, got error: {e.Message}"));
+                    }
+                }
+                else
+                {
+                    logger.Prompt(linearizer.ToString());
+                }
             }
             catch (LigralException)
             {

@@ -120,12 +120,12 @@ namespace Ligral
                     break;
                 case "-o":
                 case "--output":
-                    string folder = GetString();
-                    if (folder is null)
+                    string file = GetString();
+                    if (file is null)
                     { 
                         throw logger.Error(new OptionException(option, "output parameter need a string value."));
                     }
-                    linearization.OutputFolder = folder;
+                    linearization.OutputFile = file;
                     break;
                 default:
                     metUnknownOption = linearization.FileName != null;

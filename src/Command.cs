@@ -11,11 +11,11 @@ namespace Ligral
     class Linearization : Command
     {
         public string FileName;
-        public string OutputFolder;
+        public string OutputFile;
         public bool? IsJsonFile;
         public override string ToString()
         {
-            return $"[lin] {FileName}, to {OutputFolder} -j {IsJsonFile}";
+            return $"[lin] {FileName}, to {OutputFile} -j {IsJsonFile}";
         }
     }
     class SimulationProject : Command
