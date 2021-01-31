@@ -26,7 +26,7 @@ namespace Ligral.Simulation
                 logger.Warn("Empty matrix is printed, which is not supported in ligral.");
                 return "";
             }
-            return string.Join(";\n"+indent, matrix.ToColumnArrays().Select((row, index)=>
+            return string.Join(";\n"+indent, matrix.Transpose().ToColumnArrays().Select((row, index)=>
             {
                 return string.Join(", ", row);
             }));
