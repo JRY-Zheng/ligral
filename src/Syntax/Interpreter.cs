@@ -42,8 +42,10 @@ namespace Ligral.Syntax
         private ScopeSymbolTable currentScope;
         private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
         private List<string> files = new List<string>();
-        private static Interpreter instance;
         private Logger logger = new Logger("Interpreter");
+        private static Interpreter instance;
+        public delegate void CompletedHandler();
+        public static event CompletedHandler Completed;
         public static string ScopeName 
         {
             get 
@@ -83,6 +85,7 @@ namespace Ligral.Syntax
         public void Interpret()
         {
             Interpret(Path.GetFileName(GetInstance().CurrentFileName), true);
+            if (Completed != null) Completed();
         }
         public void Interpret(ProgramAST programAST)
         {

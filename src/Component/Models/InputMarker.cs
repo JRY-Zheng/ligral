@@ -33,34 +33,35 @@ namespace Ligral.Component.Models
                 {"name", new Parameter(ParameterType.String , value=>
                 {
                     varName = (string) value;
+                }, ()=>{})},
+                {"col", new Parameter(ParameterType.Signal , value=>
+                {
+                    colNo = System.Convert.ToInt32(value);
+                }, ()=>{})},
+                {"row", new Parameter(ParameterType.Signal , value=>
+                {
+                    rowNo = System.Convert.ToInt32(value);
                 }, ()=>{})}
             };
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Prepare()
         {
-            // Results.Clear();
-            Signal inputSignal = values[0];
-            if (varName == null)
-            {
-                varName = GivenName ?? inputSignal.Name ?? Name;
-                if (Scope != null)
-                {
-                    if (GivenName != null || inputSignal.Name == null)
-                    {
-                        varName = Scope + "." + varName;
-                    }
-                }
-            }
-            (rowNo, colNo) = inputSignal.Shape();
-            handle = new ControlInputHandle(varName, rowNo, colNo);
-            Calculate = PostCalculate;
-            return Calculate(values);
+            string inputSignalName = InPortList[0].Source.SignalName;
+            varName = varName ?? GivenName ?? inputSignalName ?? Name;
+            handle = ControlInput.CreateInput(varName??Name, rowNo, colNo);
         }
-        protected List<Signal> PostCalculate(List<Signal> values)
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];
-            handle.SetClosedLoopInput(inputSignal);
+            try
+            {
+                handle.SetClosedLoopInput(inputSignal);
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new ModelException(this));
+            }
             outputSignal.Clone(handle.GetInput());
             return Results;
         }

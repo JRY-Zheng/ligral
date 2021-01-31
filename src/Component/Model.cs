@@ -9,7 +9,7 @@ using System.Linq;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Component.Parameter>;
 using System.Text;
-using Ligral.Component.Models;
+using Ligral.Syntax;
 using Ligral.Simulation;
 
 namespace Ligral.Component
@@ -103,6 +103,7 @@ namespace Ligral.Component
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Calculate = DefaultCalculate;
+            Interpreter.Completed += Prepare;
             Observation.Stepped += Refresh;
             Observation.Stopped += Release;
             SetUpPorts();
@@ -203,6 +204,7 @@ namespace Ligral.Component
             });
             AfterConfigured();
         }
+        public virtual void Prepare() { }
         public virtual void Refresh() { }
         public virtual void Release() { }
         public virtual void Connect(int outPortNO, InPort inPort)

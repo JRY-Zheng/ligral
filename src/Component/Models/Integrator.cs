@@ -34,13 +34,25 @@ namespace Ligral.Component.Models
         {
             base.AfterConfigured();
             Results[0].Clone(initial);
-            handle = State.CreateState(varName??Name, rowNo, colNo, initial);
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += DerivativeUpdate;
         }
+        public override void Prepare()
+        {
+            string inputSignalName = InPortList[0].Source.SignalName;
+            varName = varName ?? GivenName ?? inputSignalName ?? Name;
+            handle = State.CreateState(varName, rowNo, colNo, initial);
+        }
         protected virtual void DerivativeUpdate(Signal inputSignal)
         {
-            handle.SetDerivative(inputSignal);
+            try
+            {
+                handle.SetDerivative(inputSignal);
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new ModelException(this));
+            }
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
