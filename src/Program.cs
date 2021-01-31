@@ -29,6 +29,9 @@ namespace Ligral
             case SimulationProject simulationProject:
                 Run(simulationProject);
                 break;
+            case Linearization linearization:
+                Run(linearization);
+                break;
             case Document document:
                 Run(document);
                 break;
@@ -121,9 +124,9 @@ Learn more:
                     Interpreter interpreter = Interpreter.GetInstance(simulationProject.FileName);
                     interpreter.Interpret();
                 }
-                if (simulationProject.OutputFolder is string jsonOutputFolder)
+                if (simulationProject.OutputFolder is string outputFolder)
                 {
-                    settings.OutputFolder = jsonOutputFolder;
+                    settings.OutputFolder = outputFolder;
                 }
                 if (simulationProject.StepSize is double stepSize)
                 {
@@ -143,6 +146,51 @@ Learn more:
             {
                 logger.Throw();
                 logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
+            }
+            catch (Exception e)
+            {
+                if (Logger.LogFile is null)
+                {
+                    Logger.LogFile = "ligral.log";
+                }
+                logger.Fatal(e);
+            }
+        }
+        private static void Run(Linearization linearization)
+        {
+            try
+            {
+                ControlInput.IsOpenLoop = true;
+                Settings settings = Settings.GetInstance();
+                settings.GetDefaultSettings();
+                logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
+                PluginLoader pluginLoader = new PluginLoader();
+                pluginLoader.Load();
+                if (linearization.IsJsonFile is bool isJsonFile && isJsonFile)
+                {
+                    JsonLoader jsonLoader = new JsonLoader();
+                    jsonLoader.Load(linearization.FileName);
+                }
+                else
+                {
+                    Interpreter interpreter = Interpreter.GetInstance(linearization.FileName);
+                    interpreter.Interpret();
+                }
+                if (linearization.OutputFolder is string outputFolder)
+                {
+                    settings.OutputFolder = outputFolder;
+                }
+                Inspector inspector = new Inspector();
+                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
+                Problem problem = new Problem(routine);
+                Linearizer linearizer = new Linearizer();
+                settings.ApplySetting();
+                linearizer.Linearize();
+            }
+            catch (LigralException)
+            {
+                logger.Throw();
+                logger.Warn($"Unexpected error in {linearization.FileName}, ligral exited with error.");
             }
             catch (Exception e)
             {

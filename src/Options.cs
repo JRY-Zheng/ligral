@@ -6,48 +6,6 @@
 
 namespace Ligral
 {
-    abstract class Command
-    {}
-    class SimulationProject : Command
-    {
-        public string FileName;
-        public string OutputFolder;
-        public double? StepSize;
-        public double? StopTime;
-        public bool? RealTimeSimulation;
-        public bool? ToCompile;
-        public bool? IsJsonFile;
-        public override string ToString()
-        {
-            return $"[sim] {FileName}, to {OutputFolder} ({StepSize}:{StopTime}), -r {RealTimeSimulation} -c {ToCompile} -j {IsJsonFile}";
-        }
-    }
-    class Document : Command
-    {
-        public string ModelName;
-        public bool? ToJson;
-        public string OutputFolder;
-        public override string ToString()
-        {
-            return $"[doc] model={ModelName} to_json={ToJson}";
-        }
-    }
-    class Help : Command
-    {
-        public override string ToString()
-        {
-            return "[help]";
-        }
-    }
-    class Version : Command
-    {
-        public override string ToString()
-        {
-            return "[version]";
-        }
-    }
-    class Main : Command
-    {}
     class Options
     {
         private string[] args;
@@ -79,35 +37,6 @@ namespace Ligral
         private void StepBack()
         {
             index--;
-        }
-        private Document GetDocument()
-        {
-            Document document = new Document();
-            bool metUnknownOption = false;
-            while (!metUnknownOption && Eat() is string option)
-            {
-                switch (option)
-                {
-                case "-j":
-                case "--json":
-                    document.ToJson = true;
-                    break;
-                case "-o":
-                case "--output":
-                    string folder = GetString();
-                    if (folder is null)
-                    { 
-                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
-                    }
-                    document.OutputFolder = folder;
-                    break;
-                default:
-                    metUnknownOption = document.ModelName != null;
-                    if (!metUnknownOption) document.ModelName = arg;
-                    break;
-                }
-            }
-            return document;
         }
         private Help GetHelp()
         {
@@ -147,6 +76,64 @@ namespace Ligral
                 StepBack();
                 return true;
             }
+        }
+        private Document GetDocument()
+        {
+            Document document = new Document();
+            bool metUnknownOption = false;
+            while (!metUnknownOption && Eat() is string option)
+            {
+                switch (option)
+                {
+                case "-j":
+                case "--json":
+                    document.ToJson = GetBoolean();
+                    break;
+                case "-o":
+                case "--output":
+                    string folder = GetString();
+                    if (folder is null)
+                    { 
+                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
+                    }
+                    document.OutputFolder = folder;
+                    break;
+                default:
+                    metUnknownOption = document.ModelName != null;
+                    if (!metUnknownOption) document.ModelName = arg;
+                    break;
+                }
+            }
+            return document;
+        }
+        private Linearization GetLinearization()
+        {
+            Linearization linearization = new Linearization();
+            bool metUnknownOption = false;
+            while (!metUnknownOption && Eat() is string option)
+            {
+                switch (option)
+                {
+                case "-j":
+                case "--json":
+                    linearization.IsJsonFile = GetBoolean();
+                    break;
+                case "-o":
+                case "--output":
+                    string folder = GetString();
+                    if (folder is null)
+                    { 
+                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
+                    }
+                    linearization.OutputFolder = folder;
+                    break;
+                default:
+                    metUnknownOption = linearization.FileName != null;
+                    if (!metUnknownOption) linearization.FileName = arg;
+                    break;
+                }
+            }
+            return linearization;
         }
         private SimulationProject GetSimulationProject()
         {
@@ -201,6 +188,10 @@ namespace Ligral
                 case "doc":
                 case "document":
                     return GetDocument();
+                case "lin":
+                case "linearize":
+                case "linearise":
+                    return GetLinearization();
                 case "help":
                 case "-h":
                 case "--help":

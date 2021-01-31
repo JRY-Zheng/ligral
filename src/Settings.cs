@@ -158,7 +158,7 @@ namespace Ligral
             {
                 logger.Configure(LoggerConfiguration);
             }
-            if (!(LinearizerConfiguration is null))
+            if (!(LinearizerConfiguration is null) && ControlInput.IsOpenLoop)
             {
                 linearizer.Configure(LinearizerConfiguration);
             }

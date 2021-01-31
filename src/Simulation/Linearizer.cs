@@ -75,6 +75,10 @@ namespace Ligral.Simulation
         private Logger logger = new Logger("Linearizer");
         private StateSetter stateSetter = new StateSetter();
         private InputSetter inputSetter = new InputSetter();
+        public void Linearize()
+        {
+            throw new System.NotImplementedException();
+        }
         public void Configure(Dictionary<string, object> dict)
         {
             foreach (string item in dict.Keys)
