@@ -13,18 +13,33 @@ namespace Ligral.Simulation
 {
     static class MatrixUtils
     {
+        private static Logger logger = new Logger("MatrixUtils");
         public static Matrix<double> ToColumnVector(this List<double> list)
         {
             MatrixBuilder<double> m = Matrix<double>.Build;
             return m.DenseOfRowMajor(list.Count, 1, list);
+        }
+        public static string ToLigralFormat(this Matrix<double> matrix, string indent)
+        {
+            if (matrix.RowCount == 0 || matrix.ColumnCount == 0)
+            {
+                logger.Warn("Empty matrix is printed, which is not supported in ligral.");
+                return "";
+            }
+            return string.Join(";\n"+indent, matrix.ToColumnArrays().Select((row, index)=>
+            {
+                return string.Join(", ", row);
+            }));
         }
     }
     public class Problem
     {
         private List<Model> routine;
         private Logger logger = new Logger("Problem");
-        public Problem(List<Model> routine)
+        public string Name;
+        public Problem(string name, List<Model> routine)
         {
+            Name = name;
             this.routine = routine;
         }
         public Matrix<double> InitialValues()

@@ -48,7 +48,7 @@ namespace Ligral.Simulation
                 return controlInput;
             }
         }
-        public static ControlInputHandle CreateState(string name, int rowNo, int colNo)
+        public static ControlInputHandle CreateInput(string name, int rowNo, int colNo)
         {
             name = name??$"Input{InputPool.Count}";
             if (InputHandles.ContainsKey(name))

@@ -138,7 +138,8 @@ Learn more:
                 }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                Problem problem = new Problem(routine);
+                string problemName = Path.GetFileNameWithoutExtension(simulationProject.FileName);
+                Problem problem = new Problem(problemName, routine);
                 Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
                 solver.Solve(problem);
             }
@@ -182,10 +183,12 @@ Learn more:
                 }
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                Problem problem = new Problem(routine);
+                string problemName = Path.GetFileNameWithoutExtension(linearization.FileName);
+                Problem problem = new Problem(problemName, routine);
                 Linearizer linearizer = new Linearizer();
                 settings.ApplySetting();
-                linearizer.Linearize();
+                linearizer.Linearize(problem);
+                Console.Write(linearizer);
             }
             catch (LigralException)
             {
