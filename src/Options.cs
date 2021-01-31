@@ -50,7 +50,12 @@ namespace Ligral
         }
         private string GetString()
         {
-            return Eat();
+            string str = Eat();
+            if (str.StartsWith('-'))
+            {
+                throw logger.Error(new LigralException($"String value expected, but got option {str}. Do not pass string that starts with `-`."));
+            }
+            return str;
         }
         private double GetDouble()
         {
@@ -110,6 +115,7 @@ namespace Ligral
         {
             Linearization linearization = new Linearization();
             bool metUnknownOption = false;
+            linearization.FileName = GetString();
             while (!metUnknownOption && Eat() is string option)
             {
                 switch (option)
@@ -128,8 +134,7 @@ namespace Ligral
                     linearization.OutputFile = file;
                     break;
                 default:
-                    metUnknownOption = linearization.FileName != null;
-                    if (!metUnknownOption) linearization.FileName = arg;
+                    metUnknownOption = true;
                     break;
                 }
             }
