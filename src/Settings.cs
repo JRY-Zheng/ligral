@@ -73,6 +73,8 @@ namespace Ligral
         public Dictionary<string, object> LoggerConfiguration {get; set;}
         public string SolverName {get; set;} = "ode4";
         public string PythonExecutable { get; set; } = "python";
+        private Linearizer linearizer = new Linearizer();
+        public Dictionary<string, object> LinearizerConfiguration {get; set;}
 
         public void AddSetting(string item, object val)
         {
@@ -101,6 +103,10 @@ namespace Ligral
                     break;
                 case "logger":
                     LoggerConfiguration = (Dictionary<string, object>) val;
+                    break;
+                case "lin":
+                case "linearizer":
+                    LinearizerConfiguration = (Dictionary<string, object>) val;
                     break;
                 case "author":
                 case "date":
@@ -151,6 +157,10 @@ namespace Ligral
             if (!(LoggerConfiguration is null))
             {
                 logger.Configure(LoggerConfiguration);
+            }
+            if (!(LinearizerConfiguration is null))
+            {
+                linearizer.Configure(LinearizerConfiguration);
             }
         }
     }

@@ -67,6 +67,10 @@ namespace Ligral.Simulation
         {
             SetSignal(signal, (state, deriv) => state.Derivative = deriv);
         }
+        public void SetStateVariable(Signal signal)
+        {
+            SetSignal(signal, (state, var) => state.StateVariable = var);
+        }
         public Signal GetState()
         {
             return GetSignal(state => state.StateVariable);
