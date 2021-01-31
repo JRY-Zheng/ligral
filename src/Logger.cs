@@ -186,12 +186,12 @@ namespace Ligral
                     case "log_file":
                         LogFile = (string) val; break;
                     default:
-                        throw new SettingException(item, val, "Unsupported setting in plotter.");
+                        throw Error(new SettingException(item, val, "Unsupported setting in logger."));
                     }
                 }
                 catch (System.InvalidCastException)
                 {
-                    throw Error(new SettingException(item, val, $"Invalid type {val.GetType()} in plotter"));
+                    throw Error(new SettingException(item, val, $"Invalid type {val.GetType()} in logger"));
                 }
             }
         }
