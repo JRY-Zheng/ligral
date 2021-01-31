@@ -27,23 +27,7 @@ namespace Ligral
             switch (options.GetCommand())
             {
             case SimulationProject simulationProject:
-                try
-                {
-                    Run(simulationProject);
-                }
-                catch (LigralException)
-                {
-                    logger.Throw();
-                    logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
-                }
-                catch (Exception e)
-                {
-                    if (Logger.LogFile is null)
-                    {
-                        Logger.LogFile = "ligral.log";
-                    }
-                    logger.Fatal(e);
-                }
+                Run(simulationProject);
                 break;
             case Document document:
                 Run(document);
@@ -120,38 +104,54 @@ Learn more:
         }
         private static void Run(SimulationProject simulationProject)
         {
-            Settings settings = Settings.GetInstance();
-            settings.GetDefaultSettings();
-            logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
-            PluginLoader pluginLoader = new PluginLoader();
-            pluginLoader.Load();
-            if (simulationProject.IsJsonFile is bool isJsonFile && isJsonFile)
+            try
             {
-                JsonLoader jsonLoader = new JsonLoader();
-                jsonLoader.Load(simulationProject.FileName);
+                Settings settings = Settings.GetInstance();
+                settings.GetDefaultSettings();
+                logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
+                PluginLoader pluginLoader = new PluginLoader();
+                pluginLoader.Load();
+                if (simulationProject.IsJsonFile is bool isJsonFile && isJsonFile)
+                {
+                    JsonLoader jsonLoader = new JsonLoader();
+                    jsonLoader.Load(simulationProject.FileName);
+                }
+                else
+                {
+                    Interpreter interpreter = Interpreter.GetInstance(simulationProject.FileName);
+                    interpreter.Interpret();
+                }
+                if (simulationProject.OutputFolder is string jsonOutputFolder)
+                {
+                    settings.OutputFolder = jsonOutputFolder;
+                }
+                if (simulationProject.StepSize is double stepSize)
+                {
+                    settings.StepSize = stepSize;
+                }
+                if (simulationProject.StopTime is double stopTime)
+                {
+                    settings.StopTime = (double) stopTime;
+                }
+                Inspector inspector = new Inspector();
+                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
+                Problem problem = new Problem(routine);
+                Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
+                solver.Solve(problem);
             }
-            else
+            catch (LigralException)
             {
-                Interpreter interpreter = Interpreter.GetInstance(simulationProject.FileName);
-                interpreter.Interpret();
+                logger.Throw();
+                logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
             }
-            if (simulationProject.OutputFolder is string jsonOutputFolder)
+            catch (Exception e)
             {
-                settings.OutputFolder = jsonOutputFolder;
+                if (Logger.LogFile is null)
+                {
+                    Logger.LogFile = "ligral.log";
+                }
+                logger.Fatal(e);
             }
-            if (simulationProject.StepSize is double stepSize)
-            {
-                settings.StepSize = stepSize;
-            }
-            if (simulationProject.StopTime is double stopTime)
-            {
-                settings.StopTime = (double) stopTime;
-            }
-            Inspector inspector = new Inspector();
-            List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-            Problem problem = new Problem(routine);
-            Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
-            solver.Solve(problem);
         }
         private static void Run(Document document)
         {
@@ -163,6 +163,8 @@ Learn more:
             catch (LigralException)
             {
                 logger.Error(new LigralException("Default settings is not valid, ligral exited with errors."));
+                logger.Throw();
+                return;
             }
             PluginLoader pluginLoader = new PluginLoader();
             pluginLoader.Load();
@@ -176,6 +178,8 @@ Learn more:
                 else
                 {
                     logger.Error(new OptionException(modelName, $"No model named {modelName}"));
+                    logger.Throw();
+                    return;
                 }
             }
             else
@@ -210,6 +214,8 @@ Learn more:
                     catch (Exception e)
                     {
                         logger.Error(new LigralException($"Cannot write to {modelJsonFileName}: {e.Message}"));
+                        logger.Throw();
+                        return;
                     }
                 }
             }
@@ -218,6 +224,8 @@ Learn more:
                 if (!(document.OutputFolder is null))
                 {
                     logger.Error(new OptionException("Output folder is only needed when mdl.json is requested."));
+                    logger.Throw();
+                    return;
                 }
                 foreach (Model model in models)
                 {
