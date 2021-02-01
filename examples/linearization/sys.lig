@@ -1,0 +1,23 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+
+let M = 0.1;
+let g = 9.8;
+let l = 0.5;
+let I = 0.001;
+
+-M*g*l/I*(x1 -> Sin) + @{name:'u'} -> x2d;
+[x2; x2d] -> Integrator{name:'x', row:2, col:1} -> [x1; x2];
+x1 -> ${name:'y'};
+
+conf lin:
+    state:
+        x = [0; 0];
+    end
+    input:
+        u = 0;
+    end
+end
