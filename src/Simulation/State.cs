@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Ligral.Component;
 
 namespace Ligral.Simulation
@@ -45,6 +46,10 @@ namespace Ligral.Simulation
                 StateHandles.Add(name, handle);
                 return handle;
             }
+        }
+        public static string GetNames()
+        {
+            return $"[{string.Join(", ", StatePool.Select((state, index)=>state.Name))}]";
         }
         private State(string name) 
         {

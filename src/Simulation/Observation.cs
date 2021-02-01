@@ -82,6 +82,10 @@ Make sure you did not log two different signals under the same name.");
             }
             return handle;
         }
+        public static string GetNames()
+        {
+            return $"[{string.Join(", ", ObservationPool.Select((obs, index)=>obs.Name))}]";
+        }
         private Observation(string name) 
         {
             Name = name;

@@ -126,8 +126,11 @@ namespace Ligral.Simulation
 
 # The state space matrices of system {modelName} is
 let A = [{A.ToLigralFormat("         ")}];
+# where the states are {State.GetNames()}
 let B = [{B.ToLigralFormat("         ")}];
+# where the inputs are {ControlInput.GetNames()}
 let C = [{C.ToLigralFormat("         ")}];
+# where the outputs are {Observation.GetNames()}
 let D = [{D.ToLigralFormat("         ")}];
 ";
         }

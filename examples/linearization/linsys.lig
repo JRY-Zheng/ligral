@@ -3,7 +3,10 @@
 # The state space matrices of system sys is
 let A = [0, 1;
          -490.00002527043904, 0];
+# where the states are [x(0), x(1)]
 let B = [0;
          1];
+# where the inputs are [u]
 let C = [1, 0];
+# where the outputs are [y]
 let D = [0];
