@@ -13,7 +13,7 @@ using Ligral.Simulation;
 
 namespace Ligral.Component.Models
 {
-    class InputMarker : Model
+    class InputMarker : Model, IFixable
     {
         protected override string DocString
         {
@@ -44,9 +44,27 @@ namespace Ligral.Component.Models
                 }, ()=>{})}
             };
         }
+        public bool FixConnection()
+        {
+            ILinkable constant = ModelManager.Create("Constant");
+            var dict = new Dictionary<string, object>();
+            if (rowNo > 0 && colNo > 0)
+            {
+                MatrixBuilder<double> m = Matrix<double>.Build;
+                Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
+                dict.Add("value", matrix);
+            }
+            else
+            {
+                dict.Add("value", 0);
+            }
+            constant.Configure(dict);
+            constant.Connect(this);
+            return true;
+        }
         public override void Prepare()
         {
-            string inputSignalName = InPortList[0].Source.SignalName;
+            string inputSignalName = InPortList[0].Source is null ? null : InPortList[0].Source.SignalName;
             varName = varName ?? GivenName ?? inputSignalName ?? Name;
             handle = ControlInput.CreateInput(varName??Name, rowNo, colNo);
         }
