@@ -17,6 +17,7 @@ namespace Ligral.Simulation
         private static Logger logger = new Logger("Algorithm");
         public static int PartialMaximumIteration = 100;
         public static double PartialDifferenceTolerant = 1e-3;
+        public static double AsymptoticDifferenceTolerant = 1e-7;
         public static Matrix<double> PrecisePartial(Func<double, Matrix<double>> f, double d0)
         {
             var vp = f(d0);
@@ -44,8 +45,13 @@ namespace Ligral.Simulation
             {
                 throw logger.Error(new LigralException("At least 4 values are necessary for asymptotic point estimate."));
             }
+            logger.Debug($"Check asymptotic point of list [{string.Join(", ", series.Skip(series.Count()-10))}]");
             double diff = series[series.Length-2] - series[series.Length-1];
-            if (Math.Abs(diff)<PartialDifferenceTolerant) return series[series.Length - 1];
+            if (Math.Abs(diff)<AsymptoticDifferenceTolerant)
+            {
+                logger.Debug("Constant list detected, the last value of this list will be regarded as the asymptotic point.");
+                return series[series.Length - 1];
+            } 
             int mode = diff > 0 ? 1 : -1;
             List<double> tail = new List<double>();
             tail.Add(diff * mode);
@@ -68,17 +74,20 @@ namespace Ligral.Simulation
             }
             var y = tail.ConvertAll(val => Math.Log(val));
             var yBar = y.Average();
-            var xBar = y.Count*(y.Count-1)/2;
-            var xSqrSum = xBar*(y.Count*2-1)/3;
+            var xBar = (y.Count-1)/2.0;
+            var xSqrSum = y.Count*xBar*(y.Count*2-1)/3;
             var xySum = y.Select((val, index) => val*index).Sum();
+            logger.Debug($"bar(x) = {xBar}, bar(y) = {yBar}, sum(x*y) = {xySum}, sum(x^2) = {xSqrSum}");
             double kHat = (xySum-y.Count*xBar*yBar)/(xSqrSum-y.Count*xBar*xBar);
             if (kHat > 0)
             {
                 throw logger.Error(new LigralException($"Asymptotic point estimate fails because the series is not stable.\nThe last values are [{string.Join(", ", series.Skip(series.Count()-10))}]"));
             }
             double bHat = yBar-kHat*xBar;
+            logger.Debug($"Linear fit: y = {kHat}*x+{bHat}");
             double b = Math.Exp(bHat);
             double a = Math.Exp(kHat);
+            logger.Debug($"Logarithmic fit: z = e^({a}*x)*e^{b}");
             return series[series.Length-1]-mode*b*Math.Pow(a, y.Count)/(1-a);
         }
     }

@@ -108,4 +108,6 @@ class Linearizer:
         # have to calculate the sum of differences from n to infinity.
         # They are diff[n], diff[n+1], diff[n+2], ..., diff[inf], and the 
         # common ratio is A, so the sum of them is diff[n]/(1-A)
+        print(ybar, xbar, sum(x*y), sum(x*x))
+        print(khat, bhat, A, B, series[-1])
         return series[-1]-mode*B*A**n/(1-A)
