@@ -17,6 +17,7 @@ namespace Ligral.Simulation
         private static Logger logger = new Logger("Algorithm");
         public static int PartialMaximumIteration = 100;
         public static double PartialDifferenceTolerant = 1e-3;
+        public static double PartialBias = 1e-5;
         public static double AsymptoticDifferenceTolerant = 1e-7;
         public static Matrix<double> PrecisePartial(Func<double, Matrix<double>> f, double d0)
         {
@@ -38,6 +39,33 @@ namespace Ligral.Simulation
                 d = d/2;
             }
             return slopes.ToRowArrays().Select((row, index)=>Asymptotic(row)).ToList().ToColumnVector();
+        }
+        public static Matrix<double> RoughPartial(Func<Matrix<double>, Matrix<double>> f, Matrix<double> x)
+        {
+            int n = x.RowCount;
+            if (x.ColumnCount != 1)
+            {
+                throw logger.Error(new LigralException($"Only x with shape nx1 is supported, but we got {n}x{x.ColumnCount}"));
+            }
+            var fx = f(x);
+            int m = x.RowCount;
+            if (fx.ColumnCount != 1)
+            {
+                throw logger.Error(new LigralException($"Only f(x) with shape nx1 is supported, but we got {m}x{fx.ColumnCount}"));
+            }
+            var build = Matrix<double>.Build;
+            var gradient = build.Dense(n, m, 1);
+            for (int i = 0; i < n; i++)
+            {
+                var item = x[i, 0];
+                x[i, 0] = item + PartialBias;
+                gradient.SetRow(i, (f(x)-fx).Column(0)/PartialBias);
+            }
+            return gradient;
+        }
+        public static Matrix<double> RoughHessian(Func<Matrix<double>, Matrix<double>> f, Matrix<double> x)
+        {
+            return RoughPartial(x => RoughPartial(f, x), x);
         }
         public static double Asymptotic(double[] series)
         {
