@@ -27,15 +27,15 @@ class SQP(Optimizer):
         x = x0
         c = cost(x)
         for i in range(1000):
-            H = self.hessian(cost, x0)
-            C = self.gradient(cost, x0)
-            Ae = self.gradient(equal, x0).T
-            Be = equal(x0)
+            H = self.hessian(cost, x)
+            C = self.gradient(cost, x)
+            Ae = self.gradient(equal, x).T
+            Be = equal(x)
             Ae, Be = self.filter(Ae, Be)
             n_lam, cols = Be.shape
             assert cols == 1
-            Ab = self.gradient(bound, x0).T
-            Bb = bound(x0)
+            Ab = self.gradient(bound, x).T
+            Bb = bound(x)
             sel = np.array(Bb).T[0] >= self.eps
             # A = np.vstack((Ae, Ab[sel]))
             # B = np.vstack((Be, Bb[sel]))
