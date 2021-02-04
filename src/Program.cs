@@ -23,20 +23,22 @@ namespace Ligral
         private static string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         static void Main(string[] args)
         {
-            Options options = new Options(args);
-            switch (options.GetCommand())
+            try
             {
-            case SimulationProject simulationProject:
-                Run(simulationProject);
-                break;
-            case Linearization linearization:
-                Run(linearization);
-                break;
-            case Document document:
-                Run(document);
-                break;
-            case Help help:
-                Console.WriteLine(@"Help on ligral:
+                Options options = new Options(args);
+                switch (options.GetCommand())
+                {
+                case SimulationProject simulationProject:
+                    Run(simulationProject);
+                    break;
+                case Linearization linearization:
+                    Run(linearization);
+                    break;
+                case Document document:
+                    Run(document);
+                    break;
+                case Help help:
+                    Console.WriteLine(@"Help on ligral:
 Root:
     Position parameter: 
         FileName            required string
@@ -79,12 +81,12 @@ Command: help & --help & -h:
     No parameters       print helps on the screen.
 Parameter: --version & -v:
     No values           print the current version of ligral.");
-                break;
-            case Version version:
-                Console.WriteLine("Ligral "+version);
-                break;
-            case Main main:
-                Console.WriteLine(@"Copyright (c) Ligral Tech. All rights reserved. 
+                    break;
+                case Version version:
+                    Console.WriteLine("Ligral "+version);
+                    break;
+                case Main main:
+                    Console.WriteLine(@"Copyright (c) Ligral Tech. All rights reserved. 
                     __    _                  __
                    / /   (_)___ __________ _/ /
                   / /   / / __ `/ ___/ __ `/ / 
@@ -102,7 +104,21 @@ Usage:
 Learn more:
     Visit https://junruoyu-zheng.gitee.io/ligral
     Clone the source at https://gitee.com/junruoyu-zheng/ligral");
-                break;
+                    break;
+                }
+            }
+            catch (LigralException)
+            {
+                logger.Throw();
+                logger.Warn($"Unexpected error occurred, ligral exited with error.");
+            }
+            catch (Exception e)
+            {
+                if (Logger.LogFile is null)
+                {
+                    Logger.LogFile = "ligral.log";
+                }
+                logger.Fatal(e);
             }
         }
         private static void Run(SimulationProject simulationProject)
@@ -147,14 +163,6 @@ Learn more:
             {
                 logger.Throw();
                 logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
-            }
-            catch (Exception e)
-            {
-                if (Logger.LogFile is null)
-                {
-                    Logger.LogFile = "ligral.log";
-                }
-                logger.Fatal(e);
             }
         }
         private static void Run(Linearization linearization)
@@ -205,14 +213,6 @@ Learn more:
             {
                 logger.Throw();
                 logger.Warn($"Unexpected error in {linearization.FileName}, ligral exited with error.");
-            }
-            catch (Exception e)
-            {
-                if (Logger.LogFile is null)
-                {
-                    Logger.LogFile = "ligral.log";
-                }
-                logger.Fatal(e);
             }
         }
         private static void Run(Document document)

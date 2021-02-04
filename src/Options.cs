@@ -21,7 +21,7 @@ namespace Ligral
                 }
                 else
                 {
-                    return null;
+                    throw logger.Error(new LigralException("Options are incomplete."));
                 }
             }
         }
