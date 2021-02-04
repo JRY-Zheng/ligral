@@ -21,7 +21,7 @@ namespace Ligral
                 }
                 else
                 {
-                    throw logger.Error(new LigralException("Options are incomplete."));
+                    return null;
                 }
             }
         }
@@ -31,6 +31,10 @@ namespace Ligral
         }
         private string Eat()
         {
+            if (arg is null)
+            {
+                throw logger.Error(new LigralException("Options are incomplete"));
+            }
             index++;
             return arg;
         }
@@ -51,7 +55,11 @@ namespace Ligral
         private string GetString()
         {
             string str = Eat();
-            if (str.StartsWith('-'))
+            if (str is null)
+            {
+                throw logger.Error(new LigralException("String value expected, options are incomplete"));
+            }
+            else if (str.StartsWith('-'))
             {
                 throw logger.Error(new LigralException($"String value expected, but got option {str}. Do not pass string that starts with `-`."));
             }
@@ -59,9 +67,14 @@ namespace Ligral
         }
         private double GetDouble()
         {
+            string str = Eat();
+            if (str is null)
+            {
+                throw logger.Error(new LigralException("String value expected, options are incomplete"));
+            }
             try
             {
-                return double.Parse(Eat());
+                return double.Parse(str);
             }
             catch
             {
