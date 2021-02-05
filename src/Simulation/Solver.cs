@@ -39,6 +39,8 @@ namespace Ligral.Simulation
                 return new FixedStepRK3Solver();
             case "ode4":
                 return new FixedStepRK4Solver();
+            case "ode5":
+                return new FixedStepRK5Solver();
             default:
                 if (solverName.Contains('.'))
                 {
