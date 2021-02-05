@@ -24,13 +24,13 @@ namespace Ligral.Simulation.Solvers
             Time = tn + stepSize*1.25E-1;
             var c4 = problem.SystemDynamicFunction(states + c1*3.125E-2 + c3*9.375E-2) * stepSize;
             Time = tn + stepSize*3.125E-1;
-            var c5 = problem.SystemDynamicFunction(states + c1*3.125E-1 - c3*1.171875 - c4*1.171875) * stepSize;
+            var c5 = problem.SystemDynamicFunction(states + c1*3.125E-1 - c3*1.171875 + c4*1.171875) * stepSize;
             Time = tn + stepSize*3.75E-1;
-            var c6 = problem.SystemDynamicFunction(states + c1*3.75E-2 + c4*1.875E-1 - c5*1.5E-1) * stepSize;
+            var c6 = problem.SystemDynamicFunction(states + c1*3.75E-2 + c4*1.875E-1 + c5*1.5E-1) * stepSize;
             Time = tn + stepSize*1.475E-1;
             var c7 = problem.SystemDynamicFunction(states + c1*4.791013711111111E-2 + c4*1.122487127777778E-1 - c5*2.550567377777778E-2 + c6*1.284682388888889E-2) * stepSize;
             Time = tn + stepSize*4.65E-1;
-            var c8 = problem.SystemDynamicFunction(states + c1*1.691798978729228E-2 - c4*3.878482784860432E-1 + c5*3.597736985150033E-2 + c6*1.969702142156661E-1 - c7*1.727138523405018E-1) * stepSize;
+            var c8 = problem.SystemDynamicFunction(states + c1*1.691798978729228E-2 + c4*3.878482784860432E-1 + c5*3.597736985150033E-2 + c6*1.969702142156661E-1 - c7*1.727138523405018E-1) * stepSize;
             Time = tn + stepSize*5.648654513822596E-1;
             var c9 = problem.SystemDynamicFunction(states + c1*6.90957533591923E-2 - c4*6.342479767288542E-1 - c5*1.611975752246041E-1 + c6*1.386503094588253E-1 + c7*9.409286140357563E-1 + c8*2.11636326481944E-1) * stepSize;
             Time = tn + stepSize*6.5E-1;
