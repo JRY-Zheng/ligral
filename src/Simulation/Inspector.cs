@@ -25,6 +25,7 @@ namespace Ligral.Simulation
                 if (!routine.Contains(node))
                 {
                     routine.Add(node);
+                    node.Check();
                     node.Inspect().ForEach(subNode=>Visit(subNode));
                 }
             }

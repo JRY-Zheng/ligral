@@ -271,6 +271,17 @@ namespace Ligral.Component
         {
             return InPortList.All(inPort=>inPort.Source!=null);
         }
+        public virtual void Check()
+        {
+            try
+            {
+                OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[0].ColNo);
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new ModelException(this));
+            }
+        }
         public List<Model> Inspect()
         {
             List<Model> destinationList = new List<Model>();

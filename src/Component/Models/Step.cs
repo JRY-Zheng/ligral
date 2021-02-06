@@ -26,6 +26,10 @@ namespace Ligral.Component.Models
         {
             OutPortList.Add(new OutPort("source", this));
         }
+        public override void Check()
+        {
+            OutPortList[0].SetShape(0, 0);
+        }
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()

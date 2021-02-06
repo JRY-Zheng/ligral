@@ -23,6 +23,10 @@ namespace Ligral.Component.Models
         {
             OutPortList.Add(new OutPort("time", this));
         }
+        public override void Check()
+        {
+            OutPortList[0].SetShape(0, 0);
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Results[0].Pack(Solver.Time);

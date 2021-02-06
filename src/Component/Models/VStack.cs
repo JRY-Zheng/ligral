@@ -25,6 +25,27 @@ namespace Ligral.Component.Models
             base.SetUpPorts();
             OutPortList.Add(new OutPort("matrix", this));
         }
+        public override void Check()
+        {
+            int rowNo = InPortList[0].RowNo;
+            int colNo = InPortList[0].ColNo;
+            rowNo = rowNo == 0? 1 : rowNo;
+            colNo = colNo == 0? 1 : colNo;
+            foreach (InPort inPort in InPortList.Skip(1))
+            {
+                int nextRowNo = inPort.RowNo;
+                int nextColNo = inPort.ColNo;
+                nextRowNo = nextRowNo == 0? 1 : nextRowNo;
+                nextColNo = nextColNo == 0? 1 : nextColNo;
+                if (colNo != nextColNo)
+                {
+                    int index = InPortList.IndexOf(inPort);
+                    throw logger.Error(new ModelException(this, $"The in port {index} has inconsistent column number."));
+                }
+                rowNo += nextRowNo;
+            }
+            OutPortList[0].SetShape(rowNo, colNo);
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal firstSignal = values[0];

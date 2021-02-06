@@ -25,6 +25,23 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("matrix", this));
             base.SetUpPorts();
         }
+        public override void Check()
+        {
+            int rowNo = InPortList[0].RowNo;
+            int colNo = InPortList[0].ColNo;
+            if (rowNo == 0 || colNo == 0)
+            {
+                throw logger.Error(new ModelException(this, $"The input should be a matrix"));
+            }
+            else if (rowNo * colNo != OutPortList.Count)
+            {
+                throw logger.Error(new ModelException(this, $"The input matrix has {rowNo} rows and {colNo} columns, but there are {OutPortList.Count} out ports."));
+            }
+            foreach (OutPort outPort in OutPortList)
+            {
+                outPort.SetShape(0, 0);
+            }
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];

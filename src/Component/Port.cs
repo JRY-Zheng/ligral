@@ -12,6 +12,8 @@ namespace Ligral.Component
     {
         public string Name;
         public Model FatherModel;
+        public int RowNo = -1;
+        public int ColNo = -1;
         protected Signal Value;
         protected Logger logger;
         protected Port(string name, Model model)
@@ -173,12 +175,36 @@ namespace Ligral.Component
         {
             if(inPort.Source!=null)
             {
-                throw logger.Error(new LigralException("Duplicated binding of InPort."));
+                throw logger.Error(new ModelException(FatherModel, "Duplicated binding of InPort."));
             }
             else
             {
                 destinationList.Add(inPort);
                 inPort.Source = this;
+            }
+        }
+        public void SetShape(int rowNo, int colNo)
+        {
+            ColNo = colNo;
+            RowNo = rowNo;
+            foreach (var inPort in destinationList)
+            {
+                if (inPort.RowNo<0)
+                {
+                    inPort.RowNo = rowNo;
+                }
+                else if (rowNo != inPort.RowNo)
+                {
+                    throw logger.Error(new ModelException(FatherModel, $"Shape check fail, row numbers should be {inPort.RowNo}, but got {rowNo}"));
+                }
+                if (inPort.ColNo<0)
+                {
+                    inPort.ColNo = colNo;
+                }
+                else if (colNo != inPort.ColNo)
+                {
+                    throw logger.Error(new ModelException(FatherModel, $"Shape check fail, column numbers should be {inPort.ColNo}, but got {colNo}"));
+                }
             }
         }
         public void SetValue(Signal value)

@@ -25,6 +25,18 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("base", this));
             OutPortList.Add(new OutPort("y", this));
         }
+        public override void Check()
+        {
+            int xRowNo = InPortList[0].ColNo;
+            int xColNo = InPortList[0].RowNo;
+            int baseRowNo = InPortList[0].RowNo;
+            int baseColNo = InPortList[0].ColNo;
+            if (xRowNo != baseRowNo || xColNo != baseColNo)
+            {
+                throw logger.Error(new ModelException(this, $"Two in put must have the same shape but ({xRowNo}, {xColNo}) and ({baseRowNo}, {baseColNo}) got"));
+            }
+            OutPortList[0].SetShape(xRowNo, xColNo);
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             // Results.Clear();

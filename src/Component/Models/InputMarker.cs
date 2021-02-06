@@ -37,10 +37,12 @@ namespace Ligral.Component.Models
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = System.Convert.ToInt32(value);
+                    InPortList[0].ColNo = colNo;
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = System.Convert.ToInt32(value);
+                    InPortList[0].RowNo = rowNo;
                 }, ()=>{})}
             };
         }

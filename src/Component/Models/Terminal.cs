@@ -23,6 +23,10 @@ namespace Ligral.Component.Models
         {
             InPortList.Add(new InPort("input", this));
         }
+        public override void Check()
+        {
+            
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             return Results;

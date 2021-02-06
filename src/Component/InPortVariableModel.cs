@@ -25,5 +25,9 @@ namespace Ligral.Component
         {
             InPortList.Add(new InPort("in0", this));
         }
+        public override void Check()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

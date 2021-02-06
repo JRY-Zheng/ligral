@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -24,6 +24,8 @@ namespace Ligral.Component.Models
         private int seed;
         private double upper;
         private double lower;
+        private int rowNo;
+        private int colNo;
         protected override void SetUpPorts()
         {
             OutPortList.Add(new OutPort("output", this));
@@ -55,13 +57,40 @@ namespace Ligral.Component.Models
                 {
                     lower = 0;
                 })},
+                {"col", new Parameter(ParameterType.Signal , value=>
+                {
+                    colNo = (int)value;
+                }, ()=>
+                {
+                    colNo = 0;
+                })},
+                {"row", new Parameter(ParameterType.Signal , value=>
+                {
+                    rowNo = (int)value;
+                }, ()=>
+                {
+                    rowNo = 0;
+                })},
             };
+        }
+        public override void Check()
+        {
+            OutPortList[0].SetShape(rowNo, colNo);
         }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
-            // Results.Clear();
             Signal outputSignal = Results[0];
-            outputSignal.Pack(random.NextDouble() * (upper - lower) + lower);
+            if (rowNo == 0 && colNo == 0)
+            {
+                outputSignal.Pack(random.NextDouble() * (upper - lower) + lower);
+            }
+            else if (rowNo > 0 && colNo > 0)
+            {
+                var build = Matrix<double>.Build;
+                var matrix = build.Dense(rowNo, colNo);
+                Signal signal = new Signal(matrix);
+                outputSignal.Pack(signal.Apply(_=>random.NextDouble() * (upper - lower) + lower));
+            }
             return Results;
         }
     }

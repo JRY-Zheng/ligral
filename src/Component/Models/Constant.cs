@@ -25,6 +25,11 @@ namespace Ligral.Component.Models
         {
             OutPortList.Add(new OutPort("value", this));
         }
+        public override void Check()
+        {
+            (int rowNo, int colNo) = Results[0].Shape();
+            OutPortList[0].SetShape(rowNo, colNo);
+        }
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()

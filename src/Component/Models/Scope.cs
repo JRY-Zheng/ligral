@@ -53,10 +53,10 @@ namespace Ligral.Component.Models
                 }
             }
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Check()
         {
-            Signal inputSignal = values[0];
-            (int rowNo, int colNo) = inputSignal.Shape();
+            int rowNo = InPortList[0].RowNo;
+            int colNo = InPortList[0].ColNo;
             FigureProtocol.FigureConfig figureConfig = new FigureProtocol.FigureConfig()
             {
                 FigureId = publisher.Id,
@@ -66,7 +66,7 @@ namespace Ligral.Component.Models
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
             handle = Observation.CreateObservation(varName, rowNo, colNo);
-            if (inputSignal.IsMatrix)
+            if (rowNo > 0 && colNo > 1)
             {
                 for(int i = 0; i < rowNo; i++)
                 {
@@ -118,6 +118,9 @@ namespace Ligral.Component.Models
                 FigureId = publisher.Id
             };
             publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
+        }
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        {
             Calculate = PostCalculate;
             return Calculate(values);
         }

@@ -52,15 +52,35 @@ namespace Ligral.Component.Models
                 }
             }
         }
+        public override void Check()
+        {
+            if (rowNo>=0 || colNo>=0)
+            {
+                if (rowNo != InPortList[0].RowNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Shape inconsistency. {InPortList[0].RowNo} rows got, {rowNo} expected."));
+                }
+                else if (colNo != InPortList[0].ColNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Shape inconsistency. {InPortList[0].ColNo} columns got, {colNo} expected."));
+                }
+            }
+            else
+            {
+                rowNo = InPortList[0].RowNo;
+                colNo = InPortList[0].ColNo;
+            }
+            handle = Observation.CreateObservation(varName, rowNo, colNo);
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
-            Signal inputSignal = values[0];
-            if ((rowNo>=0 || colNo>=0) && !inputSignal.CheckShape(rowNo, colNo))
-            {
-                throw logger.Error(new ModelException(this, $"Shape inconsistency. {inputSignal.Shape()} got, ({rowNo}, {colNo}) expected."));
-            }
-            (rowNo, colNo) = inputSignal.Shape();
-            handle = Observation.CreateObservation(varName, rowNo, colNo);
+            // Signal inputSignal = values[0];
+            // if ((rowNo>=0 || colNo>=0) && !inputSignal.CheckShape(rowNo, colNo))
+            // {
+            //     throw logger.Error(new ModelException(this, $"Shape inconsistency. {inputSignal.Shape()} got, ({rowNo}, {colNo}) expected."));
+            // }
+            // (rowNo, colNo) = inputSignal.Shape();
+            // handle = Observation.CreateObservation(varName, rowNo, colNo);
             Calculate = PostCalculate;
             return Calculate(values);
         }

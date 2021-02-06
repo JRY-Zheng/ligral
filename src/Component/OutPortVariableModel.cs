@@ -27,5 +27,9 @@ namespace Ligral.Component
                 base.Connect(outPortNO, inPort);
             }
         }
+        public override void Check()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

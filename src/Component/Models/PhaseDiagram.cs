@@ -84,27 +84,27 @@ namespace Ligral.Component.Models
             xName = xName ?? $"{varName}:x";
             yName = yName ?? $"{varName}:y";
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Check()
         {
-            Signal xSignal = values[0];
-            Signal ySignal = values[1];
-            (int xr, int xc) = xSignal.Shape();
-            (int yr, int yc) = ySignal.Shape();
+            int xr = InPortList[0].RowNo;
+            int xc = InPortList[0].ColNo;
+            int yr = InPortList[1].RowNo;
+            int yc = InPortList[1].ColNo;
             xHandle = Observation.CreateObservation(xName, xr, xc);
             yHandle = Observation.CreateObservation(yName, yr, yc);
-            if (!xSignal.IsMatrix && !ySignal.IsMatrix)
+            if (xr == 0 && xc == 0 && yr == 0 && yc == 0)
             {
                 FigureConfigDoubleScalar(xName, yName);
                 SendData = SendDataDoubleScalar;
                 SendFile = SendFileDoubleScalar;
             }
-            else if (!xSignal.IsMatrix)
+            else if (xr == 0 && yr == 0)
             {
                 FigureConfigScalarMatrix(yc, yr, xName, yName);
                 SendData = SendDataScalarMatrix;
                 SendFile = SendFileScalarMatrix;
             }
-            else if (!ySignal.IsMatrix)
+            else if (yr == 0 && yc == 0)
             {
                 FigureConfigMatrixScalar(xc, xr, xName, yName);
                 SendData = SendDataMatrixScalar;
@@ -126,6 +126,9 @@ namespace Ligral.Component.Models
             {
                 throw logger.Error(new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa."));
             }
+        }
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        {
             Calculate = PostCalculate;
             return Calculate(values);
         }

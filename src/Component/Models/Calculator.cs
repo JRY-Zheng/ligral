@@ -44,6 +44,108 @@ namespace Ligral.Component.Models
                 })}
             };
         }
+        public override void Check()
+        {
+            var leftRowNo = InPortList[0].RowNo;
+            var leftColNo = InPortList[0].ColNo;
+            var rightRowNo = InPortList[0].RowNo;
+            var rightColNo = InPortList[0].ColNo;
+            int rowNo; 
+            int colNo;
+            switch(type)
+            {
+            case "+":
+            case "-":
+            case ".*":
+            case "./":
+            case ".^":
+                if (leftRowNo == rightRowNo || rightRowNo <= 1)
+                {
+                    rowNo = leftRowNo;
+                }
+                else if (leftColNo == 1)
+                {
+                    rowNo = rightRowNo;
+                }
+                else
+                {
+                    throw logger.Error(new ModelException(this, $"Cannot broadcast row numbers from {leftRowNo} to {rightRowNo}"));
+                }
+                if (leftColNo == rightColNo || rightColNo <= 1)
+                {
+                    colNo = leftColNo;
+                }
+                else if (leftColNo == 1)
+                {
+                    colNo = rightColNo;
+                }
+                else
+                {
+                    throw logger.Error(new ModelException(this, $"Cannot broadcast column numbers from {leftColNo} to {rightColNo}"));
+                }
+                break;
+            case "*":
+                if (leftColNo == 0 && leftRowNo == 0)
+                {
+                    rowNo = rightRowNo;
+                    colNo = rightColNo;
+                }
+                else if (rightColNo == 0 && rightRowNo == 0)
+                {
+                    rowNo = leftRowNo;
+                    colNo = leftColNo;
+                }
+                else if (leftColNo != rightRowNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Shape inconsistency: Left column number {leftColNo} not equal to right row number {rightRowNo}"));
+                }
+                else
+                {
+                    rowNo = leftRowNo;
+                    colNo = rightColNo;
+                }
+                break;
+            case "/":
+                if (rightRowNo == 0 && rightColNo == 0)
+                {
+                    rowNo = leftRowNo;
+                    colNo = leftColNo;
+                }
+                if (leftRowNo == 0 && leftColNo == 0)
+                {
+                    rowNo = rightRowNo;
+                    colNo = rightColNo;
+                }
+                else if (rightColNo == rightRowNo && rightColNo == leftColNo)
+                {
+                    rowNo = leftRowNo;
+                    colNo = leftColNo;
+                }
+                else
+                {
+                    throw logger.Error(new ModelException(this, $"Right matrix in division should be square and equal to left column number but ({leftRowNo}, {leftColNo})/({rightRowNo}, {rightColNo})"));
+                }
+                break;
+            case "^":
+                if (rightColNo != 0 || rightRowNo != 0)
+                {
+                    throw logger.Error(new ModelException(this, "Cannot raise matrices or scalars to the power of a matrix which may causes complex value"));
+                }
+                else if (leftColNo != leftRowNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Cannot raise a non-square matrix ({leftRowNo}, {leftColNo}) to the power of a scalar"));
+                }
+                else
+                {
+                    rowNo = leftRowNo;
+                    colNo = leftColNo;
+                }
+                break;
+            default:
+                throw logger.Error(new ModelException(this, $"Unknown type {type}"));
+            }
+            OutPortList[0].SetShape(rowNo, colNo);
+        }
         protected override List<Signal> DefaultCalculate(List<Signal> values)
         {
             switch(type)
