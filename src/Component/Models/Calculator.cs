@@ -148,28 +148,29 @@ namespace Ligral.Component.Models
         }
         protected override List<Signal> Calculate(List<Signal> values)
         {
-            switch(type)
-            {
-            case "+":
-                AdditionCalculate(values); break;
-            case "-":
-                SubstractionCalculate(values); break;
-            case "*":
-                MultiplicationCalculate(values); break;
-            case "/":
-                DivisionCalculate(values); break;
-            case "^":
-                PowerCalculate(values); break;
-            case ".*":
-                BroadcastMultiplicationCalculate(values); break;
-            case "./":
-                BroadcastDivisionCalculate(values); break;
-            case ".^":
-                BroadcastPowerCalculate(values); break;
-            }// validation of operator is done in configure
             try
             {
-                return Calculate(values);
+                switch(type)
+                {
+                case "+":
+                    return AdditionCalculate(values);
+                case "-":
+                    return SubstractionCalculate(values);
+                case "*":
+                    return MultiplicationCalculate(values);
+                case "/":
+                    return DivisionCalculate(values);
+                case "^":
+                    return PowerCalculate(values);
+                case ".*":
+                    return BroadcastMultiplicationCalculate(values);
+                case "./":
+                    return BroadcastDivisionCalculate(values);
+                case ".^":
+                    return BroadcastPowerCalculate(values);
+                default:
+                    throw logger.Error(new ModelException(this, $"Unknown type {type}"));
+                }// validation of operator is done in configure
             }
             catch (System.ArgumentException e)
             {
