@@ -22,7 +22,7 @@ namespace Ligral.Component.Models
         private string varName;
         private int rowNo;
         private int colNo;
-        private List<Observation> observations = new List<Observation>();
+        private ObservationHandle handle;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("input", this));
@@ -52,27 +52,14 @@ namespace Ligral.Component.Models
                 }
             }
             (rowNo, colNo) = inputSignal.Shape();
-            if (inputSignal.IsMatrix)
-            {
-                for(int i = 0; i < rowNo; i++)
-                {
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        observations.Add(Observation.CreateObservation($"{varName}({i}-{j})"));
-                    }
-                }
-            }
-            else
-            {
-                observations.Add(Observation.CreateObservation(varName));
-            }
+            handle = Observation.CreateObservation(varName, rowNo, colNo);
             Calculate = PostCalculate;
             return Calculate(values);
         }
         protected List<Signal> PostCalculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
-            inputSignal.ZipApply<Observation>(observations, (value, observation) => observation.Cache(value));
+            handle.Cache(inputSignal);
             return Results;
         }
     }
