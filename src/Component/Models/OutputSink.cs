@@ -20,8 +20,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private int rowNo;
-        private int colNo;
+        private int rowNo = -1;
+        private int colNo = -1;
         private ObservationHandle handle;
         protected override void SetUpPorts()
         {
@@ -37,19 +37,27 @@ namespace Ligral.Component.Models
                 }, ()=>{})}
             };
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Prepare()
         {
-            Signal inputSignal = values[0];
+            string inputSignalName = InPortList[0].Source.SignalName;
             if (varName == null)
             {
-                varName = GivenName ?? inputSignal.Name ?? Name;
+                varName = GivenName ?? inputSignalName ?? Name;
                 if (Scope != null)
                 {
-                    if (GivenName != null || inputSignal.Name == null)
+                    if (GivenName != null || inputSignalName == null)
                     {
                         varName = Scope + "." + varName;
                     }
                 }
+            }
+        }
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        {
+            Signal inputSignal = values[0];
+            if ((rowNo>=0 || colNo>=0) && !inputSignal.CheckShape(rowNo, colNo))
+            {
+                throw logger.Error(new ModelException(this, $"Shape inconsistency. {inputSignal.Shape()} got, ({rowNo}, {colNo}) expected."));
             }
             (rowNo, colNo) = inputSignal.Shape();
             handle = Observation.CreateObservation(varName, rowNo, colNo);

@@ -23,6 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
+        private string xName;
+        private string yName;
         private ObservationHandle xHandle;
         private ObservationHandle yHandle;
         private Publisher publisher = new Publisher();
@@ -44,11 +46,10 @@ namespace Ligral.Component.Models
                 }, ()=> {})}
             };
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Prepare()
         {
-            Signal xSignal = values[0];
-            Signal ySignal = values[1];
-            string xName = null, yName = null;
+            string xSignalName = InPortList[0].Source.SignalName;
+            string ySignalName = InPortList[1].Source.SignalName;
             if (varName == null)
             {
                 if (GivenName != null)
@@ -62,11 +63,11 @@ namespace Ligral.Component.Models
                         varName = GivenName;
                     }
                 }
-                else if (xSignal.Name != null && ySignal.Name != null)
+                else if (xSignalName != null && ySignalName != null)
                 {
-                    varName = $"{xSignal.Name}/{ySignal.Name}";
-                    xName = xSignal.Name;
-                    yName = ySignal.Name;
+                    varName = $"{xSignalName}/{ySignalName}";
+                    xName = xSignalName;
+                    yName = ySignalName;
                 }
                 else
                 {
@@ -82,6 +83,11 @@ namespace Ligral.Component.Models
             }
             xName = xName ?? $"{varName}:x";
             yName = yName ?? $"{varName}:y";
+        }
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        {
+            Signal xSignal = values[0];
+            Signal ySignal = values[1];
             (int xr, int xc) = xSignal.Shape();
             (int yr, int yc) = ySignal.Shape();
             xHandle = Observation.CreateObservation(xName, xr, xc);

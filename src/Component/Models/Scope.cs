@@ -38,20 +38,24 @@ namespace Ligral.Component.Models
                 }, ()=> {})}
             };
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Prepare()
         {
-            Signal inputSignal = values[0];
+            string inputSignalName = InPortList[0].Source.SignalName;
             if (varName == null)
             {
-                varName = GivenName ?? inputSignal.Name ?? Name;
+                varName = GivenName ?? inputSignalName ?? Name;
                 if (Scope != null)
                 {
-                    if (GivenName != null || inputSignal.Name == null)
+                    if (GivenName != null || inputSignalName == null)
                     {
                         varName = Scope + "." + varName;
                     }
                 }
             }
+        }
+        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        {
+            Signal inputSignal = values[0];
             (int rowNo, int colNo) = inputSignal.Shape();
             FigureProtocol.FigureConfig figureConfig = new FigureProtocol.FigureConfig()
             {
