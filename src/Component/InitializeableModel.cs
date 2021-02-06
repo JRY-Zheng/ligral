@@ -98,9 +98,9 @@ namespace Ligral.Component
             {
                 if (!initial.Packed)
                 {
-                    initial.Pack(0);
-                    rowNo = 0;
-                    colNo = 0;
+                    // initial.Pack(0);
+                    // rowNo = 0;
+                    // colNo = 0;
                 }
                 else if (initial.IsMatrix)
                 {
@@ -118,6 +118,39 @@ namespace Ligral.Component
             {
                 throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero, for scalar both zeros\n but we get: {colNo}x{rowNo}"));
             }
+        }
+        public override void Check()
+        {
+            int inputRowNo = InPortList[0].RowNo;
+            int inputColNo = InPortList[0].ColNo;
+            var build = Matrix<double>.Build;
+            if (rowNo < 0 && colNo < 0)
+            {
+                if (inputRowNo < 0 && inputColNo < 0)
+                {
+                    initial.Pack(0);
+                    rowNo = 0;
+                    colNo = 0;
+                }
+                else
+                {
+                    rowNo = inputRowNo;
+                    colNo = inputColNo;
+                    initial.Pack(build.Dense(rowNo, colNo, 0));
+                }
+            }
+            else if (inputRowNo >= 0 && inputColNo >= 0)
+            {
+                if (inputColNo != colNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Column number in consistent, got {inputColNo}, but {colNo} expected."));
+                }
+                else if (inputRowNo != rowNo)
+                {
+                    throw logger.Error(new ModelException(this, $"Row number in consistent, got {inputRowNo}, but {rowNo} expected."));
+                }
+            }
+            OutPortList[0].SetShape(rowNo, colNo);
         }
     }
 }

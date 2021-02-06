@@ -119,12 +119,7 @@ namespace Ligral.Component.Models
             };
             publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
-        {
-            Calculate = PostCalculate;
-            return Calculate(values);
-        }
-        private List<Signal> PostCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             handle.Cache(inputSignal);

@@ -42,7 +42,7 @@ namespace Ligral.Component.Models
                 outPort.SetShape(rowNo, 1);
             }
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             Matrix<double> matrix = inputSignal.Unpack() as Matrix<double>;

@@ -72,19 +72,7 @@ namespace Ligral.Component.Models
             }
             handle = Observation.CreateObservation(varName, rowNo, colNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
-        {
-            // Signal inputSignal = values[0];
-            // if ((rowNo>=0 || colNo>=0) && !inputSignal.CheckShape(rowNo, colNo))
-            // {
-            //     throw logger.Error(new ModelException(this, $"Shape inconsistency. {inputSignal.Shape()} got, ({rowNo}, {colNo}) expected."));
-            // }
-            // (rowNo, colNo) = inputSignal.Shape();
-            // handle = Observation.CreateObservation(varName, rowNo, colNo);
-            Calculate = PostCalculate;
-            return Calculate(values);
-        }
-        protected List<Signal> PostCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             handle.Cache(inputSignal);

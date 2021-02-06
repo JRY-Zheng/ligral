@@ -86,8 +86,6 @@ namespace Ligral.Component
         // public bool Initializeable = false;
         // protected bool Initialized = false;
         public List<Signal> Results;
-        public delegate List<Signal> CalculateHandler(List<Signal> values);
-        public CalculateHandler Calculate;
         protected virtual string DocString 
         {
             get
@@ -102,7 +100,6 @@ namespace Ligral.Component
             DefaultName = GetType().Name + id.ToString();
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
-            Calculate = DefaultCalculate;
             Interpreter.Completed += Prepare;
             Observation.Stepped += Refresh;
             Observation.Stopped += Release;
@@ -291,7 +288,7 @@ namespace Ligral.Component
             }
             return destinationList;
         }
-        protected virtual List<Signal> DefaultCalculate(List<Signal> values)
+        protected virtual List<Signal> Calculate(List<Signal> values)
         {
             foreach (var pair in Results.Zip(values))
             {

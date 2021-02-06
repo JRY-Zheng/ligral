@@ -27,7 +27,7 @@ namespace Ligral.Component.Models
         {
             OutPortList[0].SetShape(0, 0);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Results[0].Pack(Solver.Time);
             return Results;

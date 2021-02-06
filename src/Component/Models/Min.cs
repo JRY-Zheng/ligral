@@ -37,7 +37,7 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(xRowNo, xColNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             // Results.Clear();
             Results[0].Clone(values[0].ZipApply(values[1], (first, second)=>first<second?first:second));

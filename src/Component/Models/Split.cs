@@ -42,7 +42,7 @@ namespace Ligral.Component.Models
                 outPort.SetShape(0, 0);
             }
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             if (!inputSignal.IsMatrix)

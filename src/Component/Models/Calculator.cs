@@ -146,26 +146,26 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             switch(type)
             {
             case "+":
-                Calculate = AdditionCalculate; break;
+                AdditionCalculate(values); break;
             case "-":
-                Calculate = SubstractionCalculate; break;
+                SubstractionCalculate(values); break;
             case "*":
-                Calculate = MultiplicationCalculate; break;
+                MultiplicationCalculate(values); break;
             case "/":
-                Calculate = DivisionCalculate; break;
+                DivisionCalculate(values); break;
             case "^":
-                Calculate = PowerCalculate; break;
+                PowerCalculate(values); break;
             case ".*":
-                Calculate = BroadcastMultiplicationCalculate; break;
+                BroadcastMultiplicationCalculate(values); break;
             case "./":
-                Calculate = BroadcastDivisionCalculate; break;
+                BroadcastDivisionCalculate(values); break;
             case ".^":
-                Calculate = BroadcastPowerCalculate; break;
+                BroadcastPowerCalculate(values); break;
             }// validation of operator is done in configure
             try
             {

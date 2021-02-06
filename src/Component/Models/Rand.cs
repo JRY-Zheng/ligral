@@ -77,7 +77,7 @@ namespace Ligral.Component.Models
         {
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal outputSignal = Results[0];
             if (rowNo == 0 && colNo == 0)

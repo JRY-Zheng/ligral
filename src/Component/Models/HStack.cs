@@ -46,7 +46,7 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal firstSignal = values[0];
             Matrix<double> firstMatrix;

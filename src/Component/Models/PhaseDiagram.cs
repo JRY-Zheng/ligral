@@ -127,10 +127,14 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa."));
             }
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
-            Calculate = PostCalculate;
-            return Calculate(values);
+            Signal xSignal = values[0];
+            Signal ySignal = values[1];
+            (int xr, int xc) = xSignal.Shape();
+            xHandle.Cache(xSignal);
+            yHandle.Cache(ySignal);
+            return Results;
         }
         public override void Refresh()
         {
@@ -146,15 +150,6 @@ namespace Ligral.Component.Models
             {
                 SendFile();
             }
-        }
-        private List<Signal> PostCalculate(List<Signal> values)
-        {
-            Signal xSignal = values[0];
-            Signal ySignal = values[1];
-            (int xr, int xc) = xSignal.Shape();
-            xHandle.Cache(xSignal);
-            yHandle.Cache(ySignal);
-            return Results;
         }
         #region double-scalar
         private void FigureConfigDoubleScalar(string xName, string yName)

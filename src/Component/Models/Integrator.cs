@@ -41,6 +41,10 @@ namespace Ligral.Component.Models
         {
             string inputSignalName = InPortList[0].Source.SignalName;
             varName = varName ?? GivenName ?? inputSignalName ?? Name;
+        }
+        public override void Check()
+        {
+            base.Check();
             handle = State.CreateState(varName, rowNo, colNo, initial);
         }
         protected virtual void DerivativeUpdate(Signal inputSignal)
@@ -54,7 +58,7 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this));
             }
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];

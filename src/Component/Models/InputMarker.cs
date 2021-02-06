@@ -23,8 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private int rowNo;
-        private int colNo;
+        private int rowNo = -1;
+        private int colNo = -1;
         private ControlInputHandle handle;
         protected override void SetUpParameters()
         {
@@ -68,9 +68,41 @@ namespace Ligral.Component.Models
         {
             string inputSignalName = InPortList[0].Source is null ? null : InPortList[0].Source.SignalName;
             varName = varName ?? GivenName ?? inputSignalName ?? Name;
-            handle = ControlInput.CreateInput(varName??Name, rowNo, colNo);
         }
-        protected override List<Signal> DefaultCalculate(List<Signal> values)
+        public override void Check()
+        {
+            int inputRowNo = InPortList[0].RowNo;
+            int inputColNo = InPortList[0].ColNo;
+            if (inputRowNo < 0 && inputColNo < 0)
+            {
+                if (rowNo < 0 && colNo < 0)
+                {
+                    rowNo = 0;
+                    colNo = 0;
+                }
+                else
+                {
+                    InPortList[0].RowNo = rowNo;
+                    InPortList[0].ColNo = colNo;
+                }
+            }
+            else if (rowNo < 0 && colNo < 0)
+            {
+                rowNo = inputRowNo;
+                colNo = inputColNo;
+            }
+            else if (inputColNo != colNo)
+            {
+                throw logger.Error(new ModelException(this, $"Column number inconsistent, got {inputColNo}, but {colNo} expected."));
+            }
+            else if (inputRowNo != rowNo)
+            {
+                throw logger.Error(new ModelException(this, $"Row number inconsistent, got {inputRowNo}, but {rowNo} expected."));
+            }
+            handle = ControlInput.CreateInput(varName??Name, rowNo, colNo);
+            OutPortList[0].SetShape(rowNo, colNo);
+        }
+        protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];
