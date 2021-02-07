@@ -48,13 +48,15 @@ namespace Ligral.Simulation
                 throw logger.Error(new LigralException($"Only x with shape nx1 is supported, but we got {n}x{x.ColumnCount}"));
             }
             var fx = f(x);
-            int m = x.RowCount;
+            int m = fx.RowCount;
             if (fx.ColumnCount != 1)
             {
                 throw logger.Error(new LigralException($"Only f(x) with shape nx1 is supported, but we got {m}x{fx.ColumnCount}"));
             }
             var build = Matrix<double>.Build;
             var gradient = build.Dense(n, m, 1);
+            logger.Debug($"The gradient is of shape {n}x{m}");
+            logger.Debug($"f(x) is of shape {fx.RowCount}x{fx.ColumnCount}");
             for (int i = 0; i < n; i++)
             {
                 var item = x[i, 0];

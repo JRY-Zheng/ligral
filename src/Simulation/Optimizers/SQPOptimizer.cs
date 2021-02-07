@@ -45,7 +45,7 @@ namespace Ligral.Simulation.Optimizers
                         k++;
                     }
                 }
-                (var A, var B) = Filter(Ab, Ab, Ae, Be);
+                (var A, var B) = Filter(Ab, Bb, Ae, Be);
                 if (B.ColumnCount != 1)
                 {
                     throw logger.Error(new LigralException($"Only g(x) with shape px1 is supported, but we got {B.RowCount-Be.RowCount}x{B.ColumnCount}"));
@@ -79,7 +79,7 @@ namespace Ligral.Simulation.Optimizers
         {
             var Ap = A.SubMatrix(0, 1, 0, A.ColumnCount);
             var Bp = B.SubMatrix(0, 1, 0, B.ColumnCount);
-            for (int i = 1; i <= A.RowCount; i++)
+            for (int i = 1; i < A.RowCount; i++)
             {
                 var At = Ap.Stack(A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = Bp.Stack(B.SubMatrix(i, 1, 0, B.ColumnCount));
@@ -103,7 +103,15 @@ namespace Ligral.Simulation.Optimizers
         {
             var Ap = A0;
             var Bp = B0;
-            for (int i = 1; i <= A.RowCount; i++)
+            if (Ap.ColumnCount != A.ColumnCount)
+            {
+                throw logger.Error(new LigralException($"Constrain dimensions do not agree in SQP(A) {Ap.ColumnCount}: {A.ColumnCount}"));
+            }
+            if (Bp.ColumnCount != B.ColumnCount)
+            {
+                throw logger.Error(new LigralException($"Constrain dimensions do not agree in SQP(B) {Bp.ColumnCount}: {B.ColumnCount}"));
+            }
+            for (int i = 1; i < A.RowCount; i++)
             {
                 var At = Ap.Stack(A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = Bp.Stack(B.SubMatrix(i, 1, 0, B.ColumnCount));
