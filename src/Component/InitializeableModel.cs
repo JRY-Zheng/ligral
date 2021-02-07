@@ -30,7 +30,7 @@ namespace Ligral.Component
             {
                 inputSignal.Pack(0);
             }
-            InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(inputSignal));
+            // InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(inputSignal));
             Initialized = true;
         }
         

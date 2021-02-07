@@ -18,7 +18,7 @@ namespace Ligral.Simulation
         private double openLoopInput;
         private double closedLoopInput;
         public double InputUpperBound {get; set;} = double.PositiveInfinity;
-        public double InputLowerBound {get; set;} = double.PositiveInfinity;
+        public double InputLowerBound {get; set;} = double.NegativeInfinity;
         public bool IsConstrained {get; set;} = false;
         public string Name {get; private set;}
         public double Input
