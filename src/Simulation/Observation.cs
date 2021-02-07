@@ -159,7 +159,7 @@ Make sure you did not log two different signals under the same name.");
         {
             SetSignal(signal, (observation, value) => observation.OutputLowerBound = value);
         }
-        public void SetInputConstrain(Signal signal)
+        public void SetOutputConstrain(Signal signal)
         {
             SetSignal(signal, (output, val) => 
             {
