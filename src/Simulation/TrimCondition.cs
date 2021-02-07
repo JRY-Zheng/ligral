@@ -124,7 +124,7 @@ namespace Ligral.Simulation
         }
         protected override void SetConstrain(Signal signal)
         {
-            throw logger.Error(new LigralException("Cannot set constrain for state derivative"));
+            handle.SetDerivativeConstrain(signal);
         }
     }
     class OutputCondition : ConditionSetter
@@ -156,7 +156,7 @@ namespace Ligral.Simulation
         }
         protected override void SetConstrain(Signal signal)
         {
-            throw logger.Error(new LigralException("Cannot set constrain for output"));
+            handle.SetOutputConstrain(signal);
         }
     }
     class InputCondition : ConditionSetter

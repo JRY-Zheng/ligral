@@ -20,6 +20,7 @@ namespace Ligral.Simulation
         public double DerivativeUpperBound = double.PositiveInfinity;
         public double DerivativeLowerBound = double.NegativeInfinity;
         public bool IsConstrained {get; set;} = false;
+        public bool IsDerivativeConstrained {get; set;} = false;
         private static Logger logger = new Logger("State");
         public static List<State> StatePool = new List<State>();
         public static Dictionary<string, StateHandle> StateHandles = new Dictionary<string, StateHandle>();
@@ -108,6 +109,24 @@ namespace Ligral.Simulation
                 else if (var == 0)
                 {
                     state.IsConstrained = false;
+                }
+                else
+                {
+                    throw logger.Error(new LigralException($"Constrain should be either 0 or 1, but {var} got."));
+                }
+            });
+        }
+        public void SetDerivativeConstrain(Signal stateSignal)
+        {
+            SetSignal(stateSignal, (state, var) => 
+            {
+                if (var == 1)
+                {
+                    state.IsDerivativeConstrained = true;
+                }
+                else if (var == 0)
+                {
+                    state.IsDerivativeConstrained = false;
                 }
                 else
                 {

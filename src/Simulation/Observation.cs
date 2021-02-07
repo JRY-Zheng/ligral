@@ -20,6 +20,7 @@ namespace Ligral.Simulation
         public double OutputVariable {get; set;}
         public double OutputUpperBound {get; set;} = double.PositiveInfinity;
         public double OutputLowerBound {get; set;} = double.NegativeInfinity;
+        public bool IsConstrained {get; set;} = false;
         private double cachedOutputVariable;
         private bool isCommitted = true;
         public string Name;
@@ -157,6 +158,24 @@ Make sure you did not log two different signals under the same name.");
         public void SetOutputLowerBound(Signal signal)
         {
             SetSignal(signal, (observation, value) => observation.OutputLowerBound = value);
+        }
+        public void SetInputConstrain(Signal signal)
+        {
+            SetSignal(signal, (output, val) => 
+            {
+                if (val == 1)
+                {
+                    output.IsConstrained = true;
+                }
+                else if (val == 0)
+                {
+                    output.IsConstrained = false;
+                }
+                else
+                {
+                    throw logger.Error(new LigralException($"Constrain should be either 0 or 1, but {val} got."));
+                }
+            });
         }
         public Signal GetObservation()
         {
