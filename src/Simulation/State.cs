@@ -15,6 +15,10 @@ namespace Ligral.Simulation
         public double StateVariable;
         public double InitialValue;
         public double Derivative;
+        public double StateUpperBound;
+        public double StateLowerBound;
+        public double DerivativeUpperBound;
+        public double DerivativeLowerBound;
         private static Logger logger = new Logger("State");
         public static List<State> StatePool = new List<State>();
         public static Dictionary<string, StateHandle> StateHandles = new Dictionary<string, StateHandle>();
@@ -72,9 +76,25 @@ namespace Ligral.Simulation
         {
             SetSignal(signal, (state, deriv) => state.Derivative = deriv);
         }
+        public void SetDerivativeUpperBound(Signal signal)
+        {
+            SetSignal(signal, (state, deriv) => state.DerivativeUpperBound = deriv);
+        }
+        public void SetDerivativeLowerBound(Signal signal)
+        {
+            SetSignal(signal, (state, deriv) => state.DerivativeLowerBound = deriv);
+        }
         public void SetStateVariable(Signal signal)
         {
             SetSignal(signal, (state, var) => state.StateVariable = var);
+        }
+        public void SetStateUpperBound(Signal signal)
+        {
+            SetSignal(signal, (state, var) => state.StateUpperBound = var);
+        }
+        public void SetStateLowerBound(Signal signal)
+        {
+            SetSignal(signal, (state, var) => state.StateLowerBound = var);
         }
         public Signal GetState()
         {

@@ -17,7 +17,9 @@ namespace Ligral.Simulation
     {
         public static List<double> TimeList = new List<double>();
         public List<double> ObservationList = new List<double>();
-        public double OutputVariable {get; private set;}
+        public double OutputVariable {get; set;}
+        public double OutputUpperBound {get; set;}
+        public double OutputLowerBound {get; set;}
         private double cachedOutputVariable;
         private bool isCommitted = true;
         public string Name;
@@ -143,6 +145,18 @@ Make sure you did not log two different signals under the same name.");
         public void Cache(Signal signal)
         {
             SetSignal(signal, (observation, value) => observation.Cache(value));
+        }
+        public void SetOutputVariable(Signal signal)
+        {
+            SetSignal(signal, (observation, value) => observation.OutputVariable = value);
+        }
+        public void SetOutputUpperBound(Signal signal)
+        {
+            SetSignal(signal, (observation, value) => observation.OutputUpperBound = value);
+        }
+        public void SetOutputLowerBound(Signal signal)
+        {
+            SetSignal(signal, (observation, value) => observation.OutputLowerBound = value);
         }
         public Signal GetObservation()
         {

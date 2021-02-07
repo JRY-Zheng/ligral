@@ -17,6 +17,8 @@ namespace Ligral.Simulation
         public double ClosedLoopInput {set => closedLoopInput = value;}
         private double openLoopInput;
         private double closedLoopInput;
+        public double InputUpperBound {get; set;}
+        public double InputLowerBound {get; set;}
         public string Name {get; private set;}
         public double Input
         {
@@ -86,6 +88,14 @@ namespace Ligral.Simulation
         public void SetClosedLoopInput(Signal inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.ClosedLoopInput = input);
+        }
+        public void SetInputUpperBound(Signal inputSignal)
+        {
+            SetSignal(inputSignal, (control, input) => control.InputUpperBound = input);
+        }
+        public void SetInputLowerBound(Signal inputSignal)
+        {
+            SetSignal(inputSignal, (control, input) => control.InputLowerBound = input);
         }
         public Signal GetInput()
         {
