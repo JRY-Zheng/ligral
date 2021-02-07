@@ -13,7 +13,7 @@ namespace Ligral.Simulation
     {
         protected Logger logger;
         protected string HandleName;
-        public ConditionSetter(string handleName)
+        public virtual void SetHandleName(string handleName)
         {
             HandleName = handleName;
             logger = new Logger($"ConditionSetter({handleName})");
@@ -60,8 +60,9 @@ namespace Ligral.Simulation
     class StateCondition : ConditionSetter
     {
         private StateHandle handle;
-        public StateCondition(string handleName) : base(handleName)
+        public override void SetHandleName(string handleName)
         {
+            base.SetHandleName(handleName);
             if (!State.StateHandles.ContainsKey(handleName))
             {
                 throw logger.Error(new SettingException(handleName, null, $"No state handle named {handleName}"));
@@ -87,8 +88,9 @@ namespace Ligral.Simulation
     class StateDerivativeCondition : ConditionSetter
     {
         private StateHandle handle;
-        public StateDerivativeCondition(string handleName) : base(handleName)
+        public override void SetHandleName(string handleName)
         {
+            base.SetHandleName(handleName);
             if (!State.StateHandles.ContainsKey(handleName))
             {
                 throw logger.Error(new SettingException(handleName, null, $"No state handle named {handleName}"));
@@ -114,8 +116,9 @@ namespace Ligral.Simulation
     class OutputCondition : ConditionSetter
     {
         private ObservationHandle handle;
-        public OutputCondition(string handleName) : base(handleName)
+        public override void SetHandleName(string handleName)
         {
+            base.SetHandleName(handleName);
             if (!Observation.ObservationHandles.ContainsKey(handleName))
             {
                 throw logger.Error(new SettingException(handleName, null, $"No observation handle named {handleName}"));
@@ -141,8 +144,9 @@ namespace Ligral.Simulation
     class InputCondition : ConditionSetter
     {
         private ControlInputHandle handle;
-        public InputCondition(string handleName) : base(handleName)
+        public override void SetHandleName(string handleName)
         {
+            base.SetHandleName(handleName);
             if (!ControlInput.InputHandles.ContainsKey(handleName))
             {
                 throw logger.Error(new SettingException(handleName, null, $"No control input handle named {handleName}"));
@@ -163,6 +167,19 @@ namespace Ligral.Simulation
         protected override void SetValue(Signal signal)
         {
             handle.SetOpenLoopInput(signal);
+        }
+    }
+    class ConditionsSetter<T> : IConfigurable where T : ConditionSetter, new()
+    {
+        public void Configure(Dictionary<string, object> dict)
+        {
+            foreach (string item in dict.Keys)
+            {
+                object val = dict[item];
+                T condition = new T();
+                condition.SetHandleName(item);
+                condition.Configure((Dictionary<string, object>) val);
+            }
         }
     }
 }
