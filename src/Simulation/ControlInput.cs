@@ -17,8 +17,8 @@ namespace Ligral.Simulation
         public double ClosedLoopInput {set => closedLoopInput = value;}
         private double openLoopInput;
         private double closedLoopInput;
-        public double InputUpperBound {get; set;}
-        public double InputLowerBound {get; set;}
+        public double InputUpperBound {get; set;} = double.PositiveInfinity;
+        public double InputLowerBound {get; set;} = double.PositiveInfinity;
         public string Name {get; private set;}
         public double Input
         {

@@ -18,8 +18,8 @@ namespace Ligral.Simulation
         public static List<double> TimeList = new List<double>();
         public List<double> ObservationList = new List<double>();
         public double OutputVariable {get; set;}
-        public double OutputUpperBound {get; set;}
-        public double OutputLowerBound {get; set;}
+        public double OutputUpperBound {get; set;} = double.PositiveInfinity;
+        public double OutputLowerBound {get; set;} = double.NegativeInfinity;
         private double cachedOutputVariable;
         private bool isCommitted = true;
         public string Name;

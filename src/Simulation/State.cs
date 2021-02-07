@@ -15,10 +15,10 @@ namespace Ligral.Simulation
         public double StateVariable;
         public double InitialValue;
         public double Derivative;
-        public double StateUpperBound;
-        public double StateLowerBound;
-        public double DerivativeUpperBound;
-        public double DerivativeLowerBound;
+        public double StateUpperBound = double.PositiveInfinity;
+        public double StateLowerBound = double.NegativeInfinity;
+        public double DerivativeUpperBound = double.PositiveInfinity;
+        public double DerivativeLowerBound = double.NegativeInfinity;
         private static Logger logger = new Logger("State");
         public static List<State> StatePool = new List<State>();
         public static Dictionary<string, StateHandle> StateHandles = new Dictionary<string, StateHandle>();
