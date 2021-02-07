@@ -19,6 +19,7 @@ namespace Ligral.Simulation
             logger = new Logger($"ConditionSetter({handleName})");
         }
         protected abstract void SetValue(Signal signal);
+        protected abstract void SetConstrain(Signal signal);
         protected abstract void SetUpperBound(Signal signal);
         protected abstract void SetLowerBound(Signal signal);
         public void Configure(Dictionary<string, object> dict)
@@ -33,6 +34,10 @@ namespace Ligral.Simulation
                     case "val":
                     case "value":
                         SetValue(new Signal(val));
+                        break;
+                    case "con":
+                    case "constrain":
+                        SetConstrain(new Signal(val));
                         break;
                     case "upper":
                     case "max":
@@ -84,6 +89,11 @@ namespace Ligral.Simulation
         {
             handle.SetStateVariable(signal);
         }
+
+        protected override void SetConstrain(Signal signal)
+        {
+            handle.SetStateConstrain(signal);
+        }
     }
     class StateDerivativeCondition : ConditionSetter
     {
@@ -111,6 +121,10 @@ namespace Ligral.Simulation
         protected override void SetValue(Signal signal)
         {
             handle.SetDerivative(signal);
+        }
+        protected override void SetConstrain(Signal signal)
+        {
+            throw logger.Error(new LigralException("Cannot set constrain for state derivative"));
         }
     }
     class OutputCondition : ConditionSetter
@@ -140,6 +154,10 @@ namespace Ligral.Simulation
         {
             handle.SetOutputVariable(signal);
         }
+        protected override void SetConstrain(Signal signal)
+        {
+            throw logger.Error(new LigralException("Cannot set constrain for output"));
+        }
     }
     class InputCondition : ConditionSetter
     {
@@ -167,6 +185,10 @@ namespace Ligral.Simulation
         protected override void SetValue(Signal signal)
         {
             handle.SetOpenLoopInput(signal);
+        }
+        protected override void SetConstrain(Signal signal)
+        {
+            handle.SetInputConstrain(signal);
         }
     }
     class ConditionsSetter<T> : IConfigurable where T : ConditionSetter, new()

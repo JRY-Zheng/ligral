@@ -19,6 +19,7 @@ namespace Ligral.Simulation
         private double closedLoopInput;
         public double InputUpperBound {get; set;} = double.PositiveInfinity;
         public double InputLowerBound {get; set;} = double.PositiveInfinity;
+        public bool IsConstrained {get; set;} = false;
         public string Name {get; private set;}
         public double Input
         {
@@ -96,6 +97,24 @@ namespace Ligral.Simulation
         public void SetInputLowerBound(Signal inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.InputLowerBound = input);
+        }
+        public void SetInputConstrain(Signal inputSignal)
+        {
+            SetSignal(inputSignal, (control, input) => 
+            {
+                if (input == 1)
+                {
+                    control.IsConstrained = true;
+                }
+                else if (input == 0)
+                {
+                    control.IsConstrained = false;
+                }
+                else
+                {
+                    throw logger.Error(new LigralException($"Constrain should be either 0 or 1, but {input} got."));
+                }
+            });
         }
         public Signal GetInput()
         {
