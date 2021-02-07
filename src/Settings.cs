@@ -73,9 +73,7 @@ namespace Ligral
         public Dictionary<string, object> LoggerConfiguration {get; set;}
         public string SolverName {get; set;} = "ode4";
         public string PythonExecutable { get; set; } = "python";
-        private Linearizer linearizer = new Linearizer();
         public Dictionary<string, object> LinearizerConfiguration {get; set;}
-        private Trimmer trimmer = new Trimmer();
         public Dictionary<string, object> TrimmerConfiguration {get; set;}
 
         public void AddSetting(string item, object val)
@@ -163,14 +161,6 @@ namespace Ligral
             if (!(LoggerConfiguration is null))
             {
                 logger.Configure(LoggerConfiguration);
-            }
-            if (!(LinearizerConfiguration is null) && ControlInput.IsOpenLoop)
-            {
-                linearizer.Configure(LinearizerConfiguration);
-            }
-            if (!(TrimmerConfiguration is null) && ControlInput.IsOpenLoop)
-            {
-                trimmer.Configure(TrimmerConfiguration);
             }
         }
     }

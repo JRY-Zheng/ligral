@@ -190,6 +190,14 @@ Learn more:
                 string problemName = Path.GetFileNameWithoutExtension(linearization.FileName);
                 Problem problem = new Problem(problemName, routine);
                 Linearizer linearizer = new Linearizer();
+                if (settings.LinearizerConfiguration != null)
+                {
+                    linearizer.Configure(settings.LinearizerConfiguration);
+                }
+                else
+                {
+                    logger.Warn("No linearization configuration is set. The model will be linearized at zero.");
+                }
                 settings.ApplySetting();
                 linearizer.Linearize(problem);
                 if (linearization.OutputFile is string outputFile)
