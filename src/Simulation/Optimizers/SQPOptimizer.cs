@@ -9,7 +9,7 @@ using MFunc = System.Func<MathNet.Numerics.LinearAlgebra.Matrix<double>, MathNet
 
 namespace Ligral.Simulation.Optimizers
 {
-    public abstract class SQPOptimizer : Optimizer
+    public class SQPOptimizer : Optimizer
     {
         public int MaximumIteration {get; set;} = 1000;
         public double BoundaryConstrainTolerant {get; set;} = 1e-5; 

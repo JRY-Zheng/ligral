@@ -34,6 +34,9 @@ namespace Ligral
                 case Linearization linearization:
                     Run(linearization);
                     break;
+                case Trimming trimming:
+                    Run(trimming);
+                    break;
                 case Document document:
                     Run(document);
                     break;
@@ -221,6 +224,65 @@ Learn more:
             {
                 logger.Throw();
                 logger.Warn($"Unexpected error in {linearization.FileName}, ligral exited with error.");
+            }
+        }
+        private static void Run(Trimming trimming)
+        {
+            try
+            {
+                ControlInput.IsOpenLoop = true;
+                Settings settings = Settings.GetInstance();
+                settings.GetDefaultSettings();
+                logger.Info($"Ligral (R) Simulation Engine version {version}.\nCopyright (C) Ligral Tech. All rights reserved.");
+                PluginLoader pluginLoader = new PluginLoader();
+                pluginLoader.Load();
+                if (trimming.IsJsonFile is bool isJsonFile && isJsonFile)
+                {
+                    JsonLoader jsonLoader = new JsonLoader();
+                    jsonLoader.Load(trimming.FileName);
+                }
+                else
+                {
+                    Interpreter interpreter = Interpreter.GetInstance(trimming.FileName);
+                    interpreter.Interpret();
+                }
+                Inspector inspector = new Inspector();
+                List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
+                string problemName = Path.GetFileNameWithoutExtension(trimming.FileName);
+                Problem problem = new Problem(problemName, routine);
+                Trimmer trimmer = new Trimmer();
+                if (settings.TrimmerConfiguration != null)
+                {
+                    trimmer.Configure(settings.TrimmerConfiguration);
+                }
+                else
+                {
+                    logger.Warn("No trimming configuration is set. The model will be trimmed at zero.");
+                }
+                settings.ApplySetting();
+                trimmer.GetCondition();
+                trimmer.Trim(problem);
+                if (trimming.OutputFile is string outputFile)
+                {
+                    try
+                    {
+                        File.WriteAllText(outputFile, trimmer.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Prompt(trimmer.ToString());
+                        throw logger.Error(new LigralException($"Cannot write to {outputFile}, got error: {e.Message}"));
+                    }
+                }
+                else
+                {
+                    logger.Prompt(trimmer.ToString());
+                }
+            }
+            catch (LigralException)
+            {
+                logger.Throw();
+                logger.Warn($"Unexpected error in {trimming.FileName}, ligral exited with error.");
             }
         }
         private static void Run(Document document)

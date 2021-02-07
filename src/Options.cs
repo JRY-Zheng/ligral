@@ -153,6 +153,35 @@ namespace Ligral
             }
             return linearization;
         }
+        private Trimming GetTrimming()
+        {
+            Trimming trimming = new Trimming();
+            bool metUnknownOption = false;
+            trimming.FileName = GetString();
+            while (!metUnknownOption && Eat() is string option)
+            {
+                switch (option)
+                {
+                case "-j":
+                case "--json":
+                    trimming.IsJsonFile = GetBoolean();
+                    break;
+                case "-o":
+                case "--output":
+                    string file = GetString();
+                    if (file is null)
+                    { 
+                        throw logger.Error(new OptionException(option, "output parameter need a string value."));
+                    }
+                    trimming.OutputFile = file;
+                    break;
+                default:
+                    metUnknownOption = true;
+                    break;
+                }
+            }
+            return trimming;
+        }
         private SimulationProject GetSimulationProject()
         {
             SimulationProject simulationProject = new SimulationProject() {FileName = arg};
@@ -210,6 +239,8 @@ namespace Ligral
                 case "linearize":
                 case "linearise":
                     return GetLinearization();
+                case "trim":
+                    return GetTrimming();
                 case "help":
                 case "-h":
                 case "--help":

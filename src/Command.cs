@@ -18,6 +18,16 @@ namespace Ligral
             return $"[lin] {FileName}, to {OutputFile} -j {IsJsonFile}";
         }
     }
+    class Trimming : Command
+    {
+        public string FileName;
+        public string OutputFile;
+        public bool? IsJsonFile;
+        public override string ToString()
+        {
+            return $"[trim] {FileName}, to {OutputFile} -j {IsJsonFile}";
+        }
+    }
     class SimulationProject : Command
     {
         public string FileName;

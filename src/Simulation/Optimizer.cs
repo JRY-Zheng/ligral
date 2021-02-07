@@ -5,7 +5,7 @@
 */
 
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Simulation.Solvers;
+using Ligral.Simulation.Optimizers;
 using Ligral.Extension;
 using MFunc = System.Func<MathNet.Numerics.LinearAlgebra.Matrix<double>, MathNet.Numerics.LinearAlgebra.Matrix<double>>;
 
@@ -23,6 +23,7 @@ namespace Ligral.Simulation
             switch (optimizerName.ToLower())
             {
             case "sqp":
+                return new SQPOptimizer();
             default:
                 // if (solverName.Contains('.'))
                 // {

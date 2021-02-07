@@ -14,6 +14,7 @@ namespace Ligral.Simulation
     {
         private Logger logger = new Logger("Trimmer");
         private string modelName; 
+        private string optimizerName = "sqp";
         private int n;
         private int m;
         private int p;
@@ -37,10 +38,6 @@ namespace Ligral.Simulation
         private List<bool> dxConstrain;
         private Problem problem;
         private Optimizer optimizer;
-        public Trimmer(Optimizer optimizer)
-        {
-            this.optimizer = optimizer;
-        }
         public void GetCondition()
         {
             n = State.StatePool.Count;
@@ -127,10 +124,11 @@ namespace Ligral.Simulation
             var gdxLower = dxLower - dx;
             return Stack(gxUpper, guUpper, gyUpper, gdxUpper, gxLower, guLower, gyLower, gdxLower);
         }
-        private void Trim(Problem problem)
+        public void Trim(Problem problem)
         {
             modelName = problem.Name;
             this.problem = problem;
+            if (optimizer == null) optimizer = Optimizer.GetOptimizer(optimizerName);
             var z = optimizer.Optimize(Cost, Stack(x0, u0), Equal, Bound);
             x = z.SubMatrix(0, n, 0, 1);
             u = z.SubMatrix(n, p, 0, 1);
@@ -182,6 +180,9 @@ let u = [{u.ToLigralFormat("         ")}];
                     case "t":
                         Solver.Time = System.Convert.ToDouble(val);
                         break;
+                    case "optimizer":
+                    case "opt":
+                        optimizerName = (string) val; break;
                     default:
                         throw logger.Error(new SettingException(item, val, "Unsupported setting in trimmer."));
                     }
