@@ -53,7 +53,7 @@ namespace Ligral.Simulation.Optimizers
                 var build = Matrix<double>.Build;
                 int mp = B.RowCount;
                 var K = H.Append(A.Transpose()).Stack(A.Append(build.Dense(mp, mp, 0)));
-                var p = K.Solve(-C.Append(B));
+                var p = K.Solve(-C.Stack(B));
                 var s = p.SubMatrix(0, n, 0, 1);
                 var lambda = p.SubMatrix(n, mp, 0, 1);
                 x += s;
@@ -66,6 +66,7 @@ namespace Ligral.Simulation.Optimizers
                 else if (((cp-c).RowAbsoluteSums()-OptimizationStopTolerant).ForAll(sum => sum < OptimizationStopTolerant))
                 {
                     logger.Info("SQP Optimizer stops as costs did not change.");
+                    logger.Debug($"The lambda is {lambda}");
                     break;
                 }
                 else
@@ -111,7 +112,7 @@ namespace Ligral.Simulation.Optimizers
             {
                 throw logger.Error(new LigralException($"Constrain dimensions do not agree in SQP(B) {Bp.ColumnCount}: {B.ColumnCount}"));
             }
-            for (int i = 1; i < A.RowCount; i++)
+            for (int i = 0; i < A.RowCount; i++)
             {
                 var At = Ap.Stack(A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = Bp.Stack(B.SubMatrix(i, 1, 0, B.ColumnCount));

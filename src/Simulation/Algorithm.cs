@@ -62,6 +62,7 @@ namespace Ligral.Simulation
                 var item = x[i, 0];
                 x[i, 0] = item + PartialBias;
                 gradient.SetRow(i, (f(x)-fx).Column(0)/PartialBias);
+                x[i, 0] = item;
             }
             return gradient;
         }

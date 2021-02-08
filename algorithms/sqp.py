@@ -63,7 +63,7 @@ class SQP(Optimizer):
     def filter(self, A, B, A0=None, B0=None):
         Ap = A0 if A0 is not None else A[0]
         Bp = B0 if A0 is not None else B[0]
-        for i in range(1, len(A)):
+        for i in range(1 if A0 is None else 0, len(A)):
             At = np.vstack((Ap, A[i]))
             Bt = np.vstack((Bp, B[i]))
             if np.linalg.matrix_rank(At) == At.shape[0]:

@@ -114,14 +114,14 @@ namespace Ligral.Simulation
             var u = z.SubMatrix(n, p, 0, 1);
             var dx = problem.SystemDynamicFunction(x, u);
             var y = problem.ObservationFunction();
-            var gxUpper = x - xUpper;
-            var guUpper = u - uUpper;
-            var gyUpper = y - yUpper;
-            var gdxUpper = dx - dxUpper;
-            var gxLower = xLower - x;
-            var guLower = uLower - u;
-            var gyLower = yLower - y;
-            var gdxLower = dxLower - dx;
+            var gxUpper = Filter(x, xUpper, new Signal(xUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var guUpper = Filter(u, uUpper, new Signal(uUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gyUpper = Filter(y, yUpper, new Signal(yUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gdxUpper = Filter(dx, dxUpper, new Signal(dxUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gxLower = Filter(xLower, x, new Signal(xLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var guLower = Filter(uLower, u, new Signal(uLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gyLower = Filter(yLower, y, new Signal(yLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gdxLower = Filter(dxLower, dx, new Signal(dxLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
             return Stack(gxUpper, guUpper, gyUpper, gdxUpper, gxLower, guLower, gyLower, gdxLower);
         }
         public void Trim(Problem problem)
