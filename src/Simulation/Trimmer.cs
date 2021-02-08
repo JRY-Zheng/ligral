@@ -77,6 +77,7 @@ namespace Ligral.Simulation
                 if (constrain[c])
                 {
                     matrix[i, 0] = val[c, 0] - goal[c, 0];
+                    i++;
                 }
             }
             return matrix;
