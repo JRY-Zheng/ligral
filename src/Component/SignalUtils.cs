@@ -269,5 +269,23 @@ namespace Ligral.Component
             }
             return mat;
         }
+        public static string SPrint(Matrix<double> matrix, string name)
+        {
+            if (matrix is Matrix<double> mat)
+            {
+                if (mat.ColumnCount == 0 || mat.RowCount == 0)
+                {
+                    return $"The matrix {name} is of shape ({mat.RowCount} {mat.ColumnCount})";
+                }
+                else
+                {
+                    return $"The matrix {name} is {mat}";
+                }
+            }
+            else
+            {
+                return $"The matrix {name} is null";
+            }
+        }
     }
 }

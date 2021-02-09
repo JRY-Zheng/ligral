@@ -40,10 +40,8 @@ namespace Ligral.Simulation.Optimizers
                         throw logger.Error(new LigralException($"Only h(x) with shape mx1 is supported, but we got {Be.RowCount}x{Be.ColumnCount}"));
                     }
                 }
-                if (Ae != null) logger.Debug($"The Ae matrix is {new Signal(Ae).ToStringInLine()}");
-                else logger.Debug("The Ae matrix is null");
-                if (Be != null) logger.Debug($"The Be matrix is {new Signal(Be).ToStringInLine()}");
-                else logger.Debug("The Be matrix is null");
+                logger.Debug(SignalUtils.SPrint(Ae, "Ae"));
+                logger.Debug(SignalUtils.SPrint(Be, "Be"));
                 var Ab = Algorithm.RoughPartial(bound, x);
                 var Bb = bound(x);
                 if (Ab != null)
@@ -60,15 +58,11 @@ namespace Ligral.Simulation.Optimizers
                         }
                     }
                 }
-                if (Ab != null) logger.Debug($"The Ab matrix is {new Signal(Ab).ToStringInLine()}");
-                else logger.Debug("The Ab matrix is null");
-                if (Bb != null) logger.Debug($"The Bb matrix is {new Signal(Bb).ToStringInLine()}");
-                else logger.Debug("The Bb matrix is null");
+                logger.Debug(SignalUtils.SPrint(Ab, "Ab"));
+                logger.Debug(SignalUtils.SPrint(Bb, "Bb"));
                 (var A, var B) = Filter(Ab, Bb, Ae, Be);
-                if (A != null) logger.Debug($"The A matrix is {new Signal(A).ToStringInLine()}");
-                else logger.Debug("The A matrix is null");
-                if (B != null) logger.Debug($"The B matrix is {new Signal(B).ToStringInLine()}");
-                else logger.Debug("The B vector is null");
+                logger.Debug(SignalUtils.SPrint(A, "A"));
+                logger.Debug(SignalUtils.SPrint(B, "B"));
                 if (B != null && B.ColumnCount != 1)
                 {
                     throw logger.Error(new LigralException($"Only g(x) with shape px1 is supported, but we got {B.RowCount-Be.RowCount}x{B.ColumnCount}"));
@@ -84,13 +78,12 @@ namespace Ligral.Simulation.Optimizers
                     logger.Warn("No constrain is given, optimizer quit");
                     return x;
                 }
-                logger.Debug($"The K matrix is {new Signal(K).ToStringInLine()}");
+                logger.Debug(SignalUtils.SPrint(K, "K"));
                 var p = K.Solve(SignalUtils.Stack(-C, B));
                 var s = p.SubMatrix(0, n, 0, 1);
-                logger.Debug($"The s vector is {new Signal(s).ToStringInLine()}");
+                logger.Debug(SignalUtils.SPrint(s, "s"));
                 var lambda = p.SubMatrix(n, mp, 0, 1);
-                if (lambda != null) logger.Debug($"The lambda is {new Signal(lambda).ToStringInLine()}");
-                else logger.Debug($"The lambda is null");
+                logger.Debug(SignalUtils.SPrint(lambda, "lambda"));
                 x += s;
                 var cp = cost(x);
                 if (lambda.RowAbsoluteSums().ForAll(sum => sum < OptimizationStopLambdaTolerant))
@@ -123,13 +116,15 @@ namespace Ligral.Simulation.Optimizers
                     Ap = At; 
                     Bp = Bt;
                 }
-                else if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
+                else if (SignalUtils.Append(At, Bt).Rank() != At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
                 else
                 {
-                    logger.Debug($"Conflict constrains detected at NO.{i}, which are resulted from bound constrains and will be ignore.");
+                    logger.Debug(SignalUtils.SPrint(At, "At"));
+                    logger.Debug(SignalUtils.SPrint(Bt, "Bt"));
+                    throw logger.Error(new LigralException($"Conflict constrains detected at NO.{i}."));
                 }
             }
             return (Ap, Bp);
@@ -163,7 +158,7 @@ namespace Ligral.Simulation.Optimizers
                 }
                 else
                 {
-                    throw logger.Error(new LigralException($"Conflict constrains detected at NO.{i}."));
+                    logger.Debug($"Conflict constrains detected at NO.{i}, which are resulted from bound constrains and will be ignore.");
                 }
             }
             return (Ap, Bp);
