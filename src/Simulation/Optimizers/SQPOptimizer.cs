@@ -49,7 +49,8 @@ namespace Ligral.Simulation.Optimizers
                 if (Ab != null)
                 {
                     Ab = Ab.Transpose();
-                    for (int j = 0, k = 0; j < Bb.RowCount; j++)
+                    int bRowCount = Bb.RowCount;
+                    for (int j = 0, k = 0; j < bRowCount; j++)
                     {
                         if (Bb[j-k, 0] < BoundaryConstrainTolerant)
                         {
