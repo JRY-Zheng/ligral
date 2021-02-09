@@ -48,8 +48,8 @@ namespace Ligral.Component.Models
         {
             var leftRowNo = InPortList[0].RowNo;
             var leftColNo = InPortList[0].ColNo;
-            var rightRowNo = InPortList[0].RowNo;
-            var rightColNo = InPortList[0].ColNo;
+            var rightRowNo = InPortList[1].RowNo;
+            var rightColNo = InPortList[1].ColNo;
             int rowNo; 
             int colNo;
             switch(type)

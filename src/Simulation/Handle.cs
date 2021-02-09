@@ -64,7 +64,7 @@ namespace Ligral.Simulation
         {
             if (!signal.CheckShape(rowNo, colNo))
             {
-                throw logger.Error(new LigralException($"Inconsistent shape {rowNo}x{colNo} in {name}, {signal.Shape()} expected."));
+                throw logger.Error(new LigralException($"Inconsistent shape {signal.Shape()} in {name}, ({rowNo}, {colNo}) expected."));
             }
             signal.ZipApply<T>(space, (value, room) => setValue(room, value));
         }
