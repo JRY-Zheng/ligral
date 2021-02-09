@@ -48,6 +48,7 @@ namespace Ligral.Simulation
                 throw logger.Error(new LigralException($"Only x with shape nx1 is supported, but we got {n}x{x.ColumnCount}"));
             }
             var fx = f(x);
+            if (fx is null) return null;
             int m = fx.RowCount;
             if (fx.ColumnCount != 1)
             {

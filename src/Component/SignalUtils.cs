@@ -11,9 +11,9 @@ using Dict=System.Collections.Generic.Dictionary<string,object>;
 namespace Ligral.Component
 {
     
-    static class BroadcastUtils
+    static class SignalUtils
     {
-        private static Logger logger = new Logger("BroadcastUtils");
+        private static Logger logger = new Logger("SignalUtils");
         public static Signal BroadcastMultiply(this Signal left, Signal right)
         {
             if (left.IsMatrix)
@@ -238,6 +238,36 @@ namespace Ligral.Component
                 group.AddOutputModel(gain);
             }
             return group;
+        }
+        public static Matrix<double> Stack(Matrix<double> upper, Matrix<double> lower)
+        {
+            if (upper is null) return lower;
+            else if (lower is null) return upper;
+            else return upper.Stack(lower);
+        }
+        public static Matrix<double> Stack(params Matrix<double>[] matrice)
+        {
+            var mat = matrice[0];
+            for (int i = 1; i < matrice.Length; i++)
+            {
+                mat = SignalUtils.Stack(mat, matrice[i]);
+            }
+            return mat;
+        }
+        public static Matrix<double> Append(Matrix<double> upper, Matrix<double> lower)
+        {
+            if (upper is null) return lower;
+            else if (lower is null) return upper;
+            else return upper.Append(lower);
+        }
+        public static Matrix<double> Append(params Matrix<double>[] matrice)
+        {
+            var mat = matrice[0];
+            for (int i = 1; i < matrice.Length; i++)
+            {
+                mat = SignalUtils.Append(mat, matrice[i]);
+            }
+            return mat;
         }
     }
 }

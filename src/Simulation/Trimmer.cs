@@ -82,21 +82,6 @@ namespace Ligral.Simulation
             }
             return matrix;
         }
-        private Matrix<double> Stack(Matrix<double> upper, Matrix<double> lower)
-        {
-            if (upper is null) return lower;
-            else if (lower is null) return upper;
-            else return upper.Stack(lower);
-        }
-        private Matrix<double> Stack(params Matrix<double>[] matrice)
-        {
-            var mat = matrice[0];
-            for (int i = 1; i < matrice.Length; i++)
-            {
-                mat = Stack(mat, matrice[i]);
-            }
-            return mat;
-        }
         private Matrix<double> Equal(Matrix<double> z)
         {
             var x = z.SubMatrix(0, n, 0, 1);
@@ -107,7 +92,7 @@ namespace Ligral.Simulation
             var hu = Filter(u, u0, uConstrain);
             var hy = Filter(y, y0, yConstrain);
             var hdx = Filter(dx, dx0, dxConstrain);
-            return Stack(hx, hu, hy, hdx);
+            return SignalUtils.Stack(hx, hu, hy, hdx);
         }
         private Matrix<double> Bound(Matrix<double> z)
         {
@@ -123,14 +108,14 @@ namespace Ligral.Simulation
             var guLower = Filter(uLower, u, new Signal(uLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
             var gyLower = Filter(yLower, y, new Signal(yLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
             var gdxLower = Filter(dxLower, dx, new Signal(dxLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            return Stack(gxUpper, guUpper, gyUpper, gdxUpper, gxLower, guLower, gyLower, gdxLower);
+            return SignalUtils.Stack(gxUpper, guUpper, gyUpper, gdxUpper, gxLower, guLower, gyLower, gdxLower);
         }
         public void Trim(Problem problem)
         {
             modelName = problem.Name;
             this.problem = problem;
             if (optimizer == null) optimizer = Optimizer.GetOptimizer(optimizerName);
-            var z = optimizer.Optimize(Cost, Stack(x0, u0), Equal, Bound);
+            var z = optimizer.Optimize(Cost, SignalUtils.Stack(x0, u0), Equal, Bound);
             x = z.SubMatrix(0, n, 0, 1);
             u = z.SubMatrix(n, p, 0, 1);
         }

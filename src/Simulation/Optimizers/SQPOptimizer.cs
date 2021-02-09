@@ -5,6 +5,7 @@
 */
 
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Component;
 using MFunc = System.Func<MathNet.Numerics.LinearAlgebra.Matrix<double>, MathNet.Numerics.LinearAlgebra.Matrix<double>>;
 
 namespace Ligral.Simulation.Optimizers
@@ -27,33 +28,44 @@ namespace Ligral.Simulation.Optimizers
             {
                 var H = Algorithm.RoughHessian(cost, x);
                 var C = Algorithm.RoughPartial(cost, x);
-                var Ae = Algorithm.RoughPartial(equal, x).Transpose();
+                var Ae = Algorithm.RoughPartial(equal, x);
                 var Be = equal(x);
-                (Ae, Be) = Filter(Ae, Be);
-                if (Be.ColumnCount != 1)
+                if (Ae != null)
                 {
-                    throw logger.Error(new LigralException($"Only h(x) with shape mx1 is supported, but we got {Be.RowCount}x{Be.ColumnCount}"));
-                }
-                var Ab = Algorithm.RoughPartial(bound, x).Transpose();
-                var Bb = bound(x);
-                for (int j = 0, k = 0; j < Bb.RowCount; j++)
-                {
-                    if (Bb[j-k, 0] < BoundaryConstrainTolerant)
+                    Ae = Ae.Transpose();
+                    (Ae, Be) = Filter(Ae, Be);
+                    if (Be.ColumnCount != 1)
                     {
-                        Ab = Ab.RemoveRow(j-k);
-                        Bb = Bb.RemoveRow(j-k);
-                        k++;
+                        throw logger.Error(new LigralException($"Only h(x) with shape mx1 is supported, but we got {Be.RowCount}x{Be.ColumnCount}"));
+                    }
+                }
+                var Ab = Algorithm.RoughPartial(bound, x);
+                var Bb = bound(x);
+                if (Ab != null)
+                {
+                    Ab = Ab.Transpose();
+                    for (int j = 0, k = 0; j < Bb.RowCount; j++)
+                    {
+                        if (Bb[j-k, 0] < BoundaryConstrainTolerant)
+                        {
+                            Ab = Ab.RemoveRow(j-k);
+                            Bb = Bb.RemoveRow(j-k);
+                            k++;
+                        }
                     }
                 }
                 (var A, var B) = Filter(Ab, Bb, Ae, Be);
-                if (B.ColumnCount != 1)
+                if (B != null && B.ColumnCount != 1)
                 {
                     throw logger.Error(new LigralException($"Only g(x) with shape px1 is supported, but we got {B.RowCount-Be.RowCount}x{B.ColumnCount}"));
                 }
                 var build = Matrix<double>.Build;
-                int mp = B.RowCount;
-                var K = H.Append(A.Transpose()).Stack(A.Append(build.Dense(mp, mp, 0)));
-                var p = K.Solve(-C.Stack(B));
+                int mp = B==null?0:B.RowCount;
+                var K = SignalUtils.Stack(
+                    SignalUtils.Append(H, A==null?A:A.Transpose()),
+                    SignalUtils.Append(A, mp==0?null:build.Dense(mp, mp, 0))
+                );
+                var p = K.Solve(SignalUtils.Stack(-C, B));
                 var s = p.SubMatrix(0, n, 0, 1);
                 var lambda = p.SubMatrix(n, mp, 0, 1);
                 x += s;
@@ -82,14 +94,14 @@ namespace Ligral.Simulation.Optimizers
             var Bp = B.SubMatrix(0, 1, 0, B.ColumnCount);
             for (int i = 1; i < A.RowCount; i++)
             {
-                var At = Ap.Stack(A.SubMatrix(i, 1, 0, A.ColumnCount));
-                var Bt = Bp.Stack(B.SubMatrix(i, 1, 0, B.ColumnCount));
+                var At = SignalUtils.Stack(Ap, A.SubMatrix(i, 1, 0, A.ColumnCount));
+                var Bt = SignalUtils.Stack(Bp, B.SubMatrix(i, 1, 0, B.ColumnCount));
                 if (At.Rank() == At.RowCount)
                 {
                     Ap = At; 
                     Bp = Bt;
                 }
-                else if (At.Append(Bt).Rank() == At.RowCount)
+                else if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
@@ -102,6 +114,8 @@ namespace Ligral.Simulation.Optimizers
         }
         private (Matrix<double>, Matrix<double>) Filter(Matrix<double> A, Matrix<double> B, Matrix<double> A0, Matrix<double> B0)
         {
+            if (A == null || B == null) return (A, B);
+            if (A0 == null || B0 == null) return Filter(A, B);
             var Ap = A0;
             var Bp = B0;
             if (Ap.ColumnCount != A.ColumnCount)
@@ -114,14 +128,14 @@ namespace Ligral.Simulation.Optimizers
             }
             for (int i = 0; i < A.RowCount; i++)
             {
-                var At = Ap.Stack(A.SubMatrix(i, 1, 0, A.ColumnCount));
-                var Bt = Bp.Stack(B.SubMatrix(i, 1, 0, B.ColumnCount));
+                var At = SignalUtils.Stack(Ap, A.SubMatrix(i, 1, 0, A.ColumnCount));
+                var Bt = SignalUtils.Stack(Bp, B.SubMatrix(i, 1, 0, B.ColumnCount));
                 if (At.Rank() == At.RowCount)
                 {
                     Ap = At; 
                     Bp = Bt;
                 }
-                else if (At.Append(Bt).Rank() == At.RowCount)
+                else if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
