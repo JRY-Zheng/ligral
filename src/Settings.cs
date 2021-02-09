@@ -24,7 +24,7 @@ namespace Ligral
         private Logger logger = new Logger("Settings");
         private Settings()
         {
-            Solver.Starting += ApplySetting;
+            // Solver.Starting += ApplySetting;
         }
 
         public static Settings GetInstance()

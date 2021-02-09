@@ -155,6 +155,7 @@ Learn more:
                 {
                     settings.StopTime = (double) stopTime;
                 }
+                settings.ApplySetting();
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
                 string problemName = Path.GetFileNameWithoutExtension(simulationProject.FileName);
