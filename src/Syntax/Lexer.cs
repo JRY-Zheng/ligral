@@ -158,7 +158,7 @@ namespace Ligral.Syntax
                     Advance();
                 }
             }
-            if (currentChar=='e')
+            if (currentChar=='e' || currentChar=='E')
             {
                 Advance();
                 if (currentChar=='-' || currentChar=='+')

@@ -68,7 +68,7 @@
 		},
 		"digits": {
 			"patterns": [{
-				"match": "\\b(\\d+(\\.\\d+)?)((e)(\\+|-)?(\\d+))?\\b",
+				"match": "\\b(\\d+(\\.\\d+)?)((e|E)(\\+|-)?(\\d+))?\\b",
 				"captures": {
 					"1": {
 						"name": "constant.numeric.lig"
