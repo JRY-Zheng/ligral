@@ -125,6 +125,7 @@ namespace Ligral.Syntax
             {
                 throw logger.Error(new NotFoundException($"File {fullFileName}"));
             }
+            string originalRelativeFolder = relativeFolder;
             relativeFolder = Path.GetDirectoryName(fullFileName);
             Parser parser = new Parser();
             parser.Load(text, files.IndexOf(CurrentFileName));
@@ -139,6 +140,7 @@ namespace Ligral.Syntax
             }
             Interpret(programAST);
             CurrentFileName = lastFileName;
+            relativeFolder = originalRelativeFolder;
         }
         public ScopeSymbolTable SetScope(ScopeSymbolTable scope)
         {
