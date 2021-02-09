@@ -125,10 +125,10 @@ namespace Ligral.Simulation
 
 # The trim point of system {modelName} is
 
-let x = [{x.ToLigralFormat("         ")}];
+let x0 = [{x.ToLigralFormat("         ")}];
 # where the states are {State.GetNames()}
 
-let u = [{u.ToLigralFormat("         ")}];
+let u0 = [{u.ToLigralFormat("         ")}];
 # where the inputs are {ControlInput.GetNames()}
 ";
         }
