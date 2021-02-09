@@ -1,0 +1,4 @@
+conf inner_plotter.enable = true;
+conf step_size = 0.01;
+conf stop_time = 10;
+conf output_folder = 'out';

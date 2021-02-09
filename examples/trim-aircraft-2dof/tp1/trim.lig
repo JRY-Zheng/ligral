@@ -1,0 +1,24 @@
+import ..model;
+
+@[u] -> Aircraft[aircraft] -> (z, theta);
+[z; theta] -> $[y];
+
+conf trimmer:
+    state:
+        x:
+            val = [-0.1318; 0; 0.1699; 0];
+            constrain = [0; 1; 1; 1];
+            upper = [1; 0.1; pi/5; 0.1];
+            lower = [-1; -0.1; -pi/5; -0.1];
+        end
+    end
+    derivative:
+        x:
+            val = [0; 0; 0; 0];
+            constrain = [1; 1; 1; 1];
+        end
+    end
+    input:
+        u.val = -0.5236;
+    end
+end

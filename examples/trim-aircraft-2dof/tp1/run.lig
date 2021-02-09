@@ -1,0 +1,8 @@
+import ..model;
+import ..settings;
+
+import .tp;
+
+Aircraft[aircraft]{x0:x0};
+
+u0 -> aircraft -> (Scope, Scope);
