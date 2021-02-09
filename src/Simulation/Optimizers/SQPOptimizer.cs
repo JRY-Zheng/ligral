@@ -14,7 +14,8 @@ namespace Ligral.Simulation.Optimizers
     {
         public int MaximumIteration {get; set;} = 1000;
         public double BoundaryConstrainTolerant {get; set;} = 1e-5; 
-        public double OptimizationStopTolerant {get; set;} = 1e-3;
+        public double OptimizationStopLambdaTolerant {get; set;} = 1e-3;
+        public double OptimizationStopCostTolerant {get; set;} = 1e-8;
         public override Matrix<double> Optimize(MFunc cost, Matrix<double> x0, MFunc equal, MFunc bound)
         {
             int n = x0.RowCount;
@@ -39,6 +40,10 @@ namespace Ligral.Simulation.Optimizers
                         throw logger.Error(new LigralException($"Only h(x) with shape mx1 is supported, but we got {Be.RowCount}x{Be.ColumnCount}"));
                     }
                 }
+                if (Ae != null) logger.Debug($"The Ae matrix is {new Signal(Ae).ToStringInLine()}");
+                else logger.Debug("The Ae matrix is null");
+                if (Be != null) logger.Debug($"The Be matrix is {new Signal(Be).ToStringInLine()}");
+                else logger.Debug("The Be matrix is null");
                 var Ab = Algorithm.RoughPartial(bound, x);
                 var Bb = bound(x);
                 if (Ab != null)
@@ -54,7 +59,15 @@ namespace Ligral.Simulation.Optimizers
                         }
                     }
                 }
+                if (Ab != null) logger.Debug($"The Ab matrix is {new Signal(Ab).ToStringInLine()}");
+                else logger.Debug("The Ab matrix is null");
+                if (Bb != null) logger.Debug($"The Bb matrix is {new Signal(Bb).ToStringInLine()}");
+                else logger.Debug("The Bb matrix is null");
                 (var A, var B) = Filter(Ab, Bb, Ae, Be);
+                if (A != null) logger.Debug($"The A matrix is {new Signal(A).ToStringInLine()}");
+                else logger.Debug("The A matrix is null");
+                if (B != null) logger.Debug($"The B matrix is {new Signal(B).ToStringInLine()}");
+                else logger.Debug("The B vector is null");
                 if (B != null && B.ColumnCount != 1)
                 {
                     throw logger.Error(new LigralException($"Only g(x) with shape px1 is supported, but we got {B.RowCount-Be.RowCount}x{B.ColumnCount}"));
@@ -65,20 +78,28 @@ namespace Ligral.Simulation.Optimizers
                     SignalUtils.Append(H, A==null?A:A.Transpose()),
                     SignalUtils.Append(A, mp==0?null:build.Dense(mp, mp, 0))
                 );
+                if (K == null)
+                {
+                    logger.Warn("No constrain is given, optimizer quit");
+                    return x;
+                }
+                logger.Debug($"The K matrix is {new Signal(K).ToStringInLine()}");
                 var p = K.Solve(SignalUtils.Stack(-C, B));
                 var s = p.SubMatrix(0, n, 0, 1);
+                logger.Debug($"The s vector is {new Signal(s).ToStringInLine()}");
                 var lambda = p.SubMatrix(n, mp, 0, 1);
+                if (lambda != null) logger.Debug($"The lambda is {new Signal(lambda).ToStringInLine()}");
+                else logger.Debug($"The lambda is null");
                 x += s;
                 var cp = cost(x);
-                if ((lambda.RowAbsoluteSums()-OptimizationStopTolerant).ForAll(sum => sum < OptimizationStopTolerant))
+                if (lambda.RowAbsoluteSums().ForAll(sum => sum < OptimizationStopLambdaTolerant))
                 {
                     logger.Info("SQP Optimizer stops as lambda is close to zero");
                     break;
                 }
-                else if (((cp-c).RowAbsoluteSums()-OptimizationStopTolerant).ForAll(sum => sum < OptimizationStopTolerant))
+                else if ((cp-c).RowAbsoluteSums().ForAll(sum => sum < OptimizationStopCostTolerant))
                 {
                     logger.Info("SQP Optimizer stops as costs did not change.");
-                    logger.Debug($"The lambda is {lambda}");
                     break;
                 }
                 else
@@ -114,7 +135,7 @@ namespace Ligral.Simulation.Optimizers
         }
         private (Matrix<double>, Matrix<double>) Filter(Matrix<double> A, Matrix<double> B, Matrix<double> A0, Matrix<double> B0)
         {
-            if (A == null || B == null) return (A, B);
+            if (A == null || B == null) return (A0, B0);
             if (A0 == null || B0 == null) return Filter(A, B);
             var Ap = A0;
             var Bp = B0;
