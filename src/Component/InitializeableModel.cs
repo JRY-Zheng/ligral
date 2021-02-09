@@ -19,17 +19,17 @@ namespace Ligral.Component
         protected bool Initialized = false;
         public virtual void Initialize()
         {
-            Signal inputSignal = new Signal();
-            if (isMatrix)
-            {
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
-                inputSignal.Pack(matrix);
-            }
-            else
-            {
-                inputSignal.Pack(0);
-            }
+            // Signal inputSignal = new Signal();
+            // if (isMatrix)
+            // {
+            //     MatrixBuilder<double> m = Matrix<double>.Build;
+            //     Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
+            //     inputSignal.Pack(matrix);
+            // }
+            // else
+            // {
+            //     inputSignal.Pack(0);
+            // }
             // InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(inputSignal));
             Initialized = true;
         }

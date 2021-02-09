@@ -50,6 +50,18 @@ namespace Ligral.Component.Models
         public override void Initialize()
         {
             base.Initialize();
+            Signal inputSignal = new Signal();
+            if (isMatrix)
+            {
+                MatrixBuilder<double> m = Matrix<double>.Build;
+                Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
+                inputSignal.Pack(matrix);
+            }
+            else
+            {
+                inputSignal.Pack(0);
+            }
+            InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(inputSignal));
             stack.RemoveAt(0);
         }
         protected override List<Signal> Calculate(List<Signal> values)
