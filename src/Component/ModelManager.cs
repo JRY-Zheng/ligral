@@ -76,7 +76,8 @@ namespace Ligral.Component
             {"HSplit", ()=>new HSplit()},
             {"InputMarker", ()=>new InputMarker()},
             {"OutputSink", ()=>new OutputSink()},
-            {"Sweep", ()=>new Sweep()}
+            {"Sweep", ()=>new Sweep()},
+            {"Inv", ()=>new Inverse()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
