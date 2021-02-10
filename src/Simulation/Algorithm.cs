@@ -33,7 +33,7 @@ namespace Ligral.Simulation
                 var difference = slope.Column(0) - slopes.Column(slopes.ColumnCount-1);
                 if (difference.All(diff=>Math.Abs(diff)<PartialDifferenceTolerant))
                 {
-                    if (slopes.ColumnCount > 3) break;
+                    if (slopes.ColumnCount > 5) break;
                 }
                 slopes = slopes.Append(slope);
                 d = d/2;
