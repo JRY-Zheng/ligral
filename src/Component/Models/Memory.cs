@@ -9,6 +9,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
+using Ligral.Simulation;
 
 namespace Ligral.Component.Models
 {
@@ -69,10 +70,13 @@ namespace Ligral.Component.Models
             // Results.Clear();
             Signal inputSignal = values[0];
             Signal outputSignal = Results[0];
-            Signal stackTop = stack[0];
-            stack.Remove(stackTop);
-            stackTop.Clone(inputSignal);
-            stack.Add(stackTop);
+            if (!ControlInput.IsOpenLoop)
+            {
+                Signal stackTop = stack[0];
+                stack.Remove(stackTop);
+                stackTop.Clone(inputSignal);
+                stack.Add(stackTop);
+            }
             Signal newStackTop = stack[0];
             outputSignal.Clone(newStackTop);
             return Results;
