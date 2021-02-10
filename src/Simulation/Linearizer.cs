@@ -88,19 +88,21 @@ namespace Ligral.Simulation
             var uStar = ControlInput.InputPool.ConvertAll(input => input.Input).ToColumnVector();
             var dx = 0.1*xStar.PointwiseAbs()+1;
             var du = 0.1*uStar.PointwiseAbs()+1;
+            var f0 = problem.SystemDynamicFunction(xStar, uStar);
+            var g0 = problem.ObservationFunction();
             var build = Matrix<double>.Build;
             A = build.DenseOfColumnVectors(xStar.Column(0).Select((row, index) => 
             {
                 return Algorithm.PrecisePartial(d => 
                 {
-                    return problem.SystemDynamicFunction(xStar+Mask(xStar.RowCount, index, d), uStar);
+                    return problem.SystemDynamicFunction(xStar+Mask(xStar.RowCount, index, d), uStar) - f0;
                 }, dx[index, 0]);
             }).Select((mat, i)=>mat.Column(0)));
             B = build.DenseOfColumnVectors(uStar.Column(0).Select((row, index) => 
             {
                 return Algorithm.PrecisePartial(d => 
                 {
-                    return problem.SystemDynamicFunction(xStar, uStar+Mask(uStar.RowCount, index, d));
+                    return problem.SystemDynamicFunction(xStar, uStar+Mask(uStar.RowCount, index, d)) - f0;
                 }, du[index, 0]);
             }).Select((mat, i)=>mat.Column(0)));
             C = build.DenseOfColumnVectors(xStar.Column(0).Select((row, index) => 
@@ -108,7 +110,7 @@ namespace Ligral.Simulation
                 return Algorithm.PrecisePartial(d => 
                 {
                     problem.SystemDynamicFunction(xStar+Mask(xStar.RowCount, index, d), uStar);
-                    return problem.ObservationFunction();
+                    return problem.ObservationFunction() - g0;
                 }, dx[index, 0]);
             }).Select((mat, i)=>mat.Column(0)));
             D = build.DenseOfColumnVectors(uStar.Column(0).Select((row, index) => 
@@ -116,7 +118,7 @@ namespace Ligral.Simulation
                 return Algorithm.PrecisePartial(d => 
                 {
                     problem.SystemDynamicFunction(xStar, uStar+Mask(uStar.RowCount, index, d));
-                    return problem.ObservationFunction();
+                    return problem.ObservationFunction() - g0;
                 }, du[index, 0]);
             }).Select((mat, i)=>mat.Column(0)));
         }
