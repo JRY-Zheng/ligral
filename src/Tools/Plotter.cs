@@ -111,7 +111,7 @@ namespace Ligral.Tools
             if (Publisher.ContainsHooks(this)) Publisher.RemoveHooks(this);
             base.Unsubscribe();
             Execute("exit()");
-            ScriptsStream.Close();
+            if (ScriptsStream!=null) ScriptsStream.Close();
         }
         protected override bool Receive(FigureProtocol.FigureConfig figureConfig)
         {
