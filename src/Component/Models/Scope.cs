@@ -66,7 +66,7 @@ namespace Ligral.Component.Models
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
             handle = Observation.CreateObservation(varName, rowNo, colNo);
-            if (rowNo > 0 && colNo > 1)
+            if (rowNo > 0 && colNo > 0)
             {
                 for(int i = 0; i < rowNo; i++)
                 {
