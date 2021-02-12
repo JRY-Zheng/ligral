@@ -5,15 +5,16 @@
 
 # 模型示意图见 aircraft.jpg
 
-route Aircraft(x0 = [0;0;0;0]; eta; z, theta)
+route Aircraft(x0 = [0;0;0;0]; u; x, y)
 
     let U = 7.5; let rho = 1.225;
     let CN0 = 0.1; let CNa = 4.5; let CNad = 0.41; let CNe = 0.9; let CMe = -0.45;
-    let a = 0.1667; let b = 0.019; let h = 0.15; let r = a-h; let l = 0.5+a;
+    let a = -0.1667; let b = 0.019; let h = -0.15; let r = a-h; let l = 0.5+a;
     let m = 0.077; let Ip = 2.3e-4;
     let kt = 0.069; let kz = 3.85; let ct = 0.0023; let cz = 0.0038;
 
-    [v; az; q; qdot] -> Integrator{initial:x0, name:'x'} -> [z; v; theta; q];
+    [v; az; q; qdot] -> Integrator{initial:x0, name:'x'} -> x -> [z; v; theta; q];
+    u -> eta;
 
     theta + gamma -> alpha;
     q + gammadot -> alphadot;
@@ -23,15 +24,15 @@ route Aircraft(x0 = [0;0;0;0]; eta; z, theta)
     CN0 + CNa*alpha + CNad*alphadot + CNe*eta -> CN;
     CMe * eta -> CM;
     rho * b * U^2 * CN -> N;
-    2*rho * b^2 * U^2 * CM -> M;
+    2*rho * b^2 * U^2 * CM + l*b*N -> M;
 
     # M*xddot + C*xdot + K*x = F
     [m, m*r*b; m*r*b, Ip] -> Inv[M_1];
     [cz, 0; 0, ct] -> C;
     [kz, 0; 0, kt] -> K;
-    [z; theta] -> x;
-    [v; q] -> xdot;
+    [z; theta] -> y;
+    [v; q] -> ydot;
     [-N*(theta->Cos); M] -> F;
-    M_1*(F - C*xdot - K*x) -> [az; qdot];
+    M_1*(F - C*ydot - K*y) -> [az; qdot];
 
 end

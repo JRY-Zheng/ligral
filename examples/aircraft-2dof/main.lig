@@ -1,0 +1,7 @@
+import settings;
+import model;
+
+let K = [0.929, 0.2313, -1.7447, -1.0382];
+
+Aircraft[aircraft]{x0:[0.1; 0; 0; 0]};
+-K*aircraft:x -> aircraft:y -> Scope;
