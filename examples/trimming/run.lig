@@ -1,0 +1,12 @@
+import model;
+
+let v = 1.6021;
+let beta0 = 0.5;
+
+v -> ConePendulum[cp]{beta0:beta0} -> (_, _, Scope, Scope, Scope);
+(cp:x, cp:y) -> PhaseDiagram;
+
+conf step_size = 0.01;
+conf stop_time = 10;
+conf output_folder = 'out';
+conf inner_plotter.enable = true;

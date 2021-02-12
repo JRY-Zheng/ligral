@@ -1,0 +1,19 @@
+import model;
+
+@[v] -> ConePendulum{beta0:pi/10, v:2};
+
+conf trim:
+    state.beta:
+        val = 0.5;
+        constrain = 1;
+    end
+    derivative.beta:
+        val = 0;
+        constrain = 1;
+    end
+    derivative.w:
+        val = 0;
+        constrain = 1;
+    end
+    input.v.val = 2;
+end

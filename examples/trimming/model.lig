@@ -1,0 +1,21 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+route ConePendulum(beta0, m = 0.1, l = 1; v; x, y, z, theta, beta)
+    let g = 9.8;
+
+    v/r -> omega -> Integrator -> theta_i;
+    (theta_i -> Cos) * r -> x;
+    (theta_i -> Sin) * r -> y;
+    (x, y) -> Atan2 -> theta;
+
+    (beta -> Sin) * l -> r;
+    (beta -> Cos) * l -> z;
+    m*v^2/r -> Fi;
+    m*g -> Fg;
+    -Fg*(beta -> Sin) + Fi*(beta -> Cos) -> Flon;
+    Flon/m -> Integrator{name:'w'} -> w; 
+    w/l -> Integrator{initial:beta0, name:'beta'} -> beta;
+end
