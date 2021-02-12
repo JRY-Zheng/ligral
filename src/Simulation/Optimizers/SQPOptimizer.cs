@@ -79,10 +79,12 @@ namespace Ligral.Simulation.Optimizers
                     return x;
                 }
                 logger.Debug(SignalUtils.SPrint(K, "K"));
-                var p = K.Solve(SignalUtils.Stack(-C, B));
-                var s = p.SubMatrix(0, n, 0, 1);
+                var p = SignalUtils.Stack(-C, -B);
+                logger.Debug(SignalUtils.SPrint(p, "p"));
+                var r = K.Solve(p);
+                var s = r.SubMatrix(0, n, 0, 1);
                 logger.Debug(SignalUtils.SPrint(s, "s"));
-                var lambda = p.SubMatrix(n, mp, 0, 1);
+                var lambda = r.SubMatrix(n, mp, 0, 1);
                 logger.Debug(SignalUtils.SPrint(lambda, "lambda"));
                 x += s;
                 var cp = cost(x);
