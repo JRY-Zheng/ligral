@@ -3,21 +3,29 @@
 # Distributed under MIT license.
 # See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 
+# 本例实现了一个单摆模型，并对其进行线性化。
+# 单摆模型的状态就是转动的角度和角速度，分别
+# 为 x1 和 x2。
 
-let M = 0.1;
+let m = 0.1;
 let g = 9.8;
 let l = 0.5;
 let I = 0.001;
 
--M*g*l/I*(x1 -> Sin) + @{name:'u'} -> x2d;
+# 质量块的重力引起单摆转动，输入是施加在摆上
+# 的转矩，因此公式为：
+# M = -mgl*sin(x1) + u = x2d*I
+# 其中 m 是质量，l 是摆长，I 是转动惯量，x2d
+# 是 x2 的导数。
+
+(-m*g*l*(x1 -> Sin) + @{name:'u'})/I-> x2d;
 [x2; x2d] -> Integrator{name:'x', row:2, col:1} -> [x1; x2];
 x1 -> ${name:'y'};
 
+# 在原点处对模型进行线性化，如果没有指定线性化
+# 的点，默认会在原点进行，但 ligral 会抛出一个
+# 警告。你也可以试试在其他点进行线性化。
 conf lin:
-    state:
-        x = [0; 0];
-    end
-    input:
-        u = 0;
-    end
+    state.x = [0; 0];
+    input.u = 0;
 end
