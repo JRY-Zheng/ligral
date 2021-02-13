@@ -3,29 +3,41 @@
 # Distributed under MIT license.
 # See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 
-# 模型示意图见 aircraft.jpg
+# 本例搭建了一个二维翼型的非线性模型。
 
 route Aircraft(x0 = [0;0;0;0]; u; x, y)
 
+    # U 是来流速度，ρ 是空气密度
     let U = 7.5; let rho = 1.225;
+    # 这一行是翼型的无量纲气动参数
     let CN0 = 0.1; let CNa = 4.5; let CNad = 0.41; let CNe = 0.9; let CMe = -0.45;
+    # 这一行是表征长度的量，模型示意图见 aircraft.jpg
     let a = -0.1667; let b = 0.019; let h = -0.15; let r = a-h; let l = 0.5+a;
+    # m 是翼型的质量，Ip 则是转动惯量
     let m = 0.077; let Ip = 2.3e-4;
+    # 这一行是翼型支架在转动和屏东方向的刚度和阻尼
     let kt = 0.069; let kz = 3.85; let ct = 0.0023; let cz = 0.0038;
 
+    # 二维翼型由四个状态，唯一一个输入是升降舵的偏角
     [v; az; q; qdot] -> Integrator{initial:x0, name:'x'} -> x -> [z; v; theta; q];
     u -> eta;
 
+    # 气动角和惯性角的关系，具体见模型示意图 aircraft.jpg
+    # 注：d(atan(x))/dx = x/(1+x^2)
     theta + gamma -> alpha;
     q + gammadot -> alphadot;
     v/U -> Atan -> gamma;
+    # 此处 Memory 用于小节代数环，因为竖直加速度被用于计算力
+    # 而力又被用于计算竖直加速度。
     (az -> Memory)*U/(v^2+U^2) -> gammadot;
 
+    # 非线性气动力的计算
     CN0 + CNa*alpha + CNad*alphadot + CNe*eta -> CN;
     CMe * eta -> CM;
     rho * b * U^2 * CN -> N;
     2*rho * b^2 * U^2 * CM + l*b*N -> M;
 
+    # 运动方程，公式如下：
     # M*xddot + C*xdot + K*x = F
     [m, m*r*b; m*r*b, Ip] -> Inv[M_1];
     [cz, 0; 0, ct] -> C;
@@ -33,6 +45,7 @@ route Aircraft(x0 = [0;0;0;0]; u; x, y)
     [z; theta] -> y;
     [v; q] -> ydot;
     [-N*(theta->Cos); M] -> F;
+    # 这一行是求解该运动方程
     M_1*(F - C*ydot - K*y) -> [az; qdot];
 
 end
