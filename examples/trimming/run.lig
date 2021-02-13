@@ -1,12 +1,18 @@
 import model;
 
+# 从 tp.lig 得到配平数据。你也可以手动修改这些数，
+# 看看不在配平点的质量块是如何运动的。
 let v = 1.6021;
 let beta0 = 0.5;
 
-v -> ConePendulum[cp]{beta0:beta0} -> (_, _, Scope, Scope, Scope);
-(cp:x, cp:y) -> PhaseDiagram;
+# ConePendulum 的前两个输出为 x 和 y，输出到
+# PhaseDiagram，后三个输出到 Scope。
+v -> ConePendulum{beta0:beta0} -> (PhaseDiagram, Scope, Scope, Scope);
 
 conf step_size = 0.01;
 conf stop_time = 10;
 conf output_folder = 'out';
-conf inner_plotter.enable = true;
+conf inner_plotter:
+    enable = true;
+    save_figures = true;
+end

@@ -1,19 +1,30 @@
 import model;
 
-@[v] -> ConePendulum{beta0:pi/10, v:2};
+# 质量块的水平初速度 v 和摆线张开的角度 β
+# 存在某种一一对应关系，使得质量块不再做复
+# 杂的三维运动，而是做圆锥摆运动，即高度保
+# 持不变，β 角也保持不变。
+
+# 本例希望通过配平找到与 β = 0.5 rad 对应
+# 的初速度。
+
+@[v] -> ConePendulum{beta0:0.5};
 
 conf trim:
     state.beta:
-        val = 0.5;
+        val = 0.5;     # 这一行也可以省略，默认为状态的初始值
         constrain = 1;
     end
     derivative.beta:
         val = 0;
-        constrain = 1;
+        constrain = 1; # 约束 β 角的导数即角速度为零
     end
     derivative.w:
         val = 0;
-        constrain = 1;
+        constrain = 1; # 约束 β 角的角加速度为零
     end
-    input.v.val = 2;
+    input.v.val = 2;   # 这里是给出一个初始的猜测
 end
+
+# 运行 ligral trim trim.lig -o tp.lig
+# 配平结果将会保存在 tp.lig

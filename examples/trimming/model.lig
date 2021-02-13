@@ -3,16 +3,44 @@
 # Distributed under MIT license.
 # See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 
+# 本例是一个三维空间中一个二自由度的摆，摆由一根绳子
+# 和一个质量块构成。质量快被绳子系在一个支点上，在三
+# 维空间做运动。
+
+# 设线长为 l，质量块的质量为 m。质量块有一个水平的、
+# 垂直于绳子的初速度 v（由于绳子时刻处于张紧状态，质
+# 量块不可能有绳子方向的初速度）。
+
+# 注意到质量块在水平方向上不受重力，且因为速度 v 垂
+# 直于绳子，假设没有阻尼，速度 v 将持续保持，也就是
+# 没有任何状态会影响这个值，因此可以视作是系统的输入。
+
+# 设摆线与竖直方向的夹角为 β，水平投影与基准坐标系的
+# 夹角为 θ，水平投影的长度为 r。摆线系在坐标系原点，
+# 质量块的坐标为 (x, y, z)。
+
+
 route ConePendulum(beta0, m = 0.1, l = 1; v; x, y, z, theta, beta)
     let g = 9.8;
 
+    # 质量块在水平面内绕坐标原点转动，由上述分析知速
+    # 度不变，但是半径 r 是变化的，因此角速度 ω 也是
+    # 变化的。积分得到的 θi 是连续的量，通过三角函数
+    # 得到 0~360° 的 θ值。
     v/r -> omega -> Integrator -> theta_i;
     (theta_i -> Cos) * r -> x;
     (theta_i -> Sin) * r -> y;
     (x, y) -> Atan2 -> theta;
 
+    # 水平投影半径和摆线张开的角度 β 有关。
     (beta -> Sin) * l -> r;
     (beta -> Cos) * l -> z;
+
+    # Fi 是质量块的离心力，Fg 是重力，这两个力和摆线
+    # 共面。Fi 和 Fg 在摆线方向的合力 Frad 被摆线的
+    # 张力抵消，垂直公共面方向合力 Flat 为 0，只有沿
+    # 着公共面向下的力 Flon 会带动质量块上下转动，进
+    # 而影响到摆线张开角度。
     m*v^2/r -> Fi;
     m*g -> Fg;
     -Fg*(beta -> Sin) + Fi*(beta -> Cos) -> Flon;
