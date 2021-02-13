@@ -27,7 +27,7 @@ route Aircraft(x0 = [0;0;0;0]; u; x, y)
     theta + gamma -> alpha;
     q + gammadot -> alphadot;
     v/U -> Atan -> gamma;
-    # 此处 Memory 用于小节代数环，因为竖直加速度被用于计算力
+    # 此处 Memory 用于消解代数环，因为竖直加速度被用于计算力
     # 而力又被用于计算竖直加速度。
     (az -> Memory)*U/(v^2+U^2) -> gammadot;
 
