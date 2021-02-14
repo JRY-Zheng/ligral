@@ -75,21 +75,14 @@ namespace Ligral.Network
             logger.Prompt($"Downloading file: {fileUrl}");
             using (var rawContentStream = GetHttpResponse(fileUrl))
             {
-                using (StreamReader reader = new StreamReader(rawContentStream))
+                using (FileStream fileStream = new FileStream(path, FileMode.Create))
                 {
-                    using (FileStream fileStream = new FileStream(path, FileMode.Create))
+                    byte[] buffer = new byte[1024];
+                    while (true)
                     {
-                        using (StreamWriter writer = new StreamWriter(fileStream))
-                        {
-                            int index = 0;
-                            char[] buffer = new char[1024];
-                            while (!reader.EndOfStream)
-                            {
-                                int count = reader.ReadBlock(buffer, 0, 1024);
-                                writer.Write(buffer, 0, count);
-                                index += 1024;
-                            }
-                        }
+                        int count = rawContentStream.Read(buffer, 0, 1024);
+                        if (count==0) break;
+                        fileStream.Write(buffer, 0, count);
                     }
                 }
             }
