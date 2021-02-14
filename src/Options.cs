@@ -89,6 +89,7 @@ namespace Ligral
                 return false;
             case "true":
             case null:
+                StepBack();
                 return true;
             default:
                 StepBack();
