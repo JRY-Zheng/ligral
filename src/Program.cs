@@ -84,6 +84,20 @@ Command: doc & document
         ligral doc --json -o def
                             output all JSON definitions to the `def` folder.
         ligral doc Sin      print the document of the model `Sin`.
+Command: exm & example & examples
+    Position parameter:
+        ExampleName         optional string
+            if exist        download this specific example project.
+            else            if --all is not set, show all available examples.
+    Named parameters:
+        --all & -a          boolean
+            if true         download all example projects.
+            else            depends.
+    Examples:
+        ligral exm          print all examples on the screen
+        ligral exm --all    download all example projects.
+        ligral exm mass-spring-damper
+                            download example mass-spring-damper.
 Command: help & --help & -h:
     No parameters       print helps on the screen.
 Parameter: --version & -v:
@@ -104,8 +118,8 @@ Parameter: --version & -v:
 Hi, Ligral is a textual language for simulation.
 
 Usage:
+    ligral exm --all        to download example projects.
     ligral main.lig         to parse and simulate main.lig project.
-    ligral doc Node         to view the document of Node model.
     ligral doc              to view documents of all the models.
     
 Learn more:
