@@ -5,9 +5,11 @@
 */
 
 using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Net;
 using System.Net.Security;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Ligral.Network
 {
@@ -22,7 +24,14 @@ namespace Ligral.Network
     {
         private const string apiUrl = "https://api.github.com/repos/jry-zheng/ligral/contents/examples";
         private const string downloadUrl = "https://gitee.com/junruoyu-zheng/ligral/raw/master/examples";
+        private List<GitInfo> ExamplesList;
         public void GetExamplesList()
+        {
+            string examples = GetHttpResponse(apiUrl);
+            var examplesInfo = JsonSerializer.Deserialize<GitInfo[]>(examples);
+            ExamplesList = new List<GitInfo>(examplesInfo);
+        }
+        private string GetHttpResponse(string url)
         {
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(
                 (sender, certificate, chain, error) => true
@@ -35,7 +44,9 @@ namespace Ligral.Network
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
             string message = reader.ReadToEnd();
-            System.Console.WriteLine(message);
+            reader.Close();
+            stream.Close();
+            return message;
         }
     }
 }
