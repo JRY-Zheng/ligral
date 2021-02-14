@@ -26,7 +26,42 @@ namespace Ligral.Network
         private const string downloadUrl = "https://gitee.com/junruoyu-zheng/ligral/raw/master/examples";
         private List<GitInfo> ExamplesList;
         private Logger logger = new Logger("ExampleManager");
-        public void GetExamplesList()
+        public void ShowExampleList()
+        {
+            GetExamplesList();
+            logger.Prompt($"Here are {ExamplesList.Count} examples available:\n\t{string.Join("\n\t", ExamplesList.ConvertAll(info=>info.Name))}");
+        }
+        public void DownloadProject(string projectName)
+        {
+            if (Directory.Exists(projectName))
+            {
+                logger.Warn($"Folder {projectName} has already existed, will be overrode.");
+                Directory.Delete(projectName, true);
+            }
+            if (ExamplesList == null)
+            {
+                GetExamplesList();
+            }
+            projectName = projectName.ToLower();
+            if (ExamplesList.Exists(info => info.Name == projectName))
+            {
+                DownloadFolder(projectName);
+            }
+            else
+            {
+                ShowExampleList();
+                throw logger.Error(new LigralException($"No example project named {projectName}"));
+            }
+        }
+        public void DownloadAllProjects()
+        {
+            GetExamplesList();
+            foreach (var info in ExamplesList)
+            {
+                DownloadProject(info.Name);
+            }
+        }
+        private void GetExamplesList()
         {
             using (var examples = GetHttpResponse(apiUrl))
             {

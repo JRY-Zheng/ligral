@@ -293,7 +293,18 @@ Learn more:
         private static void Run(Example example)
         {
             ExampleManager manager = new ExampleManager();
-            manager.GetExamplesList();
+            if (example.DownloadAll is bool downloadAll && downloadAll)
+            {
+                manager.DownloadAllProjects();
+            }
+            else if (example.ExampleName is string exampleName)
+            {
+                manager.DownloadProject(exampleName);
+            }
+            else
+            {
+                manager.ShowExampleList();
+            }
         }
         private static void Run(Document document)
         {
