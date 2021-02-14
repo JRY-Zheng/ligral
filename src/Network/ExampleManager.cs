@@ -25,6 +25,7 @@ namespace Ligral.Network
         private const string apiUrl = "https://api.github.com/repos/jry-zheng/ligral/contents/examples";
         private const string downloadUrl = "https://gitee.com/junruoyu-zheng/ligral/raw/master/examples";
         private List<GitInfo> ExamplesList;
+        private Logger logger = new Logger("ExampleManager");
         public void GetExamplesList()
         {
             using (var examples = GetHttpResponse(apiUrl))
@@ -32,17 +33,15 @@ namespace Ligral.Network
                 var examplesInfo = JsonSerializer.DeserializeAsync<GitInfo[]>(examples);
                 ExamplesList = new List<GitInfo>(examplesInfo.Result);
             }
-            DownloadFolder("import-logic");
         }
         private void DownloadFile(string path)
         {
             string fileUrl = downloadUrl+"/"+path;
-            System.Console.WriteLine(fileUrl);
+            logger.Prompt($"Downloading file: {fileUrl}");
             using (var rawContentStream = GetHttpResponse(fileUrl))
             {
                 using (StreamReader reader = new StreamReader(rawContentStream))
                 {
-                    // System.Console.Write(reader.ReadToEnd());
                     using (FileStream fileStream = new FileStream(path, FileMode.Create))
                     {
                         using (StreamWriter writer = new StreamWriter(fileStream))
