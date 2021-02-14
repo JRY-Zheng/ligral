@@ -32,7 +32,7 @@ namespace Ligral.Network
                 var examplesInfo = JsonSerializer.DeserializeAsync<GitInfo[]>(examples);
                 ExamplesList = new List<GitInfo>(examplesInfo.Result);
             }
-            DownloadFile("linearization/sys.lig");
+            DownloadFolder("import-logic");
         }
         private void DownloadFile(string path)
         {
@@ -56,6 +56,26 @@ namespace Ligral.Network
                                 index += 1024;
                             }
                         }
+                    }
+                }
+            }
+        }
+        private void DownloadFolder(string path)
+        {
+            Directory.CreateDirectory(path);
+            using (var items = GetHttpResponse(apiUrl+"/"+path))
+            {
+                var itemsInfo = JsonSerializer.DeserializeAsync<GitInfo[]>(items);
+                foreach (var info in itemsInfo.Result)
+                {
+                    string newPath = path+"/"+info.Name;
+                    if (info.Type == "file")
+                    {
+                        DownloadFile(newPath);
+                    }
+                    else
+                    {
+                        DownloadFolder(newPath);
                     }
                 }
             }
