@@ -104,7 +104,7 @@ Parameter: --version & -v:
     No values           print the current version of ligral.");
                     break;
                 case Version version:
-                    Console.WriteLine("Ligral "+version);
+                    Console.WriteLine("Ligral "+Program.version);
                     break;
                 case Main main:
                     Console.WriteLine(@"Copyright (c) Ligral Tech. All rights reserved. 
