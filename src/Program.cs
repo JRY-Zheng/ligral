@@ -14,6 +14,7 @@ using Ligral.Syntax;
 using Ligral.Component;
 using Ligral.Simulation;
 using Ligral.Extension;
+using Ligral.Network;
 
 namespace Ligral
 {
@@ -39,6 +40,9 @@ namespace Ligral
                     break;
                 case Document document:
                     Run(document);
+                    break;
+                case Example example:
+                    Run(example);
                     break;
                 case Help help:
                     Console.WriteLine(@"Help on ligral:
@@ -285,6 +289,11 @@ Learn more:
                 logger.Throw();
                 logger.Warn($"Unexpected error in {trimming.FileName}, ligral exited with error.");
             }
+        }
+        private static void Run(Example example)
+        {
+            ExampleManager manager = new ExampleManager();
+            manager.GetExamplesList();
         }
         private static void Run(Document document)
         {

@@ -52,6 +52,15 @@ namespace Ligral
             return $"[doc] model={ModelName} to_json={ToJson}";
         }
     }
+    class Example : Command
+    {
+        public string ExampleName;
+        public bool DownloadAll;
+        public override string ToString()
+        {
+            return $"[exm] proj={ExampleName} all={DownloadAll}";
+        }
+    }
     class Help : Command
     {
         public override string ToString()

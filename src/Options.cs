@@ -124,6 +124,30 @@ namespace Ligral
             }
             return document;
         }
+        private Example GetExample()
+        {
+            Example example = new Example();
+            bool metUnknownOption = false;
+            while (!metUnknownOption && Eat() is string option)
+            {
+                switch (option)
+                {
+                case "-a":
+                case "--all":
+                    if (example.ExampleName != null)
+                    {
+                        throw logger.Error(new OptionException(option, "Cannot specify example project name when requesting all examples"));
+                    }
+                    example.DownloadAll = GetBoolean();
+                    break;
+                default:
+                    metUnknownOption = example.ExampleName != null;
+                    if (!metUnknownOption) example.ExampleName = arg;
+                    break;
+                }
+            }
+            return example;
+        }
         private Linearization GetLinearization()
         {
             Linearization linearization = new Linearization();
@@ -235,6 +259,10 @@ namespace Ligral
                 case "doc":
                 case "document":
                     return GetDocument();
+                case "exm":
+                case "example":
+                case "examples":
+                    return GetExample();
                 case "lin":
                 case "linearize":
                 case "linearise":
