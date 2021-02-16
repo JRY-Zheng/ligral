@@ -4,6 +4,8 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using Ligral.Commands;
+
 namespace Ligral
 {
     class Options
@@ -42,15 +44,15 @@ namespace Ligral
         {
             index--;
         }
-        private Help GetHelp()
+        private HelpCommand GetHelp()
         {
             Eat();
-            return new Help();
+            return new HelpCommand();
         }
-        private Version GetVersion()
+        private VersionCommand GetVersion()
         {
             Eat();
-            return new Version();
+            return new VersionCommand();
         }
         private string GetString()
         {
@@ -112,9 +114,9 @@ namespace Ligral
             StepBack();
             return false;
         }
-        private Document GetDocument()
+        private DocumentCommand GetDocument()
         {
-            Document document = new Document();
+            DocumentCommand document = new DocumentCommand();
             if (IsHelpRequested(document)) return document;
             bool metUnknownOption = false;
             while (!metUnknownOption && Eat() is string option)
@@ -142,9 +144,9 @@ namespace Ligral
             }
             return document;
         }
-        private Example GetExample()
+        private ExampleCommand GetExample()
         {
-            Example example = new Example();
+            ExampleCommand example = new ExampleCommand();
             if (IsHelpRequested(example)) return example;
             bool metUnknownOption = false;
             while (!metUnknownOption && Eat() is string option)
@@ -167,9 +169,9 @@ namespace Ligral
             }
             return example;
         }
-        private Linearization GetLinearization()
+        private LinearizationCommand GetLinearization()
         {
-            Linearization linearization = new Linearization();
+            LinearizationCommand linearization = new LinearizationCommand();
             if (IsHelpRequested(linearization)) return linearization;
             bool metUnknownOption = false;
             linearization.FileName = GetString();
@@ -197,9 +199,9 @@ namespace Ligral
             }
             return linearization;
         }
-        private Trimming GetTrimming()
+        private TrimmingCommand GetTrimming()
         {
-            Trimming trimming = new Trimming();
+            TrimmingCommand trimming = new TrimmingCommand();
             if (IsHelpRequested(trimming)) return trimming;
             bool metUnknownOption = false;
             trimming.FileName = GetString();
@@ -227,9 +229,9 @@ namespace Ligral
             }
             return trimming;
         }
-        private SimulationProject GetSimulationProject()
+        private SimulationCommand GetSimulationProject()
         {
-            SimulationProject simulationProject = new SimulationProject() {FileName = arg};
+            SimulationCommand simulationProject = new SimulationCommand() {FileName = arg};
             bool metUnknownOption = false;
             while (!metUnknownOption && Eat() is string option)
             {
@@ -298,7 +300,7 @@ namespace Ligral
                 case "--version":
                     return GetVersion();
                 case null:
-                    return new Main();
+                    return new MainCommand();
                 default:
                     return GetSimulationProject();
                 }

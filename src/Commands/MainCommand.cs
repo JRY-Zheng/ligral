@@ -4,11 +4,10 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-namespace Ligral
+namespace Ligral.Commands
 {
-    abstract class Command
+    class MainCommand : Command
     {
-        public bool? RequestHelp;
-        public abstract string HelpInfo {get;}
+        public override string HelpInfo {get => "";}
     }
 }

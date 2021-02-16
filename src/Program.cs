@@ -15,6 +15,7 @@ using Ligral.Component;
 using Ligral.Simulation;
 using Ligral.Extension;
 using Ligral.Network;
+using Ligral.Commands;
 
 namespace Ligral
 {
@@ -35,28 +36,28 @@ namespace Ligral
                 }
                 switch (command)
                 {
-                case SimulationProject simulationProject:
+                case SimulationCommand simulationProject:
                     Run(simulationProject);
                     break;
-                case Linearization linearization:
+                case LinearizationCommand linearization:
                     Run(linearization);
                     break;
-                case Trimming trimming:
+                case TrimmingCommand trimming:
                     Run(trimming);
                     break;
-                case Document document:
+                case DocumentCommand document:
                     Run(document);
                     break;
-                case Example example:
+                case ExampleCommand example:
                     Run(example);
                     break;
-                case Help help:
+                case HelpCommand help:
                     Console.WriteLine($@"Help on ligral:\n{help.HelpInfo}");
                     break;
-                case Version version:
+                case VersionCommand version:
                     Console.WriteLine("Ligral "+Program.version);
                     break;
-                case Main main:
+                case MainCommand main:
                     Console.WriteLine(@"Copyright (c) Ligral Tech. All rights reserved. 
                     __    _                  __
                    / /   (_)___ __________ _/ /
@@ -92,7 +93,7 @@ Learn more:
                 logger.Fatal(e);
             }
         }
-        private static void Run(SimulationProject simulationProject)
+        private static void Run(SimulationCommand simulationProject)
         {
             try
             {
@@ -137,7 +138,7 @@ Learn more:
                 logger.Warn($"Unexpected error in {simulationProject.FileName}, ligral exited with error.");
             }
         }
-        private static void Run(Linearization linearization)
+        private static void Run(LinearizationCommand linearization)
         {
             try
             {
@@ -195,7 +196,7 @@ Learn more:
                 logger.Warn($"Unexpected error in {linearization.FileName}, ligral exited with error.");
             }
         }
-        private static void Run(Trimming trimming)
+        private static void Run(TrimmingCommand trimming)
         {
             try
             {
@@ -254,7 +255,7 @@ Learn more:
                 logger.Warn($"Unexpected error in {trimming.FileName}, ligral exited with error.");
             }
         }
-        private static void Run(Example example)
+        private static void Run(ExampleCommand example)
         {
             ExampleManager manager = new ExampleManager();
             if (example.DownloadAll is bool downloadAll && downloadAll)
@@ -270,7 +271,7 @@ Learn more:
                 manager.ShowExampleList();
             }
         }
-        private static void Run(Document document)
+        private static void Run(DocumentCommand document)
         {
             Settings settings = Settings.GetInstance();
             try

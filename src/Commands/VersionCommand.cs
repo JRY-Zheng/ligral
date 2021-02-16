@@ -4,11 +4,12 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-namespace Ligral
+namespace Ligral.Commands
 {
-    abstract class Command
+    class VersionCommand : Command
     {
-        public bool? RequestHelp;
-        public abstract string HelpInfo {get;}
+        public override string HelpInfo {get => @"Parameter: --version & -v:
+    No values           print the current version of ligral.
+";}
     }
 }
