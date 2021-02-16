@@ -27,7 +27,13 @@ namespace Ligral
             try
             {
                 Options options = new Options(args);
-                switch (options.GetCommand())
+                Command command = options.GetCommand();
+                if (command.RequestHelp is bool requestHelp && requestHelp)
+                {
+                    Console.WriteLine(command.HelpInfo);
+                    return;
+                }
+                switch (command)
                 {
                 case SimulationProject simulationProject:
                     Run(simulationProject);
@@ -45,63 +51,7 @@ namespace Ligral
                     Run(example);
                     break;
                 case Help help:
-                    Console.WriteLine(@"Help on ligral:
-Root:
-    Position parameter: 
-        FileName            required string
-            if is file      interpret the file and run simulation.
-            or is folder    the folder must be a package.
-    Named parameters:
-        --step-size & -s    double
-            if given        override the step size of a fixed-step solver.
-            else            use step size from `conf` or default 0.01.
-        --stop-time & -t    double
-            if given        override the stop time of all solvers.
-            else            use stop time from `conf` or default 10.
-        --output & -o       string
-            if given        output CSV file in the given folder.
-            else            output CSV file in the startup folder.
-    Examples:
-        ligral main.lig     run main.lig with default settings.
-        ligral main.lig -o out
-                            run main.lig and output CSV file into `out` folder.
-        ligral main.lig -s 0.1 -t 100
-                            run main.lig with step 0.1s and stop it at 100s.
-Command: doc & document
-    Position parameter:
-        ModelName           optional string
-            if exist        return the document of this specific model.
-            else            return documents of all models.
-    Named parameters:
-        --json & -j         boolean
-            if true         output the definition(s) in JSON format.
-            else            print document(s) on the screen.
-        --output & -o       string
-            if given        output JSON file in the given folder.
-            else            output JSON file in the startup folder.
-    Examples:
-        ligral doc          print all documents on the screen
-        ligral doc --json -o def
-                            output all JSON definitions to the `def` folder.
-        ligral doc Sin      print the document of the model `Sin`.
-Command: exm & example & examples
-    Position parameter:
-        ExampleName         optional string
-            if exist        download this specific example project.
-            else            if --all is not set, show all available examples.
-    Named parameters:
-        --all & -a          boolean
-            if true         download all example projects.
-            else            depends.
-    Examples:
-        ligral exm          print all examples on the screen
-        ligral exm --all    download all example projects.
-        ligral exm mass-spring-damper
-                            download example mass-spring-damper.
-Command: help & --help & -h:
-    No parameters       print helps on the screen.
-Parameter: --version & -v:
-    No values           print the current version of ligral.");
+                    Console.WriteLine($@"Help on ligral:\n{help.HelpInfo}");
                     break;
                 case Version version:
                     Console.WriteLine("Ligral "+Program.version);

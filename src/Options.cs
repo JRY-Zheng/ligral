@@ -96,9 +96,26 @@ namespace Ligral
                 return true;
             }
         }
+        private bool IsHelpRequested(Command command)
+        {
+            if (Eat() is string option)
+            {
+                switch (option)
+                {
+                case "-h":
+                case "--help":
+                    command.RequestHelp = true;
+                    Eat();
+                    return true;
+                }
+            }
+            StepBack();
+            return false;
+        }
         private Document GetDocument()
         {
             Document document = new Document();
+            if (IsHelpRequested(document)) return document;
             bool metUnknownOption = false;
             while (!metUnknownOption && Eat() is string option)
             {
@@ -128,6 +145,7 @@ namespace Ligral
         private Example GetExample()
         {
             Example example = new Example();
+            if (IsHelpRequested(example)) return example;
             bool metUnknownOption = false;
             while (!metUnknownOption && Eat() is string option)
             {
@@ -152,6 +170,7 @@ namespace Ligral
         private Linearization GetLinearization()
         {
             Linearization linearization = new Linearization();
+            if (IsHelpRequested(linearization)) return linearization;
             bool metUnknownOption = false;
             linearization.FileName = GetString();
             while (!metUnknownOption && Eat() is string option)
@@ -181,6 +200,7 @@ namespace Ligral
         private Trimming GetTrimming()
         {
             Trimming trimming = new Trimming();
+            if (IsHelpRequested(trimming)) return trimming;
             bool metUnknownOption = false;
             trimming.FileName = GetString();
             while (!metUnknownOption && Eat() is string option)
