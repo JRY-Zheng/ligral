@@ -38,5 +38,10 @@ Command list:
 Example:
     ligral trim --help
 ";}
+
+        public override void Run()
+        {
+            logger.Prompt($"Help on ligral:\n{HelpInfo}");
+        }
     }
 }

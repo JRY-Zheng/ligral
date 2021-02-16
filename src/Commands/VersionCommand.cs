@@ -11,5 +11,10 @@ namespace Ligral.Commands
         public override string HelpInfo {get => @"Parameter: --version & -v:
     No values           print the current version of ligral.
 ";}
+
+        public override void Run()
+        {
+            logger.Prompt("Ligral "+Program.Version);
+        }
     }
 }

@@ -4,6 +4,8 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using Ligral.Network;
+
 namespace Ligral.Commands
 {
     class ExampleCommand : Command
@@ -25,5 +27,22 @@ namespace Ligral.Commands
         ligral exm mass-spring-damper
                             download example mass-spring-damper.
 ";}
+
+        public override void Run()
+        {
+            ExampleManager manager = new ExampleManager();
+            if (DownloadAll is bool downloadAll && downloadAll)
+            {
+                manager.DownloadAllProjects();
+            }
+            else if (ExampleName is string exampleName)
+            {
+                manager.DownloadProject(exampleName);
+            }
+            else
+            {
+                manager.ShowExampleList();
+            }
+        }
     }
 }

@@ -9,6 +9,12 @@ namespace Ligral
     abstract class Command
     {
         public bool? RequestHelp;
+        protected Logger logger;
         public abstract string HelpInfo {get;}
+        public Command()
+        {
+            logger = new Logger(GetType().Name);
+        }
+        public abstract void Run();
     }
 }

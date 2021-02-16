@@ -4,6 +4,13 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.IO;
+using System.Text.Json;
+using System;
+using System.Collections.Generic;
+using Ligral.Component;
+using Ligral.Extension;
+
 namespace Ligral.Commands
 {
     class DocumentCommand : Command
@@ -29,5 +36,85 @@ namespace Ligral.Commands
                             output all JSON definitions to the `def` folder.
         ligral doc Sin      print the document of the model `Sin`.
 ";}
+        public override void Run()
+        {
+            Settings settings = Settings.GetInstance();
+            try
+            {
+                settings.GetDefaultSettings();
+            }
+            catch (LigralException)
+            {
+                logger.Error(new LigralException("Default settings is not valid, ligral exited with errors."));
+                logger.Throw();
+                return;
+            }
+            PluginLoader pluginLoader = new PluginLoader();
+            pluginLoader.Load();
+            List<Model> models = new List<Model>();
+            if (ModelName is string modelName)
+            {
+                if (ModelManager.ModelTypePool.ContainsKey(modelName))
+                {
+                    models.Add(ModelManager.Create(modelName));
+                }
+                else
+                {
+                    logger.Error(new OptionException(modelName, $"No model named {modelName}"));
+                    logger.Throw();
+                    return;
+                }
+            }
+            else
+            {
+                foreach (string modelType in ModelManager.ModelTypePool.Keys)
+                {
+                    if (modelType.Contains('<')) continue;
+                    models.Add(ModelManager.Create(modelType));
+                }
+            }
+            if (ToJson is bool toJson && toJson)
+            {
+                if (OutputFolder is string outputFolder)
+                {
+                    settings.OutputFolder = outputFolder;
+                }
+                if (!Directory.Exists(settings.OutputFolder))
+                {
+                    Directory.CreateDirectory(settings.OutputFolder);
+                }
+                foreach (Model model in models)
+                {
+                    ModelDocument modelDocument = model.GetDocStruct();
+                    string modelJson = JsonSerializer.Serialize<ModelDocument>(
+                        modelDocument, new JsonSerializerOptions() {WriteIndented = true}
+                    );
+                    string modelJsonFileName = Path.Join(settings.OutputFolder, $"{modelDocument.Type}.mdl.json");
+                    try
+                    {
+                        File.WriteAllText(modelJsonFileName, modelJson);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(new LigralException($"Cannot write to {modelJsonFileName}: {e.Message}"));
+                        logger.Throw();
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (!(OutputFolder is null))
+                {
+                    logger.Error(new OptionException("Output folder is only needed when mdl.json is requested."));
+                    logger.Throw();
+                    return;
+                }
+                foreach (Model model in models)
+                {
+                    Console.WriteLine(model.GetDoc());
+                }
+            }
+        }
     }
 }
