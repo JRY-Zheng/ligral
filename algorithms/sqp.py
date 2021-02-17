@@ -3,7 +3,8 @@ from optimization import *
 class SQP(Optimizer):
     def __init__(self):
         self.eps = 1e-5
-        self.tolerant = 1e-3
+        self.lambda_tolerant = 1e-3
+        self.cost_tolerant = 1e-8
 
     def gradient(self, f, x):
         n, cols = x.shape
@@ -49,10 +50,10 @@ class SQP(Optimizer):
             lam = p[n_s:]
             x += s
             c_new = cost(x)
-            if (np.abs(lam) < self.tolerant).all():
+            if (np.abs(lam) < self.lambda_tolerant).all():
                 print('optimal value found')
                 break 
-            elif (np.abs(c_new - c)<self.tolerant).all():
+            elif (np.abs(c_new - c)<self.cost_tolerant).all():
                 print('cannot found optimal value')
                 break
             else:
