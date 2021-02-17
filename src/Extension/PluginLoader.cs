@@ -16,7 +16,7 @@ namespace Ligral.Extension
         private Logger logger = new Logger("PluginLoader");
         public void Load()
         {
-            string executingPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string executingPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             string pluginsFolder = Path.Join(executingPath, "plugins");
             if (!Directory.Exists(pluginsFolder))
             {

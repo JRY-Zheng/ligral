@@ -45,7 +45,7 @@ namespace Ligral
 
         public void GetDefaultSettings()
         {
-            string executingPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string executingPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             string defaultSetting = Path.Join(executingPath, "default.lig");
             if (File.Exists(defaultSetting))
             {
