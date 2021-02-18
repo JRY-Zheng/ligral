@@ -74,7 +74,8 @@ class Tester:
     def test(self):
         linearizer = Linearizer()
         pendulum = Pendulum()
-        self.test_linearization(linearizer, pendulum)
+        al = AlgebraicLoop()
+        self.test_linearization(linearizer, al)
 
         optimizer = SQP()
         self.test_optimization(optimizer)

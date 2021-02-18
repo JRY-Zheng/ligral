@@ -53,7 +53,7 @@ class Linearizer:
             # slope is small enough, then stop iteration. But at least 
             # calculate four slops
             if (np.abs(slope.T[0]-slopes.T[-1])<self.eps).all():
-                if len(slopes.T)>3:
+                if len(slopes.T)>5:
                     break
             slopes = np.hstack((slopes, slope))
             d = d/2
