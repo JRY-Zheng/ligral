@@ -27,9 +27,11 @@ route Aircraft(x0 = [0;0;0;0]; u; x, y)
     theta + gamma -> alpha;
     q + gammadot -> alphadot;
     v/U -> Atan -> gamma;
-    # 此处 Memory 用于消解代数环，因为竖直加速度被用于计算力
-    # 而力又被用于计算竖直加速度。
-    (az -> Memory)*U/(v^2+U^2) -> gammadot;
+    # 此处 Equal 用于求解代数环，因为竖直加速度被用于计算力
+    # 而力又被用于计算竖直加速度。此外，用 Memory 可以消解
+    # 代数环，优点是避免求解方程，速度快。但如果需要线性化或
+    # 者配平，Memory 会导致模型不准确。
+    (az -> Equal)*U/(v^2+U^2) -> gammadot;
 
     # 非线性气动力的计算
     CN0 + CNa*alpha + CNad*alphadot + CNe*eta -> CN;
