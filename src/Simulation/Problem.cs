@@ -36,15 +36,57 @@ namespace Ligral.Simulation
     {
         private List<Model> routine;
         private Logger logger = new Logger("Problem");
+        private Matrix<double> x0;
+        private string optimizerName = "sqp";
+        private Optimizer optimizer;
+        private double algebraicErrorTolerant = 1e-5;
         public string Name;
         public Problem(string name, List<Model> routine)
         {
             Name = name;
             this.routine = routine;
+            if (Solution.SolutionPool.Count > 0)
+            {
+                x0 = Solution.SolutionPool.ConvertAll(solution => solution.InitialValue).ToColumnVector();
+                if (optimizer == null) optimizer = Optimizer.GetOptimizer(optimizerName);
+            }
         }
         public Matrix<double> InitialValues()
         {
             return State.StatePool.ConvertAll(state => state.InitialValue).ToColumnVector();
+        }
+        private Matrix<double> Cost(Matrix<double> x)
+        {
+            var dx = x - x0;
+            return dx.Transpose() * dx;
+        }
+        private Matrix<double> Equal(Matrix<double> x)
+        {
+            var solutionArray = x.AsColumnMajorArray();
+            for (int i = 0; i < solutionArray.Length; i++)
+            {
+                Solution.SolutionPool[i].GuessedValue = solutionArray[i];
+            }
+            foreach(Model node in routine)
+            {
+                node.Propagate();
+            }
+            x0 = Solution.SolutionPool.ConvertAll(solution => solution.ActualValue).ToColumnVector();
+            return x - x0;
+        }
+        private Matrix<double> Bound(Matrix<double> x)
+        {
+            var build = Matrix<double>.Build;
+            return build.Dense(0, 1);
+        }
+        private void SolveAlgebraicLoops()
+        {
+            var x = optimizer.Optimize(Cost, x0, Equal, Bound);
+            var err = Equal(x).L2Norm();
+            if (err > algebraicErrorTolerant)
+            {
+                throw logger.Error(new LigralException($"Algebraic loop cannot be solved, with error norm {err}"));
+            }
         }
         public Matrix<double> SystemDynamicFunction(Matrix<double> states)
         {
@@ -53,7 +95,11 @@ namespace Ligral.Simulation
             {
                 State.StatePool[i].StateVariable = stateArray[i];
             }
-            foreach(Model node in routine)
+            if (Solution.SolutionPool.Count > 0)
+            {
+                SolveAlgebraicLoops();
+            }
+            else foreach(Model node in routine)
             {
                 node.Propagate();
             }
