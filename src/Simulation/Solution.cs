@@ -68,13 +68,13 @@ namespace Ligral.Simulation
             });
         }
 
-        public void SetGuessedValue(Signal signal)
+        public void SetActualValue(Signal signal)
         {
-            SetSignal(signal, (solution, guess) => solution.GuessedValue = guess);
+            SetSignal(signal, (solution, actualValue) => solution.ActualValue = actualValue);
         }
-        public Signal GetActualValue()
+        public Signal GetGuessedValue()
         {
-            return GetSignal(solution => solution.ActualValue);
+            return GetSignal(solution => solution.GuessedValue);
         }
     }
 }
