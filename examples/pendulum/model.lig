@@ -1,0 +1,16 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+# 质量块的重力引起单摆转动，输入是施加在摆上
+# 的转矩，因此公式为：
+# M = -mgl*sin(x1) + u = x2d*I
+# 其中 m 是质量，l 是摆长，I 是转动惯量，x2d
+# 是 x2 的导数。
+
+route Pendulum(x0=[0;0], m, g, l, I; u; x, y)
+    (-m*g*l*(x1 -> Sin) + u)/I-> x2d;
+    [x2; x2d] -> Integrator{name:'x', row:2, col:1, initial:x0} -> x -> [x1; x2];
+    x1 -> y;
+end

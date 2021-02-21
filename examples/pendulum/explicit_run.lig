@@ -1,0 +1,21 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+import model;
+import constant;
+
+Pendulum[pendulum]{m:m, g:g, l:l, I:I, x0:[1;0]};
+
+0 -> pendulum:x -> Scope;
+
+conf step_size = 0.1;
+conf stop_time = 5;
+conf output_folder = 'out';
+conf inner_plotter.enable = true;
+
+# 从线性化的结果可以看出，这个模型的时间常数非常小
+# 也就是模态非常快。用显式求解器求解，如果步长太长
+# 就会发散。
+conf solver = 'ode1';
