@@ -81,7 +81,8 @@ namespace Ligral.Simulation
         }
         private void SolveAlgebraicLoops()
         {
-            var x = optimizer.Optimize(Cost, x0, Equal, Bound);
+            Matrix<double> x0p = Matrix<double>.Build.DenseOfMatrix(x0);
+            var x = optimizer.Optimize(Cost, x0p, Equal, Bound);
             var err = Equal(x).L2Norm();
             if (err > algebraicErrorTolerant)
             {
