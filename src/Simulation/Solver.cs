@@ -43,6 +43,8 @@ namespace Ligral.Simulation
                 return new FixedStepRK5Solver();
             case "ode8":
                 return new FixedStepRK8Solver();
+            case "ode1be":
+                return new BackwardEulerSolver();
             default:
                 if (solverName.Contains('.'))
                 {
