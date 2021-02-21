@@ -43,7 +43,7 @@ class ImplicitSolver(Solver):
             return dx.T*dx
         def equal(x):
             xdot = plant.f(x, np.matrix(0), t)
-            return x - self.step*xdot
+            return x - x[-1] - self.step*xdot
         def bound(x):
             return np.matrix(np.zeros((0,1)))
         for t in np.arange(self.step, self.stop, self.step):
