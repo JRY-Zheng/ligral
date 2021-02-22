@@ -17,7 +17,7 @@ Ligral is a textual simulation language as an alternative to Simulink. The goal 
 
 ## How to Install
 
-We now have released [v0.2.1](https://github.com/jry-zheng/ligral/releases/v0.2.1) which is available at GitHub. Alternatively, you may also want to clone the source to your workspace and build ligral manually.
+We now have released [v0.2.2](https://github.com/jry-zheng/ligral/releases/v0.2.2-beta) which is available at GitHub. Alternatively, you may also want to clone the source to your workspace and build ligral manually.
 
     git clone https://github.com/jry-zheng/ligral.git
     cd ligral
@@ -27,21 +27,6 @@ We now have released [v0.2.1](https://github.com/jry-zheng/ligral/releases/v0.2.
 For detailed installation guide see [Quick Start](doc/quick-start/README.md)。
 
 ## Usage
-
-Run `ligral` you'll see a welcome page. The following parameters are supported for some information of ligral:
-
-|   Parameters  | Functions      |
-|   --          | --            |
-|  -h, --help   | Show help info|
-| -v, --version | Show version info   |
-
-Command `doc`, which is also referenced as `document`, is used to output the documentation of the specific model or all models. The documentation includes a reading-friendly version for you and a JSON version for some programs which intends to take ligral as backend. 
-
-|   Parameters        |   Functions        |
-|   --          |   --         |
-|  [ModelName]? |Specify a `Model` for documentation generation, documentation of all `Model`s will be outputted is no specific `Model` is given. |
-|  -j, --json [bool]?    | Tell ligral to output JSON version. The boolean value is optional and the default value is `true`. |
-|  -o, --output [Folder] | Redirect the output folder, only affects when JSON version is required. |
 
 The main function of ligral absolutely is run a simulation project. The project name, usually a `.lig` file name, should be the first positional parameter, like `ligral path/file.lig`. Besides, many parameters are supported:
 
@@ -53,9 +38,7 @@ The main function of ligral absolutely is run a simulation project. The project 
 |  -j, --json [bool]?    | Toggle the input to be `.lig.json` file. Ligral parse the project as `.lig` file if this is not toggled |
 |  -o, --output [Folder] | Redirect the output folder. |
 
-*NOTE: the extension name of a ligral simulation project can be something else than `.lig` or `.lig.json`, but the standard extension name is highly recommended.*
-
-*Besides, although the extension `.lig` can be ignored (e.g. if you have `main.lig`, instead of `ligral main.lig` you can alternatively run `ligral main` provided that there is no file or folder named `main`), this is NOT recommended. It is better to given the extension name explicitly. If you project name is `doc.lig`, you cannot run `ligral doc` because ligral should recognize it as `doc` command.*
+The other commands that ligral supports include `doc`, `trim`, `lin` and `exm`, run `ligral [command] --help` to see more about the usage.
 
 ## Dependency
 
