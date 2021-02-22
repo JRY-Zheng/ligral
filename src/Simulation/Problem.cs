@@ -71,8 +71,7 @@ namespace Ligral.Simulation
             {
                 node.Propagate();
             }
-            x0 = Solution.SolutionPool.ConvertAll(solution => solution.ActualValue).ToColumnVector();
-            return x - x0;
+            return x - Solution.SolutionPool.ConvertAll(solution => solution.ActualValue).ToColumnVector();
         }
         private Matrix<double> Bound(Matrix<double> x)
         {
@@ -82,8 +81,8 @@ namespace Ligral.Simulation
         private void SolveAlgebraicLoops()
         {
             Matrix<double> x0p = Matrix<double>.Build.DenseOfMatrix(x0);
-            var x = optimizer.Optimize(Cost, x0p, Equal, Bound);
-            var err = Equal(x).L2Norm();
+            x0 = optimizer.Optimize(Cost, x0p, Equal, Bound);
+            var err = Equal(x0).L2Norm();
             if (err > algebraicErrorTolerant)
             {
                 throw logger.Error(new LigralException($"Algebraic loop cannot be solved, with error norm {err}"));

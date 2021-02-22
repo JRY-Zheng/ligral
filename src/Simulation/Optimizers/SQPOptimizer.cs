@@ -87,6 +87,7 @@ namespace Ligral.Simulation.Optimizers
                 var lambda = r.SubMatrix(n, mp, 0, 1);
                 logger.Debug(SignalUtils.SPrint(lambda, "lambda"));
                 x += s;
+                logger.Debug(SignalUtils.SPrint(x, "x"));
                 var cp = cost(x);
                 if (lambda.RowAbsoluteSums().ForAll(sum => sum < OptimizationStopLambdaTolerant))
                 {
@@ -95,7 +96,7 @@ namespace Ligral.Simulation.Optimizers
                 }
                 else if ((cp-c).RowAbsoluteSums().ForAll(sum => sum < OptimizationStopCostTolerant))
                 {
-                    logger.Info("SQP Optimizer stops as costs did not change.");
+                    logger.Info($"SQP Optimizer stops as costs did not change: from {c} to {cp}.");
                     break;
                 }
                 else
