@@ -18,7 +18,7 @@ Ligral是一个基于文本的仿真语言，旨在替代 Simulink 进行仿真�
 
 ## 安装
 
-目前发布了[v0.2.1](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.1) 正式版，您也可以克隆本项目到本地编译。
+目前发布了[v0.2.2](https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.2-beta) 预览版，您也可以克隆本项目到本地编译。
 
     git clone https://gitee.com/junruoyu-zheng/ligral.git
     cd ligral
@@ -28,21 +28,6 @@ Ligral是一个基于文本的仿真语言，旨在替代 Simulink 进行仿真�
 详细安装方法请参考[快速开始](doc/quick-start/README.md)。
 
 ## 使用
-
-运行`ligral`会看到欢迎页面。支持以下参数：
-
-|   参数        | 作用           |
-|   --          | --            |
-|  -h, --help   | 展示帮助       |
-| -v, --version | 展示版本信息   |
-
-支持`doc`命令，该命令的别名为`document`，输出模块的文档或定义文件。该命令支持的参数有：
-
-|   参数        |   作用        |
-|   --          |   --         |
-|  [ModelName]? |指定输出某个`Model`的文档或定义文件，如果缺省则输出所有`Model`的定义文件         |
-|  -j, --json [bool]?    | 指定输出定义文件，如果缺省布尔值默认为`true`，如果缺省参数默认为输出文档|
-|  -o, --output [Folder] | 输出重定向至给定文件夹，仅在输出定义文件时有效                        |
 
 运行仿真工程需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
 
@@ -54,7 +39,7 @@ Ligral是一个基于文本的仿真语言，旨在替代 Simulink 进行仿真�
 |  -j, --json [bool]?    | 指定输入`.lig.json`文件，默认为输入`.lig`文件 |
 |  -o, --output [Folder] | 仿真输出重定向至给定文件夹                    |
 
-*注意：仿真工程文件的后缀名可以不是`.lig`或`.lig.json`，但建议使用标准后缀名。如果仿真文件后缀名为`.lig`，如`main.lig`，且所在文件夹不包含名为`main`的子文件夹，运行`ligral main`也可以，但是不建议这么用。如果仿真工程文件恰好命名为`doc.lig`，运行`ligral doc`会导致`ligral`将其识别成`doc`命令。*
+Ligral 目前支持的命令包括`doc`、`trim`、`lin`和`exm`，可以通过`ligral [command] --help`查看使用说明。
 
 ## 依赖
 
