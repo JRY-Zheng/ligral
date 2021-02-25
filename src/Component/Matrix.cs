@@ -35,7 +35,7 @@ namespace Ligral.Component
         {
             return $"{matrix.RowCount}x{matrix.ColumnCount}";
         }
-        public static Matrix<double> Add(this Matrix<double> left, Matrix<double> right)
+        public static Matrix<double> MatAdd(this Matrix<double> left, Matrix<double> right)
         {
             if (left.IsScalar()) return left[0,0]+right;
             if (right.IsScalar()) return left+right[0,0];

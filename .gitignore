@@ -16,8 +16,7 @@ bin
 obj
 
 #test
-**/test.lig
-test/
+debug/
 
 #build
 *.bat
