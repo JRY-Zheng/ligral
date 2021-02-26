@@ -1,0 +1,57 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+# 电阻，U=IR
+route Resistance(R; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ui - Ii*R -> Equal -> Uo;
+end
+
+# 电压源，电势差为E
+route VoltageSource(E; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ui + E -> Equal -> Uo;
+end
+
+# 电容，dU/dt = IC
+route Capacitance(C, u0=0; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ii * C -> Integrator{initial:u0} -> dU;
+    Ui - dU -> Equal -> Uo;
+end
+
+# 电感，dI/dt = UL
+route Inductance(L, i0=0; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    (x*L -> Integrator{initial:i0}) - Ii + x -> Equal -> x;
+    Ui - x -> Equal -> Uo;
+end
+
+VoltageSource[E1]{E:10};
+Resistance[R1]{R:0.01};
+Capacitance[C1]{C:0.03};
+Inductance[I1]{L:100};
+
+#        I              C 
+# ┌─────┤\/\/\/├───────┤ ├──────┐
+# │                             │
+# │     ┌─────┐        - E +    │
+# └─────┤  R  ├─────────┤├──────┘
+#       └─────┘
+# 搭建简单的电路如上图所示
+E1 -> R1 -> I1 -> C1 -> E1;
+
+I1:Uo - R1:Uo -> Scope[U1];
+I1:Io -> Scope;
+
+
+conf step_size = 0.01;
+conf stop_time = 10;
+
+conf output_folder = 'out';
+conf inner_plotter:
+    enable = true;
+    save_figures = true;
+end
