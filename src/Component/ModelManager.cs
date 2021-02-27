@@ -79,7 +79,10 @@ namespace Ligral.Component
             {"OutputSink", ()=>new OutputSink()},
             {"Sweep", ()=>new Sweep()},
             {"Inv", ()=>new Inverse()},
-            {"Equal", ()=>new Equal()}
+            {"Equal", ()=>new Equal()},
+            {"EqualToZero", ()=>new EqualToZero()},
+            {"=0", ()=>new EqualToZero()},
+            {"Variable", ()=>new Variable()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
