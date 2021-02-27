@@ -196,10 +196,10 @@
       </h2>
       <p>
        目前发布了
-       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.1" target="_blank">
-        v0.2.1
+       <a href="https://gitee.com/junruoyu-zheng/ligral/releases/v0.2.2-beta" target="_blank">
+        v0.2.2
        </a>
-       正式版，您也可以克隆本项目到本地编译。
+       预览版，您也可以克隆本项目到本地编译。
       </p>
       <pre><code>git clone https://gitee.com/junruoyu-zheng/ligral.git
 cd ligral
@@ -216,104 +216,6 @@ dotnet build
       <h2>
        使用
       </h2>
-      <p>
-       运行
-       <code>
-        ligral
-       </code>
-       会看到欢迎页面。支持以下参数：
-      </p>
-      <table>
-       <thead>
-        <tr>
-         <th>
-          参数
-         </th>
-         <th>
-          作用
-         </th>
-        </tr>
-       </thead>
-       <tbody>
-        <tr>
-         <td>
-          -h, --help
-         </td>
-         <td>
-          展示帮助
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -v, --version
-         </td>
-         <td>
-          展示版本信息
-         </td>
-        </tr>
-       </tbody>
-      </table>
-      <p>
-       支持
-       <code>
-        doc
-       </code>
-       命令，该命令的别名为
-       <code>
-        document
-       </code>
-       ，输出模块的文档或定义文件。该命令支持的参数有：
-      </p>
-      <table>
-       <thead>
-        <tr>
-         <th>
-          参数
-         </th>
-         <th>
-          作用
-         </th>
-        </tr>
-       </thead>
-       <tbody>
-        <tr>
-         <td>
-          [ModelName]?
-         </td>
-         <td>
-          指定输出某个
-          <code>
-           Model
-          </code>
-          的文档或定义文件，如果缺省则输出所有
-          <code>
-           Model
-          </code>
-          的定义文件
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -j, --json [bool]?
-         </td>
-         <td>
-          指定输出定义文件，如果缺省布尔值默认为
-          <code>
-           true
-          </code>
-          ，如果缺省参数默认为输出文档
-         </td>
-        </tr>
-        <tr>
-         <td>
-          -o, --output [Folder]
-         </td>
-         <td>
-          输出重定向至给定文件夹，仅在输出定义文件时有效
-         </td>
-        </tr>
-       </tbody>
-      </table>
       <p>
        运行仿真工程需要给出仿真工程文件作为第一个位置参数，该命令支持以下参数：
       </p>
@@ -388,49 +290,27 @@ dotnet build
        </tbody>
       </table>
       <p>
-       <em>
-        注意：仿真工程文件的后缀名可以不是
-        <code>
-         .lig
-        </code>
-        或
-        <code>
-         .lig.json
-        </code>
-        ，但建议使用标准后缀名。如果仿真文件后缀名为
-        <code>
-         .lig
-        </code>
-        ，如
-        <code>
-         main.lig
-        </code>
-        ，且所在文件夹不包含名为
-        <code>
-         main
-        </code>
-        的子文件夹，运行
-        <code>
-         ligral main
-        </code>
-        也可以，但是不建议这么用。如果仿真工程文件恰好命名为
-        <code>
-         doc.lig
-        </code>
-        ，运行
-        <code>
-         ligral doc
-        </code>
-        会导致
-        <code>
-         ligral
-        </code>
-        将其识别成
-        <code>
-         doc
-        </code>
-        命令。
-       </em>
+       Ligral 目前支持的命令包括
+       <code>
+        doc
+       </code>
+       、
+       <code>
+        trim
+       </code>
+       、
+       <code>
+        lin
+       </code>
+       和
+       <code>
+        exm
+       </code>
+       ，可以通过
+       <code>
+        ligral [command] --help
+       </code>
+       查看使用说明。
       </p>
       <h2>
        依赖
