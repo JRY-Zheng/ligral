@@ -71,7 +71,7 @@ namespace Ligral.Simulation
             {
                 node.Propagate();
             }
-            return x - Solution.SolutionPool.ConvertAll(solution => solution.ActualValue).ToColumnVector();
+            return Function.FunctionPool.ConvertAll(function => function.Value).ToColumnVector();
         }
         private Matrix<double> Bound(Matrix<double> x)
         {

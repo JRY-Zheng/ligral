@@ -12,7 +12,6 @@ namespace Ligral.Simulation
 {
     public class Solution
     {
-        public double ActualValue;
         public double InitialValue;
         public double GuessedValue;
         private static Logger logger = new Logger("Solution");
@@ -64,14 +63,9 @@ namespace Ligral.Simulation
             SetSignal(initialSignal, (solution, initial) => 
             {
                 solution.InitialValue = initial;
-                solution.ActualValue = initial;
             });
         }
 
-        public void SetActualValue(Signal signal)
-        {
-            SetSignal(signal, (solution, actualValue) => solution.ActualValue = actualValue);
-        }
         public Signal GetGuessedValue()
         {
             return GetSignal(solution => solution.GuessedValue);

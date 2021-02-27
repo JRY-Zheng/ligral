@@ -21,7 +21,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        protected SolutionHandle handle;
+        protected SolutionHandle solutionHandle;
+        protected FunctionHandle functionHandle;
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
@@ -40,13 +41,15 @@ namespace Ligral.Component.Models
         public override void Check()
         {
             base.Check();
-            handle = Solution.CreateSolution(varName, rowNo, colNo, initial);
+            solutionHandle = Solution.CreateSolution(varName, rowNo, colNo, initial);
+            functionHandle = Function.CreateFunction(varName, rowNo, colNo);
         }
         private void ActualValueUpdate(Signal inputSignal)
         {
             try
             {
-                handle.SetActualValue(inputSignal);
+                var x = solutionHandle.GetGuessedValue();
+                functionHandle.SetActualValue(inputSignal-x);
             }
             catch (LigralException)
             {
@@ -56,7 +59,7 @@ namespace Ligral.Component.Models
         protected override List<Signal> Calculate(List<Signal> values)
         {
             Signal outputSignal = Results[0];
-            outputSignal.Clone(handle.GetGuessedValue());
+            outputSignal.Clone(solutionHandle.GetGuessedValue());
             return Results;
         }
     }
