@@ -25,8 +25,27 @@ end
 # 电感，dI/dt = UL
 route Inductance(L, i0=0; Ii, Ui; Io, Uo)
     Ii -> Equal -> Io;
-    (x*L -> Integrator{initial:i0}) - Ii + x -> Equal -> x;
-    Ui - x -> Equal -> Uo;
+    (Variable[dU]*L -> Integrator{initial:i0}) - Ii -> `=0`;
+    Ui - dU -> Equal -> Uo;
+end
+
+route Converge(; I1, U1, I2, U2; Io, Uo)
+    I1 + I2 -> Equal -> Io;
+    U1 - U2 -> `=0`;
+    U1 -> Uo;
+end
+
+route Diverge(; Ii, Ui; I1, U1, I2, U2)
+    Variable[i] -> I1;
+    Ii - i -> I2;
+    Ui -> U1 -> U2;
+end
+
+route Voltmeter(; Ii, Ui; Io, Uo)
+    Ii -> `=0`;
+    0 -> Io;
+    Ui - Variable[volt] -> Uo;
+    volt -> Scope{name:'Voltmeter'};
 end
 
 VoltageSource[E1]{E:10};
@@ -34,16 +53,19 @@ Resistance[R1]{R:0.01};
 Capacitance[C1]{C:0.03};
 Inductance[I1]{L:100};
 
-#        I              C 
-# ┌─────┤\/\/\/├───────┤ ├──────┐
+# 搭建简单的电路如下图所示
+#          I            C 
+# ┌─────┤//////├───────┤ ├──────┐
 # │                             │
 # │     ┌─────┐        - E +    │
-# └─────┤  R  ├─────────┤├──────┘
-#       └─────┘
-# 搭建简单的电路如上图所示
-E1 -> R1 -> I1 -> C1 -> E1;
+# ├─────┤  R  ├────┬────┤├──────┘
+# │     └─────┘    │
+# │      ╭───╮     │
+# └──────┤ V ├─────┘
+#        ╰───╯
+E1 -> Diverge -> (R1, Voltmeter) -> Converge -> I1 -> C1 -> E1;
 
-I1:Uo - R1:Uo -> Scope[U1];
+# I1:Uo - R1:Uo -> Scope[U1];
 I1:Io -> Scope;
 
 
