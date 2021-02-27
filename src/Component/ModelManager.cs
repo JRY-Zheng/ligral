@@ -29,6 +29,7 @@ namespace Ligral.Component
             {"Step", ()=>new Step()},
             {"Playback", ()=>new Playback()},
             {"Integrator", ()=>new Integrator()},
+            {"1/s", ()=>new Integrator()},
             {"BoundedIntegrator", ()=>new BoundedIntegrator()},
             {"Scope", ()=>new Scope()},
             {"PhaseDiagram", ()=>new PhaseDiagram()},

@@ -136,7 +136,7 @@ namespace Ligral.Syntax
                 }
                 else
                 {
-                    throw logger.Error(new LigralException($"Lexer Error: Incomplete string at line {lineNO}"));
+                    throw logger.Error(new LigralException($"Lexer Error: Incomplete string at line {lineNO}, col {columnNO}"));
                 }
             }
             int endPosition = position;
@@ -182,6 +182,24 @@ namespace Ligral.Syntax
             }
             return text.Substring(startPosition, position-startPosition);
         }
+        private string BackQuotedWord()
+        {
+            Advance();// validation is done in GetNextToken()
+            int startPosition = position;
+            while (currentChar!='`')
+            {
+                if (currentChar!='\n' && currentChar!='\r' && currentChar!='\0'){
+                    Advance();
+                }
+                else
+                {
+                    throw logger.Error(new LigralException($"Lexer Error: Incomplete word at line {lineNO}, col {columnNO}"));
+                }
+            }
+            int endPosition = position;
+            Advance();
+            return text.Substring(startPosition, endPosition-startPosition);
+        }
         public Token GetNextToken()
         {
             while (char.IsWhiteSpace(currentChar)||currentChar=='#')
@@ -197,9 +215,17 @@ namespace Ligral.Syntax
             {
                 return new StringToken(TokenType.STRING, String(), lineNO, columnNO, file);
             }
-            else if (char.IsLetter(currentChar)||currentChar=='_')
+            else if (char.IsLetter(currentChar)||currentChar=='_'||currentChar=='`')
             {
-                string word = Word();
+                string word;
+                if (currentChar=='`')
+                {
+                    word = BackQuotedWord();
+                } 
+                else
+                {
+                    word = Word();
+                }
                 switch (word)
                 {
                 case "digit":
