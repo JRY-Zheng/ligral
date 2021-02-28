@@ -9,7 +9,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component 
 {
-    public static class Matrix
+    public static class LigralMatrix
     {
         public static bool IsScalar(this Matrix<double> matrix)
         {
@@ -37,13 +37,15 @@ namespace Ligral.Component
         }
         public static Matrix<double> MatAdd(this Matrix<double> left, Matrix<double> right)
         {
-            if (left.IsScalar()) return left[0,0]+right;
-            if (right.IsScalar()) return left+right[0,0];
-            else return left+right;
-        }
-        public static Matrix<double> DotAdd(this Matrix<double> left, Matrix<double> right)
-        {
-            if (left.IsColumnVector())
+            if (left.IsScalar()) 
+            {
+                return left[0,0]+right;
+            }
+            else if (right.IsScalar()) 
+            {
+                return left+right[0,0];
+            }
+            else if (left.IsColumnVector())
             {
                 if (left.RowCount != right.RowCount)
                 {
@@ -91,7 +93,7 @@ namespace Ligral.Component
                 var result = Matrix<double>.Build.DenseOfMatrix(left);
                 for (int i = 0; i < result.ColumnCount; i++)
                 {
-                    result.SetRow(i, left.Column(i)+right[0, i]);
+                    result.SetColumn(i, left.Column(i)+right[0, i]);
                 }
                 return result;
             }
