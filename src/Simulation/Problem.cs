@@ -55,10 +55,9 @@ namespace Ligral.Simulation
         {
             return State.StatePool.ConvertAll(state => state.InitialValue).ToColumnVector();
         }
-        private Matrix<double> Cost(Matrix<double> x)
+        private Matrix<double> Cost()
         {
-            var dx = x - x0;
-            return dx.Transpose() * dx;
+            return x0;
         }
         private Matrix<double> Equal(Matrix<double> x)
         {

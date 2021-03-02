@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 using MFunc = System.Func<MathNet.Numerics.LinearAlgebra.Matrix<double>, MathNet.Numerics.LinearAlgebra.Matrix<double>>;
@@ -16,6 +17,16 @@ namespace Ligral.Simulation.Optimizers
         public double BoundaryConstrainTolerant {get; set;} = 1e-5; 
         public double OptimizationStopLambdaTolerant {get; set;} = 1e-3;
         public double OptimizationStopCostTolerant {get; set;} = 1e-8;
+        private bool isQuadraticCost = false;
+        public override Matrix<double> Optimize(Func<Matrix<double>> expect, Matrix<double> x0, MFunc equal, MFunc bound)
+        {
+            isQuadraticCost = true;
+            return Optimize(x => 
+            {
+                var dx = x - expect();
+                return dx.Transpose() * dx;
+            }, x0, equal, bound);
+        }
         public override Matrix<double> Optimize(MFunc cost, Matrix<double> x0, MFunc equal, MFunc bound)
         {
             int n = x0.RowCount;
@@ -25,10 +36,23 @@ namespace Ligral.Simulation.Optimizers
             }
             var x = x0;
             var c = cost(x);
+            Matrix<double> H = null;
+            Matrix<double> C = null;
+            if (isQuadraticCost)
+            {
+                H = Matrix<double>.Build.DiagonalIdentity(x0.RowCount) * 2;
+            }
             for (int i = 0; i < MaximumIteration; i++)
             {
-                var H = Algorithm.RoughHessian(cost, x);
-                var C = Algorithm.RoughPartial(cost, x);
+                if (isQuadraticCost)
+                {
+                    C = x * 2;
+                }
+                else
+                {
+                    H = Algorithm.RoughHessian(cost, x);
+                    C = Algorithm.RoughPartial(cost, x);
+                }
                 var Ae = Algorithm.RoughPartial(equal, x);
                 var Be = equal(x);
                 if (Ae != null)

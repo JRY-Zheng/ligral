@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation.Optimizers;
 using Ligral.Extension;
@@ -40,5 +41,6 @@ namespace Ligral.Simulation
             }
         }
         public abstract Matrix<double> Optimize(MFunc cost, Matrix<double> x0, MFunc equal, MFunc bound);
+        public abstract Matrix<double> Optimize(Func<Matrix<double>> expect, Matrix<double> x0, MFunc equal, MFunc bound);
     }
 }

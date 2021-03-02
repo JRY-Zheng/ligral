@@ -24,10 +24,9 @@ namespace Ligral.Simulation.Solvers
             x0 = State.StatePool.ConvertAll(state => state.StateVariable).ToColumnVector();
             optimizer = Optimizer.GetOptimizer(optimizerName);
         }
-        private Matrix<double> Cost(Matrix<double> x)
+        private Matrix<double> Cost()
         {
-            var dx = x - x0;
-            return dx.Transpose() * dx;
+            return x0;
         }
         private Matrix<double> Equal(Matrix<double> x)
         {

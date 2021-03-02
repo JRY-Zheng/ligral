@@ -60,11 +60,12 @@ namespace Ligral.Simulation
             yConstrain = Observation.ObservationPool.ConvertAll(output => output.IsConstrained);
             dxConstrain = State.StatePool.ConvertAll(state => state.IsDerivativeConstrained);
         }
-        private Matrix<double> Cost(Matrix<double> z)
+        private Matrix<double> Cost()
         {
-            var x = z.SubMatrix(0, n, 0, 1) - x0;
-            var u = z.SubMatrix(n, p, 0, 1) - u0;
-            return x.Transpose()*x+u.Transpose()*u;
+            // var x = z.SubMatrix(0, n, 0, 1) - x0;
+            // var u = z.SubMatrix(n, p, 0, 1) - u0;
+            // return x.Transpose()*x+u.Transpose()*u;
+            return SignalUtils.Stack(x0, u0);
         }
         private Matrix<double> Filter(Matrix<double> val, Matrix<double> goal, List<bool> constrain)
         {
