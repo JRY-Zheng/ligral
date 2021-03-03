@@ -45,7 +45,7 @@ namespace Ligral.Simulation
                     h = hAbs = tRemain;
                     stopTimeReached = true;
                 }
-                bool noFailsInStep = false;
+                bool noFailsInStep = true;
                 double xNorm = States.L2Norm();
                 double err = 0;
                 Matrix<double> xNew;
@@ -97,6 +97,7 @@ namespace Ligral.Simulation
                 xNorm = xNewNorm;
                 f0 = fp;
             }
+            Solver.OnStopped();
         }
         protected virtual Matrix<double> StepDerivatives(Problem problem, double stepSize, Matrix<double> states, Matrix<double> f0)
         {
