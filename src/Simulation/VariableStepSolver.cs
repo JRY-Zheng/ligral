@@ -31,6 +31,7 @@ namespace Ligral.Simulation
             Solver.Time = 0;
             var f0 = problem.SystemDynamicFunction(States);
             problem.ObservationFunction();
+            Solver.OnStepped(Time);
             double hAbs = h0;
             bool stopTimeReached = false;
             while (!stopTimeReached)
@@ -55,7 +56,7 @@ namespace Ligral.Simulation
                     var f = StepDerivatives(problem, h, States, f0);
                     xNew = StepStates(h, States, f);
                     double tNew = Solver.Time = stopTimeReached ? settings.StopTime : tOld + h;
-                    fp = problem.SystemDynamicFunction(States);
+                    fp = problem.SystemDynamicFunction(xNew);
                     var fe = CalculateError(f.Append(fp));
                     xNewNorm = xNew.L2Norm();
                     err = hAbs * fe.L2Norm() / xNorm.LowerBound(xNewNorm, xNormMin);
@@ -82,6 +83,8 @@ namespace Ligral.Simulation
                         break;
                     }
                 }
+                problem.ObservationFunction();
+                Solver.OnStepped(Time);
                 if (stopTimeReached)
                 {
                     break;
@@ -93,8 +96,6 @@ namespace Ligral.Simulation
                 States = xNew;
                 xNorm = xNewNorm;
                 f0 = fp;
-                problem.ObservationFunction();
-                Solver.OnStepped(Time);
             }
         }
         protected virtual Matrix<double> StepDerivatives(Problem problem, double stepSize, Matrix<double> states, Matrix<double> f0)

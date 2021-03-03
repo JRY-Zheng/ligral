@@ -11,17 +11,17 @@ namespace Ligral.Simulation.Solvers
 {
     class VarStepODE45Solver : VariableStepSolver
     {
-        private double[] A = {1/5, 3/10, 4/5, 8/9};
+        private double[] A = {1.0/5.0, 3.0/10.0, 4.0/5.0, 8.0/9.0};
         private double[,] B = 
         {
-            {1/5, 3/40, 44/45, 19372/6561, 9017/3168},
-            {0, 9/40, -56/15, -25360/2187, -355/33},
-            {0, 0, 32/9, 64448/6561, 46732/5247},
-            {0, 0, 0, -212/729, 49/176},
-            {0, 0, 0, 0, -5103/18656},
+            {1.0/5.0, 3.0/40.0, 44.0/45.0, 19372.0/6561.0, 9017.0/3168.0},
+            {0.0, 9.0/40.0, -56.0/15.0, -25360.0/2187.0, -355.0/33.0},
+            {0.0, 0.0, 32.0/9.0, 64448.0/6561.0, 46732.0/5247.0},
+            {0.0, 0.0, 0.0, -212.0/729.0, 49.0/176.0},
+            {0.0, 0.0, 0.0, 0.0, -5103.0/18656.0},
         };
-        private Matrix<double> C = Matrix<double>.Build.DenseOfColumnMajor(6, 1, new double[]{35/384, 0, 500/1113, 125/192, -2187/6784, 11/84});
-        private Matrix<double> E = Matrix<double>.Build.DenseOfColumnMajor(7, 1, new double[]{71/57600, 0, -71/16695, 71/1920, -17253/339200, 22/525, -1/40});
+        private Matrix<double> C = Matrix<double>.Build.DenseOfColumnMajor(6, 1, new double[]{35.0/384.0, 0.0, 500.0/1113.0, 125.0/192.0, -2187.0/6784.0, 11.0/84.0});
+        private Matrix<double> E = Matrix<double>.Build.DenseOfColumnMajor(7, 1, new double[]{71.0/57600.0, 0.0, -71.0/16695.0, 71.0/1920.0, -17253.0/339200.0, 22.0/525.0, -1.0/40.0});
         protected override Matrix<double> StepDerivatives(Problem problem, double stepSize, Matrix<double> states, Matrix<double> f0)
         {
             double ts0 = Time;
