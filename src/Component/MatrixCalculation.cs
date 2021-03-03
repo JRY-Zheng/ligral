@@ -267,5 +267,29 @@ namespace Ligral.Component
             }
             else return right.Solve(left);
         }
+        public static double UpperBound(this double self, params double[] bounds)
+        {
+            double m = self;
+            foreach (double bound in bounds)
+            {
+                if (m > bound)
+                {
+                    m = bound;
+                }
+            }
+            return m;
+        }
+        public static double LowerBound(this double self, params double[] bounds)
+        {
+            double m = self;
+            foreach (double bound in bounds)
+            {
+                if (m < bound)
+                {
+                    m = bound;
+                }
+            }
+            return m;
+        }
     }
 }
