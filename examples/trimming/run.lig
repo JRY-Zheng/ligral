@@ -16,3 +16,4 @@ conf inner_plotter:
     enable = true;
     save_figures = true;
 end
+conf solver = 'ode45';
