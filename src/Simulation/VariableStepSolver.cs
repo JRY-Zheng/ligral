@@ -28,6 +28,7 @@ namespace Ligral.Simulation
             {
                 throw logger.Error(new SettingException("realtime", true, "Cannot run the project in realtime when a variable step solver is utilised"));
             }
+            h0 = settings.StepSize;
             Solver.Time = 0;
             var f0 = problem.SystemDynamicFunction(States);
             problem.ObservationFunction();
