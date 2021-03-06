@@ -137,7 +137,7 @@ plt.pause(0.05)
                     figName = figName.Replace(invalidChar, '_');
                 }
                 Execute($@"
-plt.savefig(r'{Path.GetDirectoryName(fileName)}\{figName}.png')
+fig{dataFile.FigureId}.savefig(r'{Path.GetDirectoryName(fileName)}\{figName}.png')
 ");
             }
             foreach (Figure fig in Figures.Values)

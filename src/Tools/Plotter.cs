@@ -234,7 +234,7 @@ ax.grid()
                     figName = figName.Replace(invalidChar, '_');
                 }
                 Execute($@"
-plt.savefig(r'{Path.GetDirectoryName(fileName)}\{figName}.png')
+fig{dataFile.FigureId}.savefig(r'{Path.GetDirectoryName(fileName)}\{figName}.png')
 ");
             }
             foreach (var fig in Figures.Values)
