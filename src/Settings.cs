@@ -75,6 +75,7 @@ namespace Ligral
         public string PythonExecutable { get; set; } = "python";
         public Dictionary<string, object> LinearizerConfiguration {get; set;}
         public Dictionary<string, object> TrimmerConfiguration {get; set;}
+        public Dictionary<string, object> VariableStepSolverConfiguration {get; set;}
 
         public void AddSetting(string item, object val)
         {
@@ -111,6 +112,10 @@ namespace Ligral
                 case "trim":
                 case "trimmer":
                     TrimmerConfiguration = (Dictionary<string, object>) val;
+                    break;
+                case "varstep":
+                case "varstep_solver":
+                    VariableStepSolverConfiguration = (Dictionary<string, object>) val;
                     break;
                 case "author":
                 case "date":

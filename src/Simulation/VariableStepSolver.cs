@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 
@@ -12,23 +13,69 @@ namespace Ligral.Simulation
 {
     public class VariableStepSolver : Solver
     {
-        protected double hMin = 1e-5;
-        protected double hMax = 0.1;
-        protected double h0 = 0.01;
-        protected double tDir = 1;
-        protected double xNormMin = 1e-5;
-        protected double rTol = 1e-3;
-        protected double errPower = 1/5;
+        protected static double hMin = 1e-5;
+        protected static double hMax = 0.1;
+        protected static double h0 = 0.01;
+        protected static double tDir = 1;
+        protected static double xNormMin = 1e-5;
+        protected static double rTol = 1e-3;
+        protected static double errPower = 1/5;
+        protected static double stopTime = 10;
+        static VariableStepSolver()
+        {
+            Settings settings = Settings.GetInstance();
+            if (settings.RealTimeSimulation)
+            {
+                throw solverLogger.Error(new SettingException("realtime", true, "Cannot run the project in realtime when a variable step solver is utilised"));
+            }
+            h0 = settings.StepSize;
+            stopTime = settings.StopTime;
+            if (settings.VariableStepSolverConfiguration is Dictionary<string, object> dict)
+            foreach (string item in dict.Keys)
+            {
+                object val = dict[item];
+                try
+                {
+                    switch (item.ToLower())
+                    {
+                    case "hmin":
+                    case "min_step":
+                        hMin = System.Convert.ToDouble(val);
+                        break;
+                    case "hmax":
+                    case "max_step":
+                        hMax = System.Convert.ToDouble(val);
+                        break;
+                    case "tdir":
+                    case "step_factor":
+                        tDir = System.Convert.ToDouble(val);
+                        break;
+                    case "min_x_norm":
+                    case "min_x":
+                        xNormMin = System.Convert.ToDouble(val);
+                        break;
+                    case "rtol":
+                    case "relative_tolerant":
+                        rTol = System.Convert.ToDouble(val);
+                        break;
+                    case "err_pow":
+                    case "err_index":
+                        errPower = System.Convert.ToDouble(val);
+                        break;
+                    default:
+                        throw solverLogger.Error(new SettingException(item, val, "Unsupported setting in variable step solver."));
+                    }
+                }
+                catch (System.InvalidCastException)
+                {
+                    throw solverLogger.Error(new SettingException(item, val, $"Invalid type {val.GetType()} in variable step solver."));
+                }
+            }
+        }
         public override void Solve(Problem problem)
         {
             Solver.OnStarting();
-            Settings settings = Settings.GetInstance();
             States = problem.InitialValues();
-            if (settings.RealTimeSimulation)
-            {
-                throw logger.Error(new SettingException("realtime", true, "Cannot run the project in realtime when a variable step solver is utilised"));
-            }
-            h0 = settings.StepSize;
             Solver.Time = 0;
             var f0 = problem.SystemDynamicFunction(States);
             problem.ObservationFunction();
@@ -40,7 +87,7 @@ namespace Ligral.Simulation
                 double tOld = Solver.Time;
                 hAbs = hAbs.UpperBound(hMax).LowerBound(hMin);
                 double h = tDir * hAbs;
-                double tRemain = settings.StopTime - Solver.Time;
+                double tRemain = stopTime - Solver.Time;
                 if (1.1*hAbs > tRemain)
                 {
                     h = hAbs = tRemain;
@@ -56,7 +103,7 @@ namespace Ligral.Simulation
                 {
                     var f = StepDerivatives(problem, h, States, f0);
                     xNew = StepStates(h, States, f);
-                    double tNew = Solver.Time = stopTimeReached ? settings.StopTime : tOld + h;
+                    double tNew = Solver.Time = stopTimeReached ? stopTime : tOld + h;
                     fp = problem.SystemDynamicFunction(xNew);
                     var fe = CalculateError(f.Append(fp));
                     xNewNorm = xNew.L2Norm();

@@ -15,7 +15,7 @@ namespace Ligral.Simulation
         public static double Time;
         public Matrix<double> States;
         protected Logger logger;
-        private static Logger solverLogger = new Logger("Solver");
+        protected static Logger solverLogger = new Logger("Solver");
         public delegate void StartingHandler();
         public static event StartingHandler Starting;
         public delegate void SteppedHandler();
