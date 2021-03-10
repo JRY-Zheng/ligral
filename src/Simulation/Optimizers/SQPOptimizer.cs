@@ -143,16 +143,16 @@ namespace Ligral.Simulation.Optimizers
                     Ap = At; 
                     Bp = Bt;
                 }
-                else if (SignalUtils.Append(At, Bt).Rank() != At.RowCount)
+                else //if (SignalUtils.Append(At, Bt).Rank() != At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
-                else
-                {
-                    logger.Debug(SignalUtils.SPrint(At, "At"));
-                    logger.Debug(SignalUtils.SPrint(Bt, "Bt"));
-                    throw logger.Error(new LigralException($"Conflict constrains detected at NO.{i}."));
-                }
+                // else
+                // {
+                //     logger.Debug(SignalUtils.SPrint(At, "At"));
+                //     logger.Debug(SignalUtils.SPrint(Bt, "Bt"));
+                //     throw logger.Error(new LigralException($"Conflict constrains detected at NO.{i}."));
+                // }
             }
             return (Ap, Bp);
         }
@@ -179,14 +179,14 @@ namespace Ligral.Simulation.Optimizers
                     Ap = At; 
                     Bp = Bt;
                 }
-                else if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
+                else //if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
-                else
-                {
-                    logger.Debug($"Conflict constrains detected at NO.{i}, which are resulted from bound constrains and will be ignore.");
-                }
+                // else
+                // {
+                //     logger.Debug($"Conflict constrains detected at NO.{i}, which are resulted from bound constrains and will be ignore.");
+                // }
             }
             return (Ap, Bp);
         }
