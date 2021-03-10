@@ -1,0 +1,54 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+# 电阻，U=IR
+route Resistance(R; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ui - Ii*R -> Equal -> Uo;
+end
+
+# 电压源，电势差为E
+route VoltageSource(E; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ui + E -> Equal -> Uo;
+end
+
+# 电容，dU/dt = IC
+route Capacitance(C, u0=0; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    Ii * C -> Integrator{initial:u0} -> dU;
+    Ui - dU -> Equal -> Uo;
+end
+
+# 电感，dI/dt = UL
+route Inductance(L, i0=0; Ii, Ui; Io, Uo)
+    Ii -> Equal -> Io;
+    (Variable[dU]*L -> Integrator{initial:i0}) - Ii -> `=0`;
+    Ui - dU -> Equal -> Uo;
+end
+
+route Converge(; I1, U1, I2, U2; Io, Uo)
+    I1 + I2 -> Equal -> Io;
+    U1 - U2 -> `=0`;
+    U1 -> Uo;
+end
+
+route Diverge(; Ii, Ui; I1, U1, I2, U2)
+    Variable[i] -> I1;
+    Ii - i -> I2;
+    Ui -> U1 -> U2;
+end
+
+route VoltageInject(; inject, Ii, Ui; Io, Uo)
+    (Ii, Ui) -> VoltageSource{E:0} -> (Io, Ut);
+    Ut + inject -> Uo;
+end
+
+route SignalGenerator(shift=0, interval=1; ; source)
+    let omega = 2*pi/interval;
+    let phi = omega*shift;
+    SineWave[sin]{omega:omega, phi:phi};
+    (sin, 1, 0) -> ThresholdSwitch -> source;
+end

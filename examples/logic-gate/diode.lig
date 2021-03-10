@@ -1,0 +1,12 @@
+# Copyright (C) 2019-2021 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+# 二极管，dir=1代表正向接入，dir=-1代表反向接入
+route Diode(dir; Ii, Ui; Io, Uo)
+    Interpolation[va_char]{file:'diode-volt-ampere-characteristics.csv'};
+    Ui - Uo -> Gain{value:dir} -> va_char -> Io;
+    Ii - Io -> `=0`;
+    Variable -> Uo;
+end
