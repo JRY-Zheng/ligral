@@ -138,12 +138,12 @@ namespace Ligral.Simulation.Optimizers
             {
                 var At = SignalUtils.Stack(Ap, A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = SignalUtils.Stack(Bp, B.SubMatrix(i, 1, 0, B.ColumnCount));
-                if (At.Rank() == At.RowCount)
+                if (At.TolerantRank() == At.RowCount)
                 {
                     Ap = At; 
                     Bp = Bt;
                 }
-                else //if (SignalUtils.Append(At, Bt).Rank() != At.RowCount)
+                else //if (SignalUtils.Append(At, Bt).TolerantRank() != At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }
@@ -174,12 +174,12 @@ namespace Ligral.Simulation.Optimizers
             {
                 var At = SignalUtils.Stack(Ap, A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = SignalUtils.Stack(Bp, B.SubMatrix(i, 1, 0, B.ColumnCount));
-                if (At.Rank() == At.RowCount)
+                if (At.TolerantRank() == At.RowCount)
                 {
                     Ap = At; 
                     Bp = Bt;
                 }
-                else //if (SignalUtils.Append(At, Bt).Rank() == At.RowCount)
+                else //if (SignalUtils.Append(At, Bt).TolerantRank() == At.RowCount)
                 {
                     logger.Debug($"Same constrains detected at NO.{i}, which will be ignored.");
                 }

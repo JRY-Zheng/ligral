@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
@@ -12,6 +12,7 @@ namespace Ligral.Component
 {
     public static class MatrixIteration
     {
+        public static double RankTolerant = 1e-10;
         public static List<double> ToList(this Matrix<double> matrix)
         {
             return new List<double>(matrix.ToRowMajorArray());
@@ -42,6 +43,11 @@ namespace Ligral.Component
         public static int Count(this Matrix<double> matrix)
         {
             return matrix.RowCount * matrix.ColumnCount;
+        }
+        public static int TolerantRank(this Matrix<double> matrix)
+        {
+            var factor = matrix.Svd();
+            return factor.S.ToArray().Count(x => x>RankTolerant || x<-RankTolerant);
         }
     }
 }
