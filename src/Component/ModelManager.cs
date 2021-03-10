@@ -82,7 +82,8 @@ namespace Ligral.Component
             {"Equal", ()=>new Equal()},
             {"EqualToZero", ()=>new EqualToZero()},
             {"=0", ()=>new EqualToZero()},
-            {"Variable", ()=>new Variable()}
+            {"Variable", ()=>new Variable()},
+            {"Interpolation", ()=>new Interpolation()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
