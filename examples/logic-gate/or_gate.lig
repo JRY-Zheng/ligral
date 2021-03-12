@@ -6,8 +6,8 @@
 import component;
 import diode;
 
-VoltageSource[Vcc]{E:3.33};
-Resistance[R]{R:100};
+VoltageSource[Vcc]{E:0};
+Resistance[R]{R:1000};
 Diode[d1]{dir:-1};
 Diode[d2]{dir:-1};
 
