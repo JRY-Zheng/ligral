@@ -5,9 +5,7 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Component;
 
 namespace Ligral.Component.Models
 {
@@ -42,15 +40,10 @@ namespace Ligral.Component.Models
                 outPort.SetShape(rowNo, 1);
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Matrix<double> matrix = inputSignal.Unpack() as Matrix<double>;
-            if (matrix == null)
-            {
-                throw logger.Error(new ModelException(this, "Double cannot be splitted."));
-            }
-            else if (matrix.ColumnCount != Results.Count)
+            Matrix<double> matrix = values[0];
+            if (matrix.ColumnCount != Results.Count)
             {
                 throw logger.Error(new ModelException(this, "Column count inconsistency."));
             }
@@ -59,7 +52,7 @@ namespace Ligral.Component.Models
                 var m = Matrix<double>.Build;
                 for (int i = 0; i < matrix.ColumnCount; i++)
                 {
-                    Results[i].Pack(m.Dense(matrix.RowCount, 1, matrix.Column(i).ToArray()));
+                    Results[i] = m.Dense(matrix.RowCount, 1, matrix.Column(i).ToArray());
                 }
             }
             return Results;

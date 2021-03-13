@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models
@@ -50,17 +50,15 @@ namespace Ligral.Component.Models
                 })},
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            Signal outputSignal = Results[0];
             if (Solver.Time >= start)
             {
-                outputSignal.Pack(level);
+                Results[0] = level.ToMatrix();
             }
             else
             {
-                outputSignal.Pack(0);
+                Results[0] = 0.ToMatrix();
             }
             return Results;
         }

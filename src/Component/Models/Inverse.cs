@@ -24,22 +24,12 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            Matrix<double> matrix;
-            if (inputSignal.IsMatrix)
-            {
-                matrix = (Matrix<double>) inputSignal.Unpack();
-            }
-            else
-            {
-                throw logger.Error(new ModelException(this));
-            }
+            Matrix<double> matrix = values[0];
             try
             {
-                outputSignal.Pack(matrix.Inverse());
+                Results[0] = matrix.Inverse();
             }
             catch (Exception e)
             {

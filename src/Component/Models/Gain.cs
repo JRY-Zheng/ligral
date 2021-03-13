@@ -6,13 +6,13 @@
 
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
     class Gain : Model
     {
-        private Signal gain;
+        private Matrix<double> gain;
         private bool leftProduct = false;
         protected override string DocString
         {
@@ -27,7 +27,7 @@ namespace Ligral.Component.Models
             {
                 {"value", new Parameter(ParameterType.Signal , value=>
                 {
-                    gain = new Signal(value);
+                    gain = value.ToMatrix();
                 })},
                 {"prod", new Parameter(ParameterType.String , value=>
                 {
@@ -44,16 +44,16 @@ namespace Ligral.Component.Models
                 }, ()=>{})}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
             if (leftProduct)
-                outputSignal.Clone(gain * inputSignal);
+            {
+                Results[0] = gain.MatMul(values[0]);
+            }
             else
-                outputSignal.Clone(inputSignal * gain);
-            // Results.Add(signal); // validation of input is done somewhere else
+            {
+                Results[0] = values[0].MatMul(gain);
+            }
             return Results;
         }
     }

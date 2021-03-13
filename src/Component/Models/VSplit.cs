@@ -42,15 +42,10 @@ namespace Ligral.Component.Models
                 outPort.SetShape(1, colNo);
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Matrix<double> matrix = inputSignal.Unpack() as Matrix<double>;
-            if (matrix == null)
-            {
-                throw logger.Error(new ModelException(this, "Double cannot be splitted."));
-            }
-            else if (matrix.RowCount != Results.Count)
+            Matrix<double> matrix = values[0];
+            if (matrix.RowCount != Results.Count)
             {
                 throw logger.Error(new ModelException(this, "Row count inconsistency."));
             }
@@ -59,7 +54,7 @@ namespace Ligral.Component.Models
                 var m = Matrix<double>.Build;
                 for (int i = 0; i < matrix.RowCount; i++)
                 {
-                    Results[i].Pack(m.Dense(matrix.ColumnCount, 1, matrix.Row(i).ToArray()));
+                    Results[i] = m.Dense(matrix.ColumnCount, 1, matrix.Row(i).ToArray());
                 }
             }
             return Results;

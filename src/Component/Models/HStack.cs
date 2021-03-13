@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Component;
 
 namespace Ligral.Component.Models
 {
@@ -46,35 +45,14 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal firstSignal = values[0];
-            Matrix<double> firstMatrix;
-            MatrixBuilder<double> m = Matrix<double>.Build;
-            switch (firstSignal.Unpack())
-            {
-            case Matrix<double> matrix:
-                firstMatrix = matrix;
-                break;
-            case double value:
-                firstMatrix = m.Dense(1, 1, value);
-                break;
-            default:
-                throw logger.Error(new LigralException("Signal with undefined type"));
-            }
-            foreach(Signal signal in values.Skip(1))
+            Matrix<double> firstMatrix = values[0];
+            foreach(Matrix<double> matrix in values.Skip(1))
             {
                 try
                 {
-                    switch (signal.Unpack())
-                    {
-                    case Matrix<double> matrix:
-                        firstMatrix = firstMatrix.Append(matrix);
-                        break;
-                    case double value:
-                        firstMatrix = firstMatrix.Append(m.Dense(1, 1, value));
-                        break;
-                    }
+                    firstMatrix = firstMatrix.Append(matrix);
                 }
                 catch (System.ArgumentException e)
                 {
@@ -87,7 +65,7 @@ namespace Ligral.Component.Models
                     throw logger.Error(new ModelException(this, message));
                 }
             }
-            Results[0].Pack(firstMatrix);
+            Results[0] = firstMatrix;
             return Results;
         }
     }
