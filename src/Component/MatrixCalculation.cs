@@ -109,6 +109,30 @@ namespace Ligral.Component
             }
             else return right.Solve(left);
         }
+        public static Matrix<double> DotPow(this Matrix<double> left, Matrix<double> right)
+        {
+            return left.Broadcast(right, (x, y) => Math.Pow(x, y));
+        }
+        public static Matrix<double> MatPow(this Matrix<double> left, Matrix<double> right)
+        {
+            if (left.IsScalar() && right.IsScalar()) 
+            {
+                return Math.Pow(left[0,0], right[0,0]).ToMatrix();;
+            }
+            else if (right.IsScalar()) 
+            {
+                int exponent = Convert.ToInt32(right[0,0]);
+                if (Math.Abs(right[0,0] - exponent) > double.Epsilon*10)
+                {
+                    throw new ArgumentException($"Index of a matrix must be integer but {right[0,0]} received, which would make the result to be complex");
+                }
+                return left.Power(exponent);
+            }
+            else 
+            {
+                throw new ArgumentException($"The index must be a scalar but a matrix {right.ShapeString()} received");
+            }
+        }
         public static double UpperBound(this double self, params double[] bounds)
         {
             double m = self;

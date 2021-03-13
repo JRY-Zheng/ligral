@@ -618,32 +618,32 @@ namespace Ligral.Syntax
         }
         private object Visit(ValBinOpAST valBinOpAST)
         {
-            Signal left = new Signal(Visit(valBinOpAST.Left));
-            Signal right = new Signal(Visit(valBinOpAST.Right));
+            Matrix<double> left = Visit(valBinOpAST.Left).ToMatrix();
+            Matrix<double> right = Visit(valBinOpAST.Right).ToMatrix();
             try
             {
                 switch (valBinOpAST.Operator.Value)
                 {
                 case "+":
-                    return (left+right).Unpack();
+                    return left.MatAdd(right);
                 case "-":
-                    return (left-right).Unpack();
+                    return left.MatSub(right);
                 case "*":
-                    return (left*right).Unpack();
+                    return left.MatMul(right);
                 case "/":
-                    if (right.Unpack() is double v && v == 0)
+                    if (right.IsScalar() && right[0,0] == 0)
                     {
                         throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
                     }
-                    return (left/right).Unpack();
+                    return left.RightDiv(right);
                 case "^":
-                    return (left.RaiseToPower(right)).Unpack();
+                    return left.MatPow(right);
                 case ".*":
-                    return (left.BroadcastMultiply(right)).Unpack();
+                    return left.DotMul(right);
                 case "./":
-                    return (left.BroadcastDivide(right)).Unpack();
+                    return left.DotDiv(right);
                 case ".^":
-                    return (left.BroadcastPower(right)).Unpack();
+                    return left.DotPow(right);
                 default:
                     throw logger.Error(new SemanticException(valBinOpAST.FindToken(), "Invalid operator"));
                 }
@@ -659,13 +659,13 @@ namespace Ligral.Syntax
         }
         private object Visit(ValUnaryOpAST valUnaryOpAST)
         {
-            Signal signal = new Signal(Visit(valUnaryOpAST.Value));
+            Matrix<double> signal = Visit(valUnaryOpAST.Value).ToMatrix();
             switch (valUnaryOpAST.Operator.Value)
             {
             case "+":
-                return (+signal).Unpack();
+                return +signal;
             case "-":
-                return (-signal).Unpack();
+                return -signal;
             default:
                 throw logger.Error(new SemanticException(valUnaryOpAST.FindToken(), "Invalid operator"));
             }
@@ -1047,7 +1047,7 @@ namespace Ligral.Syntax
             {
                 Name = Visit(routeNullablePortAST.Id),
                 Nullable = true,
-                Default = new Signal(Visit(routeNullablePortAST.Expression)??0)
+                Default = routeNullablePortAST.Expression == null ? 0.ToMatrix() : routeNullablePortAST.Expression.ToMatrix()
             };
         }
         private List<string> Visit(RoutePortAST routePortAST)
