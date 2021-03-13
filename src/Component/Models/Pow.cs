@@ -6,8 +6,7 @@
 
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -36,13 +35,9 @@ namespace Ligral.Component.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Pow(values[0], power));
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(inputSignal.Apply((item) => Math.Pow(item, power)));
+            Results[0] = values[0].PointwisePower(power);
             return Results;
         }
     }

@@ -5,8 +5,7 @@
 */
 
 using System.Collections.Generic;
-using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -25,14 +24,9 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("cos", this));
             OutPortList.Add(new OutPort("y", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Atan2(values[0], values[1]));
-            Signal ySignal = values[0];
-            Signal xSignal = values[1];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(ySignal.ZipApply(xSignal, Math.Atan2));
+            Results[0] = values[0].PointwiseAtan2(values[1]);
             return Results;
         }
     }

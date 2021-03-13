@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -24,13 +24,9 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Asinh(values[0]));
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(inputSignal.Apply(Math.Asinh));
+            Results[0] = values[0].Map(x => Math.Asinh(x));
             return Results;
         }
     }

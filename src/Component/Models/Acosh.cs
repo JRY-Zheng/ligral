@@ -4,9 +4,9 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using System.Collections.Generic;
 using System;
-using Ligral.Component;
+using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -24,13 +24,9 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Acosh(values[0]));
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(inputSignal.Apply(Math.Acosh));
+            Results[0] = values[0].Map(x => Math.Acosh(x));
             return Results;
         }
     }

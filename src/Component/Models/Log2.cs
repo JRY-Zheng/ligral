@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -37,14 +37,9 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(xRowNo, xColNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Log(values[0], values[1]));
-            Signal xSignal = values[0];
-            Signal baseSignal = values[1];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(xSignal.ZipApply(baseSignal, Math.Log));
+            Results[0] = values[0].Map2(Math.Log, values[1]);
             return Results;
         }
     }

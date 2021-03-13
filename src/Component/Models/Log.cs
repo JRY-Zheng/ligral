@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -39,13 +39,9 @@ namespace Ligral.Component.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(Math.Log(values[0], newBase));
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(inputSignal.Apply((item) => Math.Log(item, newBase)));
+            Results[0] = values[0].Map(x => Math.Log(x, newBase));
             return Results;
         }
     }
