@@ -76,21 +76,11 @@ namespace Ligral.Component.Models
         public override void Check()
         {
             OutPortList[0].SetShape(rowNo, colNo);
+            Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal outputSignal = Results[0];
-            if (rowNo == 0 && colNo == 0)
-            {
-                outputSignal.Pack(random.NextDouble() * (upper - lower) + lower);
-            }
-            else if (rowNo > 0 && colNo > 0)
-            {
-                var build = Matrix<double>.Build;
-                var matrix = build.Dense(rowNo, colNo);
-                Signal signal = new Signal(matrix);
-                outputSignal.Pack(signal.Apply(_=>random.NextDouble() * (upper - lower) + lower));
-            }
+            Results[0] = Results[0].Map(_=>random.NextDouble() * (upper - lower) + lower);
             return Results;
         }
     }

@@ -5,7 +5,7 @@
 */
 
 using System.Collections.Generic;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models
@@ -27,9 +27,9 @@ namespace Ligral.Component.Models
         {
             OutPortList[0].SetShape(0, 0);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0].Pack(Solver.Time);
+            Results[0] = Solver.Time.ToMatrix();
             return Results;
         }
     }

@@ -27,8 +27,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            (int rowNo, int colNo) = Results[0].Shape();
-            OutPortList[0].SetShape(rowNo, colNo);
+            OutPortList[0].SetShape(Results[0].RowCount, Results[0].ColumnCount);
         }
         protected override void SetUpParameters()
         {
@@ -36,19 +35,11 @@ namespace Ligral.Component.Models
             {
                 {"value", new Parameter(ParameterType.Signal , value=>
                 {
-                    Matrix<double> matrix = value as Matrix<double>;
-                    if (matrix!=null)
-                    {
-                        Results[0].Pack(matrix);
-                    }
-                    else
-                    {
-                        Results[0].Pack(Convert.ToDouble(value));
-                    }
+                    Results[0] = value.ToMatrix();
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             return Results;
         }

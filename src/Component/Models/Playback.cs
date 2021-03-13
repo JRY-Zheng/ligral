@@ -24,8 +24,8 @@ namespace Ligral.Component.Models
             }
         }
         private Storage table;
-        private int rowNo = 0;
-        private int colNo = 0;
+        private int rowNo = 1;
+        private int colNo = 1;
         protected override void SetUpPorts()
         {
             OutPortList.Add(new OutPort("source", this));
@@ -85,20 +85,13 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this, $"Invalid playback input at time {Solver.Time}"));
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            Signal outputSignal = Results[0];
             List<double> playback = Interpolate();
-            if (colNo == 0 && rowNo == 0 && playback.Count == 2)
-            {
-                outputSignal.Pack(playback[1]);
-            }
-            else if (colNo * rowNo == playback.Count - 1)
+            if (colNo * rowNo == playback.Count - 1)
             {
                 MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> matrix = m.Dense(colNo, rowNo, playback.Skip(1).ToArray()).Transpose();
-                outputSignal.Pack(matrix);
+                Results[0] = m.Dense(colNo, rowNo, playback.Skip(1).ToArray()).Transpose();
             }
             else
             {

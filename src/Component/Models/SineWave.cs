@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
 
 namespace Ligral.Component.Models
@@ -59,12 +59,9 @@ namespace Ligral.Component.Models
                 })},
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            // Results.Add(ampl*Math.Sin(omega*time+phi));
-            Signal outputSignal = Results[0];
-            outputSignal.Pack(ampl * Math.Sin(omega * Solver.Time + phi));
+            Results[0] = (ampl * Math.Sin(omega * Solver.Time + phi)).ToMatrix();
             return Results;
         }
     }
