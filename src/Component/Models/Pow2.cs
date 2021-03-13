@@ -39,7 +39,7 @@ namespace Ligral.Component.Models
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0] = values[0].Map2(Math.Pow, values[1]);
+            Results[0] = values[0].Broadcast(values[1], Math.Pow);
             return Results;
         }
     }

@@ -5,8 +5,7 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -37,10 +36,9 @@ namespace Ligral.Component.Models
             }
             OutPortList[0].SetShape(xRowNo, xColNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            Results[0].Clone(values[0].ZipApply(values[1], (first, second)=>first>second?first:second));
+            Results[0] = values[0].Broadcast(values[1], (x, y) => x < y ? y : x);
             return Results;
         }
     }

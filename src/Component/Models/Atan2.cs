@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
@@ -26,7 +27,7 @@ namespace Ligral.Component.Models
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0] = values[0].PointwiseAtan2(values[1]);
+            Results[0] = values[0].Broadcast(values[1], Math.Atan2);
             return Results;
         }
     }
