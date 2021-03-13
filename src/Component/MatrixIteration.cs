@@ -72,7 +72,8 @@ namespace Ligral.Component
                     result.SetRow(i, result.Row(i).Map(x => func(left[i, 0], x)));
                 }
                 return result;
-            }else if (right.IsColumnVector())
+            }
+            else if (right.IsColumnVector())
             {
                 if (left.RowCount != right.RowCount)
                 {
@@ -112,6 +113,57 @@ namespace Ligral.Component
                 return result;
             }
             else return left.Map2(func, right);
+        }
+        public static (int, int) BroadcastShape(int xRow, int xCol, int yRow, int yCol)
+        {
+            if (xRow == 1 && xCol == 1)
+            {
+                return (yRow, yCol);
+            }
+            else if (yRow == 1 && yCol == 1)
+            {
+                return (xRow, xCol);
+            }
+            else if (xCol == 1)
+            {
+                if (xRow != yRow)
+                {
+                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                }
+                return (yRow, yCol);
+            }
+            else if (yCol == 1)
+            {
+                if (xRow != yRow)
+                {
+                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                }
+                return (xRow, xCol);
+            }
+            else if (xRow == 1)
+            {
+                if (xCol != yCol)
+                {
+                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                }
+                return (yRow, yCol);
+            }
+            else if (yRow == 1)
+            {
+                if (xCol !=yCol)
+                {
+                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                }
+                return (xRow, xCol);
+            }
+            else
+            {
+                if (xCol != yCol || xRow != yRow)
+                {
+                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                }
+                return (yRow, yCol);
+            }
         }
     }
 }

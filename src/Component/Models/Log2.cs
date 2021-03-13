@@ -27,15 +27,15 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            int xRowNo = InPortList[0].ColNo;
-            int xColNo = InPortList[0].RowNo;
-            int baseRowNo = InPortList[0].RowNo;
-            int baseColNo = InPortList[0].ColNo;
-            if (xRowNo != baseRowNo || xColNo != baseColNo)
+            try
             {
-                throw logger.Error(new ModelException(this, $"Two in put must have the same shape but ({xRowNo}, {xColNo}) and ({baseRowNo}, {baseColNo}) got"));
+                (int xRowNo, int xColNo) = MatrixIteration.BroadcastShape(InPortList[0].RowNo, InPortList[0].ColNo, InPortList[1].RowNo, InPortList[1].ColNo);
+                OutPortList[0].SetShape(xRowNo, xColNo);
             }
-            OutPortList[0].SetShape(xRowNo, xColNo);
+            catch (Exception e)
+            {
+                throw logger.Error(new ModelException(this, e.Message));
+            }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
