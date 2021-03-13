@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Syntax.ASTs;
 using Ligral.Syntax;
 
@@ -25,7 +26,7 @@ namespace Ligral.Component
     {
         public string Name;
         public bool Nullable;
-        public Signal Default;
+        public Matrix<double> Default;
     }
 
     class RouteConstructor

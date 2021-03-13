@@ -9,6 +9,7 @@ using System.Linq;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Component.Parameter>;
 using System.Text;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Syntax;
 using Ligral.Simulation;
 
@@ -85,7 +86,7 @@ namespace Ligral.Component
         }
         // public bool Initializeable = false;
         // protected bool Initialized = false;
-        public List<Signal> Results;
+        public List<Matrix<double>> Results;
         protected virtual string DocString 
         {
             get
@@ -166,7 +167,7 @@ namespace Ligral.Component
         }
         protected void SetUpResults()
         {
-            Results = OutPortList.ConvertAll(outPort => new Signal(outPort));
+            Results = OutPortList.ConvertAll<Matrix<double>>(outPort => null);
         }
         protected virtual void AfterConfigured(){}
         public void Configure(Dict dictionary) 
@@ -288,31 +289,29 @@ namespace Ligral.Component
             }
             return destinationList;
         }
-        protected virtual List<Signal> Calculate(List<Signal> values)
+        protected virtual List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            foreach (var pair in Results.Zip(values))
+            for(int i=0; i<values.Count; i++)
             {
-                Signal outputSignal = pair.First;
-                Signal inputSignal = pair.Second;
-                outputSignal.Clone(inputSignal);
+                values[i].CopyTo(Results[i]);
             }
             return Results;
         }
         public void Propagate()
         {
-            List<Signal> inputs = InPortList.ConvertAll(inPort=>inPort.GetValue());
-            List<Signal> outputs = Calculate(inputs);
+            List<Matrix<double>> inputs = InPortList.ConvertAll(inPort=>inPort.GetValue());
+            List<Matrix<double>> outputs = Calculate(inputs);
             if(outputs.Count != OutPortList.Count)
             {
                 throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}."));
             }
             else
             {
-                OutPortList.Zip(outputs).ToList().ForEach(pair=>
+                for (int i=0; i<OutPortList.Count; i++)
                 {
-                    pair.First.SetValue(pair.Second);
-                    pair.First.Output();
-                });
+                    OutPortList[i].SetValue(outputs[i]);
+                    OutPortList[i].Output();
+                }
             }
         }
         public string GetTypeName()

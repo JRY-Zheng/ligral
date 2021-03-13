@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component
 {
@@ -14,7 +15,7 @@ namespace Ligral.Component
         public Model FatherModel;
         public int RowNo = -1;
         public int ColNo = -1;
-        protected Signal Value;
+        protected Matrix<double> Value;
         protected Logger logger;
         protected Port(string name, Model model)
         {
@@ -70,15 +71,15 @@ namespace Ligral.Component
     {
         public bool Visited = false;
         public OutPort Source;
-        public delegate void InPortValueReceivedHandler(Signal value);
+        public delegate void InPortValueReceivedHandler(Matrix<double> value);
         public event InPortValueReceivedHandler InPortValueReceived;
         public InPort(string name, Model model) : base(name, model) {}
-        public void Input(Signal value)
+        public void Input(Matrix<double> value)
         {
             Value = value;
             if (InPortValueReceived != null) InPortValueReceived(value);
         }
-        public Signal GetValue()
+        public Matrix<double> GetValue()
         {
             return Value;
         }
@@ -207,7 +208,7 @@ namespace Ligral.Component
                 }
             }
         }
-        public void SetValue(Signal value)
+        public void SetValue(Matrix<double> value)
         {
             Value = value;
         }
@@ -228,7 +229,7 @@ namespace Ligral.Component
             }
             else
             {
-                throw logger.Error(new ModelException(FatherModel, "Out port has only single signal"));
+                throw logger.Error(new ModelException(FatherModel, "Out port has only single Matrix<double>"));
             }
         }
 

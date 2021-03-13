@@ -5,12 +5,13 @@
 */
 
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
     class Input : Model, IFixable
     {
-        private Signal source;
+        private Matrix<double> source;
         protected override string DocString
         {
             get
@@ -18,13 +19,13 @@ namespace Ligral.Component.Models
                 return "This model is automatically used inside a route. Do not call it manually.";
             }
         }
-        public void SetDefaultSource(Signal source)
+        public void SetDefaultSource(Matrix<double> source)
         {
             this.source = source;
         }
         public bool FixConnection()
         {
-            if (source is Signal src)
+            if (source is Matrix<double> src)
             {
                 ILinkable constant = ModelManager.Create("Constant");
                 var dict = new Dictionary<string, object>() {{"value", src.Unpack()}};

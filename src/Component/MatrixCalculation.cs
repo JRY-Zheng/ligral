@@ -31,6 +31,28 @@ namespace Ligral.Component
         {
             return matrix.ColumnCount==0 || matrix.RowCount==0;
         }
+        public static Matrix<double> ToMatrix(this object o)
+        {
+            switch (o)
+            {
+            case Matrix<double> matrix:
+                return matrix;
+            case int i:
+                return Matrix<double>.Build.Dense(1, 1, i);
+            case double d:
+                return Matrix<double>.Build.Dense(1, 1, d);
+            default:
+                throw new ArgumentException($"Cannot convert type {o.GetType().Name} to matrix");
+            }
+        }
+        public static Matrix<double> ToMatrix(this double d)
+        {
+            return Matrix<double>.Build.Dense(1, 1, d);
+        }
+        public static Matrix<double> ToMatrix(this int d)
+        {
+            return Matrix<double>.Build.Dense(1, 1, d);
+        }
         public static string ShapeString(this Matrix<double> matrix)
         {
             return $"{matrix.RowCount}x{matrix.ColumnCount}";

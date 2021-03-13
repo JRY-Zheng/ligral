@@ -4,6 +4,8 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using MathNet.Numerics.LinearAlgebra;
+
 namespace Ligral.Component
 {
     public class OutPortVariableModel : Model
@@ -20,7 +22,7 @@ namespace Ligral.Component
                 OutPort outPort = new OutPort($"out{outPortNO}", this);
                 OutPortList.Add(outPort);
                 outPort.Bind(inPort);
-                Results.Add(new Signal(outPort));
+                Results.Add(null);
             }
             else
             {

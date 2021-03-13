@@ -12,25 +12,12 @@ namespace Ligral.Component
 {
     public class InitializeableModel : Model
     {
-        protected Signal initial = new Signal();
-        protected bool isMatrix {get {return initial.IsMatrix;}}
-        protected int colNo = -1;
-        protected int rowNo = -1;
+        protected Matrix<double> initial = null;
+        protected int colNo = 0;
+        protected int rowNo = 0;
         protected bool Initialized = false;
         public virtual void Initialize()
         {
-            // Signal inputSignal = new Signal();
-            // if (isMatrix)
-            // {
-            //     MatrixBuilder<double> m = Matrix<double>.Build;
-            //     Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
-            //     inputSignal.Pack(matrix);
-            // }
-            // else
-            // {
-            //     inputSignal.Pack(0);
-            // }
-            // InPortList.FindAll(inPort=>!inPort.Visited).ForEach(inPort=>inPort.Input(inputSignal));
             Initialized = true;
         }
         
@@ -44,7 +31,7 @@ namespace Ligral.Component
             {
                 {"initial", new Parameter(ParameterType.Signal , value=>
                 {
-                    initial.Pack(value);
+                    initial = value.ToMatrix();
                 }, ()=>{})},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
@@ -60,63 +47,30 @@ namespace Ligral.Component
         }
         protected override void AfterConfigured()
         {
-            if (colNo == 0 && rowNo == 0)
+            if (colNo == 0 && rowNo == 0) // implicit
             {
-                if (!initial.Packed)
+                // if initial is null, let check function to determine initial
+                if (initial!=null)
                 {
-                    initial.Pack(0);
+                    rowNo = initial.RowCount;
+                    colNo = initial.ColumnCount;
                 }
-                else if (initial.IsMatrix)
-                {
-                    throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero: {colNo}x{rowNo}"));
-                }
-                else // initial is double
-                { }
             }
             else if (colNo > 0 && rowNo > 0)
             {
-                if (!initial.Packed)
+                if (initial == null)
                 {
                     MatrixBuilder<double> m = Matrix<double>.Build;
-                    Matrix<double> matrix = m.Dense(rowNo, colNo, 0);
-                    initial.Pack(matrix);
+                    initial = m.Dense(rowNo, colNo, 0);
                 }
-                else if (initial.IsMatrix)
-                { 
-                    Matrix<double> initialMatrix = initial.Unpack() as Matrix<double>;
-                    if (colNo != initialMatrix.ColumnCount || rowNo != initialMatrix.RowCount)
-                    {
-                        throw logger.Error(new ModelException(this, $"Inconsistency between initial value and shape"));
-                    }
-                }
-                else // initial is double
+                else if (colNo != initial.ColumnCount || rowNo != initial.RowCount)
                 {
-                    throw logger.Error(new ModelException(this, $"For scalar, row and col should be 0: {colNo}x{rowNo}"));
-                }
-            }
-            else if (colNo == -1 && rowNo == -1) // implicit
-            {
-                if (!initial.Packed)
-                {
-                    // initial.Pack(0);
-                    // rowNo = 0;
-                    // colNo = 0;
-                }
-                else if (initial.IsMatrix)
-                {
-                    Matrix<double> matrix = initial.Unpack() as Matrix<double>;
-                    rowNo = matrix.RowCount;
-                    colNo = matrix.ColumnCount;
-                }
-                else // initial is double
-                {
-                    rowNo = 0;
-                    colNo = 0;
+                    throw logger.Error(new ModelException(this, $"Inconsistency between initial value and shape"));
                 }
             }
             else
             {
-                throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero, for scalar both zeros\n but we get: {colNo}x{rowNo}"));
+                throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero\n but we get: {colNo}x{rowNo}"));
             }
         }
         public override void Check()
@@ -124,11 +78,11 @@ namespace Ligral.Component
             int inputRowNo = InPortList[0].RowNo;
             int inputColNo = InPortList[0].ColNo;
             var build = Matrix<double>.Build;
-            if (rowNo < 0 && colNo < 0)
+            if (rowNo == 0 && colNo == 0)
             {
-                if (inputRowNo < 0 && inputColNo < 0)
+                if (inputRowNo == 0 && inputColNo == 0)
                 {
-                    initial.Pack(0);
+                    initial = 0.ToMatrix();
                     rowNo = 0;
                     colNo = 0;
                 }
@@ -136,10 +90,10 @@ namespace Ligral.Component
                 {
                     rowNo = inputRowNo;
                     colNo = inputColNo;
-                    initial.Pack(build.Dense(rowNo, colNo, 0));
+                    initial = build.Dense(rowNo, colNo, 0);
                 }
             }
-            else if (inputRowNo >= 0 && inputColNo >= 0)
+            else if (inputRowNo > 0 && inputColNo > 0)
             {
                 if (inputColNo != colNo)
                 {
