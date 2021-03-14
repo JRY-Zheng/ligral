@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
@@ -81,24 +81,24 @@ namespace Ligral.Simulation
         public ControlInputHandle(string name, int rowNo, int colNo) : base(name, rowNo, colNo, ControlInput.CreateInput)
         {}
 
-        public void SetOpenLoopInput(Signal inputSignal)
+        public void SetOpenLoopInput(Matrix<double> inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.OpenLoopInput = input);
         }
 
-        public void SetClosedLoopInput(Signal inputSignal)
+        public void SetClosedLoopInput(Matrix<double> inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.ClosedLoopInput = input);
         }
-        public void SetInputUpperBound(Signal inputSignal)
+        public void SetInputUpperBound(Matrix<double> inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.InputUpperBound = input);
         }
-        public void SetInputLowerBound(Signal inputSignal)
+        public void SetInputLowerBound(Matrix<double> inputSignal)
         {
             SetSignal(inputSignal, (control, input) => control.InputLowerBound = input);
         }
-        public void SetInputConstrain(Signal inputSignal)
+        public void SetInputConstrain(Matrix<double> inputSignal)
         {
             SetSignal(inputSignal, (control, input) => 
             {
@@ -116,7 +116,7 @@ namespace Ligral.Simulation
                 }
             });
         }
-        public Signal GetInput()
+        public Matrix<double> GetInput()
         {
             return GetSignal(control => control.Input);
         }

@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using Ligral.Tools;
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Component;
 
 namespace Ligral.Simulation
 {
@@ -143,23 +142,23 @@ Make sure you did not log two different signals under the same name.");
     {
         public ObservationHandle(string name, int rowNo, int colNo) : base(name, rowNo, colNo, Observation.CreateObservation)
         { }
-        public void Cache(Signal signal)
+        public void Cache(Matrix<double> signal)
         {
             SetSignal(signal, (observation, value) => observation.Cache(value));
         }
-        public void SetOutputVariable(Signal signal)
+        public void SetOutputVariable(Matrix<double> signal)
         {
             SetSignal(signal, (observation, value) => observation.OutputVariable = value);
         }
-        public void SetOutputUpperBound(Signal signal)
+        public void SetOutputUpperBound(Matrix<double> signal)
         {
             SetSignal(signal, (observation, value) => observation.OutputUpperBound = value);
         }
-        public void SetOutputLowerBound(Signal signal)
+        public void SetOutputLowerBound(Matrix<double> signal)
         {
             SetSignal(signal, (observation, value) => observation.OutputLowerBound = value);
         }
-        public void SetOutputConstrain(Signal signal)
+        public void SetOutputConstrain(Matrix<double> signal)
         {
             SetSignal(signal, (output, val) => 
             {
@@ -177,7 +176,7 @@ Make sure you did not log two different signals under the same name.");
                 }
             });
         }
-        public Signal GetObservation()
+        public Matrix<double> GetObservation()
         {
             return GetSignal(observation => observation.OutputVariable);
         }

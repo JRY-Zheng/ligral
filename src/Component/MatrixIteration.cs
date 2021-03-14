@@ -165,5 +165,35 @@ namespace Ligral.Component
                 return (yRow, yCol);
             }
         }
+        public static void Apply(this Matrix<double> matrix, Action<double> action)
+        {
+            for (int r=0; r < matrix.RowCount; r++)
+            {
+                for (int c=0; c < matrix.ColumnCount; c++)
+                {
+                    action(matrix[r, c]);
+                }
+            }
+        }
+        public static void Apply2(this Matrix<double> matrix, Matrix<double> other, Action<double, double> action)
+        {
+            for (int r=0; r < matrix.RowCount; r++)
+            {
+                for (int c=0; c < matrix.ColumnCount; c++)
+                {
+                    action(matrix[r, c], other[r, c]);
+                }
+            }
+        }
+        public static void Apply2<T>(this Matrix<double> matrix, List<T> other, Action<double, T> action)
+        {
+            for (int r=0; r < matrix.RowCount; r++)
+            {
+                for (int c=0; c < matrix.ColumnCount; c++)
+                {
+                    action(matrix[r, c], other[r*matrix.ColumnCount+c]);
+                }
+            }
+        }
     }
 }

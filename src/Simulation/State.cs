@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
@@ -39,7 +39,7 @@ namespace Ligral.Simulation
                 return state;
             }
         }
-        public static StateHandle CreateState(string name, int rowNo, int colNo, Signal initial)
+        public static StateHandle CreateState(string name, int rowNo, int colNo, Matrix<double> initial)
         {
             name = name??$"State{StatePool.Count}";
             if (StateHandles.ContainsKey(name))
@@ -64,7 +64,7 @@ namespace Ligral.Simulation
     }
     public class StateHandle : Handle<State>
     {
-        public StateHandle(string name, int rowNo, int colNo, Signal initialSignal) : 
+        public StateHandle(string name, int rowNo, int colNo, Matrix<double> initialSignal) : 
         base(name, rowNo, colNo, name => State.CreateState(name)) 
         {
             SetSignal(initialSignal, (state, initial) => 
@@ -74,31 +74,31 @@ namespace Ligral.Simulation
             });
         }
 
-        public void SetDerivative(Signal signal)
+        public void SetDerivative(Matrix<double> signal)
         {
             SetSignal(signal, (state, deriv) => state.Derivative = deriv);
         }
-        public void SetDerivativeUpperBound(Signal signal)
+        public void SetDerivativeUpperBound(Matrix<double> signal)
         {
             SetSignal(signal, (state, deriv) => state.DerivativeUpperBound = deriv);
         }
-        public void SetDerivativeLowerBound(Signal signal)
+        public void SetDerivativeLowerBound(Matrix<double> signal)
         {
             SetSignal(signal, (state, deriv) => state.DerivativeLowerBound = deriv);
         }
-        public void SetStateVariable(Signal signal)
+        public void SetStateVariable(Matrix<double> signal)
         {
             SetSignal(signal, (state, var) => state.StateVariable = var);
         }
-        public void SetStateUpperBound(Signal signal)
+        public void SetStateUpperBound(Matrix<double> signal)
         {
             SetSignal(signal, (state, var) => state.StateUpperBound = var);
         }
-        public void SetStateLowerBound(Signal signal)
+        public void SetStateLowerBound(Matrix<double> signal)
         {
             SetSignal(signal, (state, var) => state.StateLowerBound = var);
         }
-        public void SetStateConstrain(Signal stateSignal)
+        public void SetStateConstrain(Matrix<double> stateSignal)
         {
             SetSignal(stateSignal, (state, var) => 
             {
@@ -116,7 +116,7 @@ namespace Ligral.Simulation
                 }
             });
         }
-        public void SetDerivativeConstrain(Signal stateSignal)
+        public void SetDerivativeConstrain(Matrix<double> stateSignal)
         {
             SetSignal(stateSignal, (state, var) => 
             {
@@ -134,7 +134,7 @@ namespace Ligral.Simulation
                 }
             });
         }
-        public Signal GetState()
+        public Matrix<double> GetState()
         {
             return GetSignal(state => state.StateVariable);
         }

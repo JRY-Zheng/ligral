@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
@@ -32,7 +32,7 @@ namespace Ligral.Simulation
                 return solution;
             }
         }
-        public static SolutionHandle CreateSolution(string name, int rowNo, int colNo, Signal initial)
+        public static SolutionHandle CreateSolution(string name, int rowNo, int colNo, Matrix<double> initial)
         {
             name = name??$"Solution{SolutionPool.Count}";
             if (SolutionHandles.ContainsKey(name))
@@ -57,7 +57,7 @@ namespace Ligral.Simulation
     }
     public class SolutionHandle : Handle<Solution>
     {
-        public SolutionHandle(string name, int rowNo, int colNo, Signal initialSignal) : 
+        public SolutionHandle(string name, int rowNo, int colNo, Matrix<double> initialSignal) : 
         base(name, rowNo, colNo, name => Solution.CreateSolution(name)) 
         {
             SetSignal(initialSignal, (solution, initial) => 
@@ -66,7 +66,7 @@ namespace Ligral.Simulation
             });
         }
 
-        public Signal GetGuessedValue()
+        public Matrix<double> GetGuessedValue()
         {
             return GetSignal(solution => solution.GuessedValue);
         }

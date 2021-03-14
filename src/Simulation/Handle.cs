@@ -25,13 +25,13 @@ namespace Ligral.Simulation
         {
             this.name = name;
             logger = new Logger(name);
-            if (rowNo < 0 || colNo < 0)
+            if (rowNo <= 0 || colNo <= 0)
             {
                 throw logger.Error(new LigralException($"Invalid shape {rowNo}x{colNo} in {name}"));
             }
             this.rowNo = rowNo;
             this.colNo = colNo;
-            if ((rowNo == 0 && colNo == 0) || (rowNo == 1 && colNo == 1))
+            if (rowNo == 1 && colNo == 1)
             {
                 space.Add(create(name));
             }
@@ -60,29 +60,20 @@ namespace Ligral.Simulation
                 }
             }
         }
-        public void SetSignal(Signal signal, Action<T, double> setValue)
+        public void SetSignal(Matrix<double> matrix, Action<T, double> setValue)
         {
-            if (!signal.CheckShape(rowNo, colNo))
+            if (!matrix.CheckShape(rowNo, colNo))
             {
-                throw logger.Error(new LigralException($"Inconsistent shape {signal.Shape()} in {name}, ({rowNo}, {colNo}) expected."));
+                throw logger.Error(new LigralException($"Inconsistent shape {matrix.ShapeString()} in {name}, ({rowNo}, {colNo}) expected."));
             }
-            signal.ZipApply<T>(space, (value, room) => setValue(room, value));
+            matrix.Apply2<T>(space, (value, room) => setValue(room, value));
         }
-        public Signal GetSignal(Func<T, double> getValue)
+        public Matrix<double> GetSignal(Func<T, double> getValue)
         {
-            Signal signal = new Signal();
-            if (rowNo==0 && colNo==0)
-            {
-                signal.Pack(getValue(space[0]));
-            }
-            else
-            {
-                IEnumerable<double> row = space.ConvertAll(room => getValue(room));
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> matrix = m.Dense(colNo, rowNo, row.ToArray()).Transpose();
-                signal.Pack(matrix);
-            }
-            return signal;
+            IEnumerable<double> row = space.ConvertAll(room => getValue(room));
+            MatrixBuilder<double> m = Matrix<double>.Build;
+            Matrix<double> matrix = m.Dense(colNo, rowNo, row.ToArray()).Transpose();
+            return matrix;
         }
     }
 }

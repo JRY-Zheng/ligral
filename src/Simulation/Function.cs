@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Simulation
 {
@@ -60,7 +60,7 @@ namespace Ligral.Simulation
         base(name, rowNo, colNo, Function.CreateFunction) 
         {}
 
-        public void SetActualValue(Signal signal)
+        public void SetActualValue(Matrix<double> signal)
         {
             SetSignal(signal, (function, actualValue) => function.Value = actualValue);
         }
