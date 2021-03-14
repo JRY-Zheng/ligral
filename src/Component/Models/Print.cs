@@ -38,8 +38,8 @@ namespace Ligral.Component.Models
         private string varName;
         private double start = 0;
         private double end = 0;
-        private int rowNo = -1;
-        private int colNo = -1;
+        private int rowNo = 0;
+        private int colNo = 0;
         private ObservationHandle handle;
         protected override void SetUpPorts()
         {
@@ -96,7 +96,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            if (rowNo>=0 || colNo>=0)
+            if (rowNo>0 || colNo>0)
             {
                 if (rowNo != InPortList[0].RowNo)
                 {
@@ -114,16 +114,16 @@ namespace Ligral.Component.Models
             }
             handle = Observation.CreateObservation(varName, rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
+            Matrix<double> inputSignal = values[0];
             handle.Cache(inputSignal);
             return Results;
         }
         public override void Refresh()
         {
             if (Solver.Time > end || Solver.Time < start) return;
-            Signal outputVariableSignal = handle.GetObservation();
+            Matrix<double> outputVariableSignal = handle.GetObservation();
             logger.Prompt(string.Format(format, Solver.Time, varName, outputVariableSignal.ToStringInLine()));
         }
     }

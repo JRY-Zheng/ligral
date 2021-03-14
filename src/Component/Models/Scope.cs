@@ -9,6 +9,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using Ligral.Tools;
 using Ligral.Tools.Protocols;
 using Ligral.Simulation;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -119,9 +120,9 @@ namespace Ligral.Component.Models
             };
             publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
+            Matrix<double> inputSignal = values[0];
             handle.Cache(inputSignal);
             return Results;
         }

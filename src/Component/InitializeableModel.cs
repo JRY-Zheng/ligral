@@ -83,8 +83,8 @@ namespace Ligral.Component
                 if (inputRowNo == 0 && inputColNo == 0)
                 {
                     initial = 0.ToMatrix();
-                    rowNo = 0;
-                    colNo = 0;
+                    rowNo = 1;
+                    colNo = 1;
                 }
                 else
                 {

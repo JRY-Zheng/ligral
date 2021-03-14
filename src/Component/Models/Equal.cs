@@ -5,7 +5,6 @@
 */
 
 using System.Collections.Generic;
-using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
 
@@ -26,7 +25,7 @@ namespace Ligral.Component.Models
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
-            Parameters["name"] = new Parameter(ParameterType.Signal , value=>
+            Parameters["name"] = new Parameter(ParameterType.String , value=>
             {
                 varName=(string)value;
             }, ()=>{});
@@ -34,7 +33,7 @@ namespace Ligral.Component.Models
         protected override void AfterConfigured()
         {
             base.AfterConfigured();
-            Results[0].Clone(initial);
+            Results[0] = initial;
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += ActualValueUpdate;
         }
@@ -44,7 +43,7 @@ namespace Ligral.Component.Models
             solutionHandle = Solution.CreateSolution(varName, rowNo, colNo, initial);
             functionHandle = Function.CreateFunction(varName, rowNo, colNo);
         }
-        private void ActualValueUpdate(Signal inputSignal)
+        private void ActualValueUpdate(Matrix<double> inputSignal)
         {
             try
             {
@@ -56,10 +55,10 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this));
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(solutionHandle.GetGuessedValue());
+            Matrix<double> outputSignal = Results[0];
+            Results[0] = solutionHandle.GetGuessedValue();
             return Results;
         }
     }

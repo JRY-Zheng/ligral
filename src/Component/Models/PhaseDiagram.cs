@@ -10,6 +10,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using Ligral.Tools;
 using Ligral.Simulation;
 using Ligral.Tools.Protocols;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -127,11 +128,10 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this, "PhaseDiagram only accepts [scalar, (m*n)] or [(1*m), (n*1)] or vice versa."));
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal xSignal = values[0];
-            Signal ySignal = values[1];
-            (int xr, int xc) = xSignal.Shape();
+            Matrix<double> xSignal = values[0];
+            Matrix<double> ySignal = values[1];
             xHandle.Cache(xSignal);
             yHandle.Cache(ySignal);
             return Results;

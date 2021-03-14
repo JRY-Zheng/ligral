@@ -23,8 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private int rowNo = -1;
-        private int colNo = -1;
+        private int rowNo = 0;
+        private int colNo = 0;
         private ControlInputHandle handle;
         protected override void SetUpParameters()
         {
@@ -102,19 +102,17 @@ namespace Ligral.Component.Models
             handle = ControlInput.CreateInput(varName??Name, rowNo, colNo);
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
             try
             {
-                handle.SetClosedLoopInput(inputSignal);
+                handle.SetClosedLoopInput(values[0]);
             }
             catch (LigralException)
             {
                 throw logger.Error(new ModelException(this));
             }
-            outputSignal.Clone(handle.GetInput());
+            Results[0] = handle.GetInput();
             return Results;
         }
     }

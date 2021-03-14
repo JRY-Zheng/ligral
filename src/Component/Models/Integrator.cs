@@ -25,7 +25,7 @@ namespace Ligral.Component.Models
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
-            Parameters["name"] = new Parameter(ParameterType.Signal , value=>
+            Parameters["name"] = new Parameter(ParameterType.String , value=>
             {
                 varName=(string)value;
             }, ()=>{});
@@ -33,7 +33,7 @@ namespace Ligral.Component.Models
         protected override void AfterConfigured()
         {
             base.AfterConfigured();
-            Results[0].Clone(initial);
+            Results[0] = initial;
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += DerivativeUpdate;
         }
@@ -47,7 +47,7 @@ namespace Ligral.Component.Models
             base.Check();
             handle = State.CreateState(varName, rowNo, colNo, initial);
         }
-        protected virtual void DerivativeUpdate(Signal inputSignal)
+        protected virtual void DerivativeUpdate(Matrix<double> inputSignal)
         {
             try
             {
@@ -58,18 +58,12 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this));
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(handle.GetState());
+            Matrix<double> inputSignal = values[0];
+            Matrix<double> outputSignal = Results[0];
+            Results[0] = handle.GetState();
             return Results;
         }
-
-        // protected virtual void StateCalculate(State state, double deriv)
-        // {
-        //     // state.SetDerivative(deriv, time);
-        //     state.EulerPropagate();
-        // }
     }
 }

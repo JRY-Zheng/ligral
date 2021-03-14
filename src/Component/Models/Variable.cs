@@ -23,9 +23,9 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private int rowNo = 0;
-        private int colNo = 0;
-        private Signal initial = new Signal();
+        private int rowNo = 1;
+        private int colNo = 1;
+        private Matrix<double> initial;
         private SolutionHandle handle;
         protected override void SetUpPorts()
         {
@@ -51,7 +51,7 @@ namespace Ligral.Component.Models
                 }, ()=>{})},
                 {"initial", new Parameter(ParameterType.Signal , value=>
                 {
-                    initial.Pack(value);
+                    initial = value.ToMatrix();
                 }, ()=>{})}
             };
         }
@@ -61,13 +61,16 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
+            if (initial==null)
+            {
+                initial = Matrix<double>.Build.Dense(rowNo, colNo, 0);
+            }
             handle = Solution.CreateSolution(varName, rowNo, colNo, initial);
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal outputSignal = Results[0];
-            outputSignal.Clone(handle.GetGuessedValue());
+            Results[0] = handle.GetGuessedValue();
             return Results;
         }
     }

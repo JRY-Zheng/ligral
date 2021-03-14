@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -20,8 +21,8 @@ namespace Ligral.Component.Models
             }
         }
         private string varName;
-        private int rowNo = -1;
-        private int colNo = -1;
+        private int rowNo = 0;
+        private int colNo = 0;
         private FunctionHandle handle;
         protected override void SetUpPorts()
         {
@@ -34,6 +35,14 @@ namespace Ligral.Component.Models
                 {"name", new Parameter(ParameterType.String , value=>
                 {
                     varName = (string) value;
+                }, ()=>{})},
+                {"col", new Parameter(ParameterType.Signal , value=>
+                {
+                    colNo = System.Convert.ToInt32(value);
+                }, ()=>{})},
+                {"row", new Parameter(ParameterType.Signal , value=>
+                {
+                    rowNo = System.Convert.ToInt32(value);
                 }, ()=>{})}
             };
         }
@@ -54,7 +63,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            if (rowNo>=0 || colNo>=0)
+            if (rowNo>0 || colNo>0)
             {
                 if (rowNo != InPortList[0].RowNo)
                 {
@@ -72,9 +81,9 @@ namespace Ligral.Component.Models
             }
             handle = Function.CreateFunction(varName, rowNo, colNo);
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
+            Matrix<double> inputSignal = values[0];
             handle.SetActualValue(inputSignal);
             return Results;
         }

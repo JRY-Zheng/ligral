@@ -4,8 +4,8 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using Ligral.Component;
 using Ligral.Simulation;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -32,9 +32,9 @@ namespace Ligral.Component.Models
                     lower = (double)value;
                 });
         }
-        protected override void DerivativeUpdate(Signal inputSignal)
+        protected override void DerivativeUpdate(Matrix<double> inputSignal)
         {
-            handle.SetDerivative(inputSignal.ZipApply(handle.GetState(), GetBoundedDerivative));
+            handle.SetDerivative(inputSignal.Map2(GetBoundedDerivative, handle.GetState()));
         }
         private double GetBoundedDerivative(double deriv, double state)
         {
