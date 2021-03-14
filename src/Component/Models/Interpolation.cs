@@ -24,11 +24,11 @@ namespace Ligral.Component.Models
             }
         }
         private Storage table;
-        private int rowNo = 0;
-        private int colNo = 0;
+        private int rowNo = 1;
+        private int colNo = 1;
         public override void Check()
         {
-            if (InPortList[0].RowNo != 0 || InPortList[0].ColNo != 0)
+            if (InPortList[0].RowNo != 1 || InPortList[0].ColNo != 1)
             {
                 throw logger.Error(new ModelException(this, "Interpolation only accept scalar input"));
             }
@@ -85,21 +85,14 @@ namespace Ligral.Component.Models
                 throw logger.Error(new ModelException(this, $"Invalid interpolation input at value {val}"));
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            Signal outputSignal = Results[0];
-            double inputVal = (double) inputSignal.Unpack();
+            double inputVal = values[0][0,0];
             List<double> interpolationVal = Interpolate(inputVal);
-            if (colNo == 0 && rowNo == 0 && interpolationVal.Count == 2)
-            {
-                outputSignal.Pack(interpolationVal[1]);
-            }
-            else if (colNo * rowNo == interpolationVal.Count - 1)
+            if (colNo * rowNo == interpolationVal.Count - 1)
             {
                 MatrixBuilder<double> m = Matrix<double>.Build;
-                Matrix<double> matrix = m.Dense(colNo, rowNo, interpolationVal.Skip(1).ToArray()).Transpose();
-                outputSignal.Pack(matrix);
+                Results[0] = m.Dense(colNo, rowNo, interpolationVal.Skip(1).ToArray()).Transpose();
             }
             else
             {

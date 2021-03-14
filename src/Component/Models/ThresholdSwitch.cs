@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Component;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
 {
@@ -69,14 +70,10 @@ namespace Ligral.Component.Models
                 })}
             };
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            // Results.Clear();
-            Signal conditionSignal = values[0].Apply(item => item >= threshold ? 1 : 0);
-            Signal firstSignal = values[1];
-            Signal secondSignal = values[2];
-            Signal resultSignal = Results[0];
-            resultSignal.Clone(conditionSignal.BroadcastMultiply(firstSignal) + (1 - conditionSignal).BroadcastMultiply(secondSignal));
+            var condition = values[0].Map<double>(item => item >= threshold ? 1 : 0);
+            Results[0] = condition.DotMul(values[1]) + (1 - condition).DotMul(values[2]);
             return Results;
         }
     }

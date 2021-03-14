@@ -42,20 +42,21 @@ namespace Ligral.Component.Models
                 outPort.SetShape(0, 0);
             }
         }
-        protected override List<Signal> Calculate(List<Signal> values)
+        protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Signal inputSignal = values[0];
-            if (!inputSignal.IsMatrix)
-            {
-                throw logger.Error(new ModelException(this, "Double cannot be splitted."));
-            }
-            else if (inputSignal.Count() != Results.Count)
+            if (values[0].RowCount*values[0].ColumnCount != Results.Count)
             {
                 throw logger.Error(new ModelException(this, "Item count inconsistency."));
             }
             else
             {
-                inputSignal.ZipApply<Signal>(Results, (value, signal) => signal.Pack(value));
+                for (int r=0; r < values[0].RowCount; r++)
+                {
+                    for (int c=0; c < values[0].ColumnCount; c++)
+                    {
+                        Results[r*values[0].ColumnCount] = values[0][r,c].ToMatrix();
+                    }
+                }
             }
             return Results;
         }
