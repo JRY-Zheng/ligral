@@ -27,19 +27,35 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            try
+            if (InPortList[1].RowNo != 1 || InPortList[1].ColNo != 1)
             {
-                (int xRowNo, int xColNo) = MatrixIteration.BroadcastShape(InPortList[0].RowNo, InPortList[0].ColNo, InPortList[1].RowNo, InPortList[1].ColNo);
-                OutPortList[0].SetShape(xRowNo, xColNo);
+                throw logger.Error(new ModelException(this, $"The exponent of a matrix should be a scalar, but a matrix with shape {InPortList[1].RowNo}x{InPortList[1].ColNo} received"));
             }
-            catch (Exception e)
+            else if (InPortList[0].RowNo != InPortList[0].ColNo)
             {
-                throw logger.Error(new ModelException(this, e.Message));
+                throw logger.Error(new ModelException(this, $"The base matrix should be a square matrix, but a matrix with shape {InPortList[0].RowNo}x{InPortList[0].ColNo} received"));
+            }
+            else
+            {
+                OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[0].ColNo);
             }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0] = values[0].Broadcast(values[1], Math.Pow);
+            try
+            {
+                Results[0] = values[0].MatPow(values[1]);
+            }
+            catch (System.ArgumentException e)
+            {
+                string message = e.Message;
+                int indexOfParenthesis = message.IndexOf('(');
+                if (indexOfParenthesis>=0)
+                {
+                    message = message.Substring(0, indexOfParenthesis);
+                }
+                throw logger.Error(new ModelException(this, message));
+            }
             return Results;
         }
     }

@@ -111,7 +111,7 @@ namespace Ligral.Component
         }
         public static Matrix<double> DotPow(this Matrix<double> left, Matrix<double> right)
         {
-            return left.Broadcast(right, (x, y) => Math.Pow(x, y));
+            return left.Broadcast(right, Math.Pow);
         }
         public static Matrix<double> MatPow(this Matrix<double> left, Matrix<double> right)
         {

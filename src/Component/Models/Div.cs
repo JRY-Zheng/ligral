@@ -10,13 +10,13 @@ using System;
 
 namespace Ligral.Component.Models
 {
-    class DotDiv : Model
+    class Div : Model
     {
         protected override string DocString
         {
             get
             {
-                return "This model outputs the broadcast quotient of the two inputs";
+                return "This model outputs the matrix product of the first input and the inverse of the second input";
             }
         }
         protected override void SetUpPorts()
@@ -27,21 +27,28 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            try
+            if (InPortList[1].RowNo == 1 && InPortList[1].ColNo == 1)
             {
-                (int xRowNo, int xColNo) = MatrixIteration.BroadcastShape(InPortList[0].RowNo, InPortList[0].ColNo, InPortList[1].RowNo, InPortList[1].ColNo);
-                OutPortList[0].SetShape(xRowNo, xColNo);
+                OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[0].ColNo);
             }
-            catch (Exception e)
+            else if (InPortList[0].RowNo == 1 && InPortList[0].ColNo == 1)
             {
-                throw logger.Error(new ModelException(this, e.Message));
+                OutPortList[0].SetShape(InPortList[1].RowNo, InPortList[1].ColNo);
+            }
+            else if (InPortList[0].ColNo == InPortList[1].RowNo && InPortList[1].RowNo == InPortList[1].ColNo)
+            {
+                OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[1].ColNo);
+            }
+            else
+            {
+                throw logger.Error(new ModelException(this, $"shape in consistency in matrix product with shapes {InPortList[0].RowNo}x{InPortList[0].ColNo} and {InPortList[1].RowNo}x{InPortList[1].ColNo}"));
             }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             try
             {
-                Results[0] = values[0].DotDiv(values[1]);
+                Results[0] = values[0].RightDiv(values[1]);
             }
             catch (System.ArgumentException e)
             {

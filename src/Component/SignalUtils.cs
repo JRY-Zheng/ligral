@@ -14,15 +14,12 @@ namespace Ligral.Component
     static class SignalUtils
     {
         private static Logger logger = new Logger("SignalUtils");
-        private static Group Calculate(this ILinkable left, ILinkable right, string operant)
+        private static Group Calculate(this ILinkable left, ILinkable right, Model calculator)
         {
             if (left.OutPortCount()!=1||right.OutPortCount()!=1)
             {
                 throw logger.Error(new LigralException("Out port number should be 1 when calculated"));
             }
-            Calculator calculator = ModelManager.Create("Calculator") as Calculator;
-            Dict dictionary = new Dict(){{"type", operant}};
-            calculator.Configure(dictionary);
             left.Connect(0, calculator.Expose(0));
             right.Connect(0, calculator.Expose(1));
             Group group = new Group();
@@ -33,35 +30,39 @@ namespace Ligral.Component
         }
         public static Group Add(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "+");
+            return Calculate(left, right, ModelManager.Create("Add"));
         }
         public static Group Subtract(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "-");
+            return Calculate(left, right, ModelManager.Create("Sub"));
         }
         public static Group Multiply(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "*");
+            return Calculate(left, right, ModelManager.Create("Mul"));
         }
         public static Group Divide(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "/");
+            return Calculate(left, right, ModelManager.Create("Div"));
+        }
+        public static Group ReverseDivide(this ILinkable left, ILinkable right)
+        {
+            return Calculate(left, right, ModelManager.Create("RDiv"));
         }
         public static Group Power(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "^");
+            return Calculate(left, right, ModelManager.Create("Pow2"));
         }
         public static Group BroadcastMultiply(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, ".*");
+            return Calculate(left, right, ModelManager.Create("DotMul"));
         }
         public static Group BroadcastDivide(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, "./");
+            return Calculate(left, right, ModelManager.Create("DotDiv"));
         }
         public static Group BroadcastPower(this ILinkable left, ILinkable right)
         {
-            return Calculate(left, right, ".^");
+            return Calculate(left, right, ModelManager.Create("DotPow"));
         }
         public static Group Positive(this ILinkable linkable)
         {

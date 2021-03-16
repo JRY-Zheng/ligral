@@ -19,7 +19,6 @@ namespace Ligral.Component.Models
                 return "This model outputs the sum of the two inputs";
             }
         }
-        private string type;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("left", this));

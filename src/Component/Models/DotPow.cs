@@ -16,10 +16,9 @@ namespace Ligral.Component.Models
         {
             get
             {
-                return "This model outputs the broadcast quotient of the two inputs";
+                return "This model outputs the broadcast power of the two inputs";
             }
         }
-        private string type;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("left", this));
