@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 
@@ -32,10 +33,10 @@ namespace Ligral.Simulation
         private Matrix<double> uLower;
         private Matrix<double> yLower;
         private Matrix<double> dxLower;
-        private List<bool> xConstrain;
-        private List<bool> uConstrain;
-        private List<bool> yConstrain;
-        private List<bool> dxConstrain;
+        private Matrix<int> xConstrain;
+        private Matrix<int> uConstrain;
+        private Matrix<int> yConstrain;
+        private Matrix<int> dxConstrain;
         private Problem problem;
         private Optimizer optimizer;
         public void GetCondition()
@@ -55,10 +56,10 @@ namespace Ligral.Simulation
             uLower = ControlInput.InputPool.ConvertAll(input => input.InputLowerBound).ToColumnVector();
             yLower = Observation.ObservationPool.ConvertAll(output => output.OutputLowerBound).ToColumnVector();
             dxLower = State.StatePool.ConvertAll(state => state.DerivativeLowerBound).ToColumnVector();
-            xConstrain = State.StatePool.ConvertAll(state => state.IsConstrained);
-            uConstrain = ControlInput.InputPool.ConvertAll(input => input.IsConstrained);
-            yConstrain = Observation.ObservationPool.ConvertAll(output => output.IsConstrained);
-            dxConstrain = State.StatePool.ConvertAll(state => state.IsDerivativeConstrained);
+            xConstrain = State.StatePool.ConvertAll(state => state.IsConstrained?1:0).ToColumnVector();
+            uConstrain = ControlInput.InputPool.ConvertAll(input => input.IsConstrained?1:0).ToColumnVector();
+            yConstrain = Observation.ObservationPool.ConvertAll(output => output.IsConstrained?1:0).ToColumnVector();
+            dxConstrain = State.StatePool.ConvertAll(state => state.IsDerivativeConstrained?1:0).ToColumnVector();
         }
         private Matrix<double> Cost()
         {
@@ -67,15 +68,15 @@ namespace Ligral.Simulation
             // return x.Transpose()*x+u.Transpose()*u;
             return SignalUtils.Stack(x0, u0);
         }
-        private Matrix<double> Filter(Matrix<double> val, Matrix<double> goal, List<bool> constrain)
+        private Matrix<double> Filter(Matrix<double> val, Matrix<double> goal, Matrix<int> constrain)
         {
-            int num = constrain.FindAll(b => b).Count;
+            int num = constrain.Column(0).ToArray().Count(b => b==1);
             if (num == 0) return null;
             var build = Matrix<double>.Build;
             var matrix = build.Dense(num, 1);
-            for (int i = 0, c = 0; c < constrain.Count; c++)
+            for (int i = 0, c = 0; c < constrain.RowCount; c++)
             {
-                if (constrain[c])
+                if (constrain[c, 0]==1)
                 {
                     matrix[i, 0] = val[c, 0] - goal[c, 0];
                     i++;
@@ -101,14 +102,14 @@ namespace Ligral.Simulation
             var u = z.SubMatrix(n, p, 0, 1);
             var dx = problem.SystemDynamicFunction(x, u);
             var y = problem.ObservationFunction();
-            var gxUpper = Filter(x, xUpper, new Signal(xUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var guUpper = Filter(u, uUpper, new Signal(uUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var gyUpper = Filter(y, yUpper, new Signal(yUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var gdxUpper = Filter(dx, dxUpper, new Signal(dxUpper).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var gxLower = Filter(xLower, x, new Signal(xLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var guLower = Filter(uLower, u, new Signal(uLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var gyLower = Filter(yLower, y, new Signal(yLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
-            var gdxLower = Filter(dxLower, dx, new Signal(dxLower).ToList().ConvertAll(bnd => !double.IsInfinity(bnd)));
+            var gxUpper = Filter(x, xUpper, xUpper.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var guUpper = Filter(u, uUpper, uUpper.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var gyUpper = Filter(y, yUpper, yUpper.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var gdxUpper = Filter(dx, dxUpper, dxUpper.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var gxLower = Filter(xLower, x, xLower.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var guLower = Filter(uLower, u, uLower.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var gyLower = Filter(yLower, y, yLower.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
+            var gdxLower = Filter(dxLower, dx, dxLower.Map<int>(bnd => !double.IsInfinity(bnd)?1:0));
             return SignalUtils.Stack(gxUpper, guUpper, gyUpper, gdxUpper, gxLower, guLower, gyLower, gdxLower);
         }
         public void Trim(Problem problem)

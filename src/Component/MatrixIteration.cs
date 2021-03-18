@@ -18,9 +18,9 @@ namespace Ligral.Component
         {
             return new List<double>(matrix.ToRowMajorArray());
         }
-        public static Matrix<double> ToColumnVector(this List<double> list)
+        public static Matrix<T> ToColumnVector<T>(this List<T> list) where T : struct, IEquatable<T>, IFormattable
         {
-            MatrixBuilder<double> m = Matrix<double>.Build;
+            MatrixBuilder<T> m = Matrix<T>.Build;
             return m.DenseOfRowMajor(list.Count, 1, list);
         }
         public static string ToStringInLine(this Matrix<double> matrix)

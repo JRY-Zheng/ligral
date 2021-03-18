@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 
 namespace Ligral.Simulation
@@ -18,10 +19,10 @@ namespace Ligral.Simulation
             HandleName = handleName;
             logger = new Logger($"ConditionSetter({handleName})");
         }
-        protected abstract void SetValue(Signal signal);
-        protected abstract void SetConstrain(Signal signal);
-        protected abstract void SetUpperBound(Signal signal);
-        protected abstract void SetLowerBound(Signal signal);
+        protected abstract void SetValue(Matrix<double> signal);
+        protected abstract void SetConstrain(Matrix<double> signal);
+        protected abstract void SetUpperBound(Matrix<double> signal);
+        protected abstract void SetLowerBound(Matrix<double> signal);
         public void Configure(Dictionary<string, object> dict)
         {
             foreach (string item in dict.Keys)
@@ -33,19 +34,19 @@ namespace Ligral.Simulation
                     {
                     case "val":
                     case "value":
-                        SetValue(new Signal(val));
+                        SetValue(val.ToMatrix());
                         break;
                     case "con":
                     case "constrain":
-                        SetConstrain(new Signal(val));
+                        SetConstrain(val.ToMatrix());
                         break;
                     case "upper":
                     case "max":
-                        SetUpperBound(new Signal(val));
+                        SetUpperBound(val.ToMatrix());
                         break;
                     case "lower":
                     case "min":
-                        SetLowerBound(new Signal(val));
+                        SetLowerBound(val.ToMatrix());
                         break;
                     default:
                         throw logger.Error(new SettingException(item, val, "Unsupported setting in linearizer."));
@@ -75,22 +76,22 @@ namespace Ligral.Simulation
             handle = State.StateHandles[handleName];
         }
 
-        protected override void SetLowerBound(Signal signal)
+        protected override void SetLowerBound(Matrix<double> signal)
         {
             handle.SetStateLowerBound(signal);
         }
 
-        protected override void SetUpperBound(Signal signal)
+        protected override void SetUpperBound(Matrix<double> signal)
         {
             handle.SetStateUpperBound(signal);
         }
 
-        protected override void SetValue(Signal signal)
+        protected override void SetValue(Matrix<double> signal)
         {
             handle.SetStateVariable(signal);
         }
 
-        protected override void SetConstrain(Signal signal)
+        protected override void SetConstrain(Matrix<double> signal)
         {
             handle.SetStateConstrain(signal);
         }
@@ -108,21 +109,21 @@ namespace Ligral.Simulation
             handle = State.StateHandles[handleName];
         }
 
-        protected override void SetLowerBound(Signal signal)
+        protected override void SetLowerBound(Matrix<double> signal)
         {
             handle.SetDerivativeLowerBound(signal);
         }
 
-        protected override void SetUpperBound(Signal signal)
+        protected override void SetUpperBound(Matrix<double> signal)
         {
             handle.SetDerivativeUpperBound(signal);
         }
 
-        protected override void SetValue(Signal signal)
+        protected override void SetValue(Matrix<double> signal)
         {
             handle.SetDerivative(signal);
         }
-        protected override void SetConstrain(Signal signal)
+        protected override void SetConstrain(Matrix<double> signal)
         {
             handle.SetDerivativeConstrain(signal);
         }
@@ -140,21 +141,21 @@ namespace Ligral.Simulation
             handle = Observation.ObservationHandles[handleName];
         }
 
-        protected override void SetLowerBound(Signal signal)
+        protected override void SetLowerBound(Matrix<double> signal)
         {
             handle.SetOutputUpperBound(signal);
         }
 
-        protected override void SetUpperBound(Signal signal)
+        protected override void SetUpperBound(Matrix<double> signal)
         {
             handle.SetOutputLowerBound(signal);
         }
 
-        protected override void SetValue(Signal signal)
+        protected override void SetValue(Matrix<double> signal)
         {
             handle.SetOutputVariable(signal);
         }
-        protected override void SetConstrain(Signal signal)
+        protected override void SetConstrain(Matrix<double> signal)
         {
             handle.SetOutputConstrain(signal);
         }
@@ -172,21 +173,21 @@ namespace Ligral.Simulation
             handle = ControlInput.InputHandles[handleName];
         }
 
-        protected override void SetLowerBound(Signal signal)
+        protected override void SetLowerBound(Matrix<double> signal)
         {
             handle.SetInputLowerBound(signal);
         }
 
-        protected override void SetUpperBound(Signal signal)
+        protected override void SetUpperBound(Matrix<double> signal)
         {
             handle.SetInputUpperBound(signal);
         }
 
-        protected override void SetValue(Signal signal)
+        protected override void SetValue(Matrix<double> signal)
         {
             handle.SetOpenLoopInput(signal);
         }
-        protected override void SetConstrain(Signal signal)
+        protected override void SetConstrain(Matrix<double> signal)
         {
             handle.SetInputConstrain(signal);
         }

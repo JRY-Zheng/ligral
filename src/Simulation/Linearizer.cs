@@ -24,11 +24,9 @@ namespace Ligral.Simulation
                     throw logger.Error(new SettingException(item, val, $"No state handle named {item}"));
                 }
                 StateHandle handle = State.StateHandles[item];
-                Signal origin;
                 try
                 {
-                    origin = new Signal(val);
-                    handle.SetStateVariable(origin);
+                    handle.SetStateVariable(val.ToMatrix());
                 }
                 catch (LigralException)
                 {
@@ -54,11 +52,9 @@ namespace Ligral.Simulation
                     throw logger.Error(new SettingException(item, val, $"No input handle named {item}"));
                 }
                 ControlInputHandle handle = ControlInput.InputHandles[item];
-                Signal origin;
                 try
                 {
-                    origin = new Signal(val);
-                    handle.SetOpenLoopInput(origin);
+                    handle.SetOpenLoopInput(val.ToMatrix());
                 }
                 catch (LigralException)
                 {
