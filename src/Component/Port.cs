@@ -190,7 +190,7 @@ namespace Ligral.Component
             RowNo = rowNo;
             foreach (var inPort in destinationList)
             {
-                if (inPort.RowNo<0)
+                if (inPort.RowNo<=0)
                 {
                     inPort.RowNo = rowNo;
                 }
@@ -198,7 +198,7 @@ namespace Ligral.Component
                 {
                     throw logger.Error(new ModelException(FatherModel, $"Shape check fail, row numbers should be {inPort.RowNo}, but got {rowNo}"));
                 }
-                if (inPort.ColNo<0)
+                if (inPort.ColNo<=0)
                 {
                     inPort.ColNo = colNo;
                 }
