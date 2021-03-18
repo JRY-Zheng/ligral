@@ -30,7 +30,7 @@ namespace Ligral.Component.Models
         protected override void AfterConfigured()
         {
             base.AfterConfigured();
-            initial.CopyTo(stack);
+            stack = Matrix<double>.Build.DenseOfMatrix(initial);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
