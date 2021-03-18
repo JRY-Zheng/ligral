@@ -13,8 +13,8 @@ namespace Ligral.Component
     {
         public string Name;
         public Model FatherModel;
-        public int RowNo = -1;
-        public int ColNo = -1;
+        public int RowNo = 0;
+        public int ColNo = 0;
         protected Matrix<double> Value;
         protected Logger logger;
         protected Port(string name, Model model)
