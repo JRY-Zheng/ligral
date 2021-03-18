@@ -274,6 +274,7 @@ namespace Ligral.Component
             try
             {
                 OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[0].ColNo);
+                Results[0] = Matrix<double>.Build.Dense(InPortList[0].RowNo, InPortList[0].ColNo);
             }
             catch (LigralException)
             {
