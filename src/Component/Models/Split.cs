@@ -39,7 +39,7 @@ namespace Ligral.Component.Models
             }
             foreach (OutPort outPort in OutPortList)
             {
-                outPort.SetShape(0, 0);
+                outPort.SetShape(1, 1);
             }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)

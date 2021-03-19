@@ -30,7 +30,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            OutPortList[0].SetShape(0, 0);
+            OutPortList[0].SetShape(1, 1);
         }
         protected override void SetUpParameters()
         {
