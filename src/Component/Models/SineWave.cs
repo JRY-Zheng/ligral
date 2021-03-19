@@ -38,21 +38,21 @@ namespace Ligral.Component.Models
             {
                 {"ampl", new Parameter(ParameterType.Signal , value=>
                 {
-                    ampl = (double)value;
+                    ampl = value.ToScalar();
                 }, ()=>
                 {
                     ampl = 1;
                 })},
                 {"omega", new Parameter(ParameterType.Signal , value=>
                 {
-                    omega = (double)value;
+                    omega = value.ToScalar();
                 }, ()=>
                 {
                     omega = 1;
                 })},
                 {"phi", new Parameter(ParameterType.Signal , value=>
                 {
-                    phi = (double)value;
+                    phi = value.ToScalar();
                 }, ()=>
                 {
                     phi = 0;

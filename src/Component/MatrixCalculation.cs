@@ -53,6 +53,32 @@ namespace Ligral.Component
         {
             return Matrix<double>.Build.Dense(1, 1, d);
         }
+        public static double ToScalar(this double d)
+        {
+            return d;
+        }
+        public static double ToScalar(this int d)
+        {
+            return d;
+        }
+        public static double ToScalar(this object o)
+        {
+            switch (o)
+            {
+            case Matrix<double> matrix:
+                if (!matrix.IsScalar())
+                {
+                    throw new ArgumentException($"Cannot cast matrix with shape {matrix.ShapeString()} to scalar");
+                }
+                return matrix[0,0];
+            case int i:
+                return i;
+            case double d:
+                return d;
+            default:
+                throw new ArgumentException($"Cannot convert type {o.GetType().Name} to matrix");
+            }
+        }
         public static string ShapeString(this Matrix<double> matrix)
         {
             return $"{matrix.RowCount}x{matrix.ColumnCount}";
