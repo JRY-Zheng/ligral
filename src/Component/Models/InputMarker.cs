@@ -73,12 +73,12 @@ namespace Ligral.Component.Models
         {
             int inputRowNo = InPortList[0].RowNo;
             int inputColNo = InPortList[0].ColNo;
-            if (inputRowNo < 0 && inputColNo < 0)
+            if (inputRowNo <= 0 && inputColNo <= 0)
             {
-                if (rowNo < 0 && colNo < 0)
+                if (rowNo <= 0 && colNo <= 0)
                 {
-                    rowNo = 0;
-                    colNo = 0;
+                    rowNo = 1;
+                    colNo = 1;
                 }
                 else
                 {
@@ -86,7 +86,7 @@ namespace Ligral.Component.Models
                     InPortList[0].ColNo = colNo;
                 }
             }
-            else if (rowNo < 0 && colNo < 0)
+            else if (rowNo <= 0 && colNo <= 0)
             {
                 rowNo = inputRowNo;
                 colNo = inputColNo;
