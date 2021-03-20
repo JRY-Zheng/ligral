@@ -24,9 +24,9 @@ namespace Ligral.Tests
             Matrix<double> result = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 3}, {3, 5}, {5, 7}});
             Assert.True(matrix.MatSub(rowVector).Equals(result), "Row vector minus matrix is matrix");
             Assert.True(rowVector.MatSub(matrix).Equals(-result), "Matrix minus row vector is matrix");
-            Assert.Throws<ArgumentOutOfRangeException>(()=>rowVector.MatSub(matrix.Transpose()));
+            Assert.Throws<ArgumentException>(()=>rowVector.MatSub(matrix.Transpose()));
             Matrix<double> longRowVector = rowVector.Append(Matrix<double>.Build.Dense(1, 1, 1));
-            Assert.Throws<ArgumentOutOfRangeException>(()=>longRowVector.MatSub(matrix));
+            Assert.Throws<ArgumentException>(()=>longRowVector.MatSub(matrix));
         }
         [Fact]
         public void MatrixSub_ColumnVectorSubMatrix_ReturnMatrix()
@@ -37,9 +37,9 @@ namespace Ligral.Tests
             Assert.True(matrix.MatSub(columnVector).Equals(result), "Column vector minus matrix is matrix");
             Assert.True(columnVector.MatSub(matrix).Equals(-result), "Matrix minus column vector is matrix");
             Matrix<double> shortColumnVector = columnVector.SubMatrix(0, 2, 0, 1);
-            Assert.Throws<ArgumentOutOfRangeException>(()=>shortColumnVector.MatSub(matrix));
+            Assert.Throws<ArgumentException>(()=>shortColumnVector.MatSub(matrix));
             Matrix<double> longColumnVector = columnVector.Stack(Matrix<double>.Build.Dense(1, 1, 1));
-            Assert.Throws<ArgumentOutOfRangeException>(()=>longColumnVector.MatSub(matrix));
+            Assert.Throws<ArgumentException>(()=>longColumnVector.MatSub(matrix));
         }
         [Fact]
         public void MatrixSub_MatrixSubMatrix_ReturnMatrix()
