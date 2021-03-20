@@ -32,8 +32,8 @@ namespace Ligral.Tests
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result1 = Matrix<double>.Build.DenseOfArray(new double[3,2]{{2.0/3.0, 1.0/4.0}, {2.0/5.0, 1.0/6.0}, {2.0/7.0, 1.0/8.0}});
             Matrix<double> result2 = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3.0/2.0, 4.0/1.0}, {5.0/2.0, 6.0/1.0}, {7.0/2.0, 8.0/1.0}});
-            Assert.True(matrix.DotDiv(rowVector).Equals(result2), "Row vector broadcast-over matrix shall be matrix");
-            Assert.True(rowVector.DotDiv(matrix).Equals(result1), "Matrix broadcast-over row vector shall be matrix");
+            Assert.True(matrix.DotDiv(rowVector).Equals(result2), "Matrix broadcast-over row vector shall be matrix");
+            Assert.True(rowVector.DotDiv(matrix).Equals(result1), "Row vector broadcast-over matrix shall be matrix");
             Assert.Throws<ArgumentException>(()=>rowVector.DotDiv(matrix.Transpose()));
             Matrix<double> longRowVector = rowVector.Append(Matrix<double>.Build.Dense(1, 1, 1));
             Assert.Throws<ArgumentException>(()=>longRowVector.DotDiv(matrix));
@@ -49,8 +49,8 @@ namespace Ligral.Tests
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result1 = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3.0/3.0, 3.0/4.0}, {2.0/5.0, 2.0/6.0}, {1.0/7.0, 1.0/8.0}});
             Matrix<double> result2 = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3.0/3.0, 4.0/3.0}, {5.0/2.0, 6.0/2.0}, {7.0/1.0, 8.0/1.0}});
-            Assert.True(matrix.DotDiv(columnVector).Equals(result2), "Column vector broadcast-over matrix shall be matrix");
-            Assert.True(columnVector.DotDiv(matrix).Equals(result1), "Matrix broadcast-over column vector shall be matrix");
+            Assert.True(matrix.DotDiv(columnVector).Equals(result2), "Matrix broadcast-over column vector shall be matrix");
+            Assert.True(columnVector.DotDiv(matrix).Equals(result1), "Column vector broadcast-over matrix shall be matrix");
             Matrix<double> shortColumnVector = columnVector.SubMatrix(0, 2, 0, 1);
             Assert.Throws<ArgumentException>(()=>shortColumnVector.DotDiv(matrix));
             Matrix<double> longColumnVector = columnVector.Stack(Matrix<double>.Build.Dense(1, 1, 1));

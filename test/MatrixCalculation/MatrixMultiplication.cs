@@ -24,8 +24,8 @@ namespace Ligral.Tests
             Matrix<double> rowVector = Matrix<double>.Build.DenseOfArray(new double[1, 2]{{2, 1}});
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result = Matrix<double>.Build.DenseOfArray(new double[3,2]{{6, 4}, {10, 6}, {14, 8}});
-            Assert.True(matrix.DotMul(rowVector).Equals(result), "Row vector broadcast-times matrix shall be matrix");
-            Assert.True(rowVector.DotMul(matrix).Equals(result), "Matrix broadcast-times row vector shall be matrix");
+            Assert.True(matrix.DotMul(rowVector).Equals(result), "Matrix broadcast-times row vector shall be matrix");
+            Assert.True(rowVector.DotMul(matrix).Equals(result), "Row vector broadcast-times matrix shall be matrix");
             Assert.Throws<ArgumentException>(()=>rowVector.DotMul(matrix.Transpose()));
             Matrix<double> longRowVector = rowVector.Append(Matrix<double>.Build.Dense(1, 1, 1));
             Assert.Throws<ArgumentException>(()=>longRowVector.DotMul(matrix));
@@ -36,8 +36,8 @@ namespace Ligral.Tests
             Matrix<double> columnVector = Matrix<double>.Build.DenseOfArray(new double[3,1]{{3}, {2}, {1}});
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result = Matrix<double>.Build.DenseOfArray(new double[3,2]{{9, 12}, {10, 12}, {7, 8}});
-            Assert.True(matrix.DotMul(columnVector).Equals(result), "Column vector broadcast-times matrix shall be matrix");
-            Assert.True(columnVector.DotMul(matrix).Equals(result), "Matrix broadcast-times column vector shall be matrix");
+            Assert.True(matrix.DotMul(columnVector).Equals(result), "Matrix broadcast-times column vector shall be matrix");
+            Assert.True(columnVector.DotMul(matrix).Equals(result), "Column vector broadcast-times matrix shall be matrix");
             Matrix<double> shortColumnVector = columnVector.SubMatrix(0, 2, 0, 1);
             Assert.Throws<ArgumentException>(()=>shortColumnVector.DotMul(matrix));
             Matrix<double> longColumnVector = columnVector.Stack(Matrix<double>.Build.Dense(1, 1, 1));

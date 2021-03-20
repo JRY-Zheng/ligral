@@ -22,8 +22,8 @@ namespace Ligral.Tests
             Matrix<double> rowVector = Matrix<double>.Build.DenseOfArray(new double[1, 2]{{2, 1}});
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result = Matrix<double>.Build.DenseOfArray(new double[3,2]{{5, 5}, {7, 7}, {9, 9}});
-            Assert.True(matrix.MatAdd(rowVector).Equals(result), "Row vector plus matrix shall be matrix");
-            Assert.True(rowVector.MatAdd(matrix).Equals(result), "Matrix plus row vector shall be matrix");
+            Assert.True(matrix.MatAdd(rowVector).Equals(result), "Matrix plus row vector shall be matrix");
+            Assert.True(rowVector.MatAdd(matrix).Equals(result), "Row vector plus matrix shall be matrix");
             Assert.Throws<ArgumentException>(()=>rowVector.MatAdd(matrix.Transpose()));
             Matrix<double> longRowVector = rowVector.Append(Matrix<double>.Build.Dense(1, 1, 1));
             Assert.Throws<ArgumentException>(()=>longRowVector.MatAdd(matrix));
@@ -34,8 +34,8 @@ namespace Ligral.Tests
             Matrix<double> columnVector = Matrix<double>.Build.DenseOfArray(new double[3,1]{{3}, {2}, {1}});
             Matrix<double> matrix = Matrix<double>.Build.DenseOfArray(new double[3,2]{{3, 4}, {5, 6}, {7, 8}});
             Matrix<double> result = Matrix<double>.Build.DenseOfArray(new double[3,2]{{6, 7}, {7, 8}, {8, 9}});
-            Assert.True(matrix.MatAdd(columnVector).Equals(result), "Column vector plus matrix shall be matrix");
-            Assert.True(columnVector.MatAdd(matrix).Equals(result), "Matrix plus column vector shall be matrix");
+            Assert.True(matrix.MatAdd(columnVector).Equals(result), "Matrix plus column vector shall be matrix");
+            Assert.True(columnVector.MatAdd(matrix).Equals(result), "Column vector plus matrix shall be matrix");
             Matrix<double> shortColumnVector = columnVector.SubMatrix(0, 2, 0, 1);
             Assert.Throws<ArgumentException>(()=>shortColumnVector.MatAdd(matrix));
             Matrix<double> longColumnVector = columnVector.Stack(Matrix<double>.Build.Dense(1, 1, 1));
