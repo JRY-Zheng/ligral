@@ -10,12 +10,12 @@ using Ligral.Syntax;
 
 namespace Ligral.Component
 {
-    struct ScopedModelType
+    public struct ScopedModelType
     {
         public string ScopeName;
         public string ModelName;
     }
-    static class ModelManager
+    public static class ModelManager
     {
         private static Dictionary<string,int> modelCount = new Dictionary<string, int>();
         private static Dictionary<string,Dictionary<string,int>> extendedModelCount = new Dictionary<string,Dictionary<string,int>>();
