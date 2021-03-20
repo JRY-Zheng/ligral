@@ -31,6 +31,11 @@ namespace Ligral.Component
         {
             return matrix.ColumnCount==0 || matrix.RowCount==0;
         }
+        public static bool IsSingular(this Matrix<double> matrix)
+        {
+            var rank = matrix.TolerantRank();
+            return rank < matrix.ColumnCount && rank < matrix.RowCount;
+        }
         public static Matrix<double> ToMatrix(this object o)
         {
             switch (o)
@@ -97,7 +102,17 @@ namespace Ligral.Component
         }
         public static Matrix<double> DotDiv(this Matrix<double> left, Matrix<double> right)
         {
-            return left.Broadcast(right, (x, y) => x / y);
+            return left.Broadcast(right, (x, y) => 
+            {
+                if (y==0)
+                {
+                    throw new DivideByZeroException();
+                }
+                else
+                {
+                    return x/y;
+                }
+            });
         }
         public static Matrix<double> MatMul(this Matrix<double> left, Matrix<double> right)
         {
@@ -119,7 +134,15 @@ namespace Ligral.Component
             }
             else if (right.IsScalar()) 
             {
+                if (right[0,0]==0)
+                {
+                    throw new DivideByZeroException();
+                }
                 return left/right[0,0];
+            }
+            else if (right.IsSingular())
+            {
+                throw new DivideByZeroException();
             }
             else return left*right.Inverse();
         }
@@ -127,13 +150,24 @@ namespace Ligral.Component
         {
             if (left.IsScalar()) 
             {
+                if (left[0,0]==0)
+                {
+                    throw new DivideByZeroException();
+                }
                 return right/left[0,0];
             }
             else if (right.IsScalar()) 
             {
                 return right[0,0]/left;
             }
-            else return right.Solve(left);
+            else if (left.IsSingular())
+            {
+                throw new DivideByZeroException();
+            }
+            else 
+            {
+                return left.Solve(right);
+            }
         }
         public static Matrix<double> DotPow(this Matrix<double> left, Matrix<double> right)
         {
