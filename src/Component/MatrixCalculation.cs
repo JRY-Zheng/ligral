@@ -36,6 +36,22 @@ namespace Ligral.Component
             var rank = matrix.TolerantRank();
             return rank < matrix.ColumnCount && rank < matrix.RowCount;
         }
+        public static bool EqualTo(this Matrix<double> matrix, Matrix<double> goal)
+        {
+            if (matrix.ColumnCount != goal.ColumnCount) return false;
+            if (matrix.RowCount != goal.RowCount) return false;
+            for (int row=0; row < matrix.RowCount; row++)
+            {
+                for (int col=0; col < matrix.ColumnCount; col++)
+                {
+                    if (Math.Abs(matrix[row, col] - goal[row, col]) > 1e-10 )
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public static Matrix<double> ToMatrix(this object o)
         {
             switch (o)
@@ -175,18 +191,25 @@ namespace Ligral.Component
         }
         public static Matrix<double> MatPow(this Matrix<double> left, Matrix<double> right)
         {
-            if (left.IsScalar() && right.IsScalar()) 
-            {
-                return Math.Pow(left[0,0], right[0,0]).ToMatrix();;
-            }
-            else if (right.IsScalar()) 
+            if (right.IsScalar()) 
             {
                 int exponent = Convert.ToInt32(right[0,0]);
                 if (Math.Abs(right[0,0] - exponent) > double.Epsilon*10)
                 {
                     throw new ArgumentException($"Index of a matrix must be integer but {right[0,0]} received, which would make the result to be complex");
                 }
-                return left.Power(exponent);
+                if (exponent < 0)
+                {
+                    if (left.IsSingular())
+                    {
+                        throw new DivideByZeroException();
+                    }
+                    else
+                    {
+                        return left.Inverse().Power(-exponent);
+                    }
+                }
+                else return left.Power(exponent);
             }
             else 
             {
