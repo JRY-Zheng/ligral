@@ -9,7 +9,7 @@ using Xunit;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 
-namespace Ligral.Tests
+namespace Ligral.Tests.MatrixCalculation
 {
     public class MatrixDivision
     {
