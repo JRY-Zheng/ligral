@@ -64,7 +64,7 @@ namespace Ligral.Component
             {
                 if (left.RowCount != right.RowCount)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
+                    throw new ArgumentException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
                 }
                 var result = Matrix<double>.Build.DenseOfMatrix(right);
                 for (int i = 0; i < result.RowCount; i++)
@@ -77,7 +77,7 @@ namespace Ligral.Component
             {
                 if (left.RowCount != right.RowCount)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
+                    throw new ArgumentException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
                 }
                 var result = Matrix<double>.Build.DenseOfMatrix(left);
                 for (int i = 0; i < result.RowCount; i++)
@@ -90,7 +90,7 @@ namespace Ligral.Component
             {
                 if (left.ColumnCount != right.ColumnCount)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
+                    throw new ArgumentException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
                 }
                 var result = Matrix<double>.Build.DenseOfMatrix(right);
                 for (int i = 0; i < result.ColumnCount; i++)
@@ -103,7 +103,7 @@ namespace Ligral.Component
             {
                 if (left.ColumnCount != right.ColumnCount)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
+                    throw new ArgumentException($"cannot broadcast matrix {left.ShapeString()} to {right.ShapeString()}");
                 }
                 var result = Matrix<double>.Build.DenseOfMatrix(left);
                 for (int i = 0; i < result.ColumnCount; i++)
@@ -128,7 +128,7 @@ namespace Ligral.Component
             {
                 if (xRow != yRow)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                    throw new ArgumentException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
                 }
                 return (yRow, yCol);
             }
@@ -136,7 +136,7 @@ namespace Ligral.Component
             {
                 if (xRow != yRow)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                    throw new ArgumentException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
                 }
                 return (xRow, xCol);
             }
@@ -144,7 +144,7 @@ namespace Ligral.Component
             {
                 if (xCol != yCol)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                    throw new ArgumentException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
                 }
                 return (yRow, yCol);
             }
@@ -152,7 +152,7 @@ namespace Ligral.Component
             {
                 if (xCol !=yCol)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                    throw new ArgumentException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
                 }
                 return (xRow, xCol);
             }
@@ -160,7 +160,7 @@ namespace Ligral.Component
             {
                 if (xCol != yCol || xRow != yRow)
                 {
-                    throw new ArgumentOutOfRangeException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
+                    throw new ArgumentException($"cannot broadcast matrix {xRow}x{xCol} to {yRow}x{yCol}");
                 }
                 return (yRow, yCol);
             }
