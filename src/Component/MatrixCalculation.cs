@@ -44,6 +44,14 @@ namespace Ligral.Component
             {
                 for (int col=0; col < matrix.ColumnCount; col++)
                 {
+                    if (matrix[row, col] == double.NaN || double.IsInfinity(matrix[row, col])) 
+                    {
+                        return false;
+                    }
+                    if (goal[row, col] == double.NaN || double.IsInfinity(goal[row, col])) 
+                    {
+                        return false;
+                    }
                     if (Math.Abs(matrix[row, col] - goal[row, col]) > 1e-10 )
                     {
                         return false;
