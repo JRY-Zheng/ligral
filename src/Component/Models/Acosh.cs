@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
@@ -27,6 +28,10 @@ namespace Ligral.Component.Models
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             Results[0] = values[0].Map(x => Math.Acosh(x));
+            if (Results[0].Enumerate().Contains(double.NaN))
+            {
+                throw logger.Error(new ModelException(this, "The input of acosh shall be greater than 1"));
+            }
             return Results;
         }
     }
