@@ -89,5 +89,15 @@ namespace Ligral.Tests.ModelTester
             }
             return true;
         }
+        public void TestInput(Model model, List<Matrix<double>> inputs)
+        {
+            InputTester inputTester = new InputTester();
+            inputTester.SetInput(inputs);
+            ((ILinkable) inputTester).Connect(model);
+            List<Model> models = new List<Model> {inputTester, model};
+            models.ForEach(m => m.Prepare());
+            models.ForEach(m => m.Check());
+            models.ForEach(m => m.Propagate());
+        }
     }
 }
