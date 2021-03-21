@@ -14,7 +14,7 @@ namespace Ligral.Tests.ModelTester
     public class TestNode
     {
         [Fact]
-        public void Node_InputEqualToOutput()
+        public void Node_InputScalar_OutputScalar()
         {
             var node = ModelManager.Create("Node");
             var modelTester = new ModelTester();
@@ -22,7 +22,7 @@ namespace Ligral.Tests.ModelTester
             Assert.True(modelTester.Test(node, inputs, inputs));
         }
         [Fact]
-        public void Node_InputEqualToOutput2()
+        public void Node_InputMatrix_OutputMatrix()
         {
             var node = ModelManager.Create("Node");
             var modelTester = new ModelTester();
