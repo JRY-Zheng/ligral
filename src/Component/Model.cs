@@ -102,6 +102,7 @@ namespace Ligral.Component
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Interpreter.Completed += Prepare;
+            Solver.Starting += Comfirm;
             Observation.Stepped += Refresh;
             Observation.Stopped += Release;
             SetUpPorts();
@@ -210,6 +211,7 @@ namespace Ligral.Component
             AfterConfigured();
         }
         public virtual void Prepare() { }
+        public virtual void Comfirm() { }
         public virtual void Refresh() { }
         public virtual void Release() { }
         public virtual void Connect(int outPortNO, InPort inPort)

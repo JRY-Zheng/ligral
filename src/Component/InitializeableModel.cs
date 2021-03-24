@@ -106,5 +106,18 @@ namespace Ligral.Component
             }
             OutPortList[0].SetShape(rowNo, colNo);
         }
+        public override void Comfirm()
+        {
+            int inputRowNo = InPortList[0].RowNo;
+            int inputColNo = InPortList[0].ColNo;
+            if (inputColNo != colNo)
+            {
+                throw logger.Error(new ModelException(this, $"Column number in consistent, got {inputColNo}, but {colNo} expected."));
+            }
+            else if (inputRowNo != rowNo)
+            {
+                throw logger.Error(new ModelException(this, $"Row number in consistent, got {inputRowNo}, but {rowNo} expected."));
+            }
+        }
     }
 }
