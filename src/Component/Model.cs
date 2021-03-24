@@ -198,7 +198,14 @@ namespace Ligral.Component
             {
                 Parameter parameter = Parameters[parameterName];
                 object value = dictionary[parameterName];
-                parameter.OnSet(value);
+                try
+                {
+                    parameter.OnSet(value);
+                }
+                catch (System.Exception e)
+                {
+                    throw logger.Error(new ModelException(this, e.Message));
+                }
             });
             AfterConfigured();
         }
