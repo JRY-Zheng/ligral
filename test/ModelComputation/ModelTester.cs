@@ -5,7 +5,7 @@
 */
 
 using System.Collections.Generic;
-using Xunit;
+using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 
@@ -67,17 +67,25 @@ namespace Ligral.Tests.ModelTester
     }
     class ModelTester
     {
-        public bool Test(Model model, List<Matrix<double>> inputs, List<Matrix<double>> outputs)
+        public bool Test(Model model, List<Matrix<double>> inputs, List<Matrix<double>> outputs, Action beforeRunning=null)
+        {
+            var models = new List<Model>{model};
+            return Test(model, models, inputs, outputs, beforeRunning);
+        }
+        public bool Test(ILinkable model, List<Model> models, List<Matrix<double>> inputs, List<Matrix<double>> outputs, Action beforeRunning=null)
         {
             InputTester inputTester = new InputTester();
             OutputTester outputTester = new OutputTester();
             inputTester.SetInput(inputs);
             outputTester.SetOutput(outputs.Count);
             ((ILinkable) inputTester).Connect(model);
-            ((ILinkable) model).Connect(outputTester);
-            List<Model> models = new List<Model> {inputTester, model, outputTester};
+            model.Connect(outputTester);
+            models.Insert(0, inputTester);
+            models.Add(outputTester);
             models.ForEach(m => m.Prepare());
             models.ForEach(m => m.Check());
+            models.ForEach(m => m.Confirm());
+            if (beforeRunning != null) beforeRunning();
             models.ForEach(m => m.Propagate());
             var results = outputTester.GetOutput();
             for (int i=0; i<outputs.Count; i++)
@@ -91,12 +99,17 @@ namespace Ligral.Tests.ModelTester
         }
         public void TestInput(Model model, List<Matrix<double>> inputs)
         {
+            TestInput(model, new List<Model>{model}, inputs);
+        }
+        public void TestInput(ILinkable model, List<Model> models, List<Matrix<double>> inputs)
+        {
             InputTester inputTester = new InputTester();
             inputTester.SetInput(inputs);
             ((ILinkable) inputTester).Connect(model);
-            List<Model> models = new List<Model> {inputTester, model};
+            models.Insert(0, inputTester);
             models.ForEach(m => m.Prepare());
             models.ForEach(m => m.Check());
+            models.ForEach(m => m.Confirm());
             models.ForEach(m => m.Propagate());
         }
     }
