@@ -25,11 +25,11 @@ namespace Ligral.Component.Models
             base.SetUpParameters();
             Parameters["upper"] = new Parameter(ParameterType.Signal , value=>
                 {
-                    upper=(double)value;
+                    upper=value.ToScalar();
                 });
             Parameters["lower"] = new Parameter(ParameterType.Signal , value=>
                 {
-                    lower = (double)value;
+                    lower = value.ToScalar();
                 });
         }
         protected override void DerivativeUpdate(Matrix<double> inputSignal)
