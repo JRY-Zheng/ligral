@@ -55,14 +55,14 @@ namespace Ligral.Component.Models
                 }, ()=>{})},
                 {"start", new Parameter(ParameterType.Signal , value=>
                 {
-                    start = Convert.ToInt32(value);
+                    start = value.ToScalar();
                 }, ()=>
                 {
                     start = 0;
                 })},
                 {"stop", new Parameter(ParameterType.Signal , value=>
                 {
-                    end = Convert.ToInt32(value);
+                    end = value.ToScalar();
                 }, ()=>
                 {
                     Settings settings = Settings.GetInstance();
@@ -70,11 +70,11 @@ namespace Ligral.Component.Models
                 })},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
-                    colNo = System.Convert.ToInt32(value);
+                    colNo = value.ToInt();
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
-                    rowNo = System.Convert.ToInt32(value);
+                    rowNo = value.ToInt();
                 }, ()=>{})}
             };
         }

@@ -36,7 +36,7 @@ namespace Ligral.Component.Models
             {
                 {"seed", new Parameter(ParameterType.Signal , value=>
                 {
-                    seed = Convert.ToInt32(value);
+                    seed = value.ToInt();
                     random = new Random(seed);
                 }, ()=>
                 {

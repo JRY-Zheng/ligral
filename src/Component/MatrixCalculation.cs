@@ -108,6 +108,37 @@ namespace Ligral.Component
                 throw new ArgumentException($"Cannot convert type {o.GetType().Name} to matrix");
             }
         }
+        public static int ToInt(this double d)
+        {
+            int i = Convert.ToInt32(d);
+            if (Math.Abs(i-d) > double.Epsilon*10)
+            {
+                throw new ArgumentException("Not a integer");
+            }
+            return i;
+        }
+        public static double ToInt(this int d)
+        {
+            return d;
+        }
+        public static int ToInt(this object o)
+        {
+            switch (o)
+            {
+            case Matrix<double> matrix:
+                if (!matrix.IsScalar())
+                {
+                    throw new ArgumentException($"Cannot cast matrix with shape {matrix.ShapeString()} to scalar");
+                }
+                return matrix[0,0].ToInt();
+            case int i:
+                return i;
+            case double d:
+                return d.ToInt();
+            default:
+                throw new ArgumentException($"Cannot convert type {o.GetType().Name} to matrix");
+            }
+        }
         public static string ShapeString(this Matrix<double> matrix)
         {
             return $"{matrix.RowCount}x{matrix.ColumnCount}";
@@ -201,8 +232,12 @@ namespace Ligral.Component
         {
             if (right.IsScalar()) 
             {
-                int exponent = Convert.ToInt32(right[0,0]);
-                if (Math.Abs(right[0,0] - exponent) > double.Epsilon*10)
+                int exponent;
+                try
+                {
+                    exponent = right[0,0].ToInt();
+                }
+                catch (ArgumentException)
                 {
                     throw new ArgumentException($"Index of a matrix must be integer but {right[0,0]} received, which would make the result to be complex");
                 }

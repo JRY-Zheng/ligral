@@ -35,12 +35,12 @@ namespace Ligral.Component
                 }, ()=>{})},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
-                    colNo = Convert.ToInt32(value);
+                    colNo = value.ToInt();
                     InPortList[0].ColNo = colNo;
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
-                    rowNo = Convert.ToInt32(value);
+                    rowNo = value.ToInt();
                     InPortList[0].RowNo  = rowNo;
                 }, ()=>{})}
             };

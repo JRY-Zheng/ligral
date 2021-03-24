@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Ligral.Component;
 
 namespace Ligral
 {
@@ -168,7 +169,7 @@ namespace Ligral
                         }
                         else
                         {
-                            MinPrintOutLevel = (LogLevel) Convert.ToInt32(val);
+                            MinPrintOutLevel = (LogLevel) val.ToInt();
                         }
                         break;
                     case "min_log_file_level":
@@ -178,7 +179,7 @@ namespace Ligral
                         }
                         else
                         {
-                            MinLogFileLevel = (LogLevel) Convert.ToInt32(val);
+                            MinLogFileLevel = (LogLevel) val.ToInt();
                         }
                         break;
                     case "print_out_plain_text":

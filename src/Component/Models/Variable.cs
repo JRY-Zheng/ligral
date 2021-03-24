@@ -41,12 +41,12 @@ namespace Ligral.Component.Models
                 }, ()=>{})},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
-                    colNo = System.Convert.ToInt32(value);
+                    colNo = value.ToInt();
                     InPortList[0].ColNo = colNo;
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
-                    rowNo = System.Convert.ToInt32(value);
+                    rowNo = value.ToInt();
                     InPortList[0].RowNo = rowNo;
                 }, ()=>{})},
                 {"initial", new Parameter(ParameterType.Signal , value=>
