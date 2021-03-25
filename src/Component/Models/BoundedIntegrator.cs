@@ -34,6 +34,7 @@ namespace Ligral.Component.Models
         }
         protected override void AfterConfigured()
         {
+            base.AfterConfigured();
             if (lower>=upper)
             {
                 throw logger.Error(new ModelException(this, $"Configuration conflict: lower bound {lower} is greater than upper bound {upper}."));
