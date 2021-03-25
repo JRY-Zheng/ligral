@@ -213,11 +213,19 @@ namespace Ligral.Tests.ModelTester
             Assert.Throws<ModelException>(()=>modelTester.TestInput(model, inputs));
         }
         [Fact]
-        public void BoundedIntegrator_InputMatrix_DecimalShape_CauseError()
+        public void BoundedIntegrator_DecimalShape_CauseError()
         {
             State.StatePool.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"row", 2.3}, {"col", 3}};
+            Assert.Throws<ModelException>(()=>model.Configure(dict));
+        }
+        [Fact]
+        public void BoundedIntegrator_ConflictBound_CauseError()
+        {
+            State.StatePool.Clear();
+            var model = ModelManager.Create("BoundedIntegrator");
+            var dict = new Dictionary<string, object> {{"upper", -10.0}, {"lower", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
         [Fact]
