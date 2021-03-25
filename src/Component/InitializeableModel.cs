@@ -106,7 +106,7 @@ namespace Ligral.Component
             }
             OutPortList[0].SetShape(rowNo, colNo);
         }
-        public override void Comfirm()
+        public override void Confirm()
         {
             int inputRowNo = InPortList[0].RowNo;
             int inputColNo = InPortList[0].ColNo;
