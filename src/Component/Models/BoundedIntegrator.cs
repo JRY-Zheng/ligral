@@ -32,6 +32,13 @@ namespace Ligral.Component.Models
                     lower = value.ToScalar();
                 });
         }
+        protected override void AfterConfigured()
+        {
+            if (lower>=upper)
+            {
+                throw logger.Error(new ModelException(this, $"Configuration conflict: lower bound {lower} is greater than upper bound {upper}."));
+            }
+        }
         protected override void DerivativeUpdate(Matrix<double> inputSignal)
         {
             handle.SetDerivative(inputSignal.Map2(GetBoundedDerivative, handle.GetState()));
