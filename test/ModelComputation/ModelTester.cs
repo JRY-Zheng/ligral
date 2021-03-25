@@ -112,5 +112,29 @@ namespace Ligral.Tests.ModelTester
             models.ForEach(m => m.Confirm());
             models.ForEach(m => m.Propagate());
         }
+        public bool TestOutput(Model model, List<Matrix<double>> outputs)
+        {
+            return TestOutput(model, new List<Model>{model}, outputs);
+        }
+        public bool TestOutput(ILinkable model, List<Model> models, List<Matrix<double>> outputs)
+        {
+            OutputTester outputTester = new OutputTester();
+            outputTester.SetOutput(outputs.Count);
+            model.Connect(outputTester);
+            models.Add(outputTester);
+            models.ForEach(m => m.Prepare());
+            models.ForEach(m => m.Check());
+            models.ForEach(m => m.Confirm());
+            models.ForEach(m => m.Propagate());
+            var results = outputTester.GetOutput();
+            for (int i=0; i<outputs.Count; i++)
+            {
+                if (!results[i].EqualTo(outputs[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
