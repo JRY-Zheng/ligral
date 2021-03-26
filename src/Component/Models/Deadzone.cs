@@ -27,13 +27,21 @@ namespace Ligral.Component.Models
             {
                 {"left", new Parameter(ParameterType.Signal , value=>
                 {
-                    left = (double)value;
+                    left = value.ToScalar();
                 })},
                 {"right", new Parameter(ParameterType.Signal , value=>
                 {
-                    right = (double)value;
+                    right = value.ToScalar();
                 })},
             };
+        }
+        protected override void AfterConfigured()
+        {
+            base.AfterConfigured();
+            if (left >= right)
+            {
+                throw logger.Error(new ModelException(this, $"Configuration conflict: left {left} is greater than right {right}"));
+            }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
