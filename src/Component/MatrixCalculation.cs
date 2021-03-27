@@ -183,11 +183,7 @@ namespace Ligral.Component
         }
         public static Matrix<double> RightDiv(this Matrix<double> left, Matrix<double> right)
         {
-            if (left.IsScalar()) 
-            {
-                return left[0,0]/right;
-            }
-            else if (right.IsScalar()) 
+            if (right.IsScalar()) 
             {
                 if (right[0,0]==0)
                 {
@@ -195,6 +191,10 @@ namespace Ligral.Component
                 }
                 return left/right[0,0];
             }
+            else if (left.IsScalar()) 
+            {
+                return left[0,0]/right;
+            } 
             else if (right.IsSingular())
             {
                 throw new DivideByZeroException();
