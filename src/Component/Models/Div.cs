@@ -60,6 +60,10 @@ namespace Ligral.Component.Models
                 }
                 throw logger.Error(new ModelException(this, message));
             }
+            catch (System.DivideByZeroException e)
+            {
+                throw logger.Error(new ModelException(this, e.Message));
+            }
             return Results;
         }
     }
