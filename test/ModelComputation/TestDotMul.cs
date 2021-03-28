@@ -12,113 +12,76 @@ using Ligral.Component;
 
 namespace Ligral.Tests.ModelTester
 {
-    public class TestDotDiv
+    public class TestDotMul
     {
         [Fact]
-        public void DotDiv_InputTwoScalars_OutputScalar()
+        public void DotMul_InputTwoScalars_OutputScalar()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix(), -1.2.ToMatrix()};
-            var outputs = new List<Matrix<double>> {-1.ToMatrix()};
+            var outputs = new List<Matrix<double>> {-1.44.ToMatrix()};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputScalarDotDivZero_OutputScalar()
+        public void DotMul_InputScalarDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotDiv");
-            var modelTester = new ModelTester();
-            var inputs = new List<Matrix<double>> {1.2.ToMatrix(), 0.ToMatrix()};
-            Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
-        }
-        [Fact]
-        public void DotDiv_InputScalarDotDivMatrix_OutputMatrix()
-        {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = 1.2.ToMatrix();
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var inputs = new List<Matrix<double>> {left, right};
-            var outputs = new List<Matrix<double>> {left.DotDiv(right)};
+            var outputs = new List<Matrix<double>> {left.DotMul(right)};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputMatrixDotDivScalar_OutputMatrix()
+        public void DotMul_InputMatrixDotMulScalar_OutputMatrix()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var right = 1.2.ToMatrix();
             var inputs = new List<Matrix<double>> {left, right};
-            var outputs = new List<Matrix<double>> {left.DotDiv(right)};
+            var outputs = new List<Matrix<double>> {left.DotMul(right)};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputMatrixDotDivZero_CauseError()
+        public void DotMul_InputVectorDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotDiv");
-            var modelTester = new ModelTester();
-            var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
-            var inputs = new List<Matrix<double>> {left, 0.ToMatrix()};
-            Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
-        }
-        [Fact]
-        public void DotDiv_InputVectorDotDivMatrix_OutputMatrix()
-        {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var inputs = new List<Matrix<double>> {left, right};
-            var outputs = new List<Matrix<double>> {left.DotDiv(right)};
+            var outputs = new List<Matrix<double>> {left.DotMul(right)};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputMatrixDotDivVector_OutputMatrix()
+        public void DotMul_InputMatrixDotMulVector_OutputMatrix()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {2}});
             var inputs = new List<Matrix<double>> {left, right};
-            var outputs = new List<Matrix<double>> {left.DotDiv(right)};
+            var outputs = new List<Matrix<double>> {left.DotMul(right)};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputMatrixDotDivMatrix_OutputMatrix()
+        public void DotMul_InputMatrixDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{2, 3, 4}, {1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-1.1, -2, -4}});
             var inputs = new List<Matrix<double>> {left, right};
-            var outputs = new List<Matrix<double>> {left.DotDiv(right)};
+            var outputs = new List<Matrix<double>> {left.DotMul(right)};
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void DotDiv_InputMatrixDotDivMatrixWithZero_CauseError()
+        public void DotMul_InputShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("DotDiv");
-            var modelTester = new ModelTester();
-            var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{2, 3, 4}, {1, 2, 3}});
-            var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 0, 4}});
-            var inputs = new List<Matrix<double>> {left, right};
-            Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
-        }
-        [Fact]
-        public void DotDiv_InputVectorDotDivMatrixWithZero_CauseError()
-        {
-            var model = ModelManager.Create("DotDiv");
-            var modelTester = new ModelTester();
-            var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
-            var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 0}, {2, 3, 4}, {-1, -2, -3}});
-            var inputs = new List<Matrix<double>> {left, right};
-            Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
-        }
-        [Fact]
-        public void DotDiv_InputShapeInconsistency_CauseError()
-        {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {3, 4, 5}});
@@ -126,18 +89,18 @@ namespace Ligral.Tests.ModelTester
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
         }
         [Fact]
-        public void DotDiv_InputLessThanTwo_CauseError()
+        public void DotMul_InputLessThanTwo_CauseError()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
         }
         [Fact]
-        public void DotDiv_InputMoreThanTwo_CauseError()
+        public void DotMul_InputMoreThanTwo_CauseError()
         {
-            var model = ModelManager.Create("DotDiv");
+            var model = ModelManager.Create("DotMul");
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left, left, left};
