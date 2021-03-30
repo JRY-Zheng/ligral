@@ -81,7 +81,7 @@ namespace Ligral.Tests.ModelTester
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 2.1, -23.2}, {0, -0.02, 10}})};
             var outputs = new List<Matrix<double>> {Matrix<double>.Build.Dense(2, 3, 0)};
             Assert.True(modelTester.Test(model, inputs, outputs));
-            Assert.True(State.StatePool.Zip(inputs[0].ToList()).All(pair => pair.First.Derivative==pair.Second));
+            Assert.True(Function.FunctionPool.Zip(inputs[0].ToList()).All(pair => pair.First.Value==pair.Second));
         }
         [Fact]
         public void Equal_InputMatrix_InitializeMatrix_OutputMatrix()
