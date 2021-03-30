@@ -39,12 +39,25 @@ namespace Ligral.Component.Models
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = value.ToInt();
+                    if (colNo <= 0)
+                    {
+                        throw logger.Error(new ModelException(this, $"column number should be positive but got {colNo}"));
+                    }
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = value.ToInt();
+                    if (rowNo <= 0)
+                    {
+                        throw logger.Error(new ModelException(this, $"row number should be positive but got {rowNo}"));
+                    }
                 }, ()=>{})}
             };
+        }
+        protected override void AfterConfigured()
+        {
+            base.AfterConfigured();
+            // if ()
         }
         public override void Prepare()
         {

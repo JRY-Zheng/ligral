@@ -36,11 +36,19 @@ namespace Ligral.Component
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = value.ToInt();
+                    if (colNo <= 0)
+                    {
+                        throw logger.Error(new ModelException(this, $"column number should be positive but got {colNo}"));
+                    }
                     InPortList[0].ColNo = colNo;
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = value.ToInt();
+                    if (rowNo<= 0)
+                    {
+                        throw logger.Error(new ModelException(this, $"row number should be positive but got {rowNo}"));
+                    }
                     InPortList[0].RowNo  = rowNo;
                 }, ()=>{})}
             };
