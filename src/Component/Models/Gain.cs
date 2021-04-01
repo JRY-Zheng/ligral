@@ -13,7 +13,7 @@ namespace Ligral.Component.Models
     class Gain : Model
     {
         private Matrix<double> gain;
-        private bool leftProduct = false;
+        private bool leftProduct = true;
         protected override string DocString
         {
             get
@@ -46,13 +46,26 @@ namespace Ligral.Component.Models
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            if (leftProduct)
+            try
             {
-                Results[0] = gain.MatMul(values[0]);
+                if (leftProduct)
+                {
+                    Results[0] = gain.MatMul(values[0]);
+                }
+                else
+                {
+                    Results[0] = values[0].MatMul(gain);
+                }
             }
-            else
+            catch (System.ArgumentException e)
             {
-                Results[0] = values[0].MatMul(gain);
+                string message = e.Message;
+                int indexOfParenthesis = message.IndexOf('(');
+                if (indexOfParenthesis>=0)
+                {
+                    message = message.Substring(0, indexOfParenthesis);
+                }
+                throw logger.Error(new ModelException(this, message));
             }
             return Results;
         }
