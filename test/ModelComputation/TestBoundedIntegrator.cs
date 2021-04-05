@@ -51,7 +51,7 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {5.3.ToMatrix()};
-            Assert.True(modelTester.Test(model, inputs, outputs, ()=>State.StatePool[0].StateVariable = 5.3));
+            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: ()=>State.StatePool[0].StateVariable = 5.3));
         }
         [Fact]
         public void BoundedIntegrator_StateOutOfUpperBound_PositiveDerivativeDemand_DerivativeZero()
@@ -63,7 +63,7 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {10.ToMatrix()};
-            Assert.True(modelTester.Test(model, inputs, outputs, ()=>State.StatePool[0].StateVariable = 10.0));
+            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: ()=>State.StatePool[0].StateVariable = 10.0));
             Assert.True(State.StatePool[0].Derivative==0);
         }
         [Fact]
@@ -76,7 +76,7 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-11.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {10.ToMatrix()};
-            Assert.True(modelTester.Test(model, inputs, outputs, ()=>State.StatePool[0].StateVariable = 10.0));
+            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: ()=>State.StatePool[0].StateVariable = 10.0));
             Assert.True(State.StatePool[0].Derivative==-11.2);
         }
         [Fact]
@@ -89,7 +89,7 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {-10.ToMatrix()};
-            Assert.True(modelTester.Test(model, inputs, outputs, ()=>State.StatePool[0].StateVariable = -10.0));
+            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: ()=>State.StatePool[0].StateVariable = -10.0));
             Assert.True(State.StatePool[0].Derivative==1.2);
         }
         [Fact]
@@ -102,7 +102,7 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-11.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {-10.ToMatrix()};
-            Assert.True(modelTester.Test(model, inputs, outputs, ()=>State.StatePool[0].StateVariable = -10.0));
+            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: ()=>State.StatePool[0].StateVariable = -10.0));
             Assert.True(State.StatePool[0].Derivative==0);
         }
         [Fact]

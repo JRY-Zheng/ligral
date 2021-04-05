@@ -67,12 +67,15 @@ namespace Ligral.Tests.ModelTester
     }
     class ModelTester
     {
-        public bool Test(Model model, List<Matrix<double>> inputs, List<Matrix<double>> outputs, Action beforeRunning=null)
+        public bool Test(Model model, List<Matrix<double>> inputs, List<Matrix<double>> outputs, 
+            Action beforeRunning=null, Action beforeChecking=null)
         {
             var models = new List<Model>{model};
-            return Test(model, models, inputs, outputs, beforeRunning);
+            return Test(model, models, inputs, outputs, 
+                beforeRunning:beforeRunning, beforeChecking:beforeChecking);
         }
-        public bool Test(ILinkable model, List<Model> models, List<Matrix<double>> inputs, List<Matrix<double>> outputs, Action beforeRunning=null)
+        public bool Test(ILinkable model, List<Model> models, List<Matrix<double>> inputs, List<Matrix<double>> outputs, 
+            Action beforeRunning=null, Action beforeChecking=null)
         {
             InputTester inputTester = new InputTester();
             OutputTester outputTester = new OutputTester();
@@ -83,6 +86,37 @@ namespace Ligral.Tests.ModelTester
             models.Insert(0, inputTester);
             models.Add(outputTester);
             models.ForEach(m => m.Prepare());
+            if (beforeChecking != null) beforeChecking();
+            models.ForEach(m => m.Check());
+            models.ForEach(m => m.Confirm());
+            if (beforeRunning != null) beforeRunning();
+            models.ForEach(m => m.Propagate());
+            var results = outputTester.GetOutput();
+            for (int i=0; i<outputs.Count; i++)
+            {
+                if (!results[i].EqualTo(outputs[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool TestOutput(Model model, List<Matrix<double>> outputs, 
+            Action beforeRunning=null, Action beforeChecking=null)
+        {
+            var models = new List<Model>{model};
+            return TestOutput(model, models, outputs, 
+                beforeRunning:beforeRunning, beforeChecking:beforeChecking);
+        }
+        public bool TestOutput(ILinkable model, List<Model> models, List<Matrix<double>> outputs, 
+            Action beforeRunning=null, Action beforeChecking=null)
+        {
+            OutputTester outputTester = new OutputTester();
+            outputTester.SetOutput(outputs.Count);
+            model.Connect(outputTester);
+            models.Add(outputTester);
+            models.ForEach(m => m.Prepare());
+            if (beforeChecking != null) beforeChecking();
             models.ForEach(m => m.Check());
             models.ForEach(m => m.Confirm());
             if (beforeRunning != null) beforeRunning();

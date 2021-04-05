@@ -6,7 +6,7 @@
 
 namespace Ligral.Component
 {
-    interface IFixable
+    public interface IFixable
     {
         bool FixConnection();
     }
