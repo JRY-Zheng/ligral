@@ -37,11 +37,19 @@ namespace Ligral.Component.Models
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = value.ToInt();
+                    if (colNo < 1)
+                    {
+                        throw logger.Error(new ModelException(this, $"column number should be at least 1 but {colNo} received"));
+                    }
                     InPortList[0].ColNo = colNo;
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = value.ToInt();
+                    if (rowNo < 1)
+                    {
+                        throw logger.Error(new ModelException(this, $"row number should be at least 1 but {rowNo} received"));
+                    }
                     InPortList[0].RowNo = rowNo;
                 }, ()=>{})}
             };
