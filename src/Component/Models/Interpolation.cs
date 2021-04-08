@@ -49,10 +49,18 @@ namespace Ligral.Component.Models
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = value.ToInt();
+                    if (colNo<1)
+                    {
+                        throw logger.Error(new ModelException(this, $"column number should be at least one but {colNo} received"));
+                    }
                 }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
                     rowNo = value.ToInt();
+                    if (rowNo<1)
+                    {
+                        throw logger.Error(new ModelException(this, $"row number should be at least one but {rowNo} received"));
+                    }
                 }, ()=>{})}
             };
         }
@@ -87,7 +95,7 @@ namespace Ligral.Component.Models
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            double inputVal = values[0][0,0];
+            double inputVal = values[0].ToScalar();
             List<double> interpolationVal = Interpolate(inputVal);
             if (colNo * rowNo == interpolationVal.Count - 1)
             {
