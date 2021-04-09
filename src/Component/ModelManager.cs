@@ -86,6 +86,7 @@ namespace Ligral.Component
             {"OutputSink", ()=>new OutputSink()},
             {"Sweep", ()=>new Sweep()},
             {"Inv", ()=>new Inverse()},
+            {"Inverse", ()=>new Inverse()},
             {"Equal", ()=>new Equal()},
             {"EqualToZero", ()=>new EqualToZero()},
             {"=0", ()=>new EqualToZero()},

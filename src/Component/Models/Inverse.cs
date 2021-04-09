@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component.Models
@@ -24,12 +25,24 @@ namespace Ligral.Component.Models
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
+        public override void Check()
+        {
+            if (InPortList[0].RowNo != InPortList[0].ColNo)
+            {
+                throw logger.Error(new ModelException(this, $"Only square matrix can be inverted but the matrix is of shape ({InPortList[0].RowNo}, {InPortList[0].ColNo})"));
+            }
+            base.Check();
+        }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             Matrix<double> matrix = values[0];
             try
             {
                 Results[0] = matrix.Inverse();
+                if (Results[0].Enumerate().Contains(double.NaN))
+                {
+                    throw logger.Error(new ModelException(this, "The matrix shall be invertable (nonsingular)"));
+                }
             }
             catch (Exception e)
             {
