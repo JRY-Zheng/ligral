@@ -11,6 +11,7 @@ using ParameterDictionary=System.Collections.Generic.Dictionary<string,Ligral.Co
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Syntax;
+using Ligral.Syntax.CodeASTs;
 using Ligral.Simulation;
 
 namespace Ligral.Component
@@ -327,6 +328,28 @@ namespace Ligral.Component
         public string GetTypeName()
         {
             return GetType().Name;
+        }
+        internal ModelCodeAST ConstructAST()
+        {
+            ModelCodeAST modelCodeAST = new ModelCodeAST();
+            FunctionCodeAST functionCodeAST = new FunctionCodeAST();
+            functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, GetTypeName());
+            functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{inPort.Name}"));
+            functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{outPort.Name}"));
+            List<CopyCodeAST> copyCodeASTs = new List<CopyCodeAST>();
+            foreach (var outPort in OutPortList)
+            {
+                foreach (var destination in outPort.DestinationWordList)
+                {
+                    CopyCodeAST copyCodeAST = new CopyCodeAST();
+                    copyCodeAST.Source = new CodeToken(CodeTokenType.WORD, $"{Name}_{outPort.Name}");
+                    copyCodeAST.Destination = new CodeToken(CodeTokenType.WORD, destination);
+                    copyCodeASTs.Add(copyCodeAST);
+                }
+            }
+            modelCodeAST.functionCodeAST = functionCodeAST;
+            modelCodeAST.copyCodeASTs = copyCodeASTs;
+            return modelCodeAST;
         }
         public override string ToString()
         {

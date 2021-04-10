@@ -168,6 +168,18 @@ namespace Ligral.Component
                 signalName = value;
             }
         }
+        private List<string> destinationWordList;
+        public List<string> DestinationWordList
+        {
+            get
+            {
+                if (destinationWordList == null)
+                {
+                    destinationWordList = destinationList.ConvertAll(inPort => $"{inPort.FatherModel.Name}_{inPort.Name}");
+                }
+                return destinationWordList;
+            }
+        }
         public OutPort(string name, Model model) : base(name, model)
         {
             destinationList = new List<InPort>();
