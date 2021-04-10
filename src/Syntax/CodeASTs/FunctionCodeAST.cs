@@ -13,5 +13,9 @@ namespace Ligral.Syntax.CodeASTs
         public CodeToken FunctionName;
         public List<CodeToken> Parameters;
         public List<CodeToken> Results;
+        public override CodeToken FindToken()
+        {
+            return FunctionName;
+        }
     }
 }

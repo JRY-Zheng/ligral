@@ -11,5 +11,9 @@ namespace Ligral.Syntax.CodeASTs
     {
         public CodeToken Source;
         public CodeToken Destination;
+        public override CodeToken FindToken()
+        {
+            return Source;
+        }
     }
 }

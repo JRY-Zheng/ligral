@@ -12,5 +12,9 @@ namespace Ligral.Syntax.CodeASTs
     {
         public FunctionCodeAST functionCodeAST;
         public List<CopyCodeAST> copyCodeASTs;
+        public override CodeToken FindToken()
+        {
+            return functionCodeAST.FindToken();
+        }
     }
 }

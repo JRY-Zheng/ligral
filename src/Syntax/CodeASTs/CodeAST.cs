@@ -8,5 +8,9 @@ namespace Ligral.Syntax.CodeASTs
 {
     class CodeAST 
     {
+        public virtual CodeToken FindToken()
+        {
+            return null;
+        }
     }
 }
