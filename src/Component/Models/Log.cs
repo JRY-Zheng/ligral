@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Linq;
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
@@ -20,7 +21,7 @@ namespace Ligral.Component.Models
                 return "This model calculates y=log(x)/log(base), where default base is e.";
             }
         }
-        private double newBase;
+        private double newBase = Math.E;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("x", this));
@@ -32,16 +33,21 @@ namespace Ligral.Component.Models
             {
                 {"base", new Parameter(ParameterType.Signal , value=>
                 {
-                    newBase = (double)value;
-                }, ()=>
-                {
-                    newBase = Math.E;
-                })}
+                    newBase = value.ToScalar();
+                }, ()=>{})}
             };
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             Results[0] = values[0].Map(x => Math.Log(x, newBase));
+            if (Results[0].Enumerate().Contains(double.NaN))
+            {
+                throw logger.Error(new ModelException(this, "The input of log cannot be negative"));
+            }
+            else if (Results[0].Enumerate().Contains(double.NegativeInfinity))
+            {
+                throw logger.Error(new ModelException(this, "The input of log cannot be zero"));
+            }
             return Results;
         }
     }
