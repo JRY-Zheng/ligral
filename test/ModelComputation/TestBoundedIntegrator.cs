@@ -19,6 +19,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputScalar_OutputZero()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"name", "myName"}};
             model.Configure(dict);
@@ -33,6 +34,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputZero_InitializeOne_OutputOne()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -45,6 +47,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_SetState_OutputStateValue()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -57,6 +60,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_StateOutOfUpperBound_PositiveDerivativeDemand_DerivativeZero()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -70,6 +74,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_StateOutOfUpperBound_NegativeDerivativeDemand_DerivativeDemanded()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -83,6 +88,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_StateOutOfLowerBound_PositiveDerivativeDemand_DerivativeDemanded()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -96,6 +102,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_StateOutOfLowerBound_NegativeDerivativeDemand_DerivativeDemanded()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}, {"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -109,6 +116,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}};
             model.Configure(dict);
@@ -122,6 +130,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_InitializeMatrix_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var initial = Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 20.1, -23.2}, {0, -15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}, {"upper", 10.0.ToMatrix()}, {"lower", -10.0.ToMatrix()}};
@@ -137,6 +146,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_InitializeShapeInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var initial = Matrix<double>.Build.DenseOfArray(new double[3, 2] {{1, 20.1}, {-23.2, 0}, {-15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}, {"upper", 10.0.ToMatrix()}, {"lower", -10.0.ToMatrix()}};
@@ -149,6 +159,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_MissUpper_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1}, {"lower", -10}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -157,6 +168,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_MissLower_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1}, {"upper", 10}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -165,6 +177,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_ParameterTypeWrong_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1}, {"upper", "10"}, {"lower", -10}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -173,6 +186,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_UnknownParameter_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"initial", 1}, {"upper", 10}, {"lower", -10}, {"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -181,6 +195,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_ExplicitShape_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"row", 2}, {"col", 3}};
             model.Configure(dict);
@@ -194,6 +209,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_RowInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"row", 3}, {"col", 3}};
             model.Configure(dict);
@@ -205,6 +221,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_InputMatrix_ColumnInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"row", 2}, {"col", 2}};
             model.Configure(dict);
@@ -216,6 +233,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_DecimalShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", 10.0}, {"lower", -10.0}, {"row", 2.3}, {"col", 3}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
@@ -224,6 +242,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_ConflictBound_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var dict = new Dictionary<string, object> {{"upper", -10.0}, {"lower", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
@@ -232,6 +251,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_Loop_InputScalar_ImplicitShape_OutputScalar()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");
@@ -253,6 +273,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_Loop_InputMatrix_ImplicitShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");
@@ -273,6 +294,7 @@ namespace Ligral.Tests.ModelTester
         public void BoundedIntegrator_Loop_InputMatrix_ExplicitShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("BoundedIntegrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");

@@ -19,6 +19,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputScalar_OutputZero()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"name", "myName"}};
             model.Configure(dict);
@@ -33,6 +34,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputZero_InitializeOne_OutputOne()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}};
             model.Configure(dict);
@@ -45,6 +47,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_SetState_OutputStateValue()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"initial", 1.0}};
             model.Configure(dict);
@@ -57,6 +60,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {};
             model.Configure(dict);
@@ -70,6 +74,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_InitializeMatrix_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var initial = Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 20.1, -23.2}, {0, -15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}};
@@ -84,6 +89,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_InitializeShapeInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var initial = Matrix<double>.Build.DenseOfArray(new double[3, 2] {{1, 20.1}, {-23.2, 0}, {-15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}};
@@ -96,6 +102,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_ParameterTypeWrong_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"initial", "1"}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -104,6 +111,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_UnknownParameter_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"initial", 1}, {"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -112,6 +120,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_ExplicitShape_OutputMatrix()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             model.Configure(dict);
@@ -125,6 +134,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_RowInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"row", 3}, {"col", 3}};
             model.Configure(dict);
@@ -136,6 +146,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_InputMatrix_ColumnInconsistency_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 2}};
             model.Configure(dict);
@@ -147,6 +158,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_DecimalShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var dict = new Dictionary<string, object> {{"row", 2.3}, {"col", 3}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
@@ -155,6 +167,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_Loop_InputScalar_ImplicitShape_OutputScalar()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");
@@ -176,6 +189,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_Loop_InputMatrix_ImplicitShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");
@@ -196,6 +210,7 @@ namespace Ligral.Tests.ModelTester
         public void Integrator_Loop_InputMatrix_ExplicitShape_CauseError()
         {
             State.StatePool.Clear();
+            State.StateHandles.Clear();
             var model = ModelManager.Create("Integrator");
             var add = ModelManager.Create("Add");
             var node = ModelManager.Create("Node");
