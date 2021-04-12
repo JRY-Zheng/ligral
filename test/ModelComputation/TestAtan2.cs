@@ -51,6 +51,19 @@ namespace Ligral.Tests.ModelTester
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
+        public void Atan2_InputVectorAndMatrix_OutputMatrix()
+        {
+            var model = ModelManager.Create("Atan2");
+            var modelTester = new ModelTester();
+            var inputs = new List<Matrix<double>> 
+            {
+                Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}}), 
+                Matrix<double>.Build.DenseOfArray(new double[2,3]{{88.1, 2, 3.01}, {4.707, 50.6, 0.1}})
+            };
+            var outputs = new List<Matrix<double>> {inputs[0].Broadcast(inputs[1], Math.Atan2)};
+            Assert.True(modelTester.Test(model, inputs, outputs));
+        }
+        [Fact]
         public void Atan2_InputMatrix_OutputMatrix()
         {
             var model = ModelManager.Create("Atan2");
@@ -62,6 +75,18 @@ namespace Ligral.Tests.ModelTester
             };
             var outputs = new List<Matrix<double>> {inputs[0].Map2(Math.Atan2, inputs[1])};
             Assert.True(modelTester.Test(model, inputs, outputs));
+        }
+        [Fact]
+        public void Atan2_InputMatrix_ShapeInconsistency_CauseError()
+        {
+            var model = ModelManager.Create("Atan2");
+            var modelTester = new ModelTester();
+            var inputs = new List<Matrix<double>> 
+            {
+                Matrix<double>.Build.DenseOfArray(new double[2,2]{{1, 2}, {1, 3}}), 
+                Matrix<double>.Build.DenseOfArray(new double[2,3]{{88.1, 2, 3.01}, {4.707, 50.6, 0.1}})
+            };
+            Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
         }
     }
 }
