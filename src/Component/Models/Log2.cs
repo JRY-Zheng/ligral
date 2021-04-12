@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Linq;
 using System.Collections.Generic;
 using System;
 using MathNet.Numerics.LinearAlgebra;
@@ -40,6 +41,14 @@ namespace Ligral.Component.Models
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             Results[0] = values[0].Broadcast(values[1], Math.Log);
+            if (Results[0].Enumerate().Contains(double.NaN))
+            {
+                throw logger.Error(new ModelException(this, "The input of log cannot be negative"));
+            }
+            else if (Results[0].Enumerate().Contains(double.NegativeInfinity))
+            {
+                throw logger.Error(new ModelException(this, "The input of log cannot be zero"));
+            }
             return Results;
         }
     }
