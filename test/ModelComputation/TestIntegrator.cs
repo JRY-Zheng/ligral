@@ -207,7 +207,7 @@ namespace Ligral.Tests.ModelTester
             Assert.Throws<ModelException>(()=>modelTester.TestInput(group, models, inputs));
         }
         [Fact]
-        public void Integrator_Loop_InputMatrix_ExplicitShape_CauseError()
+        public void Integrator_Loop_InputMatrix_ExplicitShape_OutputMatrix()
         {
             State.StatePool.Clear();
             State.StateHandles.Clear();
