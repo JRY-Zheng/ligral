@@ -45,7 +45,7 @@ namespace Ligral.Component.Models
             base.Check();
             handle = State.CreateState(varName, rowNo, colNo, initial);
         }
-        protected override void DerivativeUpdate(Matrix<double> inputSignal)
+        protected override void InputUpdate(Matrix<double> inputSignal)
         {
             try
             {

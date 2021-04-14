@@ -29,7 +29,7 @@ namespace Ligral.Component.Models
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
         }
-        protected override void DerivativeUpdate(Matrix<double> inputSignal)
+        protected override void InputUpdate(Matrix<double> inputSignal)
         {
             inputSignal.CopyTo(stack);
         }
