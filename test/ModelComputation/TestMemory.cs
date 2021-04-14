@@ -24,7 +24,7 @@ namespace Ligral.Tests.ModelTester
             var model = ModelManager.Create("Memory");
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
-            var outputs = new List<Matrix<double>> {0.ToMatrix()};
+            var outputs = new List<Matrix<double>> {1.3.ToMatrix()};//No loop here so memory works as direct-feed-through
             Assert.True(modelTester.Test(model, inputs, outputs));
             var stackInfo = model.GetType().GetField("stack", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.True(((Matrix<double>) stackInfo.GetValue(model)).EqualTo(1.3.ToMatrix()));
@@ -39,7 +39,7 @@ namespace Ligral.Tests.ModelTester
             model.Configure(dict);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-1.ToMatrix()};
-            var outputs = new List<Matrix<double>> {1.ToMatrix()};
+            var outputs = new List<Matrix<double>> {-1.ToMatrix()};
             var stackInfo = model.GetType().GetField("stack", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: () => 
             {
@@ -55,8 +55,7 @@ namespace Ligral.Tests.ModelTester
             var model = ModelManager.Create("Memory");
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 2.1, -23.2}, {0, -0.02, 10}})};
-            var outputs = new List<Matrix<double>> {Matrix<double>.Build.Dense(2, 3, 0)};
-            Assert.True(modelTester.Test(model, inputs, outputs));
+            Assert.True(modelTester.Test(model, inputs, inputs));
             var stackInfo = model.GetType().GetField("stack", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.True(((Matrix<double>) stackInfo.GetValue(model)).EqualTo(inputs[0]));
         }
@@ -71,9 +70,8 @@ namespace Ligral.Tests.ModelTester
             model.Configure(dict);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{-1, 2.1, 23.2}, {0.9, -1.02, -10}})};
-            var outputs = new List<Matrix<double>> {initial};
             var stackInfo = model.GetType().GetField("stack", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.True(modelTester.Test(model, inputs, outputs, beforeRunning: () => 
+            Assert.True(modelTester.Test(model, inputs, inputs, beforeRunning: () => 
             {
                 Assert.True(((Matrix<double>) stackInfo.GetValue(model)).EqualTo(initial));
             }));
@@ -120,8 +118,7 @@ namespace Ligral.Tests.ModelTester
             model.Configure(dict);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 2.1, -23.2}, {0, -0.02, 10}})};
-            var outputs = new List<Matrix<double>> {Matrix<double>.Build.Dense(2, 3, 0)};
-            Assert.True(modelTester.Test(model, inputs, outputs));
+            Assert.True(modelTester.Test(model, inputs, inputs));
             var stackInfo = model.GetType().GetField("stack", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.True(((Matrix<double>) stackInfo.GetValue(model)).EqualTo(inputs[0]));
         }
@@ -178,6 +175,28 @@ namespace Ligral.Tests.ModelTester
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
+            Assert.True(modelTester.Test(group, models, inputs, outputs));
+        }
+        [Fact]
+        public void Memory_Loop_InputScalar_Initialized_ImplicitShape_OutputScalar()
+        {
+            State.StatePool.Clear();
+            State.StateHandles.Clear();
+            var model = ModelManager.Create("Memory");
+            var add = ModelManager.Create("Add");
+            var node = ModelManager.Create("Node");
+            var dict = new Dictionary<string, object> {{"initial", -2.3.ToMatrix()}};
+            model.Configure(dict);
+            node.Connect(0, add.Expose(0));
+            model.Connect(0, add.Expose(1));
+            add.Connect(0, model.Expose(0));
+            var group = new Group();
+            group.AddInputModel(node);
+            group.AddOutputModel(model);
+            var models = new List<Model> {node, model, add};
+            var modelTester = new ModelTester();
+            var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
+            var outputs = new List<Matrix<double>> {-2.3.ToMatrix()};
             Assert.True(modelTester.Test(group, models, inputs, outputs));
         }
         [Fact]
