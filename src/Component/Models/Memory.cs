@@ -23,19 +23,19 @@ namespace Ligral.Component.Models
             }
         }
         private Matrix<double> stack;
-        protected override void SetUpParameters()
+        public override void Check()
         {
-            base.SetUpParameters();
-        }
-        protected override void AfterConfigured()
-        {
-            base.AfterConfigured();
+            base.Check();
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
+            Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
+        }
+        protected override void DerivativeUpdate(Matrix<double> inputSignal)
+        {
+            inputSignal.CopyTo(stack);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             stack.CopyTo(Results[0]);
-            values[0].CopyTo(stack);
             return Results;
         }
     }

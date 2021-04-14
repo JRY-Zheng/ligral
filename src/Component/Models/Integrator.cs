@@ -22,12 +22,6 @@ namespace Ligral.Component.Models
         }
         private string varName;
         protected StateHandle handle;
-        protected override void SetUpPorts()
-        {
-            base.SetUpPorts();
-            InPort inPort = InPortList[0];
-            inPort.InPortValueReceived += DerivativeUpdate;
-        }
         protected override void SetUpParameters()
         {
             base.SetUpParameters();
@@ -51,7 +45,7 @@ namespace Ligral.Component.Models
             base.Check();
             handle = State.CreateState(varName, rowNo, colNo, initial);
         }
-        protected virtual void DerivativeUpdate(Matrix<double> inputSignal)
+        protected override void DerivativeUpdate(Matrix<double> inputSignal)
         {
             try
             {

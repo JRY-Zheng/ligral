@@ -25,6 +25,14 @@ namespace Ligral.Component
         {
             return Initialized || base.IsReady();
         }
+        protected override void SetUpPorts()
+        {
+            base.SetUpPorts();
+            InPort inPort = InPortList[0];
+            inPort.InPortValueReceived += DerivativeUpdate;
+        }
+        protected virtual void DerivativeUpdate(Matrix<double> inputSignal)
+        {}
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
