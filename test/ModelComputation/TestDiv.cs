@@ -24,7 +24,7 @@ namespace Ligral.Tests.ModelTester
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void Div_InputScalarDivZero_OutputScalar()
+        public void Div_InputScalarDivZero_CauseError()
         {
             var model = ModelManager.Create("Div");
             var modelTester = new ModelTester();
@@ -54,7 +54,7 @@ namespace Ligral.Tests.ModelTester
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void Div_InputMatrixDivZero_OutputScalar()
+        public void Div_InputMatrixDivZero_CauseError()
         {
             var model = ModelManager.Create("Div");
             var modelTester = new ModelTester();
@@ -74,7 +74,7 @@ namespace Ligral.Tests.ModelTester
             Assert.True(modelTester.Test(model, inputs, outputs));
         }
         [Fact]
-        public void Div_InputMatrixDivNonSquareMatrix_OutputMatrix()
+        public void Div_InputMatrixDivNonSquareMatrix_CauseError()
         {
             var model = ModelManager.Create("Div");
             var modelTester = new ModelTester();
@@ -84,7 +84,7 @@ namespace Ligral.Tests.ModelTester
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
         }
         [Fact]
-        public void Div_InputMatrixDivSingularMatrix_OutputMatrix()
+        public void Div_InputMatrixDivSingularMatrix_CauseError()
         {
             var model = ModelManager.Create("Div");
             var modelTester = new ModelTester();
