@@ -15,7 +15,13 @@ namespace Ligral.Syntax
         private Logger logger = new Logger("Compiler");
         public void Compile(List<Model> routine)
         {
-            var codeASTs = routine.ConvertAll(model => model.ConstructAST());
+            var configurationASTs = routine.ConvertAll(model => model.ConstructConfigurationAST());
+            foreach (var ast in configurationASTs)
+            {
+                if (ast == null) continue;
+                System.Console.WriteLine(Visit(ast));
+            }
+            var codeASTs = routine.ConvertAll(model => model.ConstructConnectionAST());
             foreach (var ast in codeASTs)
             {
                 System.Console.WriteLine(Visit(ast));
@@ -31,6 +37,10 @@ namespace Ligral.Syntax
                 return Visit(functionCodeAST);
             case CopyCodeAST copyCodeAST:
                 return Visit(copyCodeAST);
+            case ConfigurationCodeAST configurationCodeAST:
+                return Visit(configurationCodeAST);
+            case DeclareCodeAST declareCodeAST:
+                return Visit(declareCodeAST);
             default:
                 throw logger.Error(new ComplieException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
             }
@@ -62,6 +72,17 @@ namespace Ligral.Syntax
         private string Visit(CopyCodeAST copyCodeAST)
         {
             return $"{copyCodeAST.Destination.Value} = {copyCodeAST.Source.Value};";
+        }
+        private string Visit(ConfigurationCodeAST configuarionCodeAST)
+        {
+            string functionStatement = Visit(configuarionCodeAST.declareCodeAST);
+            var statements = configuarionCodeAST.copyCodeASTs.ConvertAll(copyCodeAST => Visit(copyCodeAST));
+            statements.Insert(0, functionStatement);
+            return string.Join('\n', statements);
+        }
+        private string Visit(DeclareCodeAST declareCodeAST)
+        {
+            return $"{declareCodeAST.Type.Value} {declareCodeAST.Instance.Value};";
         }
     }
 }
