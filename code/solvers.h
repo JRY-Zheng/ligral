@@ -2,9 +2,13 @@
 #define SOLVERS_H
 
 #include <Eigen/Dense>
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
+using Eigen::Matrix;
 
-VectorXd euler_integral(VectorXd f(VectorXd), VectorXd x, double h);
+template<int n>
+Matrix<double, n, 1> euler_integral(
+    Matrix<double, n, 1> f(Matrix<double, n, 1>), 
+    Matrix<double, n, 1> x, double h) {
+    return x+f(x)*h;
+}
 
 #endif

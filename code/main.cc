@@ -6,13 +6,12 @@
 
 #include <iostream>
 #include <Eigen/Dense>
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
+using Eigen::Matrix;
 
 #include "config.h"
 
 int main() {
-    VectorXd x(2);
+    Matrix<double, n, 1> x;
     x << 0, 1;
     for (int i=0; i<10; i++) {
         double t = ((double)i)*h;
