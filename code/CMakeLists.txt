@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
 PROJECT(LigralCode)
 
-SET(SRC_LIST main.cc)
+SET(SRC_LIST main.cc solvers.cc config.cc)
 ADD_EXECUTABLE(model ${SRC_LIST})
 
 TARGET_INCLUDE_DIRECTORIES(model PUBLIC "/usr/include/eigen3")
