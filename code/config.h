@@ -5,6 +5,7 @@
 using Eigen::Matrix;
 
 #include "solvers.h"
+#include "models.h"
 
 #define h 0.1
 #define n 2
