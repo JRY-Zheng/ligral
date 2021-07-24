@@ -31,6 +31,7 @@ namespace Ligral.Component
             }
         }
         public bool IsConfigured {get; set;}
+        protected Dict configuration;
         public string DefaultName;
         private string scope;
         public string Scope
@@ -62,6 +63,7 @@ namespace Ligral.Component
             }
         }
         public string GivenName;
+        protected virtual bool HasConfiguration {get => false; }
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;
         protected Logger loggerInstance;
@@ -178,6 +180,7 @@ namespace Ligral.Component
             {
                 return;
             }
+            configuration = dictionary;
             IsConfigured = true;
             // ConfigureAction(dictionary);
             dictionary.Keys.Except(Parameters.Keys).ToList().ForEach(unknownParameterName=>
@@ -329,12 +332,16 @@ namespace Ligral.Component
         {
             return GetType().Name;
         }
-        internal ModelCodeAST ConstructAST()
+        internal ModelCodeAST ConstructConnectionAST()
         {
             ModelCodeAST modelCodeAST = new ModelCodeAST();
             FunctionCodeAST functionCodeAST = new FunctionCodeAST();
             functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, GetTypeName());
             functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{inPort.Name}"));
+            if (HasConfiguration)
+            {
+                functionCodeAST.Parameters.Add(new CodeToken(CodeTokenType.WORD, $"&{Name}"));
+            }
             functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{outPort.Name}"));
             List<CopyCodeAST> copyCodeASTs = new List<CopyCodeAST>();
             foreach (var outPort in OutPortList)
@@ -350,6 +357,10 @@ namespace Ligral.Component
             modelCodeAST.functionCodeAST = functionCodeAST;
             modelCodeAST.copyCodeASTs = copyCodeASTs;
             return modelCodeAST;
+        }
+        internal virtual ConfigurationCodeAST ConstructConfigurationAST()
+        {
+            return null;
         }
         public override string ToString()
         {
