@@ -24,8 +24,14 @@ struct integrator_struct {
         Matrix<double, rows_cnt, cols_cnt>* x) {
         for (int r=0; r<rows_cnt; ++r) {
             for (int c=0; c<cols_cnt; ++c) {
-                (*derivatives)(index+r*cols_cnt+c) = xdot(r, c);
                 (*x)(r, c) = (*states)(index+r*cols_cnt+c);
+            }
+        }
+    }
+    void input_update(Matrix<double, rows_cnt, cols_cnt> xdot) {
+        for (int r=0; r<rows_cnt; ++r) {
+            for (int c=0; c<cols_cnt; ++c) {
+                (*derivatives)(index+r*cols_cnt+c) = xdot(r, c);
             }
         }
     }
