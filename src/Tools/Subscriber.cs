@@ -143,47 +143,7 @@ namespace Ligral.Tools
                 }
             }
         }
-        public bool Invoke<T>(T dataPacket) where T: struct
-        {
-            switch (dataPacket)
-            {
-            case FigureProtocol.FigureConfig figureConfig:
-                return Receive(figureConfig);
-            case FigureProtocol.PlotConfig plotConfig:
-                return Receive(plotConfig);
-            case FigureProtocol.ShowCommand showCommand:
-                return Receive(showCommand);
-            case FigureProtocol.DataFile dataFile:
-                return Receive(dataFile);
-            case FigureProtocol.Data data:
-                return Receive(data);
-            case FigureProtocol.Curve curve:
-                return Receive(curve);
-            default:
-                return false;
-            }
-        }
-        protected virtual bool Receive(FigureProtocol.FigureConfig figureConfig)
-        {
-            return false;
-        }
-        protected virtual bool Receive(FigureProtocol.PlotConfig plotConfig)
-        {
-            return false;
-        }
-        protected virtual bool Receive(FigureProtocol.ShowCommand showCommand)
-        {
-            return false;
-        }
-        protected virtual bool Receive(FigureProtocol.DataFile dataFile)
-        {
-            return false;
-        }
-        protected virtual bool Receive(FigureProtocol.Data data)
-        {
-            return false;
-        }
-        protected virtual bool Receive(FigureProtocol.Curve curve)
+        public virtual bool Receive<T>(T datastruct) where T: struct
         {
             return false;
         }

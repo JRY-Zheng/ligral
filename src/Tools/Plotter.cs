@@ -113,7 +113,27 @@ namespace Ligral.Tools
             Execute("exit()");
             if (ScriptsStream!=null) ScriptsStream.Close();
         }
-        protected override bool Receive(FigureProtocol.FigureConfig figureConfig)
+        public override bool Receive<T>(T dataPacket) where T: struct
+        {
+            switch (dataPacket)
+            {
+            case FigureProtocol.FigureConfig figureConfig:
+                return Receive(figureConfig);
+            case FigureProtocol.PlotConfig plotConfig:
+                return Receive(plotConfig);
+            case FigureProtocol.ShowCommand showCommand:
+                return Receive(showCommand);
+            case FigureProtocol.DataFile dataFile:
+                return Receive(dataFile);
+            case FigureProtocol.Data data:
+                return Receive(data);
+            case FigureProtocol.Curve curve:
+                return Receive(curve);
+            default:
+                return false;
+            }
+        }
+        protected virtual bool Receive(FigureProtocol.FigureConfig figureConfig)
         {
             Execute($@"
 fig{figureConfig.FigureId}, ax{figureConfig.FigureId} = plt.subplots({figureConfig.RowsCount}, {figureConfig.ColumnsCount}, num='{figureConfig.Title}')
@@ -136,7 +156,7 @@ fig{figureConfig.FigureId}.suptitle('{figureConfig.Title}')
             Figures[figureConfig.FigureId] = figure;
             return true;
         }
-        protected override bool Receive(FigureProtocol.PlotConfig plotConfig)
+        protected virtual bool Receive(FigureProtocol.PlotConfig plotConfig)
         {
             if (Figures.ContainsKey(plotConfig.FigureId))
             switch (Figures[plotConfig.FigureId].AxesShape)
@@ -168,7 +188,7 @@ ax.grid()
             }
             return true;
         }
-        protected override bool Receive(FigureProtocol.Curve curve)
+        protected virtual bool Receive(FigureProtocol.Curve curve)
         {
             if (!Figures.ContainsKey(curve.FigureId)) return false;
             Figure figure = Figures[curve.FigureId];
@@ -179,15 +199,15 @@ ax.grid()
             return true;
         }
 
-        protected override bool Receive(FigureProtocol.ShowCommand showCommand)
+        protected virtual bool Receive(FigureProtocol.ShowCommand showCommand)
         {
             return true;
         }
-        protected override bool Receive(FigureProtocol.Data data)
+        protected virtual bool Receive(FigureProtocol.Data data)
         {
             return true;
         }
-        protected override bool Receive(FigureProtocol.DataFile dataFile)
+        protected virtual bool Receive(FigureProtocol.DataFile dataFile)
         {
             if (!Figures.ContainsKey(dataFile.FigureId)) return false;
             Figure figure = Figures[dataFile.FigureId];

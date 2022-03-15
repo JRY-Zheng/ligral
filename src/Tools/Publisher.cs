@@ -41,7 +41,7 @@ namespace Ligral.Tools
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
             foreach (var hook in hooks)
             {
-                if (hook.Invoke<T>(data)) return;
+                if (hook.Receive<T>(data)) return;
             }
             await Task.Run(() => socket.SendTo(packetBytes, endPoint));
         }
