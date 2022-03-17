@@ -16,7 +16,7 @@ using Ligral.Tools.Protocols;
 
 namespace Ligral.Tools
 {
-    struct PacketLabel
+    public struct PacketLabel
     {
         [JsonPropertyName("label")]
         public int Label {get; set;}
@@ -78,70 +78,15 @@ namespace Ligral.Tools
                 await Task.Run(()=>socket.ReceiveFrom(buffer, ref senderRemote));
                 string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
-                switch (packetLabel.Label)
+                foreach (var subscriber in subscribers)
                 {
-                case FigureProtocol.FigureConfigLabel:
-                    var figureConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.FigureConfig>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(figureConfigPacket.Data))
-                        {
-                            break;
-                        }
-                    }
-                    break;
-                case FigureProtocol.PlotConfigLabel:
-                    var plotConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.PlotConfig>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(plotConfigPacket.Data))
-                        {
-                            break;
-                        }
-                    };
-                    break;
-                case FigureProtocol.ShowCommandLabel:
-                    var showCommandPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.ShowCommand>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(showCommandPacket.Data))
-                        {
-                            break;
-                        }
-                    };
-                    break;
-                case FigureProtocol.DataFileLabel:
-                    var dataFilePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.DataFile>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(dataFilePacket.Data))
-                        {
-                            break;
-                        }
-                    };
-                    break;
-                case FigureProtocol.DataLabel:
-                    var dataPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Data>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(dataPacket.Data))
-                        {
-                            break;
-                        }
-                    };
-                    break;
-                case FigureProtocol.CurveLabel:
-                    var curvePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Curve>>(packetString);
-                    foreach (Subscriber subscriber in subscribers)
-                    {
-                        if (subscriber.Receive(curvePacket.Data))
-                        {
-                            break;
-                        }
-                    };
-                    break;
+                    subscriber.Invoke(packetLabel, packetString);
                 }
             }
+        }
+        protected virtual bool Invoke(PacketLabel packetLabel, string packetString)
+        {
+            return false;
         }
         public virtual bool Receive<T>(T datastruct) where T: struct
         {

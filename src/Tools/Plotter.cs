@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Ligral.Tools.Protocols;
 using Ligral.Simulation;
 
@@ -112,6 +114,38 @@ namespace Ligral.Tools
             base.Unsubscribe();
             Execute("exit()");
             if (ScriptsStream!=null) ScriptsStream.Close();
+        }
+        protected override bool Invoke(PacketLabel packetLabel, string packetString)
+        {
+            switch (packetLabel.Label)
+            {
+            case FigureProtocol.FigureConfigLabel:
+                var figureConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.FigureConfig>>(packetString);
+                Receive(figureConfigPacket.Data);
+                return true;
+            case FigureProtocol.PlotConfigLabel:
+                var plotConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.PlotConfig>>(packetString);
+                Receive(plotConfigPacket.Data);
+                return true;
+            case FigureProtocol.ShowCommandLabel:
+                var showCommandPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.ShowCommand>>(packetString);
+                Receive(showCommandPacket.Data);
+                return true;
+            case FigureProtocol.DataFileLabel:
+                var dataFilePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.DataFile>>(packetString);
+                Receive(dataFilePacket.Data);
+                return true;
+            case FigureProtocol.DataLabel:
+                var dataPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Data>>(packetString);
+                Receive(dataPacket.Data);
+                return true;
+            case FigureProtocol.CurveLabel:
+                var curvePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Curve>>(packetString);
+                Receive(curvePacket.Data);
+                return true;
+            default:
+                return false;
+            }
         }
         public override bool Receive<T>(T dataPacket) where T: struct
         {
