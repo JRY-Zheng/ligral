@@ -1,6 +1,7 @@
 #include "config.h"
+#include "context.h"
 
-Vector f(Vector x) {
+Vector f(Vector x, context* ctx) {
     Vector xdot;
 
     // models initialization
