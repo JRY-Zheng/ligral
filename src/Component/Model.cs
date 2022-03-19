@@ -249,7 +249,7 @@ namespace Ligral.Component
                 return InPortList[inPortNO];
             }
         }
-        public Port Expose(string portName)
+        public virtual Port Expose(string portName)
         {
             int inPortNO = InPortList.FindIndex(inPort=>inPort.Name==portName);
             int outPortNO = OutPortList.FindIndex(outPort=>outPort.Name==portName);

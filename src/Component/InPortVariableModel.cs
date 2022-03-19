@@ -21,9 +21,22 @@ namespace Ligral.Component
                 return base.Expose(inPortNO);
             }
         }
+        public override Port Expose(string portName)
+        {
+            try
+            {
+                return base.Expose(portName);
+            }
+            catch (ModelException)
+            {
+                InPort inPort = new InPort(portName, this);
+                InPortList.Add(inPort);
+                return inPort;
+            }
+        }
         protected override void SetUpPorts()
         {
-            InPortList.Add(new InPort("in0", this));
+            //InPortList.Add(new InPort("in0", this));
         }
         public override void Check()
         {

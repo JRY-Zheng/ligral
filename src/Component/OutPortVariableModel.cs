@@ -13,7 +13,7 @@ namespace Ligral.Component
         
         protected override void SetUpPorts()
         {
-            OutPortList.Add(new OutPort("out0", this));
+            // OutPortList.Add(new OutPort("out0", this));
         }
         public override void Connect(int outPortNO, InPort inPort)
         {
@@ -27,6 +27,20 @@ namespace Ligral.Component
             else
             {
                 base.Connect(outPortNO, inPort);
+            }
+        }
+        public override void Connect(string outPortName, InPort inPort)
+        {
+            try
+            {
+                base.Connect(outPortName, inPort);
+            }
+            catch (ModelException)
+            {
+                OutPort outPort = new OutPort(outPortName, this);
+                OutPortList.Add(outPort);
+                outPort.Bind(inPort);
+                Results.Add(null);
             }
         }
         public override void Check()
