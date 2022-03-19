@@ -121,28 +121,22 @@ namespace Ligral.Tools
             {
             case FigureProtocol.FigureConfigLabel:
                 var figureConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.FigureConfig>>(packetString);
-                Receive(figureConfigPacket.Data);
-                return true;
+                return Receive(figureConfigPacket.Data);
             case FigureProtocol.PlotConfigLabel:
                 var plotConfigPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.PlotConfig>>(packetString);
-                Receive(plotConfigPacket.Data);
-                return true;
+                return Receive(plotConfigPacket.Data);
             case FigureProtocol.ShowCommandLabel:
                 var showCommandPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.ShowCommand>>(packetString);
-                Receive(showCommandPacket.Data);
-                return true;
+                return Receive(showCommandPacket.Data);
             case FigureProtocol.DataFileLabel:
                 var dataFilePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.DataFile>>(packetString);
-                Receive(dataFilePacket.Data);
-                return true;
+                return Receive(dataFilePacket.Data);
             case FigureProtocol.DataLabel:
                 var dataPacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Data>>(packetString);
-                Receive(dataPacket.Data);
-                return true;
+                return Receive(dataPacket.Data);
             case FigureProtocol.CurveLabel:
                 var curvePacket = JsonSerializer.Deserialize<Packet<FigureProtocol.Curve>>(packetString);
-                Receive(curvePacket.Data);
-                return true;
+                return Receive(curvePacket.Data);
             default:
                 return false;
             }
