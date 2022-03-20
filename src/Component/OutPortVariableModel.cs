@@ -43,6 +43,20 @@ namespace Ligral.Component
                 Results.Add(null);
             }
         }
+        public override Port Expose(string portName)
+        {
+            try
+            {
+                return base.Expose(portName);
+            }
+            catch (ModelException)
+            {
+                OutPort outPort = new OutPort(portName, this);
+                OutPortList.Add(outPort);
+                Results.Add(null);
+                return outPort;
+            }
+        }
         public override void Check()
         {
             throw new System.NotImplementedException();
