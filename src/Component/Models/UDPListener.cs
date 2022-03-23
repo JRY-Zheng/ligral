@@ -24,6 +24,7 @@ namespace Ligral.Component.Models
         private List<(int, int)> size;
         private List<string> names;
         private List<ControlInputHandle> handles;
+        private List<Matrix<double>> inputs;
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
@@ -52,15 +53,16 @@ namespace Ligral.Component.Models
                 {"name", new Parameter(ParameterType.String , value=>
                 {
                     names = new List<string>(value.ToString().Split(";"));
-                    names.ForEach(s => s.Trim());
+                    names = names.ConvertAll(s => s.Trim());
                 }, ()=>{})}
             };
         }
         public override void Check()
         {
+            handles = new List<ControlInputHandle>();
             if (names is null)
             {
-                names = OutPortList.Select((_, i) => Name+i.ToString()).ToList();
+                names = OutPortList.ConvertAll(op => Name+"."+op.Name);
             }
             else if (names.Count != OutPortCount())
             {
@@ -68,7 +70,7 @@ namespace Ligral.Component.Models
             }
             if (size is null)
             {
-                for (int i=0; i<size.Count; i++)
+                for (int i=0; i<OutPortCount(); i++)
                 {
                     var handle = ControlInput.CreateInput(names[i], 1, 1);
                     handles.Add(handle);
@@ -88,10 +90,23 @@ namespace Ligral.Component.Models
                     OutPortList[i].SetShape(size[i].Item1, size[i].Item2);
                 }
             }
+            inputs = handles.ConvertAll(h => h.GetInput());
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            throw new System.NotImplementedException();
+            for (int i=0; i<OutPortCount(); i++)
+            {
+                try
+                {
+                    handles[i].SetClosedLoopInput(inputs[i]);
+                }
+                catch (LigralException)
+                {
+                    throw logger.Error(new ModelException(this, $"Error occurred in output {i}"));
+                }
+                Results[i] = handles[i].GetInput();
+            }
+            return Results;
         }
     }
 }
