@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
@@ -21,12 +22,13 @@ namespace Ligral.Component.Models
             }
         }
         private List<(int, int)> size;
+        private List<string> names;
         private List<ControlInputHandle> handles;
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
             {
-                {"size", new Parameter(ParameterType.String , value=>
+                {"size", new Parameter(ParameterType.Signal , value=>
                 {
                     size = new List<(int, int)>();
                     Matrix<double> sizeMat;
@@ -47,25 +49,42 @@ namespace Ligral.Component.Models
                         throw logger.Error(new ModelException(this, $"size must be a nx2 int matrix, but {e.Message}"));
                     }
                 }, ()=>{})},
+                {"name", new Parameter(ParameterType.String , value=>
+                {
+                    names = new List<string>(value.ToString().Split(";"));
+                    names.ForEach(s => s.Trim());
+                }, ()=>{})}
             };
         }
         public override void Check()
         {
+            if (names is null)
+            {
+                names = OutPortList.Select((_, i) => Name+i.ToString()).ToList();
+            }
+            else if (names.Count != OutPortCount())
+            {
+                throw logger.Error(new ModelException(this, $"cannot match name info {names.Count} to out port count {OutPortCount()}"));
+            }
             if (size is null)
             {
-                foreach (OutPort outPort in OutPortList)
+                for (int i=0; i<size.Count; i++)
                 {
-                    outPort.SetShape(1, 1);
+                    var handle = ControlInput.CreateInput(names[i], 1, 1);
+                    handles.Add(handle);
+                    OutPortList[i].SetShape(1, 1);
                 }
             }
-            else if (size.Count != OutPortList.Count)
+            else if (size.Count != OutPortCount())
             {
-                throw logger.Error(new ModelException(this, $"cannot match size info {size.Count} to out port count {OutPortList.Count}"));
+                throw logger.Error(new ModelException(this, $"cannot match size info {size.Count} to out port count {OutPortCount()}"));
             }
             else
             {
                 for (int i=0; i<size.Count; i++)
                 {
+                    var handle = ControlInput.CreateInput(names[i], size[i].Item1, size[i].Item2);
+                    handles.Add(handle);
                     OutPortList[i].SetShape(size[i].Item1, size[i].Item2);
                 }
             }
