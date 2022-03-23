@@ -5,10 +5,11 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
+using Ligral.Tools;
 
 namespace Ligral.Component.Models
 {
@@ -25,6 +26,8 @@ namespace Ligral.Component.Models
         private List<string> names;
         private List<ControlInputHandle> handles;
         private List<Matrix<double>> inputs;
+        private Subscriber subscriber;
+        private PacketLabel packetLabel;
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
@@ -54,7 +57,16 @@ namespace Ligral.Component.Models
                 {
                     names = new List<string>(value.ToString().Split(";"));
                     names = names.ConvertAll(s => s.Trim());
-                }, ()=>{})}
+                }, ()=>{})},
+                {"label", new Parameter(ParameterType.String , value=>
+                {
+                    packetLabel = new PacketLabel();
+                    packetLabel.Label = int.Parse(value.ToString(), System.Globalization.NumberStyles.HexNumber);
+                }, ()=>
+                {
+                    packetLabel = new PacketLabel();
+                    packetLabel.Label = 0xfef0;
+                })}
             };
         }
         public override void Check()
@@ -91,6 +103,14 @@ namespace Ligral.Component.Models
                 }
             }
             inputs = handles.ConvertAll(h => h.GetInput());
+        }
+        public override void Prepare()
+        {
+            subscriber = new Subscriber();
+            subscriber.AddAbility(packetLabel, packetString => 
+            {
+                
+            });
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
