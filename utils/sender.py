@@ -13,11 +13,12 @@ UDP_PORT_NO = 8783
 
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # serverSock.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
-for i in range(100):
+for i in range(10000):
     jsonbytes = json.dumps({
         "label": 0xffb0,
         "data": {
-            "test": i,
+            "abc": i,
+            "def": 100-i
         }
     }).encode('ascii')
     serverSock.sendto(jsonbytes, (UDP_IP_ADDRESS, UDP_PORT_NO))

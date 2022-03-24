@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
+using Ligral.Simulation;
 
 namespace Ligral.Tools
 {
@@ -28,7 +29,7 @@ namespace Ligral.Tools
         static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().Port);
         private static int count = 0;
         public int Id;
-        private static bool running = true;
+        private static bool running = false;
         protected static List<Subscriber> subscribers = new List<Subscriber>();
         protected Logger logger;
         private static Logger subscriberLogger = new Logger("Subscriber");
@@ -51,17 +52,18 @@ namespace Ligral.Tools
         public static void Start()
         {
             started = true;
+            Solver.Exited += Stop;
             thread.Start();
         }
         public static void Stop()
         {
             running = false;
-            if (socket.IsBound)
-            {
-                socket.Shutdown(SocketShutdown.Receive);
-                socket.Close();
-            }
-            thread.Abort();
+            // if (socket.IsBound)
+            // {
+            //     socket.Shutdown(SocketShutdown.Receive);
+            //     socket.Close();
+            // }
+            // thread.Suspend();
         }
         public virtual void Unsubscribe()
         {

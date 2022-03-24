@@ -22,6 +22,8 @@ namespace Ligral.Simulation
         public static event SteppedHandler Stepped;
         public delegate void StoppedHandler();
         public static event StoppedHandler Stopped;
+        public delegate void ExitedHandler();
+        public static event ExitedHandler Exited;
         public Solver()
         {
             logger = new Logger(GetType().Name);
@@ -76,7 +78,8 @@ namespace Ligral.Simulation
         public static void OnStopped()
         {
             if (Stopped != null) Stopped();
-            solverLogger.Info("Simulation stoped.");
+            solverLogger.Info("Simulation stopped.");
+            if (Exited != null) Exited();
         }
     }
 }

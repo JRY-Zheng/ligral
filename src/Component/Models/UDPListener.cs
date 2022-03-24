@@ -5,7 +5,7 @@
 */
 
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
@@ -24,6 +24,7 @@ namespace Ligral.Component.Models
         }
         private List<(int, int)> size;
         private List<string> names;
+        private bool useDefinedName = false;
         private List<ControlInputHandle> handles;
         private List<Matrix<double>> inputs;
         private Subscriber subscriber;
@@ -57,6 +58,7 @@ namespace Ligral.Component.Models
                 {
                     names = new List<string>(value.ToString().Split(";"));
                     names = names.ConvertAll(s => s.Trim());
+                    useDefinedName = true;
                 }, ()=>{})},
                 {"label", new Parameter(ParameterType.String , value=>
                 {
@@ -65,7 +67,7 @@ namespace Ligral.Component.Models
                 }, ()=>
                 {
                     packetLabel = new PacketLabel();
-                    packetLabel.Label = 0xfef0;
+                    packetLabel.Label = 0xffb0;
                 })}
             };
         }
@@ -74,7 +76,7 @@ namespace Ligral.Component.Models
             handles = new List<ControlInputHandle>();
             if (names is null)
             {
-                names = OutPortList.ConvertAll(op => Name+"."+op.Name);
+                names = OutPortsName;
             }
             else if (names.Count != OutPortCount())
             {
@@ -109,8 +111,42 @@ namespace Ligral.Component.Models
             subscriber = new Subscriber();
             subscriber.AddAbility(packetLabel, packetString => 
             {
-                
+                JsonDict dict;
+                try
+                {
+                    dict = JsonConvert.Load(packetString);
+                }
+                catch (System.ArgumentException e)
+                {
+                    throw logger.Error(new ModelException(this, $"Json text syntax error: {e.Message}"));
+                }
+                if (!dict.Value.ContainsKey("data"))
+                {
+                    throw logger.Error(new ModelException(this, "Invalid message: No data"));
+                }
+                var data = dict.Value["data"] as JsonDict;
+                if (data is null)
+                {
+                    throw logger.Error(new ModelException(this, "Invalid message: Data is not dict"));
+                }
+                var dataName = useDefinedName ? names : OutPortsName;
+                if (dataName.Any(n => !data.Value.ContainsKey(n)))
+                {
+                    throw logger.Error(new ModelException(this, "Invalid message: Key lost in data"));
+                }
+                for (int i=0; i<OutPortCount(); i++)
+                {
+                    try
+                    {
+                        inputs[i] = data.Value[dataName[i]].ToMatrix();
+                    }
+                    catch (System.ArgumentException e)
+                    {
+                        throw logger.Error(new ModelException(this, $"Invalid message: invalid data {dataName[i]}, {e.Message}"));
+                    }
+                }
             });
+            Solver.Stopped += subscriber.Unsubscribe;
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
