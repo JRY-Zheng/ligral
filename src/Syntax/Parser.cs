@@ -352,6 +352,7 @@ namespace Ligral.Syntax
             List<RowDeMuxAST> rows = new List<RowDeMuxAST>();
             Eat(TokenType.LBRK);
             rows.Add(RowDeMux(columnNumber, out int parsedColumnNumber));
+            columnNumber = parsedColumnNumber;
             while (currentToken.Type!=TokenType.RBRK)
             {
                 Eat(TokenType.SEMIC);
