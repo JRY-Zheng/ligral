@@ -54,6 +54,7 @@ namespace Ligral.Component
                 OutPort outPort = new OutPort(portName, this);
                 OutPortList.Add(outPort);
                 Results.Add(null);
+                logger.Solve();
                 return outPort;
             }
         }

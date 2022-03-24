@@ -31,6 +31,7 @@ namespace Ligral.Component
             {
                 InPort inPort = new InPort(portName, this);
                 InPortList.Add(inPort);
+                logger.Solve();
                 return inPort;
             }
         }

@@ -51,6 +51,7 @@ namespace Ligral
         public static DateTime StartUpTime = DateTime.Now;
         public static List<LogMessage> Logs = new List<LogMessage>();
         private string source;
+        private static string lastMessage = "";
         public static bool PrintOut = true;
         public static bool PrintOutPlainText = true;
         public static LogLevel MinPrintOutLevel = LogLevel.Warning;
@@ -126,9 +127,11 @@ namespace Ligral
         {
             foreach (var message in Logs.FindAll(msg => msg.Level == LogLevel.Error))
             {
+                if (message.Message == lastMessage) continue;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Log(message, false);
                 Console.ForegroundColor = defaultForeGroundColor;
+                lastMessage = message.Message;
             }
         }
         public void Fatal(Exception exception)

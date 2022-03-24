@@ -97,7 +97,20 @@ namespace Ligral.Tools
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
                 foreach (var subscriber in subscribers)
                 {
-                    subscriber.Invoke(packetLabel, packetString);
+                    try
+                    {
+                        subscriber.Invoke(packetLabel, packetString);
+                    }
+                    catch (LigralException)
+                    {
+                        subscriberLogger.Throw();
+                    }
+                    catch (Exception e)
+                    {
+                        subscriberLogger.Fatal(e);
+                        running = false;
+                        break;
+                    }
                 }
             }
         }
