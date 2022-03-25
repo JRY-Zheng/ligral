@@ -25,7 +25,7 @@ namespace Ligral.Tools
     {
         static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse(Settings.GetInstance().IPAddress);
-        static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().Port);
+        static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().SendingPort);
         private static int count = 0;
         private static List<Subscriber> hooks = new List<Subscriber>();
         public int Id;

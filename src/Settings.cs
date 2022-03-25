@@ -67,7 +67,8 @@ namespace Ligral
         public string OutputFolder { get; set;} = ".";
         public bool NeedOutput {get; set;} = false;
         public string IPAddress { get; set; } = "127.0.0.1";
-        public int Port { get; set; } = 8783;
+        public int ListeningPort { get; set; } = 8783;
+        public int SendingPort { get; set; } = 8784;
         public bool RealTimeSimulation { get; set; } = false;
         private Tools.Plotter plotter;
         public Dictionary<string, object> InnerPlotterConfiguration {get; set;} = new Dictionary<string, object>();
@@ -104,7 +105,12 @@ namespace Ligral
                 case "ip_address":
                     IPAddress = (string) val; break;
                 case "port":
-                    Port = (int) val; break;
+                    ListeningPort = (int) val;
+                    SendingPort = ListeningPort+1; break;
+                case "listening_port":
+                    ListeningPort = (int) val; break;
+                case "sending_port":
+                    SendingPort = (int) val; break;
                 case "realtime":
                     RealTimeSimulation = (bool) val; break;
                 case "python":
