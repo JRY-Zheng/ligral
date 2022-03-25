@@ -5,6 +5,7 @@
 */
 
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using Ligral.Syntax;
 using Ligral.Syntax.ASTs;
@@ -69,13 +70,24 @@ namespace Ligral
         public int Port { get; set; } = 8783;
         public bool RealTimeSimulation { get; set; } = false;
         private Tools.Plotter plotter;
-        public Dictionary<string, object> InnerPlotterConfiguration {get; set;}
-        public Dictionary<string, object> LoggerConfiguration {get; set;}
+        public Dictionary<string, object> InnerPlotterConfiguration {get; set;} = new Dictionary<string, object>();
+        public Dictionary<string, object> LoggerConfiguration {get; set;} = new Dictionary<string, object>();
         public string SolverName {get; set;} = "ode4";
         public string PythonExecutable { get; set; } = "python";
-        public Dictionary<string, object> LinearizerConfiguration {get; set;}
-        public Dictionary<string, object> TrimmerConfiguration {get; set;}
-        public Dictionary<string, object> VariableStepSolverConfiguration {get; set;}
+        public Dictionary<string, object> LinearizerConfiguration {get; set;} = new Dictionary<string, object>();
+        public Dictionary<string, object> TrimmerConfiguration {get; set;} = new Dictionary<string, object>();
+        public Dictionary<string, object> VariableStepSolverConfiguration {get; set;} = new Dictionary<string, object>();
+        public void UnionDictionarySetting(string settingName, Dictionary<string, object> origin, Dictionary<string, object> newSetting)
+        {
+            foreach ((var k, var v) in newSetting)
+            {
+                if (origin.ContainsKey(k))
+                {
+                    logger.Warn($"Key overridden in {settingName}: {k}");
+                }
+                origin[k] = v;
+            }
+        }
 
         public void AddSetting(string item, object val)
         {
@@ -100,22 +112,22 @@ namespace Ligral
                 case "solver":
                     SolverName = (string) val; break;
                 case "inner_plotter":
-                    InnerPlotterConfiguration = (Dictionary<string, object>) val;
+                    UnionDictionarySetting(item.ToLower(), InnerPlotterConfiguration, (Dictionary<string, object>) val);
                     break;
                 case "logger":
-                    LoggerConfiguration = (Dictionary<string, object>) val;
+                    UnionDictionarySetting(item.ToLower(), LoggerConfiguration, (Dictionary<string, object>) val);
                     break;
                 case "lin":
                 case "linearizer":
-                    LinearizerConfiguration = (Dictionary<string, object>) val;
+                    UnionDictionarySetting(item.ToLower(), LinearizerConfiguration, (Dictionary<string, object>) val);
                     break;
                 case "trim":
                 case "trimmer":
-                    TrimmerConfiguration = (Dictionary<string, object>) val;
+                    UnionDictionarySetting(item.ToLower(), TrimmerConfiguration, (Dictionary<string, object>) val);
                     break;
                 case "varstep":
                 case "varstep_solver":
-                    VariableStepSolverConfiguration = (Dictionary<string, object>) val;
+                    UnionDictionarySetting(item.ToLower(), VariableStepSolverConfiguration, (Dictionary<string, object>) val);
                     break;
                 case "author":
                 case "date":
@@ -133,6 +145,10 @@ namespace Ligral
             }
         }
         #endregion
+        public bool HasSettings(Dictionary<string, object> setting)
+        {
+            return setting != null && setting.Count > 0;
+        }
 
         public void ApplySetting()
         {
@@ -148,7 +164,7 @@ namespace Ligral
             {
                 throw logger.Error(new SettingException("stop_time", StopTime, "step size must be positive nonzero."));
             }
-            if (!(InnerPlotterConfiguration is null))
+            if (HasSettings(InnerPlotterConfiguration))
             {
                 if (plotter is null)
                 {
@@ -163,7 +179,7 @@ namespace Ligral
                 }
                 plotter.Configure(InnerPlotterConfiguration);
             }
-            if (!(LoggerConfiguration is null))
+            if (HasSettings(LoggerConfiguration))
             {
                 logger.Configure(LoggerConfiguration);
             }
