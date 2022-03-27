@@ -8,9 +8,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
 using System.Net;
+using System.Linq;
 using System.Net.Sockets;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
+using Ligral.Simulation;
 
 namespace Ligral.Tools
 {
@@ -29,12 +31,46 @@ namespace Ligral.Tools
         private static int count = 0;
         private static List<Subscriber> hooks = new List<Subscriber>();
         public int Id;
+        private static ThreadStart threadStart = new ThreadStart(Serve);
+        private static Thread thread = new Thread(threadStart);
+        private static bool started = false;
+        private static bool running = false;
+        private static List<byte[]> packets = new List<byte[]>();
         public Publisher()
         {
             Id = count;
             count++;
+            if (!started)
+            {
+                Start();
+            }
         }
-        public async void Send<T>(int label, T data) where T:struct
+        public static void Start()
+        {
+            started = true;
+            Solver.Exited += Stop;
+            thread.Start();
+        }
+        public static void Stop()
+        {
+            running = false;
+        }
+        public static void Serve()
+        {
+            if (running) return;
+            running = true;
+            while (running)
+            {
+                try
+                {
+                    var packetBytes = packets.First();
+                    packets.RemoveAt(0);
+                    socket.SendTo(packetBytes, endPoint);
+                }
+                catch (System.InvalidOperationException){}
+            }
+        }
+        public void Send<T>(int label, T data) where T:struct
         {
             Packet<T> packet = new Tools.Packet<T>(){Label = label, Data = data};
             string packetString = JsonSerializer.Serialize<Packet<T>>(packet);
@@ -43,7 +79,7 @@ namespace Ligral.Tools
             {
                 if (hook.Receive<T>(data)) return;
             }
-            await Task.Run(() => socket.SendTo(packetBytes, endPoint));
+            packets.Add(packetBytes);
         }
         public static void AddHooks(Subscriber subscriber)
         {
