@@ -22,6 +22,7 @@ namespace Ligral.Tools
         protected override void Execute(string command)
         {
             PythonProcess.StandardInput.Write(command);
+            // Console.WriteLine(command);
         }
         protected override bool Receive(FigureProtocol.Curve curve)
         {
@@ -41,7 +42,7 @@ ax{curve.FigureId}.grid()
             case AxesShapeType.Vector:
                 int index = curve.RowNO > curve.ColumnNO ? curve.RowNO : curve.ColumnNO;
                 Execute($@"
-cv{curveID} = ax{curve.FigureId}[{index}].plot([], [])
+cv{curveID}, = ax{curve.FigureId}[{index}].plot([], [])
 xdata{curveID} = cv{curveID}.get_xdata()
 ydata{curveID} = cv{curveID}.get_ydata()
 ax{curve.FigureId}[{index}].grid()
@@ -49,7 +50,7 @@ ax{curve.FigureId}[{index}].grid()
                 break;
             case AxesShapeType.Matrix:
                 Execute($@"
-cv{curveID} = ax{curve.FigureId}[{curve.RowNO}, {curve.ColumnNO}].plot([], [])
+cv{curveID}, = ax{curve.FigureId}[{curve.RowNO}, {curve.ColumnNO}].plot([], [])
 xdata{curveID} = cv{curveID}.get_xdata()
 ydata{curveID} = cv{curveID}.get_ydata()
 ax{curve.FigureId}[{curve.RowNO}, {curve.ColumnNO}].grid()
@@ -97,14 +98,39 @@ plt.ion()
         }
         protected virtual void Flush(Curve curve, int figureId, int curveHandle)
         {
+            Figure figure = Figures[figureId];
             string curveID = $"{figureId}_{curveHandle}";
-            Execute($@"
+            switch (figure.AxesShape)
+            {
+            case AxesShapeType.Scalar:
+                Execute($@"
 xdata{curveID} = np.append(xdata{curveID}, [{string.Join(',', curve.CachedX)}])
 ydata{curveID} = np.append(ydata{curveID}, [{string.Join(',', curve.CachedY)}])
 cv{curveID}.set_data(xdata{curveID}, ydata{curveID})
 ax{figureId}.set_xlim((min(xdata{curveID}), max(xdata{curveID})))
 ax{figureId}.set_ylim((min(ydata{curveID}), max(ydata{curveID})))
 ");
+                break;
+                case AxesShapeType.Vector:
+                int index = curve.RowNO > curve.ColNO ? curve.RowNO : curve.ColNO;
+                Execute($@"
+xdata{curveID} = np.append(xdata{curveID}, [{string.Join(',', curve.CachedX)}])
+ydata{curveID} = np.append(ydata{curveID}, [{string.Join(',', curve.CachedY)}])
+cv{curveID}.set_data(xdata{curveID}, ydata{curveID})
+ax{figureId}[{index}].set_xlim((min(xdata{curveID}), max(xdata{curveID})))
+ax{figureId}[{index}].set_ylim((min(ydata{curveID}), max(ydata{curveID})))
+");
+                break;
+            case AxesShapeType.Matrix:
+                Execute($@"
+xdata{curveID} = np.append(xdata{curveID}, [{string.Join(',', curve.CachedX)}])
+ydata{curveID} = np.append(ydata{curveID}, [{string.Join(',', curve.CachedY)}])
+cv{curveID}.set_data(xdata{curveID}, ydata{curveID})
+ax{figureId}[{curve.RowNO},{curve.ColNO}].set_xlim((min(xdata{curveID}), max(xdata{curveID})))
+ax{figureId}[{curve.RowNO},{curve.ColNO}].set_ylim((min(ydata{curveID}), max(ydata{curveID})))
+");
+                break;
+            }
             curve.CachedX.Clear();
             curve.CachedY.Clear();
             curve.CachedTime = DateTime.Now;
