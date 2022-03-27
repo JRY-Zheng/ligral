@@ -13,7 +13,7 @@ UDP_PORT_NO = 8784
 
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverSock.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
-for i in range(100):
+for i in range(10000):
     buf = serverSock.recvfrom(1024)
     print(buf)
-    sleep(0.1)
+    # sleep(0.1)

@@ -64,6 +64,7 @@ namespace Ligral.Tools
                 try
                 {
                     var packetBytes = packets.First();
+                    if (packetBytes is null) continue;
                     packets.RemoveAt(0);
                     socket.SendTo(packetBytes, endPoint);
                 }
