@@ -81,6 +81,7 @@ namespace Ligral.Tools
             if (running) return;
             running = true;
             EndPoint senderRemote = (EndPoint)endPoint;
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
             try
             {
                 socket.Bind(endPoint);
@@ -92,8 +93,16 @@ namespace Ligral.Tools
             while (running)
             {
                 byte[] buffer = new byte[1024];
-                socket.ReceiveFrom(buffer, ref senderRemote);
+                try
+                {
+                    socket.ReceiveFrom(buffer, ref senderRemote);
+                }
+                catch (SocketException)
+                {
+                    continue;
+                }
                 string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
+                if (packetString.Length == 0) continue;
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
                 foreach (var subscriber in subscribers)
                 {
