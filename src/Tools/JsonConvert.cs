@@ -11,11 +11,12 @@ using Ligral.Component;
 
 namespace Ligral.Tools
 {
-    abstract class JsonObject
+    public abstract class JsonObject
     {
         public abstract Matrix<double> ToMatrix();
+        public abstract override string ToString();
     }
-    class JsonNumber: JsonObject
+    public class JsonNumber: JsonObject
     {
         public double Value {get; set;}
 
@@ -23,8 +24,13 @@ namespace Ligral.Tools
         {
             return Value.ToMatrix();
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
-    class JsonString: JsonObject
+    public class JsonString: JsonObject
     {
         public string Value {get; set;}
 
@@ -32,14 +38,28 @@ namespace Ligral.Tools
         {
             throw new System.ArgumentException("string cannot be transferred to matrix");
         }
+
+        public override string ToString()
+        {
+            return "\""+Value+"\"";
+        }
     }
-    class JsonList: JsonObject
+    public class JsonList: JsonObject
     {
         public List<JsonObject> Value {get; set;}
         public void Add(JsonObject jsonObject)
         {
             if (Value is null) Value = new List<JsonObject>();
             Value.Add(jsonObject);
+        }
+        public static JsonList FromList<T>(IEnumerable<T> list) where T: JsonObject
+        {
+            JsonList jsonList = new JsonList();
+            foreach (T val in list)
+            {
+                jsonList.Add(val);
+            }
+            return jsonList;
         }
 
         public override Matrix<double> ToMatrix()
@@ -73,8 +93,13 @@ namespace Ligral.Tools
             }
             return mat;
         }
+
+        public override string ToString()
+        {
+            return "["+string.Join(",", Value.ConvertAll(item => item.ToString()))+"]";
+        }
     }
-    class JsonDict: JsonObject
+    public class JsonDict: JsonObject
     {
         public Dictionary<string, JsonObject> Value {get; set;}
         public void Add(string key, JsonObject jsonObject)
@@ -88,8 +113,13 @@ namespace Ligral.Tools
         {
             throw new System.ArgumentException("Dict object cannot be transferred to matrix");
         }
+
+        public override string ToString()
+        {
+            return "{"+string.Join(",", Value.Select((pair, i) => pair.Key+":"+pair.Value.ToString()))+"}";
+        }
     }
-    class JsonConvert
+    public class JsonConvert
     {
         private int position = 0;
         private string json;

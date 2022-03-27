@@ -81,6 +81,16 @@ namespace Ligral.Tools
             }
             packets.Add(packetBytes);
         }
+        public void Send(int label, Dictionary<string, JsonObject> data)
+        {
+            Dictionary<string, JsonObject> packet = new Dictionary<string, JsonObject>();
+            packet["label"] = new JsonNumber() { Value = label };
+            packet["data"] = new JsonDict() { Value = data };
+            JsonDict dict = new JsonDict() { Value = packet };
+            string packetString = dict.ToString();
+            byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
+            packets.Add(packetBytes);
+        }
         public static void AddHooks(Subscriber subscriber)
         {
             hooks.Add(subscriber);
