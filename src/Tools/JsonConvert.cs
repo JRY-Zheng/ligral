@@ -116,7 +116,7 @@ namespace Ligral.Tools
 
         public override string ToString()
         {
-            return "{"+string.Join(",", Value.Select((pair, i) => pair.Key+":"+pair.Value.ToString()))+"}";
+            return "{"+string.Join(",", Value.Select((pair, i) => "\""+pair.Key+"\":"+pair.Value.ToString()))+"}";
         }
     }
     public class JsonConvert
