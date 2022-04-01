@@ -16,7 +16,7 @@ using Ligral.Simulation;
 
 namespace Ligral.Tools
 {
-    struct Packet<T> where T:struct
+    public struct Packet<T> where T:struct
     {
         [JsonPropertyName("label")]
         public int Label {get; set;}
