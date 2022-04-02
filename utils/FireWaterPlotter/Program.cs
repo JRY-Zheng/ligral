@@ -40,14 +40,29 @@ namespace FireWaterPlotter
                 if (packetLabel.Label == FigureProtocol.CurveLabel)
                 {
                     FigureProtocol.Curve curve = JsonSerializer.Deserialize<Packet<FigureProtocol.Curve>>(packetString).Data;
-                    curveMap[curve.CurveHandle] = vector.Count;
-                    vector.Add(0);
+                    if (curveMap.ContainsKey(curve.CurveHandle))
+                    {
+                        vector[curveMap[curve.CurveHandle]] = 0;
+                    }
+                    else
+                    {
+                        curveMap[curve.CurveHandle] = vector.Count;
+                        vector.Add(0);
+                    }
                 }
                 else if (packetLabel.Label == FigureProtocol.DataLabel)
                 {
                     FigureProtocol.Data data = JsonSerializer.Deserialize<Packet<FigureProtocol.Data>>(packetString).Data;
-                    int index = curveMap[data.CurveHandle];
-                    vector[index] = data.YValue;
+                    if (curveMap.ContainsKey(data.CurveHandle))
+                    {
+                        int index = curveMap[data.CurveHandle];
+                        vector[index] = data.YValue;
+                    }
+                    else
+                    {
+                        curveMap[data.CurveHandle] = vector.Count;
+                        vector.Add(0);
+                    }
                     counter++;
                     if (counter >= vector.Count) 
                     {
