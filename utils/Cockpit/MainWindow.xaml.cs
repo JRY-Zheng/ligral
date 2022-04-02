@@ -95,8 +95,8 @@ namespace Cockpit
             {
                 var element = sender as Canvas;
                 var p = e.GetPosition(element);
-                info.x = p.X/element.ActualWidth;
-                info.y = p.Y/element.ActualHeight;
+                info.x = p.X/element.ActualWidth*2-1;
+                info.y = p.Y/element.ActualHeight*2-1;
             }
         }
         private void OnKeyInputLostFocus(object sender, RoutedEventArgs e)
