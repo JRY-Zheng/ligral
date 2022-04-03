@@ -12,7 +12,7 @@
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBox Name="KeyInput" Height="0" KeyDown="OnKeyDown" KeyUp="OnKeyUp" LostFocus="OnKeyInputLostFocus"></TextBox>
-        <Canvas Grid.Row="0" MouseMove="OnMouseMove" Background="White"></Canvas>
+        <Canvas Grid.Row="0" MouseMove="OnMouseMove" MouseWheel="OnMouseWheel" Background="White"></Canvas>
         <TextBlock Name="StatusBar" Grid.Row="1">????</TextBlock>
     </Grid>
 </Window>

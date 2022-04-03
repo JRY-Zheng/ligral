@@ -23,6 +23,8 @@ namespace Cockpit
         public double x {get; set;}
         [JsonPropertyName("Y")]
         public double y {get; set;}
+        [JsonPropertyName("ZZ")]
+        public double z {get; set;}
         [JsonPropertyName("A")]
         public int A {get; set;}
         [JsonPropertyName("S")]
@@ -81,7 +83,7 @@ namespace Cockpit
                 info.x *= 0.9;
                 info.y *= 0.9;
             }
-            StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00}";
+            StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
         }
         private void OnUDPSend(object sender, EventArgs e)
         {
@@ -98,6 +100,12 @@ namespace Cockpit
                 info.x = p.X/element.ActualWidth*2-1;
                 info.y = p.Y/element.ActualHeight*2-1;
             }
+        }
+        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            info.z += e.Delta * 0.0001;
+            if (info.z>1) info.z = 1;
+            else if (info.z<0) info.z = 0;
         }
         private void OnKeyInputLostFocus(object sender, RoutedEventArgs e)
         {
