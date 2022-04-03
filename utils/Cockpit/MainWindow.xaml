@@ -12,7 +12,20 @@
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBox Name="KeyInput" Height="0" KeyDown="OnKeyDown" KeyUp="OnKeyUp" LostFocus="OnKeyInputLostFocus"></TextBox>
-        <Canvas Grid.Row="0" MouseMove="OnMouseMove" MouseWheel="OnMouseWheel" Background="White"></Canvas>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Canvas Grid.Column="0" MouseMove="OnMouseMove" MouseWheel="OnMouseWheel" Background="White"></Canvas>
+            <Grid Grid.Column="1" Name="ZBarContainer">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Canvas Grid.Row="1" Name="ZBar" Height="0" Background="Blue"></Canvas>
+            </Grid>
+        </Grid>
         <TextBlock Name="StatusBar" Grid.Row="1">????</TextBlock>
     </Grid>
 </Window>

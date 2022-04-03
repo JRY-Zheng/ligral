@@ -68,6 +68,7 @@ namespace Cockpit
             KeyInput.Focus();
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            timer.Tick += OnDraw;
             timer.Tick += OnStickReturn;
             timer.Tick += OnUDPSend;
             timer.Start();
@@ -76,6 +77,11 @@ namespace Cockpit
             info = new KeyMouseInfo();
             packet.Data = info;
         }
+        private void OnDraw(object sender, EventArgs e)
+        {
+            ZBar.Height = info.z*ZBarContainer.ActualHeight;
+            StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
+        }
         private void OnStickReturn(object sender, EventArgs e)
         {
             if (!stickHold)
@@ -83,7 +89,6 @@ namespace Cockpit
                 info.x *= 0.9;
                 info.y *= 0.9;
             }
-            StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
         }
         private void OnUDPSend(object sender, EventArgs e)
         {
