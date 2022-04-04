@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -11,6 +10,12 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace Cockpit
 {
@@ -62,6 +67,9 @@ namespace Cockpit
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse("127.0.0.1");
         static IPEndPoint endPoint = new IPEndPoint(address, 8783);
+        private Line xStar;
+        private Line yStar;
+        private Brush starBrush = new SolidColorBrush() { Color = Colors.Black };
         public MainWindow()
         {
             InitializeComponent();
@@ -76,9 +84,41 @@ namespace Cockpit
             packet.Label = 0xffb0;
             info = new KeyMouseInfo();
             packet.Data = info;
+            InitiateCanvas();
+        }
+        private void InitiateCanvas()
+        {
+            xStar = new Line() 
+            {
+                X1 = StickContainer.ActualWidth/2 - 5,
+                Y1 = StickContainer.ActualHeight/2,
+                X2 = StickContainer.ActualWidth/2 + 5,
+                Y2 = StickContainer.ActualHeight/2,
+                Stroke = starBrush,
+                StrokeThickness = 1
+            };
+            yStar = new Line()
+            {
+                X1 = StickContainer.ActualWidth/2,
+                Y1 = StickContainer.ActualHeight/2 - 5,
+                X2 = StickContainer.ActualWidth/2,
+                Y2 = StickContainer.ActualHeight/2 + 5,
+                Stroke = starBrush,
+                StrokeThickness = 1
+            };
+            StickContainer.Children.Add(xStar);
+            StickContainer.Children.Add(yStar);
         }
         private void OnDraw(object sender, EventArgs e)
         {
+            xStar.X1 = StickContainer.ActualWidth*(info.x+1)/2 - 5;
+            xStar.Y1 = StickContainer.ActualHeight*(info.y+1)/2;
+            xStar.X2 = StickContainer.ActualWidth*(info.x+1)/2 + 5;
+            xStar.Y2 = StickContainer.ActualHeight*(info.y+1)/2;
+            yStar.X1 = StickContainer.ActualWidth*(info.x+1)/2;
+            yStar.Y1 = StickContainer.ActualHeight*(info.y+1)/2 - 5;
+            yStar.X2 = StickContainer.ActualWidth*(info.x+1)/2;
+            yStar.Y2 = StickContainer.ActualHeight*(info.y+1)/2 + 5;
             ZBar.Height = info.z*ZBarContainer.ActualHeight;
             StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
         }
