@@ -70,6 +70,10 @@ namespace Cockpit
         private Line xStar;
         private Line yStar;
         private Brush starBrush = new SolidColorBrush() { Color = Colors.Black };
+        private Brush disableBrush = new SolidColorBrush() { Color = Colors.Gray };
+        private Brush activeBrush = new SolidColorBrush() { Color = Colors.White };
+        private Brush disableBackground = new SolidColorBrush() { Color = Colors.White };
+        private Brush activeBackground = new SolidColorBrush() { Color = Colors.Green };
         public MainWindow()
         {
             InitializeComponent();
@@ -120,7 +124,35 @@ namespace Cockpit
             yStar.X2 = StickContainer.ActualWidth*(info.x+1)/2;
             yStar.Y2 = StickContainer.ActualHeight*(info.y+1)/2 + 5;
             ZBar.Height = info.z*ZBarContainer.ActualHeight;
-            StatusBar.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
+            XYStatus.Text = $"x:{info.x:0.00} y:{info.y:0.00} z:{info.z:0.00}";
+            HStatus.Background = info.H!=0 ? activeBackground : disableBackground;
+            HStatus.Foreground = info.H!=0 ? activeBrush : disableBrush;
+            JStatus.Background = info.J!=0 ? activeBackground : disableBackground;
+            JStatus.Foreground = info.J!=0 ? activeBrush : disableBrush;
+            KStatus.Background = info.K!=0 ? activeBackground : disableBackground;
+            KStatus.Foreground = info.K!=0 ? activeBrush : disableBrush;
+            LStatus.Background = info.L!=0 ? activeBackground : disableBackground;
+            LStatus.Foreground = info.L!=0 ? activeBrush : disableBrush;
+            WStatus.Background = info.W!=0 ? activeBackground : disableBackground;
+            WStatus.Foreground = info.W!=0 ? activeBrush : disableBrush;
+            AStatus.Background = info.A!=0 ? activeBackground : disableBackground;
+            AStatus.Foreground = info.A!=0 ? activeBrush : disableBrush;
+            SStatus.Background = info.S!=0 ? activeBackground : disableBackground;
+            SStatus.Foreground = info.S!=0 ? activeBrush : disableBrush;
+            DStatus.Background = info.D!=0 ? activeBackground : disableBackground;
+            DStatus.Foreground = info.D!=0 ? activeBrush : disableBrush;
+            TFC0Status.Background = info.TFC==0 ? activeBackground : disableBackground;
+            TFC0Status.Foreground = info.TFC==0 ? activeBrush : disableBrush;
+            TFC1Status.Background = info.TFC==1 ? activeBackground : disableBackground;
+            TFC1Status.Foreground = info.TFC==1 ? activeBrush : disableBrush;
+            TFC2Status.Background = info.TFC==2 ? activeBackground : disableBackground;
+            TFC2Status.Foreground = info.TFC==2 ? activeBrush : disableBrush;
+            YGV0Status.Background = info.YGV==0 ? activeBackground : disableBackground;
+            YGV0Status.Foreground = info.YGV==0 ? activeBrush : disableBrush;
+            YGV1Status.Background = info.YGV==1 ? activeBackground : disableBackground;
+            YGV1Status.Foreground = info.YGV==1 ? activeBrush : disableBrush;
+            YGV2Status.Background = info.YGV==2 ? activeBackground : disableBackground;
+            YGV2Status.Foreground = info.YGV==2 ? activeBrush : disableBrush;
         }
         private void OnStickReturn(object sender, EventArgs e)
         {
@@ -174,7 +206,7 @@ namespace Cockpit
                 info.W = 1;
                 break;
             case Key.D:
-                info.A = 1;
+                info.D = 1;
                 break;
             case Key.H:
                 info.H = ~info.H;
@@ -226,7 +258,7 @@ namespace Cockpit
                 info.W = 0;
                 break;
             case Key.D:
-                info.A = 0;
+                info.D = 0;
                 break;
             }
         }
