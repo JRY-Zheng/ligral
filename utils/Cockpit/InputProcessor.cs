@@ -39,17 +39,17 @@ namespace Cockpit
         [JsonPropertyName("TFC")]
         public int TFC {get; set;}
     }
-    class Packet
+    class Packet<T>
     {
         [JsonPropertyName("label")]
         public int Label {get; set;}
         [JsonPropertyName("data")]
-        public KeyMouseInfo Data { get; set; }
+        public T Data { get; set; }
     }
     class InputProcessor
     {
         public bool stickHold = false;
-        private Packet packet;
+        private Packet<KeyMouseInfo> packet;
         private KeyMouseInfo info;
         private Line xStar;
         private Line yStar;
@@ -68,7 +68,7 @@ namespace Cockpit
             f.Register(OnDraw);
             f.Register(OnStickReturn);
             // f.Register(OnUDPSend);
-            packet = new Packet();
+            packet = new Packet<KeyMouseInfo>();
             packet.Label = 0xffb0;
             info = new KeyMouseInfo();
             packet.Data = info;
@@ -77,8 +77,8 @@ namespace Cockpit
         static IPEndPoint endPoint = new IPEndPoint(address, 8783);
         private void InitiateCanvas()
         {
-            double w = f.StickContainer.ActualWidth;
-            double h = f.StickContainer.ActualHeight;
+            double w = f.PrimaryDisplay.ActualWidth;
+            double h = f.PrimaryDisplay.ActualHeight;
             xStar = new Line() 
             {
                 X1 = w/2 - 5,
@@ -97,13 +97,13 @@ namespace Cockpit
                 Stroke = starBrush,
                 StrokeThickness = 1
             };
-            f.StickContainer.Children.Add(xStar);
-            f.StickContainer.Children.Add(yStar);
+            f.PrimaryDisplay.Children.Add(xStar);
+            f.PrimaryDisplay.Children.Add(yStar);
         }
         private void OnDraw(object sender, EventArgs e)
         {
-            double w = f.StickContainer.ActualWidth;
-            double h = f.StickContainer.ActualHeight;
+            double w = f.PrimaryDisplay.ActualWidth;
+            double h = f.PrimaryDisplay.ActualHeight;
             xStar.X1 = w*(info.x+1)/2 - 5;
             xStar.Y1 = h*(info.y+1)/2;
             xStar.X2 = w*(info.x+1)/2 + 5;
@@ -153,7 +153,7 @@ namespace Cockpit
         }
         private void OnUDPSend(object sender, EventArgs e)
         {
-            string packetString = JsonSerializer.Serialize<Packet>(packet);
+            string packetString = JsonSerializer.Serialize<Packet<KeyMouseInfo>>(packet);
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
             socket.SendTo(packetBytes, endPoint);
         }

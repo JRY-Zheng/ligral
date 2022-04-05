@@ -15,11 +15,13 @@ namespace Cockpit
     {
         private DispatcherTimer timer;
         private InputProcessor inputProcessor;
+        private OutputDisplay outputDisplay;
         public MainWindow()
         {
             InitializeComponent();
             timer = new DispatcherTimer();
             inputProcessor = new InputProcessor(this);
+            outputDisplay = new OutputDisplay(this);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer.Start();
         }
