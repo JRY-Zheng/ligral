@@ -15,7 +15,7 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Canvas Grid.Column="0" Name="PrimaryDisplay" MouseMove="OnMouseMove" MouseWheel="OnMouseWheel" Background="White"></Canvas>
             <Grid Grid.Column="1" Name="ZBarContainer">
@@ -23,7 +23,7 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Canvas Grid.Row="1" Name="ZBar" Height="0" Background="Blue"></Canvas>
+                <Canvas Grid.Row="1" Name="ZBar" Height="0" Background="Lime"></Canvas>
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
