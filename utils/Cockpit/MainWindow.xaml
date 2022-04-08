@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cockpit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="450">
+        Title="MainWindow" Height="480" Width="480">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="5"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox Name="KeyInput" Height="0" KeyDown="OnKeyDown" KeyUp="OnKeyUp" LostFocus="OnKeyInputLostFocus"></TextBox>
+        <TextBox Name="KeyInput" Height="0" PreviewKeyDown="OnPreviewKeyDown" KeyDown="OnKeyDown" PreviewKeyUp="OnKeyUp" KeyUp="OnPreviewKeyUp" LostFocus="OnKeyInputLostFocus"></TextBox>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -44,15 +45,24 @@
                 <TextBlock Name="LStatus" Padding="5,0">L</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="2">
-                <TextBlock Grid.Row="1" Margin="5,0">TFC</TextBlock>
+                <TextBlock Grid.Row="1" Margin="5,0">SW1</TextBlock>
                 <TextBlock Name="TFC0Status" Padding="2,0">0</TextBlock>
                 <TextBlock Name="TFC1Status" Padding="2,0">1</TextBlock>
                 <TextBlock Name="TFC2Status" Padding="2,0">2</TextBlock>
-                <TextBlock Grid.Row="1" Margin="10,0,5,0">YGV</TextBlock>
+                <TextBlock Grid.Row="1" Margin="10,0,5,0">SW2</TextBlock>
                 <TextBlock Name="YGV0Status" Padding="2,0">0</TextBlock>
                 <TextBlock Name="YGV1Status" Padding="2,0">1</TextBlock>
                 <TextBlock Name="YGV2Status" Padding="2,0">2</TextBlock>
             </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2" Name="WBarContainer">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Canvas Grid.Column="0" Name="WBarLeft" Width="0"></Canvas>
+            <Canvas Grid.Column="1" Name="WBar" Width="0" Background="Lime"></Canvas>
         </Grid>
     </Grid>
 </Window>

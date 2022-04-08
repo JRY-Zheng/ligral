@@ -44,6 +44,18 @@ namespace Cockpit
         {
             (sender as UIElement).Focus();
         }
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+            case Key.Left:
+                inputProcessor.OnLeftDown();
+                break;
+            case Key.Right:
+                inputProcessor.OnRightDown();
+                break;
+            }
+        }
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -93,6 +105,18 @@ namespace Cockpit
                 break;
             case Key.C:
                 inputProcessor.OnCDown();
+                break;
+            }
+        }
+        private void OnPreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+            case Key.Left:
+                inputProcessor.OnLeftUp();
+                break;
+            case Key.Right:
+                inputProcessor.OnRightUp();
                 break;
             }
         }
