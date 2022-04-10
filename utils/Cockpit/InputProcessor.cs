@@ -12,10 +12,10 @@ namespace Cockpit
 {
     class KeyMouseInfo
     {
-        [JsonPropertyName("pitch")]
-        public double pitch {get; set;}
         [JsonPropertyName("roll")]
         public double roll {get; set;}
+        [JsonPropertyName("pitch")]
+        public double pitch {get; set;}
         [JsonPropertyName("yaw")]
         public double yaw {get; set;}
         [JsonPropertyName("throttle")]
@@ -63,6 +63,7 @@ namespace Cockpit
         private Brush activeBackground = new SolidColorBrush() { Color = Colors.Lime };
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse("127.0.0.1");
+        static IPEndPoint endPoint = new IPEndPoint(address, 8783);
         private MainWindow f;
         public InputProcessor(MainWindow window)
         {
@@ -70,14 +71,13 @@ namespace Cockpit
             f.KeyInput.Focus();
             f.Register(OnDraw);
             f.Register(OnStickReturn);
-            // f.Register(OnUDPSend);
+            f.Register(OnUDPSend);
             packet = new Packet<KeyMouseInfo>();
             packet.Label = 0xffb0;
             info = new KeyMouseInfo();
             packet.Data = info;
             InitiateCanvas();
         }
-        static IPEndPoint endPoint = new IPEndPoint(address, 8783);
         private void InitiateCanvas()
         {
             double w = f.PrimaryDisplay.ActualWidth;
@@ -107,18 +107,18 @@ namespace Cockpit
         {
             double w = f.PrimaryDisplay.ActualWidth;
             double h = f.PrimaryDisplay.ActualHeight;
-            xStar.X1 = w*(info.pitch+1)/2 - 5;
-            xStar.Y1 = h*(info.roll+1)/2;
-            xStar.X2 = w*(info.pitch+1)/2 + 5;
-            xStar.Y2 = h*(info.roll+1)/2;
-            yStar.X1 = w*(info.pitch+1)/2;
-            yStar.Y1 = h*(info.roll+1)/2 - 5;
-            yStar.X2 = w*(info.pitch+1)/2;
-            yStar.Y2 = h*(info.roll+1)/2 + 5;
+            xStar.X1 = w*(info.roll+1)/2 - 5;
+            xStar.Y1 = h*(info.pitch+1)/2;
+            xStar.X2 = w*(info.roll+1)/2 + 5;
+            xStar.Y2 = h*(info.pitch+1)/2;
+            yStar.X1 = w*(info.roll+1)/2;
+            yStar.Y1 = h*(info.pitch+1)/2 - 5;
+            yStar.X2 = w*(info.roll+1)/2;
+            yStar.Y2 = h*(info.pitch+1)/2 + 5;
             f.ZBar.Height = info.throttle*f.ZBarContainer.ActualHeight;
             f.WBar.Width = Math.Abs(info.yaw)*f.WBarContainer.ActualWidth/2;
             f.WBarLeft.Width = info.yaw>0?f.WBarContainer.ActualWidth/2:f.WBarContainer.ActualWidth/2-f.WBar.Width;
-            f.XYStatus.Text = $"p:{info.pitch:0.00} r:{info.roll:0.00} y:{info.yaw:0.00} t:{info.throttle:0.00}";
+            f.XYStatus.Text = $"p:{info.roll:0.00} r:{info.pitch:0.00} y:{info.yaw:0.00} t:{info.throttle:0.00}";
             f.HStatus.Background = info.H!=0 ? activeBackground : disableBackground;
             f.HStatus.Foreground = info.H!=0 ? activeBrush : disableBrush;
             f.JStatus.Background = info.J!=0 ? activeBackground : disableBackground;
@@ -152,8 +152,8 @@ namespace Cockpit
         {
             if (!stickHold)
             {
-                info.pitch *= 0.9;
                 info.roll *= 0.9;
+                info.pitch *= 0.9;
             }
             if (yawHold != 0)
             {
@@ -176,8 +176,8 @@ namespace Cockpit
         {
             if (stickHold)
             {
-                info.pitch = x;
-                info.roll = y;
+                info.roll = x;
+                info.pitch = y;
             }
         }
         public void OnMouseWheel(double dz)

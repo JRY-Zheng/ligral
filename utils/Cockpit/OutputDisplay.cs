@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
@@ -46,7 +47,7 @@ namespace Cockpit
         private Canvas primaryDisplay;
         private MainWindow f;
         private Packet<AircraftInfo> packet;
-        private AircraftInfo info;
+        private AircraftInfo info {get {return packet.Data;}}
         private Polygon land;
         private Polygon sky;
         static Point Center = new Point(0, 0);
@@ -59,16 +60,38 @@ namespace Cockpit
         static Point3 ZAxis = new Point3(0, 0, 1);
         static double SkylineDistance = 1;
         static double SkylineHalfLength = 3;
+        private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        static IPAddress address = IPAddress.Parse("127.0.0.1");
+        static IPEndPoint endPoint = new IPEndPoint(address, 8784);
         public OutputDisplay(MainWindow window)
         {
             f = window;
             primaryDisplay = window.PrimaryDisplay;
             packet = new Packet<AircraftInfo>();
             packet.Label = 0xffb0;
-            info = new AircraftInfo();
-            packet.Data = info;
+            packet.Data = new AircraftInfo();
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
+            socket.Bind(endPoint);
             InitiatePolygon();
             f.Register(OnDrawPolygon);
+            f.Register(OnUDPReceive);
+        }
+        private void OnUDPReceive(object sender, EventArgs e)
+        {
+            byte[] buffer = new byte[1024];
+            EndPoint senderRemote = (EndPoint)endPoint;
+            try
+            {
+                socket.ReceiveFrom(buffer, ref senderRemote);
+            }
+            catch (SocketException)
+            {
+                return;
+            }
+            string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
+            if (packetString.Length == 0) return;
+            var _packet = JsonSerializer.Deserialize<Packet<AircraftInfo>>(packetString);
+            if (packet.Label == _packet.Label) packet.Data = _packet.Data;
         }
         private Point GetPoint(double x, double y)
         {
@@ -197,9 +220,6 @@ namespace Cockpit
         }
         private void OnDrawPolygon(object sender, EventArgs e)
         {
-            info.theta = Math.Sin(2*info.phi);
-            info.phi += 0.01;
-            info.psi -= 0.01;
             PointCollection landPC = new PointCollection();
             PointCollection skyPC = new PointCollection();
             Point3 pl3 = new Point3(SkylineDistance, -SkylineHalfLength, 0);
