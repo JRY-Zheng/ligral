@@ -52,6 +52,11 @@ namespace Cockpit
         private Polygon sky;
         private Polygon leftBar;
         private Polygon rightBar;
+        private Canvas AirspeedIndicator;
+        private Canvas Altimeter;
+        private Canvas PitchIndicator;
+        private Canvas RollIndicator;
+        private Canvas HeadingIndicator;
         static Point Center = new Point(0, 0);
         static Point TopLeft = new Point(-1, -1);
         static Point TopRight = new Point(1, -1);
@@ -62,6 +67,7 @@ namespace Cockpit
         static Point3 ZAxis = new Point3(0, 0, 1);
         static double SkylineDistance = 1;
         static double SkylineHalfLength = 3;
+        static Brush transparentBlack = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         static IPAddress address = IPAddress.Parse("127.0.0.1");
         static IPEndPoint endPoint = new IPEndPoint(address, 8784);
@@ -77,6 +83,8 @@ namespace Cockpit
             f.RegisterInitialTask(InitiatePolygon);
             f.RegisterInitialTask(InitiateCenterBar);
             f.RegisterEventTriggedTask(RedrawCenterBar);
+            f.RegisterInitialTask(InitiateCanvas);
+            f.RegisterEventTriggedTask(RedrawCanvas);
             f.RegisterPeriodicTask(OnDrawPolygon);
             f.RegisterPeriodicTask(OnUDPReceive);
         }
@@ -113,6 +121,23 @@ namespace Cockpit
         private Point GetPoint(Point p)
         {
             return GetPoint(p.X, p.Y);
+        }
+        private Point GetConservativePoint(double x, double y)
+        {
+            double w = primaryDisplay.ActualWidth;
+            double h = primaryDisplay.ActualHeight;
+            if (w>h) 
+            {
+                return new Point((x+1)/2*h+(w-h)/2, (y+1)/2*h);
+            }
+            else
+            {
+                return new Point((x+1)/2*w, (y+1)/2*w+(h-w)/2);
+            }
+        }
+        private Point GetConservativePoint(Point p)
+        {
+            return GetConservativePoint(p.X, p.Y);
         }
         private Point? GetCrossing(Point p1, Point p2, Point pa, Point pb)
         {
@@ -297,40 +322,93 @@ namespace Cockpit
             leftBar.Fill = System.Windows.Media.Brushes.Black;
             leftBar.StrokeThickness = 0;
             leftBar.Points = new PointCollection();
-            leftBar.Points.Add(GetPoint(-0.5, 0));
-            leftBar.Points.Add(GetPoint(-0.2, 0));
-            leftBar.Points.Add(GetPoint(-0.2, 0.05));
-            leftBar.Points.Add(GetPoint(-0.21, 0.05));
-            leftBar.Points.Add(GetPoint(-0.21, 0.025));
-            leftBar.Points.Add(GetPoint(-0.5, 0.025));
+            leftBar.Points.Add(GetConservativePoint(-0.5, 0));
+            leftBar.Points.Add(GetConservativePoint(-0.2, 0));
+            leftBar.Points.Add(GetConservativePoint(-0.2, 0.05));
+            leftBar.Points.Add(GetConservativePoint(-0.21, 0.05));
+            leftBar.Points.Add(GetConservativePoint(-0.21, 0.025));
+            leftBar.Points.Add(GetConservativePoint(-0.5, 0.025));
             primaryDisplay.Children.Add(leftBar);
             rightBar = new Polygon();
             rightBar.Fill = System.Windows.Media.Brushes.Black;
             rightBar.StrokeThickness = 0;
             rightBar.Points = new PointCollection();
-            rightBar.Points.Add(GetPoint(0.5, 0));
-            rightBar.Points.Add(GetPoint(0.2, 0));
-            rightBar.Points.Add(GetPoint(0.2, 0.05));
-            rightBar.Points.Add(GetPoint(0.21, 0.05));
-            rightBar.Points.Add(GetPoint(0.21, 0.025));
-            rightBar.Points.Add(GetPoint(0.5, 0.025));
+            rightBar.Points.Add(GetConservativePoint(0.5, 0));
+            rightBar.Points.Add(GetConservativePoint(0.2, 0));
+            rightBar.Points.Add(GetConservativePoint(0.2, 0.05));
+            rightBar.Points.Add(GetConservativePoint(0.21, 0.05));
+            rightBar.Points.Add(GetConservativePoint(0.21, 0.025));
+            rightBar.Points.Add(GetConservativePoint(0.5, 0.025));
             primaryDisplay.Children.Add(rightBar);
         }
         private void RedrawCenterBar(object sender, SizeChangedEventArgs e)
         {
             if (!f.IsLoaded) return;
-            leftBar.Points[0] = GetPoint(-0.5, 0);
-            leftBar.Points[1] = GetPoint(-0.2, 0);
-            leftBar.Points[2] = GetPoint(-0.2, 0.05);
-            leftBar.Points[3] = GetPoint(-0.21, 0.05);
-            leftBar.Points[4] = GetPoint(-0.21, 0.025);
-            leftBar.Points[5] = GetPoint(-0.5, 0.025);
-            rightBar.Points[0] = GetPoint(0.5, 0);
-            rightBar.Points[1] = GetPoint(0.2, 0);
-            rightBar.Points[2] = GetPoint(0.2, 0.05);
-            rightBar.Points[3] = GetPoint(0.21, 0.05);
-            rightBar.Points[4] = GetPoint(0.21, 0.025);
-            rightBar.Points[5] = GetPoint(0.5, 0.025);
+            leftBar.Points[0] = GetConservativePoint(-0.5, 0);
+            leftBar.Points[1] = GetConservativePoint(-0.2, 0);
+            leftBar.Points[2] = GetConservativePoint(-0.2, 0.05);
+            leftBar.Points[3] = GetConservativePoint(-0.21, 0.05);
+            leftBar.Points[4] = GetConservativePoint(-0.21, 0.025);
+            leftBar.Points[5] = GetConservativePoint(-0.5, 0.025);
+            rightBar.Points[0] = GetConservativePoint(0.5, 0);
+            rightBar.Points[1] = GetConservativePoint(0.2, 0);
+            rightBar.Points[2] = GetConservativePoint(0.2, 0.05);
+            rightBar.Points[3] = GetConservativePoint(0.21, 0.05);
+            rightBar.Points[4] = GetConservativePoint(0.21, 0.025);
+            rightBar.Points[5] = GetConservativePoint(0.5, 0.025);
+        }
+        private void InitiateCanvas(object sender, RoutedEventArgs e)
+        {
+            AirspeedIndicator = new Canvas();
+            AirspeedIndicator.Background = transparentBlack;
+            primaryDisplay.Children.Add(AirspeedIndicator);
+            Altimeter = new Canvas();
+            Altimeter.Background = transparentBlack;
+            primaryDisplay.Children.Add(Altimeter);
+            PitchIndicator = new Canvas();
+            // PitchIndicator.Background = transparentBlack;
+            primaryDisplay.Children.Add(PitchIndicator);
+            RollIndicator = new Canvas();
+            // RollIndicator.Background = transparentBlack;
+            primaryDisplay.Children.Add(RollIndicator);
+            HeadingIndicator = new Canvas();
+            // HeadingIndicator.Background = transparentBlack;
+            primaryDisplay.Children.Add(HeadingIndicator);
+            RedrawCanvas(null, null);
+        }
+        private void RedrawCanvas(object sender, SizeChangedEventArgs e)
+        {
+            if (!f.IsLoaded) return;
+            Point topLeft = GetConservativePoint(-0.9,-0.8);
+            Point bottonRight = GetConservativePoint(-0.6,0.8);
+            Canvas.SetLeft(AirspeedIndicator, topLeft.X);
+            Canvas.SetTop(AirspeedIndicator, topLeft.Y);
+            AirspeedIndicator.Width = bottonRight.X-topLeft.X;
+            AirspeedIndicator.Height = bottonRight.Y-topLeft.Y;
+            topLeft = GetConservativePoint(0.6,-0.8);
+            bottonRight = GetConservativePoint(0.9,0.8);
+            Canvas.SetLeft(Altimeter, topLeft.X);
+            Canvas.SetTop(Altimeter, topLeft.Y);
+            Altimeter.Width = bottonRight.X-topLeft.X;
+            Altimeter.Height = bottonRight.Y-topLeft.Y;
+            topLeft = GetConservativePoint(-0.6,-0.8);
+            bottonRight = GetConservativePoint(0.6,0.8);
+            Canvas.SetLeft(PitchIndicator, topLeft.X);
+            Canvas.SetTop(PitchIndicator, topLeft.Y);
+            PitchIndicator.Width = bottonRight.X-topLeft.X;
+            PitchIndicator.Height = bottonRight.Y-topLeft.Y;
+            topLeft = GetConservativePoint(-0.6,-0.9);
+            bottonRight = GetConservativePoint(0.6,0);
+            Canvas.SetLeft(RollIndicator, topLeft.X);
+            Canvas.SetTop(RollIndicator, topLeft.Y);
+            RollIndicator.Width = bottonRight.X-topLeft.X;
+            RollIndicator.Height = bottonRight.Y-topLeft.Y;
+            topLeft = GetConservativePoint(-0.6,0.8);
+            bottonRight = GetConservativePoint(0.6,1.4);
+            Canvas.SetLeft(HeadingIndicator, topLeft.X);
+            Canvas.SetTop(HeadingIndicator, topLeft.Y);
+            HeadingIndicator.Width = bottonRight.X-topLeft.X;
+            HeadingIndicator.Height = bottonRight.Y-topLeft.Y;
         }
     }
 }
