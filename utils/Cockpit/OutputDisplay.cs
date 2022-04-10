@@ -50,6 +50,8 @@ namespace Cockpit
         private AircraftInfo info {get {return packet.Data;}}
         private Polygon land;
         private Polygon sky;
+        private Polygon leftBar;
+        private Polygon rightBar;
         static Point Center = new Point(0, 0);
         static Point TopLeft = new Point(-1, -1);
         static Point TopRight = new Point(1, -1);
@@ -72,9 +74,11 @@ namespace Cockpit
             packet.Data = new AircraftInfo();
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
             socket.Bind(endPoint);
-            InitiatePolygon();
-            f.Register(OnDrawPolygon);
-            f.Register(OnUDPReceive);
+            f.RegisterInitialTask(InitiatePolygon);
+            f.RegisterInitialTask(InitiateCenterBar);
+            f.RegisterEventTriggedTask(RedrawCenterBar);
+            f.RegisterPeriodicTask(OnDrawPolygon);
+            f.RegisterPeriodicTask(OnUDPReceive);
         }
         private void OnUDPReceive(object sender, EventArgs e)
         {
@@ -97,8 +101,14 @@ namespace Cockpit
         {
             double w = primaryDisplay.ActualWidth;
             double h = primaryDisplay.ActualHeight;
-            w = Math.Max(w, h);
-            return new Point((x+1)/2*w, (y+1)/2*w);
+            if (w>h) 
+            {
+                return new Point((x+1)/2*w, (y+1)/2*w-(w-h)/2);
+            }
+            else
+            {
+                return new Point((x+1)/2*h-(h-w)/2, (y+1)/2*h);
+            }
         }
         private Point GetPoint(Point p)
         {
@@ -181,7 +191,7 @@ namespace Cockpit
             double t = t2 - t1;
             return t < -180 || (t >= 0 && t < 180);
         }
-        private void InitiatePolygon()
+        private void InitiatePolygon(object sender, RoutedEventArgs e)
         {
             land = new Polygon();
             land.Fill = System.Windows.Media.Brushes.OrangeRed;
@@ -280,6 +290,47 @@ namespace Cockpit
             }
             CopyPoints(landPC, land.Points);
             CopyPoints(skyPC, sky.Points);
+        }
+        private void InitiateCenterBar(object sender, RoutedEventArgs e)
+        {
+            leftBar = new Polygon();
+            leftBar.Fill = System.Windows.Media.Brushes.Black;
+            leftBar.StrokeThickness = 0;
+            leftBar.Points = new PointCollection();
+            leftBar.Points.Add(GetPoint(-0.5, 0));
+            leftBar.Points.Add(GetPoint(-0.2, 0));
+            leftBar.Points.Add(GetPoint(-0.2, 0.05));
+            leftBar.Points.Add(GetPoint(-0.21, 0.05));
+            leftBar.Points.Add(GetPoint(-0.21, 0.025));
+            leftBar.Points.Add(GetPoint(-0.5, 0.025));
+            primaryDisplay.Children.Add(leftBar);
+            rightBar = new Polygon();
+            rightBar.Fill = System.Windows.Media.Brushes.Black;
+            rightBar.StrokeThickness = 0;
+            rightBar.Points = new PointCollection();
+            rightBar.Points.Add(GetPoint(0.5, 0));
+            rightBar.Points.Add(GetPoint(0.2, 0));
+            rightBar.Points.Add(GetPoint(0.2, 0.05));
+            rightBar.Points.Add(GetPoint(0.21, 0.05));
+            rightBar.Points.Add(GetPoint(0.21, 0.025));
+            rightBar.Points.Add(GetPoint(0.5, 0.025));
+            primaryDisplay.Children.Add(rightBar);
+        }
+        private void RedrawCenterBar(object sender, SizeChangedEventArgs e)
+        {
+            if (!f.IsLoaded) return;
+            leftBar.Points[0] = GetPoint(-0.5, 0);
+            leftBar.Points[1] = GetPoint(-0.2, 0);
+            leftBar.Points[2] = GetPoint(-0.2, 0.05);
+            leftBar.Points[3] = GetPoint(-0.21, 0.05);
+            leftBar.Points[4] = GetPoint(-0.21, 0.025);
+            leftBar.Points[5] = GetPoint(-0.5, 0.025);
+            rightBar.Points[0] = GetPoint(0.5, 0);
+            rightBar.Points[1] = GetPoint(0.2, 0);
+            rightBar.Points[2] = GetPoint(0.2, 0.05);
+            rightBar.Points[3] = GetPoint(0.21, 0.05);
+            rightBar.Points[4] = GetPoint(0.21, 0.025);
+            rightBar.Points[5] = GetPoint(0.5, 0.025);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Controls;
+using System.Windows;
 
 namespace Cockpit
 {
@@ -69,16 +69,16 @@ namespace Cockpit
         {
             f = window;
             f.KeyInput.Focus();
-            f.Register(OnDraw);
-            f.Register(OnStickReturn);
-            f.Register(OnUDPSend);
+            f.RegisterPeriodicTask(OnDraw);
+            f.RegisterPeriodicTask(OnStickReturn);
+            f.RegisterPeriodicTask(OnUDPSend);
             packet = new Packet<KeyMouseInfo>();
             packet.Label = 0xffb0;
             info = new KeyMouseInfo();
             packet.Data = info;
-            InitiateCanvas();
+            f.RegisterInitialTask(InitiateCanvas);
         }
-        private void InitiateCanvas()
+        private void InitiateCanvas(object sender, RoutedEventArgs e)
         {
             double w = f.PrimaryDisplay.ActualWidth;
             double h = f.PrimaryDisplay.ActualHeight;

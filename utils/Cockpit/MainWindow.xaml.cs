@@ -26,9 +26,17 @@ namespace Cockpit
             timer.Start();
         }
         
-        public void Register(EventHandler handler)
+        public void RegisterPeriodicTask(EventHandler handler)
         {
             timer.Tick += handler;
+        }
+        public void RegisterInitialTask(RoutedEventHandler handler)
+        {
+            Loaded += handler;
+        }
+        public void RegisterEventTriggedTask(SizeChangedEventHandler handler)
+        {
+            SizeChanged += handler;
         }
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
