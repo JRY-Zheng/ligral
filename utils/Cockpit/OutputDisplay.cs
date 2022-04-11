@@ -55,6 +55,7 @@ namespace Cockpit
         private Canvas AirspeedIndicatorCanvas;
         private Indicator airspeedIndicator;
         private Indicator altimeter;
+        private Indicator headingIndicator;
         private Canvas AltimeterCanvas;
         private Canvas PitchIndicatorCanvas;
         private Canvas RollIndicatorCanvas;
@@ -384,8 +385,20 @@ namespace Cockpit
             // RollIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(RollIndicatorCanvas);
             HeadingIndicatorCanvas = new Canvas();
-            // HeadingIndicator.Background = transparentBlack;
+            // HeadingIndicatorCanvas.Background = transparentBlack;
             primaryDisplay.Children.Add(HeadingIndicatorCanvas);
+            headingIndicator = new Indicator(HeadingIndicatorCanvas, 360)
+            {
+                Window = 120,
+                Interval = 30,
+                ShortPosition1 = 0.8,
+                ShortPosition2 = 0.9,
+                MediumPosition1 = 0.75,
+                MediumPosition2 = 0.9,
+                LongPosition1 = 0.7,
+                LongPosition2 = 0.9,
+                LabelPosition = 0.95
+            };
             RedrawCanvas(null, null);
         }
         private void RedrawCanvas(object sender, SizeChangedEventArgs e)
@@ -415,8 +428,8 @@ namespace Cockpit
             Canvas.SetTop(RollIndicatorCanvas, topLeft.Y);
             RollIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             RollIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
-            topLeft = GetConservativePoint(-0.6,0.8);
-            bottonRight = GetConservativePoint(0.6,1.4);
+            topLeft = GetConservativePoint(-0.6,0.7);
+            bottonRight = GetConservativePoint(0.6,1.3);
             Canvas.SetLeft(HeadingIndicatorCanvas, topLeft.X);
             Canvas.SetTop(HeadingIndicatorCanvas, topLeft.Y);
             HeadingIndicatorCanvas.Width = bottonRight.X-topLeft.X;
@@ -430,6 +443,9 @@ namespace Cockpit
             altimeter.CurrentValue = info.h;
             altimeter.NormalisedTicks();
             altimeter.DrawLinearTicks();
+            headingIndicator.CurrentValue = info.psi*180/Math.PI;
+            headingIndicator.PeriodisedTicks();
+            headingIndicator.DrawRadiusTicks();
         }
     }
 }
