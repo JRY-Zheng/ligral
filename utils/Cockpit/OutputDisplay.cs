@@ -52,11 +52,12 @@ namespace Cockpit
         private Polygon sky;
         private Polygon leftBar;
         private Polygon rightBar;
-        private Canvas AirspeedIndicator;
-        private Canvas Altimeter;
-        private Canvas PitchIndicator;
-        private Canvas RollIndicator;
-        private Canvas HeadingIndicator;
+        private Canvas AirspeedIndicatorCanvas;
+        private Indicator airspeedIndicator;
+        private Canvas AltimeterCanvas;
+        private Canvas PitchIndicatorCanvas;
+        private Canvas RollIndicatorCanvas;
+        private Canvas HeadingIndicatorCanvas;
         static Point Center = new Point(0, 0);
         static Point TopLeft = new Point(-1, -1);
         static Point TopRight = new Point(1, -1);
@@ -87,6 +88,7 @@ namespace Cockpit
             f.RegisterEventTriggedTask(RedrawCanvas);
             f.RegisterPeriodicTask(OnDrawPolygon);
             f.RegisterPeriodicTask(OnUDPReceive);
+            f.RegisterPeriodicTask(OnDrawIndicators);
         }
         private void OnUDPReceive(object sender, EventArgs e)
         {
@@ -359,56 +361,64 @@ namespace Cockpit
         }
         private void InitiateCanvas(object sender, RoutedEventArgs e)
         {
-            AirspeedIndicator = new Canvas();
-            AirspeedIndicator.Background = transparentBlack;
-            primaryDisplay.Children.Add(AirspeedIndicator);
-            Altimeter = new Canvas();
-            Altimeter.Background = transparentBlack;
-            primaryDisplay.Children.Add(Altimeter);
-            PitchIndicator = new Canvas();
+            AirspeedIndicatorCanvas = new Canvas();
+            AirspeedIndicatorCanvas.Background = transparentBlack;
+            primaryDisplay.Children.Add(AirspeedIndicatorCanvas);
+            airspeedIndicator = new Indicator(AirspeedIndicatorCanvas, 500);
+            AltimeterCanvas = new Canvas();
+            AltimeterCanvas.Background = transparentBlack;
+            primaryDisplay.Children.Add(AltimeterCanvas);
+            PitchIndicatorCanvas = new Canvas();
             // PitchIndicator.Background = transparentBlack;
-            primaryDisplay.Children.Add(PitchIndicator);
-            RollIndicator = new Canvas();
+            primaryDisplay.Children.Add(PitchIndicatorCanvas);
+            RollIndicatorCanvas = new Canvas();
             // RollIndicator.Background = transparentBlack;
-            primaryDisplay.Children.Add(RollIndicator);
-            HeadingIndicator = new Canvas();
+            primaryDisplay.Children.Add(RollIndicatorCanvas);
+            HeadingIndicatorCanvas = new Canvas();
             // HeadingIndicator.Background = transparentBlack;
-            primaryDisplay.Children.Add(HeadingIndicator);
+            primaryDisplay.Children.Add(HeadingIndicatorCanvas);
             RedrawCanvas(null, null);
         }
         private void RedrawCanvas(object sender, SizeChangedEventArgs e)
         {
             if (!f.IsLoaded) return;
-            Point topLeft = GetConservativePoint(-0.9,-0.8);
+            Point topLeft = GetConservativePoint(-0.95,-0.8);
             Point bottonRight = GetConservativePoint(-0.6,0.8);
-            Canvas.SetLeft(AirspeedIndicator, topLeft.X);
-            Canvas.SetTop(AirspeedIndicator, topLeft.Y);
-            AirspeedIndicator.Width = bottonRight.X-topLeft.X;
-            AirspeedIndicator.Height = bottonRight.Y-topLeft.Y;
+            Canvas.SetLeft(AirspeedIndicatorCanvas, topLeft.X);
+            Canvas.SetTop(AirspeedIndicatorCanvas, topLeft.Y);
+            AirspeedIndicatorCanvas.Width = bottonRight.X-topLeft.X;
+            AirspeedIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
             topLeft = GetConservativePoint(0.6,-0.8);
-            bottonRight = GetConservativePoint(0.9,0.8);
-            Canvas.SetLeft(Altimeter, topLeft.X);
-            Canvas.SetTop(Altimeter, topLeft.Y);
-            Altimeter.Width = bottonRight.X-topLeft.X;
-            Altimeter.Height = bottonRight.Y-topLeft.Y;
-            topLeft = GetConservativePoint(-0.6,-0.8);
-            bottonRight = GetConservativePoint(0.6,0.8);
-            Canvas.SetLeft(PitchIndicator, topLeft.X);
-            Canvas.SetTop(PitchIndicator, topLeft.Y);
-            PitchIndicator.Width = bottonRight.X-topLeft.X;
-            PitchIndicator.Height = bottonRight.Y-topLeft.Y;
+            bottonRight = GetConservativePoint(0.95,0.8);
+            Canvas.SetLeft(AltimeterCanvas, topLeft.X);
+            Canvas.SetTop(AltimeterCanvas, topLeft.Y);
+            AltimeterCanvas.Width = bottonRight.X-topLeft.X;
+            AltimeterCanvas.Height = bottonRight.Y-topLeft.Y;
+            topLeft = GetConservativePoint(-0.4,-0.8);
+            bottonRight = GetConservativePoint(0.4,0.8);
+            Canvas.SetLeft(PitchIndicatorCanvas, topLeft.X);
+            Canvas.SetTop(PitchIndicatorCanvas, topLeft.Y);
+            PitchIndicatorCanvas.Width = bottonRight.X-topLeft.X;
+            PitchIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
             topLeft = GetConservativePoint(-0.6,-0.9);
             bottonRight = GetConservativePoint(0.6,0);
-            Canvas.SetLeft(RollIndicator, topLeft.X);
-            Canvas.SetTop(RollIndicator, topLeft.Y);
-            RollIndicator.Width = bottonRight.X-topLeft.X;
-            RollIndicator.Height = bottonRight.Y-topLeft.Y;
+            Canvas.SetLeft(RollIndicatorCanvas, topLeft.X);
+            Canvas.SetTop(RollIndicatorCanvas, topLeft.Y);
+            RollIndicatorCanvas.Width = bottonRight.X-topLeft.X;
+            RollIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
             topLeft = GetConservativePoint(-0.6,0.8);
             bottonRight = GetConservativePoint(0.6,1.4);
-            Canvas.SetLeft(HeadingIndicator, topLeft.X);
-            Canvas.SetTop(HeadingIndicator, topLeft.Y);
-            HeadingIndicator.Width = bottonRight.X-topLeft.X;
-            HeadingIndicator.Height = bottonRight.Y-topLeft.Y;
+            Canvas.SetLeft(HeadingIndicatorCanvas, topLeft.X);
+            Canvas.SetTop(HeadingIndicatorCanvas, topLeft.Y);
+            HeadingIndicatorCanvas.Width = bottonRight.X-topLeft.X;
+            HeadingIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+        }
+        private void OnDrawIndicators(object sender, EventArgs e)
+        {
+            info.V += 1;
+            airspeedIndicator.CurrentValue = info.V;
+            airspeedIndicator.NormalisedTicks();
+            airspeedIndicator.DrawLinearTicks();
         }
     }
 }
