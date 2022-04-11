@@ -54,6 +54,7 @@ namespace Cockpit
         private Polygon rightBar;
         private Canvas AirspeedIndicatorCanvas;
         private Indicator airspeedIndicator;
+        private Indicator altimeter;
         private Canvas AltimeterCanvas;
         private Canvas PitchIndicatorCanvas;
         private Canvas RollIndicatorCanvas;
@@ -368,6 +369,14 @@ namespace Cockpit
             AltimeterCanvas = new Canvas();
             AltimeterCanvas.Background = transparentBlack;
             primaryDisplay.Children.Add(AltimeterCanvas);
+            altimeter = new Indicator(AltimeterCanvas, 40000) 
+            {
+                LabelPosition = 0.6,
+                LongPosition1 = 0.1,
+                LongPosition2 = 0.6,
+                Window = 10000,
+                Interval = 2000
+            };
             PitchIndicatorCanvas = new Canvas();
             // PitchIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(PitchIndicatorCanvas);
@@ -415,10 +424,12 @@ namespace Cockpit
         }
         private void OnDrawIndicators(object sender, EventArgs e)
         {
-            info.V += 1;
             airspeedIndicator.CurrentValue = info.V;
             airspeedIndicator.NormalisedTicks();
             airspeedIndicator.DrawLinearTicks();
+            altimeter.CurrentValue = info.h;
+            altimeter.NormalisedTicks();
+            altimeter.DrawLinearTicks();
         }
     }
 }

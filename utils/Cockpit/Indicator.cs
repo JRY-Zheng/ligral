@@ -19,7 +19,7 @@ namespace Cockpit
         public double MediumPosition2 {get; set;} = 0.75;
         public double ShortPosition1 {get; set;} = 0.3;
         public double ShortPosition2 {get; set;} = 0.7;
-        public double LabelPosition {get; set;} = 0.1;
+        public double LabelPosition {get; set;} = 0.05;
         private List<double> LongTicks = new List<double>();
         private List<double> MediumTicks = new List<double>();
         private List<double> ShortTicks = new List<double>();
@@ -32,7 +32,7 @@ namespace Cockpit
             this.canvas = canvas;
             this.UpperBound = upper;
             this.LowerBound = lower;
-            this.Window = (UpperBound-LowerBound)/10;
+            this.Window = (UpperBound-LowerBound)/5;
             this.Interval = Window/5;
         }
         public void NormalisedTicks()
@@ -138,7 +138,7 @@ namespace Cockpit
                     labels.Add(label);
                     label.Text = LongTickValues[i].ToString();
                     Canvas.SetTop(label, canvas.ActualHeight*LongTicks[i]-label.ActualHeight/2);
-                    Canvas.SetLeft(label, LabelPosition);
+                    Canvas.SetLeft(label, LabelPosition*canvas.ActualWidth);
                     label.Foreground = tickBrush;
                 }
                 if (!canvas.Children.Contains(label))
