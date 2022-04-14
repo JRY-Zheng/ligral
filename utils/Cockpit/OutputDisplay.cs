@@ -57,6 +57,7 @@ namespace Cockpit
         private Indicator altimeter;
         private Indicator headingIndicator;
         private Indicator pitchIndicator;
+        private Indicator rollIndicator;
         private Canvas AltimeterCanvas;
         private Canvas PitchIndicatorCanvas;
         private Canvas RollIndicatorCanvas;
@@ -411,7 +412,7 @@ namespace Cockpit
             PitchIndicatorCanvas.RenderTransform = rollTransform;
             pitchIndicator = new Indicator(PitchIndicatorCanvas, 90, -90)
             {
-                Window = 180/Math.PI*2*0.8*GetRatio(),
+                Window = 180/Math.PI*2*0.4*GetRatio(),
                 Interval = 10,
                 ShortPosition1 = 0.3,
                 ShortPosition2 = 0.7,
@@ -424,6 +425,20 @@ namespace Cockpit
             RollIndicatorCanvas = new Canvas();
             // RollIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(RollIndicatorCanvas);
+            rollIndicator = new Indicator(RollIndicatorCanvas, 360)
+            {
+                Window = 120,
+                Interval = 30,
+                ShortPosition1 = 0.88,
+                ShortPosition2 = 0.9,
+                MediumPosition1 = 0.85,
+                MediumPosition2 = 0.9,
+                LongPosition1 = 0.8,
+                LongPosition2 = 0.9,
+                LabelPosition = 0.95
+            };
+            rollIndicator.PeriodisedTicks();
+            RollIndicatorCanvas.Loaded += (_, _) => rollIndicator.DrawRadiusTicks();
             HeadingIndicatorCanvas = new Canvas();
             // HeadingIndicatorCanvas.Background = transparentBlack;
             primaryDisplay.Children.Add(HeadingIndicatorCanvas);
@@ -444,32 +459,33 @@ namespace Cockpit
         private void RedrawCanvas(object sender, SizeChangedEventArgs e)
         {
             if (!f.IsLoaded) return;
-            Point topLeft = GetConservativePoint(-0.95,-0.8);
-            Point bottonRight = GetConservativePoint(-0.6,0.8);
+            Point topLeft = GetConservativePoint(-1,-0.8);
+            Point bottonRight = GetConservativePoint(-0.65,0.8);
             Canvas.SetLeft(AirspeedIndicatorCanvas, topLeft.X);
             Canvas.SetTop(AirspeedIndicatorCanvas, topLeft.Y);
             AirspeedIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             AirspeedIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
-            topLeft = GetConservativePoint(0.6,-0.8);
-            bottonRight = GetConservativePoint(0.95,0.8);
+            topLeft = GetConservativePoint(0.65,-0.8);
+            bottonRight = GetConservativePoint(1,0.8);
             Canvas.SetLeft(AltimeterCanvas, topLeft.X);
             Canvas.SetTop(AltimeterCanvas, topLeft.Y);
             AltimeterCanvas.Width = bottonRight.X-topLeft.X;
             AltimeterCanvas.Height = bottonRight.Y-topLeft.Y;
-            topLeft = GetConservativePoint(-0.4,-0.8);
-            bottonRight = GetConservativePoint(0.4,0.8);
+            topLeft = GetConservativePoint(-0.4,-0.4);
+            bottonRight = GetConservativePoint(0.4,0.4);
             Canvas.SetLeft(PitchIndicatorCanvas, topLeft.X);
             Canvas.SetTop(PitchIndicatorCanvas, topLeft.Y);
             PitchIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             PitchIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
             rollTransform.CenterX = PitchIndicatorCanvas.Width/2;
             rollTransform.CenterY = PitchIndicatorCanvas.Height/2;
-            topLeft = GetConservativePoint(-0.6,-0.9);
-            bottonRight = GetConservativePoint(0.6,0);
+            topLeft = GetConservativePoint(-0.4,-0.8);
+            bottonRight = GetConservativePoint(0.4,0);
             Canvas.SetLeft(RollIndicatorCanvas, topLeft.X);
             Canvas.SetTop(RollIndicatorCanvas, topLeft.Y);
             RollIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             RollIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+            if (RollIndicatorCanvas.IsLoaded) rollIndicator.DrawRadiusTicks();
             topLeft = GetConservativePoint(-0.6,0.7);
             bottonRight = GetConservativePoint(0.6,1.3);
             Canvas.SetLeft(HeadingIndicatorCanvas, topLeft.X);
