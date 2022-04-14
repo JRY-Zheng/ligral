@@ -70,7 +70,7 @@ namespace Cockpit
         static Point3 XAxis = new Point3(1, 0, 0);
         static Point3 YAxis = new Point3(0, 1, 0);
         static Point3 ZAxis = new Point3(0, 0, 1);
-        static double SkylineDistance = 1;
+        // static double SkylineDistance = 1;
         static double SkylineHalfLength = 3;
         static Brush transparentBlack = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -110,6 +110,19 @@ namespace Cockpit
             if (packetString.Length == 0) return;
             var _packet = JsonSerializer.Deserialize<Packet<AircraftInfo>>(packetString);
             if (packet.Label == _packet.Label) packet.Data = _packet.Data;
+        }
+        private double GetRatio()
+        {
+            double w = primaryDisplay.ActualWidth;
+            double h = primaryDisplay.ActualHeight;
+            if (w>h) 
+            {
+                return h/w;
+            }
+            else
+            {
+                return w/h;
+            }
         }
         private Point GetPoint(double x, double y)
         {
@@ -183,6 +196,14 @@ namespace Cockpit
             if (p.X == -1 && p.Y != -1) return TopLeft;
             if (p.X != 1 && p.Y == -1) return TopRight;
             throw new InvalidOperationException("Unknown error");
+        }
+        private Point BodyToEarth(Point p)
+        {
+            double x = p.X;
+            double y = p.Y + info.theta;
+            double cosphi = Math.Cos(info.phi);
+            double sinphi = Math.Sin(info.phi);
+            return new Point(x*cosphi+y*sinphi, -x*sinphi+y*cosphi);
         }
         private Point3 BodyToEarth(Point3 pe)
         {
@@ -263,14 +284,18 @@ namespace Cockpit
         {
             PointCollection landPC = new PointCollection();
             PointCollection skyPC = new PointCollection();
-            Point3 pl3 = new Point3(SkylineDistance, -SkylineHalfLength, 0);
-            Point3 pr3 = new Point3(SkylineDistance, SkylineHalfLength, 0);
-            pl3 = Yaw(pl3);
-            pr3 = Yaw(pr3);
-            pl3 = BodyToEarth(pl3);
-            pr3 = BodyToEarth(pr3);
-            Point pl = new Point(pl3.Y, pl3.Z);
-            Point pr = new Point(pr3.Y, pr3.Z);
+            // Point3 pl3 = new Point3(SkylineDistance, -SkylineHalfLength, 0);
+            // Point3 pr3 = new Point3(SkylineDistance, SkylineHalfLength, 0);
+            // pl3 = Yaw(pl3);
+            // pr3 = Yaw(pr3);
+            // pl3 = BodyToEarth(pl3);
+            // pr3 = BodyToEarth(pr3);
+            // Point pl = new Point(pl3.Y, pl3.Z);
+            // Point pr = new Point(pr3.Y, pr3.Z);
+            Point pl = new Point(-SkylineHalfLength, 0);
+            Point pr = new Point(SkylineHalfLength, 0);
+            pl = BodyToEarth(pl);
+            pr = BodyToEarth(pr);
             var points = GetCrossingOnBorder(pl, pr);
             if (points.Count == 0)
             {
@@ -386,7 +411,7 @@ namespace Cockpit
             PitchIndicatorCanvas.RenderTransform = rollTransform;
             pitchIndicator = new Indicator(PitchIndicatorCanvas, 90, -90)
             {
-                Window = 75,
+                Window = 180/Math.PI*2*0.8*GetRatio(),
                 Interval = 10,
                 ShortPosition1 = 0.3,
                 ShortPosition2 = 0.7,
