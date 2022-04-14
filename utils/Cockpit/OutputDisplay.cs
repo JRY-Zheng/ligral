@@ -56,10 +56,12 @@ namespace Cockpit
         private Indicator airspeedIndicator;
         private Indicator altimeter;
         private Indicator headingIndicator;
+        private Indicator pitchIndicator;
         private Canvas AltimeterCanvas;
         private Canvas PitchIndicatorCanvas;
         private Canvas RollIndicatorCanvas;
         private Canvas HeadingIndicatorCanvas;
+        private RotateTransform rollTransform = new RotateTransform();
         static Point Center = new Point(0, 0);
         static Point TopLeft = new Point(-1, -1);
         static Point TopRight = new Point(1, -1);
@@ -381,6 +383,19 @@ namespace Cockpit
             PitchIndicatorCanvas = new Canvas();
             // PitchIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(PitchIndicatorCanvas);
+            PitchIndicatorCanvas.RenderTransform = rollTransform;
+            pitchIndicator = new Indicator(PitchIndicatorCanvas, 90, -90)
+            {
+                Window = 75,
+                Interval = 10,
+                ShortPosition1 = 0.3,
+                ShortPosition2 = 0.7,
+                MediumPosition1 = 0.25,
+                MediumPosition2 = 0.75,
+                LongPosition1 = 0.2,
+                LongPosition2 = 0.9,
+                LabelPosition = 0.05
+            };
             RollIndicatorCanvas = new Canvas();
             // RollIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(RollIndicatorCanvas);
@@ -422,6 +437,8 @@ namespace Cockpit
             Canvas.SetTop(PitchIndicatorCanvas, topLeft.Y);
             PitchIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             PitchIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+            rollTransform.CenterX = PitchIndicatorCanvas.Width/2;
+            rollTransform.CenterY = PitchIndicatorCanvas.Height/2;
             topLeft = GetConservativePoint(-0.6,-0.9);
             bottonRight = GetConservativePoint(0.6,0);
             Canvas.SetLeft(RollIndicatorCanvas, topLeft.X);
@@ -443,6 +460,10 @@ namespace Cockpit
             altimeter.CurrentValue = info.h;
             altimeter.NormalisedTicks();
             altimeter.DrawLinearTicks();
+            pitchIndicator.CurrentValue = info.theta*180/Math.PI;
+            pitchIndicator.NormalisedTicks();
+            pitchIndicator.DrawLinearTicks();
+            rollTransform.Angle = -info.phi*180/Math.PI;
             headingIndicator.CurrentValue = info.psi*180/Math.PI;
             headingIndicator.PeriodisedTicks();
             headingIndicator.DrawRadiusTicks();
