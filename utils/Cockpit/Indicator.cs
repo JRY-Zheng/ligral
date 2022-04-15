@@ -25,13 +25,21 @@ namespace Cockpit
         public double PointerTop {get; set;} = -0.2;
         public double PointerHeight {get; set;} = 0.05;
         public double PointerWidth {get; set;} = 0.05;
+        public double LabelHeight {get; set;} = 0.1;
+        public int LabelPrecision {get; set;} = 1;
+        public double LabelTextLeft {get; set;} = 0.3;
         private List<double> LongTicks = new List<double>();
         private List<double> MediumTicks = new List<double>();
         private List<double> ShortTicks = new List<double>();
         private List<double> LongTickValues = new List<double>();
         private List<Line> lines = new List<Line>();
         private List<TextBlock> labels = new List<TextBlock>();
-        private Polygon pointer = new Polygon() {Fill=Brushes.White};
+        private Polygon pointer;
+        private Polygon labelBackground;
+        private TextBlock MainLabel;
+        private TextBlock UpperLabel;
+        private TextBlock LowerLabel;
+        private bool labelEnabled = false;
         static Brush tickBrush = Brushes.White;
         public Indicator(Canvas canvas, double upper, double lower=0)
         {
@@ -60,17 +68,20 @@ namespace Cockpit
             while (tickValue <= valueAtTop && tickValue <= UpperBound)
             {
                 double tick = (tickValue-valueAtTop)/(valueAtBottom-valueAtTop);
-                switch (tickIndex % 4)
+                if (!labelEnabled || tick<0.5-LabelHeight/2 || tick>0.5+LabelHeight/2)
                 {
-                case 0:
-                    LongTicks.Add(tick); 
-                    LongTickValues.Add(tickValue);
-                    break;
-                case 2:
-                    MediumTicks.Add(tick); break;
-                case 1:
-                case 3:
-                    ShortTicks.Add(tick); break;
+                    switch (tickIndex % 4)
+                    {
+                    case 0:
+                        LongTicks.Add(tick); 
+                        LongTickValues.Add(tickValue);
+                        break;
+                    case 2:
+                        MediumTicks.Add(tick); break;
+                    case 1:
+                    case 3:
+                        ShortTicks.Add(tick); break;
+                    }
                 }
                 tickValue += step;
                 tickIndex ++;
@@ -307,6 +318,7 @@ namespace Cockpit
             var bottomRight = new Point(w*(1+PointerWidth)/2, h*(PointerTop+PointerHeight));
             if (!canvas.Children.Contains(pointer))
             {
+                pointer = new Polygon() {Fill=tickBrush};
                 pointer.Points.Add(top);
                 pointer.Points.Add(bottomLeft);
                 pointer.Points.Add(bottomRight);
@@ -318,6 +330,76 @@ namespace Cockpit
                 pointer.Points[1] = bottomLeft;
                 pointer.Points[2] = bottomRight;
             }
+        }
+        public void DrawLabelBackground(bool direction)
+        {
+            labelEnabled = true;
+            double w = canvas.ActualWidth;
+            double h = canvas.ActualHeight;
+            double labelTop = 0.5-LabelHeight/2;
+            double labelBottom = 0.5+LabelHeight/2;
+            var pointInfo = new List<(double, double)>() 
+            {
+                (0.01, labelTop), (0.93, labelTop), (0.93, 0.48),
+                (0.99, 0.5), (0.93, 0.52), (0.93, labelBottom),
+                (0.01, labelBottom)
+            };
+            if (!direction)
+            {
+                pointInfo = pointInfo.ConvertAll(p => (1-p.Item1, p.Item2));
+            }
+            var points = pointInfo.ConvertAll(p => new Point(w*p.Item1, h*p.Item2));
+            if (!canvas.Children.Contains(pointer))
+            {
+                labelBackground = new Polygon() 
+                {
+                    Stroke = tickBrush,
+                    StrokeThickness = 2
+                };
+                foreach (var point in points)
+                {
+                    labelBackground.Points.Add(point);
+                }
+                canvas.Children.Add(labelBackground);
+                MainLabel = new TextBlock();
+                MainLabel.Foreground = tickBrush;
+                canvas.Children.Add(MainLabel);
+                UpperLabel = new TextBlock();
+                UpperLabel.Foreground = tickBrush;
+                canvas.Children.Add(UpperLabel);
+                LowerLabel = new TextBlock();
+                LowerLabel.Foreground = tickBrush;
+                canvas.Children.Add(LowerLabel);
+            }
+            else
+            {
+                for (int i=0; i<points.Count; i++)
+                {
+                    labelBackground.Points[i] = points[i];
+                }
+            }
+            UpdateLabel();
+        }
+        public void UpdateLabel()
+        {
+            if (!labelEnabled) return;
+            int b = 10*LabelPrecision;
+            int v = (int) CurrentValue/LabelPrecision*LabelPrecision;
+            int m = v/b;
+            int l = v-m*b;
+            int u = (l+LabelPrecision)%b;
+            double r = (CurrentValue-v)/LabelPrecision;
+            double w = canvas.ActualWidth;
+            double h = canvas.ActualHeight;
+            MainLabel.Text = $"{m:00}";
+            UpperLabel.Text = u.ToString();
+            LowerLabel.Text = l.ToString();
+            Canvas.SetTop(MainLabel, h/2-MainLabel.ActualHeight/2);
+            Canvas.SetLeft(MainLabel, w*LabelTextLeft);
+            Canvas.SetTop(UpperLabel, h/2+UpperLabel.ActualHeight*(-1.5+r));
+            Canvas.SetLeft(UpperLabel, w*LabelTextLeft+MainLabel.ActualWidth);
+            Canvas.SetTop(LowerLabel, h/2+UpperLabel.ActualHeight*(-0.5+r));
+            Canvas.SetLeft(LowerLabel, w*LabelTextLeft+MainLabel.ActualWidth);
         }
     }
 }

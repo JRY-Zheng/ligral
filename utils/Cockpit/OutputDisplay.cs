@@ -395,6 +395,7 @@ namespace Cockpit
             AirspeedIndicatorCanvas.Background = transparentBlack;
             primaryDisplay.Children.Add(AirspeedIndicatorCanvas);
             airspeedIndicator = new Indicator(AirspeedIndicatorCanvas, 500);
+            AirspeedIndicatorCanvas.Loaded += (_, _) => airspeedIndicator.DrawLabelBackground(true);
             AltimeterCanvas = new Canvas();
             AltimeterCanvas.Background = transparentBlack;
             primaryDisplay.Children.Add(AltimeterCanvas);
@@ -404,8 +405,10 @@ namespace Cockpit
                 LongPosition1 = 0.1,
                 LongPosition2 = 0.6,
                 Window = 10000,
-                Interval = 2000
+                Interval = 2000,
+                LabelPrecision = 100
             };
+            AltimeterCanvas.Loaded += (_, _) => altimeter.DrawLabelBackground(false);
             PitchIndicatorCanvas = new Canvas();
             // PitchIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(PitchIndicatorCanvas);
@@ -470,12 +473,14 @@ namespace Cockpit
             Canvas.SetTop(AirspeedIndicatorCanvas, topLeft.Y);
             AirspeedIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             AirspeedIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+            if (AirspeedIndicatorCanvas.IsLoaded) airspeedIndicator.DrawLabelBackground(true);
             topLeft = GetConservativePoint(0.65,-0.8);
             bottonRight = GetConservativePoint(1,0.8);
             Canvas.SetLeft(AltimeterCanvas, topLeft.X);
             Canvas.SetTop(AltimeterCanvas, topLeft.Y);
             AltimeterCanvas.Width = bottonRight.X-topLeft.X;
             AltimeterCanvas.Height = bottonRight.Y-topLeft.Y;
+            if (AltimeterCanvas.IsLoaded) altimeter.DrawLabelBackground(false);
             topLeft = GetConservativePoint(-0.4,-0.4);
             bottonRight = GetConservativePoint(0.4,0.4);
             Canvas.SetLeft(PitchIndicatorCanvas, topLeft.X);
@@ -505,9 +510,11 @@ namespace Cockpit
             airspeedIndicator.CurrentValue = info.V;
             airspeedIndicator.NormalisedTicks();
             airspeedIndicator.DrawLinearTicks();
+            airspeedIndicator.UpdateLabel();
             altimeter.CurrentValue = info.h;
             altimeter.NormalisedTicks();
             altimeter.DrawLinearTicks();
+            altimeter.UpdateLabel();
             pitchIndicator.CurrentValue = info.theta*180/Math.PI;
             pitchIndicator.NormalisedTicks();
             pitchIndicator.DrawLinearTicks();
