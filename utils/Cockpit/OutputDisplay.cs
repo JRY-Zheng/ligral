@@ -422,6 +422,7 @@ namespace Cockpit
                 LongPosition2 = 0.9,
                 LabelPosition = 0.05
             };
+            PitchIndicatorCanvas.Loaded += (_, _) => pitchIndicator.DrawPointer();
             RollIndicatorCanvas = new Canvas();
             // RollIndicator.Background = transparentBlack;
             primaryDisplay.Children.Add(RollIndicatorCanvas);
@@ -452,8 +453,12 @@ namespace Cockpit
                 MediumPosition2 = 0.9,
                 LongPosition1 = 0.7,
                 LongPosition2 = 0.9,
-                LabelPosition = 0.95
+                LabelPosition = 0.95,
+                PointerTop = 0.3,
+                PointerWidth = 0.04,
+                PointerHeight = 0.08
             };
+            HeadingIndicatorCanvas.Loaded += (_, _) => headingIndicator.DrawPointer();
             RedrawCanvas(null, null);
         }
         private void RedrawCanvas(object sender, SizeChangedEventArgs e)
@@ -477,6 +482,7 @@ namespace Cockpit
             Canvas.SetTop(PitchIndicatorCanvas, topLeft.Y);
             PitchIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             PitchIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+            if (PitchIndicatorCanvas.IsLoaded) pitchIndicator.DrawPointer();
             rollTransform.CenterX = PitchIndicatorCanvas.Width/2;
             rollTransform.CenterY = PitchIndicatorCanvas.Height/2;
             topLeft = GetConservativePoint(-0.4,-0.8);
@@ -492,6 +498,7 @@ namespace Cockpit
             Canvas.SetTop(HeadingIndicatorCanvas, topLeft.Y);
             HeadingIndicatorCanvas.Width = bottonRight.X-topLeft.X;
             HeadingIndicatorCanvas.Height = bottonRight.Y-topLeft.Y;
+            if (HeadingIndicatorCanvas.IsLoaded) headingIndicator.DrawPointer();
         }
         private void OnDrawIndicators(object sender, EventArgs e)
         {

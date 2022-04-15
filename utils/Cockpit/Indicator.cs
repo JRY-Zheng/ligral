@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System;
+using System.Windows;
 
 namespace Cockpit
 {
@@ -21,12 +22,16 @@ namespace Cockpit
         public double ShortPosition1 {get; set;} = 0.3;
         public double ShortPosition2 {get; set;} = 0.7;
         public double LabelPosition {get; set;} = 0.05;
+        public double PointerTop {get; set;} = -0.2;
+        public double PointerHeight {get; set;} = 0.05;
+        public double PointerWidth {get; set;} = 0.05;
         private List<double> LongTicks = new List<double>();
         private List<double> MediumTicks = new List<double>();
         private List<double> ShortTicks = new List<double>();
         private List<double> LongTickValues = new List<double>();
         private List<Line> lines = new List<Line>();
         private List<TextBlock> labels = new List<TextBlock>();
+        private Polygon pointer = new Polygon() {Fill=Brushes.White};
         static Brush tickBrush = Brushes.White;
         public Indicator(Canvas canvas, double upper, double lower=0)
         {
@@ -291,6 +296,27 @@ namespace Cockpit
                     canvas.Children.Remove(labels[i]);
                 }
                 i++;
+            }
+        }
+        public void DrawPointer()
+        {
+            double w = canvas.ActualWidth;
+            double h = canvas.ActualHeight;
+            var top = new Point(w/2, h*PointerTop);
+            var bottomLeft = new Point(w*(1-PointerWidth)/2, h*(PointerTop+PointerHeight));
+            var bottomRight = new Point(w*(1+PointerWidth)/2, h*(PointerTop+PointerHeight));
+            if (!canvas.Children.Contains(pointer))
+            {
+                pointer.Points.Add(top);
+                pointer.Points.Add(bottomLeft);
+                pointer.Points.Add(bottomRight);
+                canvas.Children.Add(pointer);
+            }
+            else
+            {
+                pointer.Points[0] = top;
+                pointer.Points[1] = bottomLeft;
+                pointer.Points[2] = bottomRight;
             }
         }
     }
