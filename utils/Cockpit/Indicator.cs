@@ -15,6 +15,8 @@ namespace Cockpit
         public double Window {get; set;}
         public double Interval {get; set;}
         public double CurrentValue {get; set;}
+        public double BetaValue {get; set;}
+        public double AlphaValue {get; set;}
         public double LongPosition1 {get; set;} = 0.3;
         public double LongPosition2 {get; set;} = 0.9;
         public double MediumPosition1 {get; set;} = 0.25;
@@ -35,6 +37,7 @@ namespace Cockpit
         private List<Line> lines = new List<Line>();
         private List<TextBlock> labels = new List<TextBlock>();
         private Polygon pointer;
+        private Polygon slider;
         private Polygon labelBackground;
         private TextBlock MainLabel;
         private TextBlock UpperLabel;
@@ -400,6 +403,37 @@ namespace Cockpit
             Canvas.SetLeft(UpperLabel, w*LabelTextLeft+MainLabel.ActualWidth);
             Canvas.SetTop(LowerLabel, h/2+UpperLabel.ActualHeight*(-0.5+r));
             Canvas.SetLeft(LowerLabel, w*LabelTextLeft+MainLabel.ActualWidth);
+        }
+        public void DrawBetaSlider()
+        {
+            double w = canvas.ActualWidth;
+            double h = canvas.ActualHeight;
+            double interval = 0.005;
+            double height = 0.01;
+            double top = PointerTop+PointerHeight+interval;
+            double topwidth = PointerWidth*(1+interval/PointerHeight);
+            double bottomwidth = PointerWidth*(1+(interval+height)/PointerHeight);
+            double bias = BetaValue*topwidth/Math.PI*6;
+            var topLeft = new Point(w*(1+topwidth+bias)/2, h*top);
+            var topRight = new Point(w*(1-topwidth+bias)/2, h*top);
+            var bottomLeft = new Point(w*(1-bottomwidth+bias)/2, h*(top+height));
+            var bottomRight = new Point(w*(1+bottomwidth+bias)/2, h*(top+height));
+            if (!canvas.Children.Contains(slider))
+            {
+                slider = new Polygon() {Fill=tickBrush};
+                slider.Points.Add(topLeft);
+                slider.Points.Add(topRight);
+                slider.Points.Add(bottomLeft);
+                slider.Points.Add(bottomRight);
+                canvas.Children.Add(slider);
+            }
+            else
+            {
+                slider.Points[0] = topLeft;
+                slider.Points[1] = topRight;
+                slider.Points[2] = bottomLeft;
+                slider.Points[3] = bottomRight;
+            }
         }
     }
 }

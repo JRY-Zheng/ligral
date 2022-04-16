@@ -516,8 +516,10 @@ namespace Cockpit
             altimeter.DrawLinearTicks();
             altimeter.UpdateLabel();
             pitchIndicator.CurrentValue = info.theta*180/Math.PI;
+            pitchIndicator.BetaValue = info.beta;
             pitchIndicator.NormalisedTicks();
             pitchIndicator.DrawLinearTicks();
+            pitchIndicator.DrawBetaSlider();
             rollTransform.Angle = -info.phi*180/Math.PI;
             headingIndicator.CurrentValue = info.psi*180/Math.PI;
             headingIndicator.PeriodisedTicks();
