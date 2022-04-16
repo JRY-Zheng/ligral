@@ -30,6 +30,7 @@ namespace Cockpit
         public double LabelHeight {get; set;} = 0.1;
         public int LabelPrecision {get; set;} = 1;
         public double LabelTextLeft {get; set;} = 0.3;
+        public string LabelZero {get; set;} = "0";
         private List<double> LongTicks = new List<double>();
         private List<double> MediumTicks = new List<double>();
         private List<double> ShortTicks = new List<double>();
@@ -353,7 +354,7 @@ namespace Cockpit
                 pointInfo = pointInfo.ConvertAll(p => (1-p.Item1, p.Item2));
             }
             var points = pointInfo.ConvertAll(p => new Point(w*p.Item1, h*p.Item2));
-            if (!canvas.Children.Contains(pointer))
+            if (!canvas.Children.Contains(labelBackground))
             {
                 labelBackground = new Polygon() 
                 {
@@ -396,9 +397,10 @@ namespace Cockpit
             double w = canvas.ActualWidth;
             double h = canvas.ActualHeight;
             int bias = (u<0 || m<0 || l<0) ? 1 : 0;
-            MainLabel.Text = ((u<0 || m<0 || l<0)?"-":"")+$"{Math.Abs(m):00}";
-            UpperLabel.Text = $"{Math.Abs(u):000}";
-            LowerLabel.Text = $"{Math.Abs(l):000}";
+            var mText = ((u<0 || m<0 || l<0)?"-":"")+Math.Abs(m).ToString();
+            MainLabel.Text = mText.PadLeft(4);
+            UpperLabel.Text = u==0?LabelZero:Math.Abs(u).ToString();
+            LowerLabel.Text = v==0?LabelZero:Math.Abs(l).ToString();
             Canvas.SetTop(MainLabel, h/2-MainLabel.ActualHeight/2);
             Canvas.SetLeft(MainLabel, w*LabelTextLeft);
             Canvas.SetTop(UpperLabel, h/2+UpperLabel.ActualHeight*(-1.5+r+bias));

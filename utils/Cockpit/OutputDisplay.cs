@@ -406,7 +406,8 @@ namespace Cockpit
                 LongPosition2 = 0.6,
                 Window = 10000,
                 Interval = 2000,
-                LabelPrecision = 100
+                LabelPrecision = 100,
+                LabelZero = "000"
             };
             AltimeterCanvas.Loaded += (_, _) => altimeter.DrawLabelBackground(false);
             PitchIndicatorCanvas = new Canvas();
