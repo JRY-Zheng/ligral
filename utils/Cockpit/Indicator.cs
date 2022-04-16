@@ -38,6 +38,7 @@ namespace Cockpit
         private List<TextBlock> labels = new List<TextBlock>();
         private Polygon pointer;
         private Polygon slider;
+        private Polygon flightPath;
         private Polygon labelBackground;
         private TextBlock MainLabel;
         private TextBlock UpperLabel;
@@ -433,6 +434,41 @@ namespace Cockpit
                 slider.Points[1] = topRight;
                 slider.Points[2] = bottomLeft;
                 slider.Points[3] = bottomRight;
+            }
+        }
+        public void DrawFlightPath()
+        {
+            double w = canvas.ActualWidth;
+            double h = canvas.ActualHeight;
+            double fpa = CurrentValue - AlphaValue*180/Math.PI;
+            double beta = BetaValue*180/Math.PI;
+            double x = 0.5+beta/Window;
+            double y = 0.5+fpa/Window;
+            double width = 0.03;
+            double height = 0.04;
+            var top = new Point(w*x, h*(y-height));
+            var right = new Point(w*(x+width), h*y);
+            var bottom = new Point(w*x, h*(y+height));
+            var left = new Point(w*(x-width), h*y);
+            if (!canvas.Children.Contains(flightPath))
+            {
+                flightPath = new Polygon() 
+                {
+                    Stroke = tickBrush,
+                    StrokeThickness = 1
+                };
+                flightPath.Points.Add(top);
+                flightPath.Points.Add(right);
+                flightPath.Points.Add(bottom);
+                flightPath.Points.Add(left);
+                canvas.Children.Add(flightPath);
+            }
+            else
+            {
+                flightPath.Points[0] = top;
+                flightPath.Points[1] = right;
+                flightPath.Points[2] = bottom;
+                flightPath.Points[3] = left;
             }
         }
     }
