@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Cockpit"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- <BitmapImage x:Key="icon" UriSource="pack://application:,,,/icon.png" /> -->
     </Application.Resources>
 </Application>
