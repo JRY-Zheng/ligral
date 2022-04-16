@@ -389,20 +389,21 @@ namespace Cockpit
             if (!labelEnabled) return;
             int b = 10*LabelPrecision;
             int v = (int) CurrentValue/LabelPrecision*LabelPrecision;
-            int m = v/b;
-            int l = v-m*b;
+            int m = (int)(CurrentValue/b+0.05);
+            int l = v-v/b*b;
             int u = (l+LabelPrecision)%b;
             double r = (CurrentValue-v)/LabelPrecision;
             double w = canvas.ActualWidth;
             double h = canvas.ActualHeight;
-            MainLabel.Text = $"{m:00}";
-            UpperLabel.Text = u.ToString();
-            LowerLabel.Text = l.ToString();
+            int bias = (u<0 || m<0 || l<0) ? 1 : 0;
+            MainLabel.Text = ((u<0 || m<0 || l<0)?"-":"")+$"{Math.Abs(m):00}";
+            UpperLabel.Text = $"{Math.Abs(u):000}";
+            LowerLabel.Text = $"{Math.Abs(l):000}";
             Canvas.SetTop(MainLabel, h/2-MainLabel.ActualHeight/2);
             Canvas.SetLeft(MainLabel, w*LabelTextLeft);
-            Canvas.SetTop(UpperLabel, h/2+UpperLabel.ActualHeight*(-1.5+r));
+            Canvas.SetTop(UpperLabel, h/2+UpperLabel.ActualHeight*(-1.5+r+bias));
             Canvas.SetLeft(UpperLabel, w*LabelTextLeft+MainLabel.ActualWidth);
-            Canvas.SetTop(LowerLabel, h/2+UpperLabel.ActualHeight*(-0.5+r));
+            Canvas.SetTop(LowerLabel, h/2+UpperLabel.ActualHeight*(-0.5+r+bias));
             Canvas.SetLeft(LowerLabel, w*LabelTextLeft+MainLabel.ActualWidth);
         }
         public void DrawBetaSlider()
