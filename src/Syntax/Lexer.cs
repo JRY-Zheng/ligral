@@ -322,6 +322,11 @@ namespace Ligral.Syntax
                 Advance();
                 return new OperatorToken(TokenType.DIV, "/", lineNO, columnNO, file);
             }
+            else if (currentChar=='\\')
+            {
+                Advance();
+                return new OperatorToken(TokenType.RDIV, "\\", lineNO, columnNO, file);
+            }
             else if (currentChar==';')
             {
                 Advance();

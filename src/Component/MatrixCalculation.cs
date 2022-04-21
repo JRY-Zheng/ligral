@@ -217,7 +217,7 @@ namespace Ligral.Component
             }
             else if (left.IsSingular())
             {
-                throw new DivideByZeroException();
+                throw new DivideByZeroException("left is singular");
             }
             else 
             {

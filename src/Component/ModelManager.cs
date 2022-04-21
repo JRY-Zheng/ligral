@@ -39,7 +39,7 @@ namespace Ligral.Component
             {"Sub", ()=>new Sub()},
             {"Mul", ()=>new Mul()},
             {"Div", ()=>new Div()},
-            {"RDiv", ()=>new Div()},
+            {"RDiv", ()=>new RDiv()},
             {"DotMul", ()=>new DotMul()},
             {"DotDiv", ()=>new DotDiv()},
             {"DotPow", ()=>new DotPow()},

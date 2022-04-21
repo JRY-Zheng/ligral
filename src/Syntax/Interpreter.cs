@@ -582,6 +582,8 @@ namespace Ligral.Syntax
                     return left.Multiply(right);
                 case "/":
                     return left.Divide(right);
+                case "\\":
+                    return left.ReverseDivide(right);
                 case "^":
                     return left.Power(right);
                 case ".*":
@@ -636,6 +638,12 @@ namespace Ligral.Syntax
                         throw logger.Error(new SemanticException(valBinOpAST.Right.FindToken(), "0 Division"));
                     }
                     return left.RightDiv(right);
+                case "\\":
+                    if (left.IsScalar() && left[0,0] == 0)
+                    {
+                        throw logger.Error(new SemanticException(valBinOpAST.Left.FindToken(), "0 Division"));
+                    }
+                    return left.LeftDiv(right);
                 case "^":
                     return left.MatPow(right);
                 case ".*":

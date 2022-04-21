@@ -60,6 +60,10 @@ namespace Ligral.Component.Models
                 }
                 throw logger.Error(new ModelException(this, message));
             }
+            catch (System.DivideByZeroException)
+            {
+                throw logger.Error(new ModelException(this, "Matrix is singular or zero"));
+            }
             return Results;
         }
     }

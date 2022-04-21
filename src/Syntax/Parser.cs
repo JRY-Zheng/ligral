@@ -159,7 +159,7 @@ namespace Ligral.Syntax
         private AST ValueFactor()
         {
             AST valueAST = ValueEntity();
-            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
+            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.RDIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
             {
                 OperatorToken binOpToken = Eat(currentToken.Type) as OperatorToken;
                 valueAST = new ValBinOpAST(valueAST, binOpToken, ValueEntity());
@@ -281,7 +281,7 @@ namespace Ligral.Syntax
         private AST NodeFactor(bool isFirstNode)
         {
             AST nodeAST = NodeEntity(isFirstNode);
-            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
+            while (currentToken.Type==TokenType.MUL||currentToken.Type==TokenType.DIV||currentToken.Type==TokenType.RDIV||currentToken.Type==TokenType.BCMUL||currentToken.Type==TokenType.BCDIV)
             {
                 OperatorToken binOpToken = Eat(currentToken.Type) as OperatorToken;
                 nodeAST = new BinOpAST(nodeAST, binOpToken, NodeEntity(isFirstNode));
