@@ -22,7 +22,6 @@ namespace Ligral.Component.Models
                 return "This model sends udp data from output";
             }
         }
-        private List<(int, int)> size;
         private List<string> names;
         private bool useDefinedName = false;
         private List<ObservationHandle> handles;
@@ -68,7 +67,7 @@ namespace Ligral.Component.Models
         public override void Check()
         {
             handles = new List<ObservationHandle>();
-            if (names is null)
+            if (!useDefinedName)
             {
                 names = InPortsName;
             }
