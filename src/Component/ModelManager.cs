@@ -94,7 +94,10 @@ namespace Ligral.Component
             {"Interpolation", ()=>new Interpolation()},
             {"UDPListener", ()=>new UDPListener()},
             {"UDPSender", ()=>new UDPSender()},
-            {"Cross", ()=>new Cross()}
+            {"Cross", ()=>new Cross()},
+            {"Transpose", ()=>new Transpose()},
+            {"T", ()=>new Transpose()},
+            {"'", ()=>new Transpose()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
