@@ -56,38 +56,9 @@ namespace Ligral.Component.Models
                 }, ()=>{})}
             };
         }
-        private List<double> Interpolate()
-        {
-            List<double> before = table.Data.FindLast(row => row[0] < Solver.Time);
-            List<double> after = table.Data.Find(row => row[0] > Solver.Time);
-            List<double> current = table.Data.Find(row => row[0] == Solver.Time);
-            if (current != null)
-            {
-                return current;
-            }
-            else if (before != null && after != null)
-            {
-                // Results.Add(before.Data+(after.Data-before.Data)/(after.Time-before.Time)*(time-before.Time));
-                double tb = before[0];
-                double ta = after[0];
-                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (Solver.Time - tb)).ToList();
-            }
-            else if (before == null && after != null)
-            {
-                return after.ToList();
-            }
-            else if (before != null && after == null)
-            {
-                return before.ToList();
-            }
-            else
-            {
-                throw logger.Error(new ModelException(this, $"Invalid playback input at time {Solver.Time}"));
-            }
-        }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            List<double> playback = Interpolate();
+            List<double> playback = table.ColumnInterpolate(Solver.Time);
             if (colNo * rowNo == playback.Count - 1)
             {
                 MatrixBuilder<double> m = Matrix<double>.Build;

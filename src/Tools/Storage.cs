@@ -169,5 +169,34 @@ namespace Ligral.Tools
         {
             return GetItem(Columns, index);
         }
+        public List<double> ColumnInterpolate(double val)
+        {
+            List<double> before = Data.FindLast(row => row[0] < val);
+            List<double> after = Data.Find(row => row[0] > val);
+            List<double> current = Data.Find(row => row[0] == val);
+            if (current != null)
+            {
+                return current;
+            }
+            else if (before != null && after != null)
+            {
+                // Results.Add(before.Data+(after.Data-before.Data)/(after.Time-before.Time)*(time-before.Time));
+                double tb = before[0];
+                double ta = after[0];
+                return before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (val - tb)).ToList();
+            }
+            else if (before == null && after != null)
+            {
+                return after.ToList();
+            }
+            else if (before != null && after == null)
+            {
+                return before.ToList();
+            }
+            else
+            {
+                throw new System.ArgumentException($"Invalid interpolation input at value {val}");
+            }
+        }
     }
 }
