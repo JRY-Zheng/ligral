@@ -118,7 +118,7 @@ namespace Cockpit
             f.ZBar.Height = info.throttle*f.ZBarContainer.ActualHeight;
             f.WBar.Width = Math.Abs(info.yaw)*f.WBarContainer.ActualWidth/2;
             f.WBarLeft.Width = info.yaw>0?f.WBarContainer.ActualWidth/2:f.WBarContainer.ActualWidth/2-f.WBar.Width;
-            f.XYStatus.Text = $"p:{info.roll:0.00} r:{info.pitch:0.00} y:{info.yaw:0.00} t:{info.throttle:0.00}";
+            f.XYStatus.Text = $"x:{info.roll:0.00} p:{info.pitch:0.00} y:{info.yaw:0.00} t:{info.throttle:0.00}";
             f.HStatus.Background = info.H!=0 ? activeBackground : disableBackground;
             f.HStatus.Foreground = info.H!=0 ? activeBrush : disableBrush;
             f.JStatus.Background = info.J!=0 ? activeBackground : disableBackground;
