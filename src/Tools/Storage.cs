@@ -169,6 +169,58 @@ namespace Ligral.Tools
         {
             return GetItem(Columns, index);
         }
+        public double Interpolate2D(double colVal, double rowVal)
+        {
+            List<double> before = Data.Skip(1).LastOrDefault(row => row[0] < colVal);
+            List<double> after = Data.Skip(1).FirstOrDefault(row => row[0] > colVal);
+            List<double> current = Data.Skip(1).FirstOrDefault(row => row[0] == colVal);
+            if (current == null && before != null && after != null)
+            {
+                // Results.Add(before.Data+(after.Data-before.Data)/(after.Time-before.Time)*(time-before.Time));
+                double tb = before[0];
+                double ta = after[0];
+                current = before.Zip(after, (b, a) => b + (a - b) / (ta - tb) * (colVal - tb)).ToList();
+            }
+            else if (before == null && after != null)
+            {
+                current = after.ToList();
+            }
+            else if (before != null && after == null)
+            {
+                current = before.ToList();
+            }
+            else
+            {
+                throw new System.ArgumentException($"Invalid interpolation input at col value {colVal}");
+            }
+            int left = Data[0].Skip(1).ToList().FindLastIndex(item => item < rowVal) + 1;
+            int right = Data[0].Skip(1).ToList().FindLastIndex(item => item > rowVal) + 1;
+            int mid = Data[0].Skip(1).ToList().FindLastIndex(item => item == rowVal) + 1;
+            if (mid > 0)
+            {
+                return current[mid];
+            }
+            else if (left > 0 && right > 0)
+            {
+                double tb = Data[0][left];
+                double ta = Data[0][right];
+                double b = current[left];
+                double a = current[right];
+                return b + (a - b) / (ta - tb) * (rowVal - tb);
+            }
+            else if (left > 0 && right <= 0)
+            {
+                return current[left];
+            }
+            else if (left <= 0 && right > 0)
+            {
+                return current[right];
+            }
+            else
+            {
+                throw new System.ArgumentException($"Invalid interpolation input at row value {rowVal}");
+            }
+        }
         public List<double> ColumnInterpolate(double val)
         {
             List<double> before = Data.FindLast(row => row[0] < val);
