@@ -97,7 +97,10 @@ namespace Ligral.Component
             {"Cross", ()=>new Cross()},
             {"Transpose", ()=>new Transpose()},
             {"T", ()=>new Transpose()},
-            {"'", ()=>new Transpose()}
+            {"'", ()=>new Transpose()},
+            {"Sec", ()=>new Sec()},
+            {"Csc", ()=>new Csc()},
+            {"Cot", ()=>new Tan()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType)
