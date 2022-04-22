@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System;
+using MathNet.Numerics.LinearAlgebra;
 
 
 namespace Ligral.Tools
@@ -17,6 +17,7 @@ namespace Ligral.Tools
     {
         public List<string> Columns { get; private set; }
         public List<List<double>> Data { get; private set; }
+        public int ColumnCount { get => Columns!=null?Columns.Count:Data!=null && Data.Count>=1?Data[0].Count:-1; }
         private Regex columnRegex;
         private Regex headerRegex;
         private Regex doubleRegex;
@@ -35,10 +36,13 @@ namespace Ligral.Tools
         {
             return new Regex($"\\s*{item}\\s*(,\\s*{item}\\s*)*");
         }
-        public Storage(List<string> columns, List<List<double>> data) : this()
+        public Storage(Matrix<double> matrix) : this()
         {
-            Columns = columns;
-            Data = data;
+            Data = new List<List<double>>();
+            foreach (var vector in matrix.ToRowArrays())
+            {
+                Data.Add(vector.ToList());
+            }
         }
         public Storage(string fileName, bool hasHeader = false) : this()
         {
@@ -77,7 +81,7 @@ namespace Ligral.Tools
                     throw logger.Error(new CSVFormatError($"Data format error in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
                 List<double> row = doubleRegex.Matches(line).OfType<Match>().Select(m => double.Parse(m.Value)).ToList();
-                if (row.Count != Columns.Count)
+                if (row.Count != ColumnCount)
                 {
                     throw logger.Error(new CSVFormatError($"Column number inconsistency in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
@@ -115,7 +119,7 @@ namespace Ligral.Tools
         }
         public void AddRow(List<double> row, int pos = -1)
         {
-            if (row.Count != Columns.Count)
+            if (row.Count != ColumnCount)
             {
                 throw logger.Error(new CSVFormatError("Column number inconsistency"));
             }

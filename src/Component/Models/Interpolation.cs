@@ -28,6 +28,14 @@ namespace Ligral.Component.Models
         private int colNo = 1;
         public override void Check()
         {
+            if (table == null)
+            {
+                throw logger.Error(new ModelException(this, $"Interpolation table undefined"));
+            }
+            if (colNo * rowNo != table.ColumnCount - 1)
+            {
+                throw logger.Error(new ModelException(this, $"Inconsistency of row, col and playback"));
+            }
             if (InPortList[0].RowNo != 1 || InPortList[0].ColNo != 1)
             {
                 throw logger.Error(new ModelException(this, "Interpolation only accept scalar input"));
@@ -40,12 +48,28 @@ namespace Ligral.Component.Models
             {
                 {"file", new Parameter(ParameterType.String , value=>
                 {
-                    table = new Storage((string)value, true);
-                    if (table.Columns.Count < 2)
+                    if (table != null)
                     {
-                        throw logger.Error(new ModelException(this,"Invalid playback file"));
+                        throw logger.Error(new ModelException(this, "Interpolation table redefined"));
                     }
-                })},
+                    table = new Storage((string)value, true);
+                    if (table.ColumnCount < 2)
+                    {
+                        throw logger.Error(new ModelException(this,"Invalid interpolation file"));
+                    }
+                }, ()=>{})},
+                {"table", new Parameter(ParameterType.Signal , value=>
+                {
+                    if (table != null)
+                    {
+                        throw logger.Error(new ModelException(this, "Interpolation table redefined"));
+                    }
+                    table = new Storage(value.ToMatrix());
+                    if (table.ColumnCount < 2)
+                    {
+                        throw logger.Error(new ModelException(this,"Invalid interpolation file"));
+                    }
+                }, ()=>{})},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
                     colNo = value.ToInt();
@@ -97,15 +121,8 @@ namespace Ligral.Component.Models
         {
             double inputVal = values[0].ToScalar();
             List<double> interpolationVal = Interpolate(inputVal);
-            if (colNo * rowNo == interpolationVal.Count - 1)
-            {
-                MatrixBuilder<double> m = Matrix<double>.Build;
-                Results[0] = m.Dense(colNo, rowNo, interpolationVal.Skip(1).ToArray()).Transpose();
-            }
-            else
-            {
-                throw logger.Error(new ModelException(this, $"Inconsistency of row, col and playback"));
-            }
+            MatrixBuilder<double> m = Matrix<double>.Build;
+            Results[0] = m.Dense(colNo, rowNo, interpolationVal.Skip(1).ToArray()).Transpose();
             return Results;
         }
     }

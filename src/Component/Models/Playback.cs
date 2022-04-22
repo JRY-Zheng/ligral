@@ -41,7 +41,7 @@ namespace Ligral.Component.Models
                 {"file", new Parameter(ParameterType.String , value=>
                 {
                     table = new Storage((string)value, true);
-                    if (table.Columns.Count < 2 || table.GetColumnName(0) != "Time")
+                    if (table.ColumnCount < 2 || table.GetColumnName(0) != "Time")
                     {
                         throw logger.Error(new ModelException(this,"Invalid playback file"));
                     }
