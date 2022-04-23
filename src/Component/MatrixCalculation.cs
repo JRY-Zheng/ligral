@@ -232,6 +232,10 @@ namespace Ligral.Component
         {
             if (right.IsScalar()) 
             {
+                if (left.IsScalar())
+                {
+                    return Math.Pow(left[0,0], right[0,0]).ToMatrix();
+                }
                 int exponent;
                 try
                 {

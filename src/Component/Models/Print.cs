@@ -65,8 +65,7 @@ namespace Ligral.Component.Models
                     end = value.ToScalar();
                 }, ()=>
                 {
-                    Settings settings = Settings.GetInstance();
-                    end = settings.StopTime;
+                    end = Double.PositiveInfinity;
                 })},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
