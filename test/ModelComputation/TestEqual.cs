@@ -22,7 +22,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"name", "myName"}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -40,7 +40,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"initial", 1.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -59,7 +59,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"initial", 1.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -74,7 +74,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -90,7 +90,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var initial = Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 20.1, -23.2}, {0, -15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}};
             model.Configure(dict);
@@ -109,7 +109,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var initial = Matrix<double>.Build.DenseOfArray(new double[3, 2] {{1, 20.1}, {-23.2, 0}, {-15.02, 10}});
             var dict = new Dictionary<string, object> {{"initial", initial}};
             model.Configure(dict);
@@ -124,7 +124,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"initial", "1"}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -135,7 +135,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"initial", 1}, {"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -146,7 +146,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -162,7 +162,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", 3}, {"col", 3}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -176,7 +176,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 2}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -190,7 +190,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", 2.3}, {"col", 3}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -201,7 +201,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", -10.0}, {"col", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -212,7 +212,7 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
+            var model = ModelManager.Create("Equal", null);
             var dict = new Dictionary<string, object> {{"row", 0.0}, {"col", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -223,9 +223,9 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
-            var add = ModelManager.Create("Add");
-            var node = ModelManager.Create("Node");
+            var model = ModelManager.Create("Equal", null);
+            var add = ModelManager.Create("Add", null);
+            var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
             node.Connect(0, add.Expose(0));
@@ -247,9 +247,9 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
-            var add = ModelManager.Create("Add");
-            var node = ModelManager.Create("Node");
+            var model = ModelManager.Create("Equal", null);
+            var add = ModelManager.Create("Add", null);
+            var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
             node.Connect(0, add.Expose(0));
@@ -270,9 +270,9 @@ namespace Ligral.Tests.ModelTester
             Solution.SolutionHandles.Clear();
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("Equal");
-            var add = ModelManager.Create("Add");
-            var node = ModelManager.Create("Node");
+            var model = ModelManager.Create("Equal", null);
+            var add = ModelManager.Create("Add", null);
+            var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             model.Configure(dict);
             node.Connect(0, add.Expose(0));

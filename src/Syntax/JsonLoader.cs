@@ -172,7 +172,7 @@ namespace Ligral.Syntax
             {
                 throw logger.Error(new NotFoundException("Property `type`"));
             }
-            Model model = ModelManager.Create(jModel.Type);
+            Model model = ModelManager.Create(jModel.Type, null);
             if (jModel.Id is null) 
             {
                 throw logger.Error(new ModelException(model, "Property `id` not found."));

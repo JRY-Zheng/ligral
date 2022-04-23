@@ -56,7 +56,7 @@ namespace Ligral.Commands
             {
                 if (ModelManager.ModelTypePool.ContainsKey(modelName))
                 {
-                    models.Add(ModelManager.Create(modelName));
+                    models.Add(ModelManager.Create(modelName, null));
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace Ligral.Commands
                 foreach (string modelType in ModelManager.ModelTypePool.Keys)
                 {
                     if (modelType.Contains('<')) continue;
-                    models.Add(ModelManager.Create(modelType));
+                    models.Add(ModelManager.Create(modelType, null));
                 }
             }
             if (ToJson is bool toJson && toJson)

@@ -26,9 +26,14 @@ namespace Ligral.Component
     {
         public string Name;
         public bool Nullable;
+        public Token InputToken;
         public Matrix<double> Default;
     }
-
+    struct RoutePort
+    {
+        public string Name;
+        public Token PortToken;
+    }
     class RouteConstructor
     {
         public string Name;
@@ -36,7 +41,7 @@ namespace Ligral.Component
         private int id = 1;
         private List<RouteParam> parameters;
         private List<RouteInPort> inPortNameList;
-        private List<string> outPortNameList;
+        private List<RoutePort> outPortNameList;
         private StatementsAST statementsAST;
         private string routeFileName;
         private int scopeLevel;
@@ -55,7 +60,7 @@ namespace Ligral.Component
         {
             this.parameters = parameters;
         }
-        public void SetUp(List<RouteInPort> inPortNameList, List<string> outPortNameList)
+        public void SetUp(List<RouteInPort> inPortNameList, List<RoutePort> outPortNameList)
         {
             this.inPortNameList = inPortNameList;
             this.outPortNameList = outPortNameList;

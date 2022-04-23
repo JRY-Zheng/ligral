@@ -144,7 +144,11 @@ namespace Ligral
         }
         public override string ToString()
         {
-            string errorMessage = $"Error occurred in {errorModel.Name}";
+            string errorMessage = $"Error occurred in {errorModel.GetTypeName()}({errorModel.Name})";
+            if (errorModel.ModelToken != null)
+            {
+                errorMessage += $" in file {Interpreter.GetInstance().GetFileNameByIndex(errorModel.ModelToken.File)}:line {errorModel.ModelToken.Line} column {errorModel.ModelToken.Column}";
+            }
             if (Message!="")
             {
                 return $"{errorMessage}: {Message}";

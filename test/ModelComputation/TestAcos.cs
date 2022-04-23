@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputZero_OutputHalfPi()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.PI/2.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputOne_OutputZero()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputNegativeScalar_OutputNegativeScalar()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-0.56.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Acos(-0.56).ToMatrix()};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputLargeScalar_CauseError()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -52,7 +52,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -1, 0}, {0.707, -0.707, 0.56}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.PointwiseAcos())));
@@ -60,7 +60,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acos_InputMatrixWithLargeValue_CauseError()
         {
-            var model = ModelManager.Create("Acos");
+            var model = ModelManager.Create("Acos", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -1, 0}, {0.707, -0.707, -1.3}})};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));

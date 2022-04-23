@@ -6,6 +6,7 @@
 
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component.Models;
+using Ligral.Syntax;
 using Dict=System.Collections.Generic.Dictionary<string,object>;
 
 namespace Ligral.Component
@@ -28,41 +29,41 @@ namespace Ligral.Component
             group.AddOutputModel(calculator);
             return group;
         }
-        public static Group Add(this ILinkable left, ILinkable right)
+        public static Group Add(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("Add"));
+            return Calculate(left, right, ModelManager.Create("Add", token));
         }
-        public static Group Subtract(this ILinkable left, ILinkable right)
+        public static Group Subtract(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("Sub"));
+            return Calculate(left, right, ModelManager.Create("Sub", token));
         }
-        public static Group Multiply(this ILinkable left, ILinkable right)
+        public static Group Multiply(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("Mul"));
+            return Calculate(left, right, ModelManager.Create("Mul", token));
         }
-        public static Group Divide(this ILinkable left, ILinkable right)
+        public static Group Divide(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("Div"));
+            return Calculate(left, right, ModelManager.Create("Div", token));
         }
-        public static Group ReverseDivide(this ILinkable left, ILinkable right)
+        public static Group ReverseDivide(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("RDiv"));
+            return Calculate(left, right, ModelManager.Create("RDiv", token));
         }
-        public static Group Power(this ILinkable left, ILinkable right)
+        public static Group Power(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("Pow2"));
+            return Calculate(left, right, ModelManager.Create("Pow2", token));
         }
-        public static Group BroadcastMultiply(this ILinkable left, ILinkable right)
+        public static Group BroadcastMultiply(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("DotMul"));
+            return Calculate(left, right, ModelManager.Create("DotMul", token));
         }
-        public static Group BroadcastDivide(this ILinkable left, ILinkable right)
+        public static Group BroadcastDivide(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("DotDiv"));
+            return Calculate(left, right, ModelManager.Create("DotDiv", token));
         }
-        public static Group BroadcastPower(this ILinkable left, ILinkable right)
+        public static Group BroadcastPower(this ILinkable left, ILinkable right, Token token)
         {
-            return Calculate(left, right, ModelManager.Create("DotPow"));
+            return Calculate(left, right, ModelManager.Create("DotPow", token));
         }
         public static Group Positive(this ILinkable linkable)
         {
@@ -71,13 +72,13 @@ namespace Ligral.Component
             group.AddOutputModel(linkable);
             return group;
         }
-        public static Group Negative(this ILinkable linkable)
+        public static Group Negative(this ILinkable linkable, Token token)
         {
             Group group = new Group();
             group.AddInputModel(linkable);
             for (int i = 0; i < linkable.OutPortCount(); i++)
             {
-                Gain gain = ModelManager.Create("Gain") as Gain;
+                Gain gain = ModelManager.Create("Gain", token) as Gain;
                 Dict dictionary = new Dict(){{"value", -1}};
                 gain.Configure(dictionary);
                 linkable.Connect(i, gain.Expose(0));

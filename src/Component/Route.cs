@@ -31,7 +31,7 @@ namespace Ligral.Component
         public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
         private List<RouteInPort> inPortNameList;
-        private List<string> outPortNameList;
+        private List<RoutePort> outPortNameList;
         private StatementsAST statementsAST;
         private string routeFileName;
         protected Logger loggerInstance;
@@ -52,7 +52,7 @@ namespace Ligral.Component
             ScopeSymbolTable scope, 
             List<RouteParam> parameters,
             List<RouteInPort> inPortNameList, 
-            List<string> outPortNameList, 
+            List<RoutePort> outPortNameList, 
             StatementsAST statementsAST,
             string routeFileName)
         {
@@ -77,7 +77,7 @@ namespace Ligral.Component
             ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
             foreach (var routeInPort in inPortNameList)
             {
-                Input model = (Input) ModelManager.Create("<Input>");
+                Input model = (Input) ModelManager.Create("<Input>", routeInPort.InputToken);
                 model.Name = routeInPort.Name;
                 if (routeInPort.Nullable)
                 {
@@ -88,13 +88,13 @@ namespace Ligral.Component
                 ModelSymbol modelSymbol = new ModelSymbol(routeInPort.Name, modelType, model);
                 RouteScope.Insert(modelSymbol);
             }
-            foreach (string outPortName in outPortNameList)
+            foreach (var routeOutPort in outPortNameList)
             {
-                Model model = ModelManager.Create("<Output>");
-                model.Name = outPortName;
+                Model model = ModelManager.Create("<Output>", routeOutPort.PortToken);
+                model.Name = routeOutPort.Name;
                 outputModels.Add(model);
                 TypeSymbol modelType = RouteScope.Lookup(Type) as TypeSymbol;
-                ModelSymbol modelSymbol = new ModelSymbol(outPortName, modelType, model);
+                ModelSymbol modelSymbol = new ModelSymbol(routeOutPort.Name, modelType, model);
                 RouteScope.Insert(modelSymbol);
             }
             int modelsCount = ModelManager.ModelPool.Count;

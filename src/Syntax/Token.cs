@@ -6,7 +6,7 @@
 
 namespace Ligral.Syntax
 {
-    enum TokenType
+    public enum TokenType
     {
         STRING,DIGIT,PLUS,MINUS,MUL,DIV,RDIV,
         FROM,GOTO,LPAR,RPAR,LBRC,RBRC,LBRK,RBRK,
@@ -15,7 +15,7 @@ namespace Ligral.Syntax
         TRUE,FALSE,TILDE,SIGN,BCMUL,BCDIV,BCPOW
     }
 
-    class Token
+    public class Token
     {
         public TokenType Type;
         public object Value;

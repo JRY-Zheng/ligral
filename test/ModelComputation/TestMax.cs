@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Max_InputTwoScalars_OutputScalar()
         {
-            var model = ModelManager.Create("Max");
+            var model = ModelManager.Create("Max", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-1.ToMatrix(), 1.8.ToMatrix()};
             var outputs = new List<Matrix<double>> {1.8.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Max_InputVectorAndMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Max");
+            var model = ModelManager.Create("Max", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {
@@ -39,7 +39,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Max_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Max");
+            var model = ModelManager.Create("Max", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {
@@ -52,7 +52,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Max_InputMatrix_ShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("Max");
+            var model = ModelManager.Create("Max", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {

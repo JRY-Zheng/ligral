@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Abs_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Abs");
+            var model = ModelManager.Create("Abs", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             Assert.True(modelTester.Test(model, inputs, inputs));
@@ -24,7 +24,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Abs_InputNegativeScalar_OutputNegativeScalar()
         {
-            var model = ModelManager.Create("Abs");
+            var model = ModelManager.Create("Abs", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-1.3.ToMatrix()};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(scalar => -scalar)));
@@ -32,7 +32,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Abs_InputZero_OutputZero()
         {
-            var model = ModelManager.Create("Abs");
+            var model = ModelManager.Create("Abs", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             Assert.True(modelTester.Test(model, inputs, inputs));
@@ -40,7 +40,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Abs_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Abs");
+            var model = ModelManager.Create("Abs", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -2, 3}, {2, -3, -4}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.PointwiseAbs())));

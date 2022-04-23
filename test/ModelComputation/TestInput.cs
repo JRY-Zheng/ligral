@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Input_InputScalar_OutputScalar()
         {
-            var node = ModelManager.Create("<Input>");
+            var node = ModelManager.Create("<Input>", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix()};
             Assert.True(modelTester.Test(node, inputs, inputs));
@@ -25,7 +25,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Input_InputMatrix_OutputMatrix()
         {
-            var node = ModelManager.Create("<Input>");
+            var node = ModelManager.Create("<Input>", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}})};
             Assert.True(modelTester.Test(node, inputs, inputs));
@@ -33,7 +33,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Input_InputNothing_SetDefaultSource_OutputMatrix()
         {
-            var node = ModelManager.Create("<Input>");
+            var node = ModelManager.Create("<Input>", null);
             var mat = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var inputType = typeof(ModelManager).Assembly.GetType("Ligral.Component.Models.Input");
             var setDefaultSourceMethod = inputType.GetMethod("SetDefaultSource");

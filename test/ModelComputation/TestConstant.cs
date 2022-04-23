@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Constant_ScalarValue_OutputScalar()
         {
-            var model = ModelManager.Create("Constant");
+            var model = ModelManager.Create("Constant", null);
             var dict = new Dictionary<string, object> {{"value", 1.2}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Constant_MatrixValue_OutputMatrix()
         {
-            var model = ModelManager.Create("Constant");
+            var model = ModelManager.Create("Constant", null);
             var matrix = Matrix<double>.Build.DenseOfArray(new double[2, 3]{{1, 3.33, -5}, {0, 100.2, 0.002}});
             var dict = new Dictionary<string, object> {{"value", matrix}};
             model.Configure(dict);
@@ -37,7 +37,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Constant_NoValue_CauseError()
         {
-            var model = ModelManager.Create("Constant");
+            var model = ModelManager.Create("Constant", null);
             var dict = new Dictionary<string, object> {};
             // configure is a must procedure even if there is nothing to config
             Assert.Throws<ModelException>(()=>model.Configure(dict));

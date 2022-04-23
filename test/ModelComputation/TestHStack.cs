@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HStack_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("HStack");
+            var model = ModelManager.Create("HStack", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {1.3.ToMatrix()};
@@ -25,7 +25,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HStack_InputScalars_OutputRowVector()
         {
-            var model = ModelManager.Create("HStack");
+            var model = ModelManager.Create("HStack", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[1,3]{{-4.1, 5.1, -6.1}});
             var inputs = new List<Matrix<double>> {-4.1.ToMatrix(), 5.1.ToMatrix(), -6.1.ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HStack_InputColumnVectors_OutputMatrix()
         {
-            var model = ModelManager.Create("HStack");
+            var model = ModelManager.Create("HStack", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var vector1 = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {-4.1}});
@@ -48,7 +48,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HStack_InputColumnVectors_ColumnNumberInconsistency_CauseError()
         {
-            var model = ModelManager.Create("HStack");
+            var model = ModelManager.Create("HStack", null);
             var modelTester = new ModelTester();
             var vector1 = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {-4.1}});
             var vector2 = Matrix<double>.Build.DenseOfArray(new double[3,1]{{2}, {5.1}, {3}});
@@ -59,7 +59,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HStack_InputMatrices_OutputMatrix()
         {
-            var model = ModelManager.Create("HStack");
+            var model = ModelManager.Create("HStack", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var matrix1 = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {-4.1}});

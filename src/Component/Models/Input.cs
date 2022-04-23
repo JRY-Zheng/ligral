@@ -27,7 +27,7 @@ namespace Ligral.Component.Models
         {
             if (source is Matrix<double> src)
             {
-                ILinkable constant = ModelManager.Create("Constant");
+                ILinkable constant = ModelManager.Create("Constant", ModelToken);
                 var dict = new Dictionary<string, object>() {{"value", src}};
                 constant.Configure(dict);
                 constant.Connect(this);

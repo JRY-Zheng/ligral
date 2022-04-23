@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputTwoScalars_OutputScalar()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix(), -1.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {-1.44.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputScalarDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = 1.2.ToMatrix();
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
@@ -37,7 +37,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputMatrixDotMulScalar_OutputMatrix()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var right = 1.2.ToMatrix();
@@ -48,7 +48,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputVectorDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
@@ -59,7 +59,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputMatrixDotMulVector_OutputMatrix()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {2}});
@@ -70,7 +70,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputMatrixDotMulMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{2, 3, 4}, {1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-1.1, -2, -4}});
@@ -81,7 +81,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {3, 4, 5}});
@@ -91,7 +91,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputLessThanTwo_CauseError()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left};
@@ -100,7 +100,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void DotMul_InputMoreThanTwo_CauseError()
         {
-            var model = ModelManager.Create("DotMul");
+            var model = ModelManager.Create("DotMul", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left, left, left};

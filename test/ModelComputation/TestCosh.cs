@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Cosh_InputZero_OutputSin()
         {
-            var model = ModelManager.Create("Cosh");
+            var model = ModelManager.Create("Cosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {1.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Cosh_InputNegative_OutputNegative()
         {
-            var model = ModelManager.Create("Cosh");
+            var model = ModelManager.Create("Cosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-10.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Cosh(-10).ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Cosh_InputPositive_OutputPositive()
         {
-            var model = ModelManager.Create("Cosh");
+            var model = ModelManager.Create("Cosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Cosh(1.3).ToMatrix()};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Cosh_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Cosh");
+            var model = ModelManager.Create("Cosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -2, 3}, {-4.707, 5.707, 100}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.Map(item => Math.Cosh(item)))));

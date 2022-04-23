@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Clock_OutputTime()
         {
-            var model = ModelManager.Create("Clock");
+            var model = ModelManager.Create("Clock", null);
             var modelTester = new ModelTester();
             Solver.Time = 1.3;
             var outputs = new List<Matrix<double>> {1.3.ToMatrix()};

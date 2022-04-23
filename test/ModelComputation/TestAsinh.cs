@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asinh_InputZero_OutputZero()
         {
-            var model = ModelManager.Create("Asinh");
+            var model = ModelManager.Create("Asinh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asinh_InputNegative_OutputNegative()
         {
-            var model = ModelManager.Create("Asinh");
+            var model = ModelManager.Create("Asinh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-10.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Asinh(-10).ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asinh_InputPositive_OutputPositive()
         {
-            var model = ModelManager.Create("Asinh");
+            var model = ModelManager.Create("Asinh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Asinh(1.3).ToMatrix()};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asinh_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Asinh");
+            var model = ModelManager.Create("Asinh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -2, 3}, {-4.707, 5.707, 100}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.Map(item => Math.Asinh(item)))));

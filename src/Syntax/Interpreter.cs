@@ -264,6 +264,7 @@ namespace Ligral.Syntax
                 TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
                 Node node = typeSymbol.GetValue() as Node;
                 node.Name = idAST.Id;
+                node.ModelToken = idAST.FindToken();
                 ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
                 currentScope.Insert(modelSymbol);
                 return node;
@@ -271,7 +272,12 @@ namespace Ligral.Syntax
             }
             else
             {
-                return symbol.GetValue();
+                object value = symbol.GetValue();
+                if (value is Model model)
+                {
+                    model.ModelToken = idAST.FindToken();
+                }
+                return value;
             }
         }
         private string Visit(WordAST wordAST)
@@ -344,7 +350,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(RowMuxAST rowMuxAST)
         {
-            Model hStack = ModelManager.Create("HStack");
+            Model hStack = ModelManager.Create("HStack", rowMuxAST.FindToken());
             for (int i = 0; i < rowMuxAST.Items.Count; i++)
             {
                 switch (Visit(rowMuxAST.Items[i]))
@@ -369,7 +375,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(MatrixMuxAST matrixMuxAST)
         {
-            Model vStack = ModelManager.Create("VStack");
+            Model vStack = ModelManager.Create("VStack", matrixMuxAST.FindToken());
             for (int i = 0; i < matrixMuxAST.Rows.Count; i++)
             {
                 Group rowGroup = Visit(matrixMuxAST.Rows[i]);
@@ -388,7 +394,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(RowDeMuxAST rowDeMuxAST)
         {
-            Model split = ModelManager.Create("Split");
+            Model split = ModelManager.Create("Split", rowDeMuxAST.FindToken());
             var modelList = new List<ILinkable>();
             bool canOutputMatrix = true;
             for (int i = 0; i < rowDeMuxAST.Items.Count; i++)
@@ -415,7 +421,7 @@ namespace Ligral.Syntax
             group.AddInputModel(split);
             if (canOutputMatrix)
             {
-                Model hStack = ModelManager.Create("HStack");
+                Model hStack = ModelManager.Create("HStack", rowDeMuxAST.FindToken());
                 for (int i = 0; i < modelList.Count; i++)
                 {
                     ILinkable linkable = modelList[i];
@@ -427,7 +433,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(MatrixDeMuxAST matrixDeMuxAST)
         {
-            Model vSplit = ModelManager.Create("VSplit");
+            Model vSplit = ModelManager.Create("VSplit", matrixDeMuxAST.FindToken());
             var groupList = new List<Group>();
             bool canOutputMatrix = true;
             for (int i = 0; i < matrixDeMuxAST.Rows.Count; i++)
@@ -448,7 +454,7 @@ namespace Ligral.Syntax
             group.AddInputModel(vSplit);
             if (canOutputMatrix)
             {
-                Model vStack = ModelManager.Create("VStack");
+                Model vStack = ModelManager.Create("VStack", matrixDeMuxAST.FindToken());
                 for (int i = 0; i < groupList.Count; i++)
                 {
                     Group rowGroup = groupList[i];
@@ -464,7 +470,7 @@ namespace Ligral.Syntax
         }
         private Model Visit(DigitBlockAST digitBlockAST)
         {
-            Model constant = ModelManager.Create("Constant");
+            Model constant = ModelManager.Create("Constant", digitBlockAST.FindToken());
             Dict dictionary = new Dict() {{"value", (double)digitBlockAST.Digit}};
             constant.Configure(dictionary);
             return constant;
@@ -539,7 +545,7 @@ namespace Ligral.Syntax
             ILinkable linkable = modelObject as ILinkable;
             if (linkable==null)
             {
-                Model constant = ModelManager.Create("Constant");
+                Model constant = ModelManager.Create("Constant", configureAST.FindToken());
                 string name = "";
                 while (modelAST is PointerAST pointerAST)
                 {
@@ -570,28 +576,29 @@ namespace Ligral.Syntax
             ILinkable left = leftObject as ILinkable;
             object rightObject = Visit(binOpAST.Right);
             ILinkable right = rightObject as ILinkable;
+            Token operatorToken = binOpAST.FindToken();
             try
             {
                 switch (binOpAST.Operator.Value)
                 {
                 case "+":
-                    return left.Add(right);
+                    return left.Add(right, operatorToken);
                 case "-":
-                    return left.Subtract(right);
+                    return left.Subtract(right, operatorToken);
                 case "*":
-                    return left.Multiply(right);
+                    return left.Multiply(right, operatorToken);
                 case "/":
-                    return left.Divide(right);
+                    return left.Divide(right, operatorToken);
                 case "\\":
-                    return left.ReverseDivide(right);
+                    return left.ReverseDivide(right, operatorToken);
                 case "^":
-                    return left.Power(right);
+                    return left.Power(right, operatorToken);
                 case ".*":
-                    return left.BroadcastMultiply(right);
+                    return left.BroadcastMultiply(right, operatorToken);
                 case "./":
-                    return left.BroadcastDivide(right);
+                    return left.BroadcastDivide(right, operatorToken);
                 case ".^":
-                    return left.BroadcastPower(right);
+                    return left.BroadcastPower(right, operatorToken);
                 default:
                     throw logger.Error(new SemanticException(binOpAST.FindToken(), "Invalid operator"));
                 }
@@ -608,12 +615,13 @@ namespace Ligral.Syntax
         private Group Visit(UnaryOpAST unaryOpAST)
         {
             ILinkable value = Visit(unaryOpAST.Value) as ILinkable;
+            Token operatorToken = unaryOpAST.FindToken();
             switch (unaryOpAST.Operator.Value)
             {
             case "+":
                 return value.Positive();
             case "-":
-                return value.Negative();
+                return value.Negative(operatorToken);
             default:
                 throw logger.Error(new SemanticException(unaryOpAST.FindToken(), "Invalid operator"));
             }
@@ -951,7 +959,7 @@ namespace Ligral.Syntax
                         string signalName = selectAST.Port.PortName == null? null : Visit(selectAST.Port.PortName);
                         if (signalName != null)
                         {
-                            Node node = ModelManager.Create("Node") as Node;
+                            Node node = ModelManager.Create("Node", selectAST.FindToken()) as Node;
                             outPort.SignalName = signalName;
                             node.Name = outPort.SignalName;
                             outPort.Bind(node.Expose(0));
@@ -1058,23 +1066,32 @@ namespace Ligral.Syntax
                 Default = routeNullablePortAST.Expression == null ? 0.ToMatrix() : routeNullablePortAST.Expression.ToMatrix()
             };
         }
-        private List<string> Visit(RoutePortAST routePortAST)
+        private List<RoutePort> Visit(RoutePortAST routePortAST)
         {
-            return routePortAST.Ports.ConvertAll(routePort=>(Visit(routePort)));
+            return routePortAST.Ports.ConvertAll(routePort=> new RoutePort()
+            {
+                Name = Visit(routePort),
+                PortToken = routePortAST.FindToken()
+            });
         }
         private List<RouteInPort> Visit(RouteInPortAST routeInPortAST)
         {
             return routeInPortAST.Ports.ConvertAll(routePort=>
                 {
+                    RouteInPort routeInPort;
                     switch (Visit(routePort))
                     {
                     case string name:
-                        return new RouteInPort() {Name = name, Nullable = false};
-                    case RouteInPort routeInPort:
-                        return routeInPort;
+                        routeInPort = new RouteInPort() {Name = name, Nullable = false};
+                        break;
+                    case RouteInPort rip:
+                        routeInPort = rip;
+                        break;
                     default:
                         throw logger.Error(new SemanticException(routePort.FindToken(), "Unknown type for in port."));
                     }
+                    routeInPort.InputToken = routeInPortAST.FindToken();
+                    return routeInPort;
                 });
         }
         private object Visit(RouteAST routeAST)
@@ -1082,7 +1099,8 @@ namespace Ligral.Syntax
             RouteConstructor routeConstructor = new RouteConstructor();
             List<RouteInPort> inPortList = Visit(routeAST.InPorts);
             List<string> inPortNameList = inPortList.ConvertAll(inPort => inPort.Name);
-            List<string> outPortNameList = Visit(routeAST.OutPorts);
+            List<RoutePort> outPortList = Visit(routeAST.OutPorts);
+            List<string> outPortNameList = outPortList.ConvertAll(outPort => outPort.Name);
             if (routeAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
             {
                 throw logger.Error(new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports"));
@@ -1130,7 +1148,7 @@ namespace Ligral.Syntax
                 throw logger.Error(new SemanticException(duplicatedParam.FindToken(), "Parameters should be unique"));
             }
             routeConstructor.SetUp(parameters);
-            routeConstructor.SetUp(inPortList, outPortNameList);
+            routeConstructor.SetUp(inPortList, outPortList);
             routeConstructor.SetUp(routeAST.Statements, CurrentFileName);
             TypeSymbol routeType = currentScope.Lookup(routeConstructor.Type) as TypeSymbol;
             TypeSymbol routeSymbol = new TypeSymbol(routeConstructor.Name, routeType, routeConstructor);
@@ -1143,8 +1161,8 @@ namespace Ligral.Syntax
         private object Visit(SignatureAST signatureAST)
         {
             string name = Visit(signatureAST.TypeName);
-            List<string> inPortNameList = Visit(signatureAST.InPorts);
-            List<string> outPortNameList = Visit(signatureAST.OutPorts);
+            List<string> inPortNameList = Visit(signatureAST.InPorts).ConvertAll(p => p.Name);
+            List<string> outPortNameList = Visit(signatureAST.OutPorts).ConvertAll(p => p.Name);
             if (signatureAST.OutPorts.Ports.Find(port => inPortNameList.Contains(Visit(port))) is WordAST duplicatedPort)
             {
                 throw logger.Error(new SemanticException(duplicatedPort.FindToken(), "Out ports should be distinguished from in ports"));

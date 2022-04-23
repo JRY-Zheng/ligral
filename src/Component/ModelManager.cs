@@ -104,12 +104,13 @@ namespace Ligral.Component
             {"Interpolation2D", ()=>new Interpolation2D()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
-        public static Model Create(string modelType)
+        public static Model Create(string modelType, Token token)
         {
             Model model;
             if (ModelTypePool.ContainsKey(modelType))
             {
                 model = ModelTypePool[modelType]();
+                model.ModelToken = token;
             }
             else
             {
@@ -128,7 +129,7 @@ namespace Ligral.Component
             ModelPool.Add(model);
             return model;
         }
-        public static Model Create(ScopedModelType scopedModelType)
+        public static Model Create(ScopedModelType scopedModelType, Token token)
         {
             string scopeName = scopedModelType.ScopeName;
             if (!ExtendedModelTypePool.ContainsKey(scopeName))
@@ -147,7 +148,7 @@ namespace Ligral.Component
                 modelCount = new Dictionary<string, int>();
                 extendedModelCount[scopeName] = modelCount;
             }
-            Model model = Create(scopedModelType.ModelName);
+            Model model = Create(scopedModelType.ModelName, token);
             ModelTypePool = mainModelTypePool;
             modelCount = mainModelCount;
             return model;

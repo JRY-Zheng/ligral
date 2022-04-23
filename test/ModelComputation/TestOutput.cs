@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Output_InputScalar_OutputScalar()
         {
-            var node = ModelManager.Create("<Output>");
+            var node = ModelManager.Create("<Output>", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix()};
             Assert.True(modelTester.Test(node, inputs, inputs));
@@ -24,7 +24,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Output_InputMatrix_OutputMatrix()
         {
-            var node = ModelManager.Create("<Output>");
+            var node = ModelManager.Create("<Output>", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}})};
             Assert.True(modelTester.Test(node, inputs, inputs));

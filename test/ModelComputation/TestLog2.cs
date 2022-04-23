@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputOneAndPositiveScalar_OutputZero()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix(), 1.8.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputPositiveAndNegative_CauseError()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix(), -0.3.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -34,7 +34,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputNegativeAndPositive_CauseError()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-1.3.ToMatrix(), 1.8.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -42,7 +42,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputPositiveAndZero_CauseError()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix(), 0.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -50,7 +50,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputPositiveAndOne_CauseError()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix(), 1.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -58,7 +58,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputVectorAndMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {
@@ -71,7 +71,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {
@@ -84,7 +84,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Log2_InputMatrix_ShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("Log2");
+            var model = ModelManager.Create("Log2", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> 
             {

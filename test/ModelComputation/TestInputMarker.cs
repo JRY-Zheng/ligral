@@ -21,7 +21,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"name", "myName"}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -36,7 +36,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = true;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"name", "myName"}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -51,7 +51,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 2.1, -23.2}, {0, -0.02, 10}})};
             Assert.True(modelTester.Test(model, inputs, inputs));
@@ -63,7 +63,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = true;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3] {{1, 2.1, -23.2}, {0, -0.02, 10}})};
             var outputs = new List<Matrix<double>> {Matrix<double>.Build.Dense(2, 3, 0)};
@@ -77,7 +77,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"col", "1"}, {"row", "10"}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -87,7 +87,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -97,7 +97,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -111,7 +111,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", 3}, {"col", 3}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -124,7 +124,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 2}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -137,7 +137,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", 2.3}, {"col", 3}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -147,7 +147,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -157,7 +157,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var model = ModelManager.Create("InputMarker");
+            var model = ModelManager.Create("InputMarker", null);
             var dict = new Dictionary<string, object> {{"row", -2}, {"col", 1}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -167,7 +167,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var node = ModelManager.Create("InputMarker");
+            var node = ModelManager.Create("InputMarker", null);
             var modelTester = new ModelTester();
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
             Assert.True(modelTester.TestOutput(node, outputs, beforeChecking:()=>
@@ -185,7 +185,7 @@ namespace Ligral.Tests.ModelTester
             ControlInput.InputPool.Clear();
             ControlInput.InputHandles.Clear();
             ControlInput.IsOpenLoop = false;
-            var node = ModelManager.Create("InputMarker");
+            var node = ModelManager.Create("InputMarker", null);
             var modelTester = new ModelTester();
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             node.Configure(dict);

@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {1.3.ToMatrix()};
@@ -25,7 +25,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputRowVector_OutputScalars()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[1,3]{{-4.1, 5.1, -6.1}});
             var inputs = new List<Matrix<double>> {matrix};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputRowVector_OutputInconsistency_CauseError()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[1,3]{{-4.1, 5.1, -6.1}});
             var inputs = new List<Matrix<double>> {matrix};
@@ -45,7 +45,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputColumnVector_OutputColumnVector()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[3,1]{{-4.1}, {5.1}, {-6.1}});
             var inputs = new List<Matrix<double>> {matrix};
@@ -54,7 +54,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputColumnVector_OutputInconsistency_CauseError()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[3,1]{{-4.1}, {5.1}, {-6.1}});
             var inputs = new List<Matrix<double>> {matrix};
@@ -64,7 +64,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputMatrix_OutputColumnVectors()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var vector1 = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {-4.1}});
@@ -77,7 +77,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void HSplit_InputMatrix_OutputInconsistency_CauseError()
         {
-            var model = ModelManager.Create("HSplit");
+            var model = ModelManager.Create("HSplit", null);
             var modelTester = new ModelTester();
             var matrix = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var vector1 = Matrix<double>.Build.DenseOfArray(new double[2,1]{{1}, {-4.1}});

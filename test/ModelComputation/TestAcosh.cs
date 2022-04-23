@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acosh_InputOne_OutputZero()
         {
-            var model = ModelManager.Create("Acosh");
+            var model = ModelManager.Create("Acosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acosh_InputSmallValue_CauseError()
         {
-            var model = ModelManager.Create("Acosh");
+            var model = ModelManager.Create("Acosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.99.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -34,7 +34,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acosh_InputLargeScalar_OutputsPositive()
         {
-            var model = ModelManager.Create("Acosh");
+            var model = ModelManager.Create("Acosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Acosh(1.3).ToMatrix()};
@@ -43,7 +43,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acosh_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Acosh");
+            var model = ModelManager.Create("Acosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {4.707, 5.707, 100}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.Map(item => Math.Acosh(item)))));
@@ -51,7 +51,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Acosh_InputMatrixWithLargeValue_CauseError()
         {
-            var model = ModelManager.Create("Acosh");
+            var model = ModelManager.Create("Acosh", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -1, 0}, {0.707, -0.707, -1.3}})};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));

@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Exp_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Exp");
+            var model = ModelManager.Create("Exp", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Exp(1.3).ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Exp_InputNegativeScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Exp");
+            var model = ModelManager.Create("Exp", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-1.3.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.Exp(-1.3).ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Exp_InputZero_OutputOne()
         {
-            var model = ModelManager.Create("Exp");
+            var model = ModelManager.Create("Exp", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {1.ToMatrix()};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Exp_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Exp");
+            var model = ModelManager.Create("Exp", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -2, 3}, {2, -3, -4}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.PointwiseExp())));

@@ -20,7 +20,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"name", "myName"}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -34,7 +34,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -47,7 +47,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"col", "1"}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -56,7 +56,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -65,7 +65,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", Matrix<double>.Build.Dense(1, 1, 3)}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -78,7 +78,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", 3}, {"col", 3}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -90,7 +90,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 2}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -102,7 +102,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", 2.3}, {"col", 3}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -111,7 +111,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", -10.0}, {"col", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -120,7 +120,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", 0.0}, {"col", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }
@@ -129,7 +129,7 @@ namespace Ligral.Tests.ModelTester
         {
             Function.FunctionPool.Clear();
             Function.FunctionHandles.Clear();
-            var model = ModelManager.Create("EqualToZero");
+            var model = ModelManager.Create("EqualToZero", null);
             var dict = new Dictionary<string, object> {{"row", Matrix<double>.Build.Dense(3, 2, 1)}, {"col", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }

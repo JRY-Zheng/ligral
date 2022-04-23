@@ -18,7 +18,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_InputScalarBetweenDeadzone_OutputZero()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12.0}, {"left", -10.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -30,7 +30,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_InputScalarOutOfRightBound_OutputZero()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12.0}, {"left", -10.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -42,7 +42,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_InputScalarOutOfLeftBound_OutputZero()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12.0}, {"left", -10.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -54,7 +54,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_InputMatrix_OutputMatrix()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12.0}, {"left", -10.0}};
             model.Configure(dict);
             var modelTester = new ModelTester();
@@ -66,7 +66,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_MissRight_CauseError()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"initial", 1}, {"left", -10}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -74,7 +74,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_MissLeft_CauseError()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -82,7 +82,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_ParameterTypeWrong_CauseError()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", "10"}, {"left", -10}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -90,7 +90,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_UnknownParameter_CauseError()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", 12}, {"left", -10}, {"unknown", 0}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
         }
@@ -98,7 +98,7 @@ namespace Ligral.Tests.ModelTester
         public void Deadzone_ConflictBound_CauseError()
         {
             State.StatePool.Clear();
-            var model = ModelManager.Create("Deadzone");
+            var model = ModelManager.Create("Deadzone", null);
             var dict = new Dictionary<string, object> {{"right", -10.0}, {"left", 10.0}};
             Assert.Throws<ModelException>(()=>model.Configure(dict));
         }

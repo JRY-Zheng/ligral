@@ -63,6 +63,7 @@ namespace Ligral.Component
             }
         }
         public string GivenName;
+        public Token ModelToken {get; set;}
         protected virtual bool HasConfiguration {get => false; }
         protected List<InPort> InPortList;
         protected List<OutPort> OutPortList;

@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Inverse_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Inverse");
+            var model = ModelManager.Create("Inverse", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {3.1.ToMatrix()};
             var outputs = new List<Matrix<double>> {1/3.1.ToMatrix()};
@@ -25,7 +25,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Inverse_InputSquareMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Inverse");
+            var model = ModelManager.Create("Inverse", null);
             var modelTester = new ModelTester();
             var mat = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {-1, -2, -5}});
             var inputs = new List<Matrix<double>> {mat};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Inverse_InputNonSquareMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Inverse");
+            var model = ModelManager.Create("Inverse", null);
             var modelTester = new ModelTester();
             var mat = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var inputs = new List<Matrix<double>> {mat};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Inverse_InputSingularMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Inverse");
+            var model = ModelManager.Create("Inverse", null);
             var modelTester = new ModelTester();
             var mat = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {-1, -2, -3}});
             var inputs = new List<Matrix<double>> {mat};

@@ -16,7 +16,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputScalar_TimesScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var dict = new Dictionary<string, object> {{"value", 2}};
             model.Configure(dict);
@@ -27,7 +27,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputScalar_TimesMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var gain = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var dict = new Dictionary<string, object> {{"value", gain}};
@@ -39,7 +39,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputMatrix_TimesScalar_OutputMatrix()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var mat = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var dict = new Dictionary<string, object> {{"value", 2}};
@@ -51,7 +51,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputMatrix_TimesMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var gain = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var mat = Matrix<double>.Build.DenseOfArray(new double[3,1]{{3.33}, {-4.44}, {0}});
@@ -64,7 +64,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputMatrix_RightTimesMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var gain = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var mat = Matrix<double>.Build.DenseOfArray(new double[1,2]{{3.33, -4.44}});
@@ -77,7 +77,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputMatrix_UnknownProduction_CauseError()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var dict = new Dictionary<string, object> {{"value", 1}, {"prod", "top"}};
             Assert.Throws<ModelException>(() => model.Configure(dict));
@@ -85,7 +85,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Gain_InputMatrix_ShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("Gain");
+            var model = ModelManager.Create("Gain", null);
             var modelTester = new ModelTester();
             var gain = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {-4.1, 5.1, -6.1}});
             var mat = Matrix<double>.Build.DenseOfArray(new double[1,2]{{3.33, -4.44}});

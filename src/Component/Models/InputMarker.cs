@@ -56,7 +56,7 @@ namespace Ligral.Component.Models
         }
         public bool FixConnection()
         {
-            ILinkable constant = ModelManager.Create("Constant");
+            ILinkable constant = ModelManager.Create("Constant", ModelToken);
             var dict = new Dictionary<string, object>();
             if (rowNo > 0 && colNo > 0)
             {

@@ -18,7 +18,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_OutputScalar()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -43,7 +43,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_OutOfRightLimit_OutputScalar()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -68,7 +68,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_OutOfLeftLimit_OutputScalar()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -93,7 +93,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_OutputMatrix()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -118,7 +118,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_OutputVector()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -143,7 +143,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_ShapeInconsistency_OutputMatrix()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => 
@@ -167,7 +167,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_NegativeShape_OutputMatrix()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => {};
@@ -177,7 +177,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Interpolation_InputScalar_DecimalShape_OutputMatrix()
         {
-            var model = ModelManager.Create("Interpolation");
+            var model = ModelManager.Create("Interpolation", null);
             var parametersInfo = model.GetType().GetField("Parameters", BindingFlags.NonPublic|BindingFlags.Instance);
             var parameters = (Dictionary<string, Parameter>) parametersInfo.GetValue(model);
             parameters["file"].OnSet = val => {};

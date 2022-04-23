@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputTwoScalars_OutputScalar()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix(), -1.2.ToMatrix()};
             var outputs = new List<Matrix<double>> {-1.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputScalarDivZero_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.2.ToMatrix(), 0.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -34,7 +34,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputScalarDivMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = 1.2.ToMatrix();
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
@@ -45,7 +45,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMatrixDivScalar_OutputMatrix()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var right = 1.2.ToMatrix();
@@ -56,7 +56,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMatrixDivZero_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
             var inputs = new List<Matrix<double>> {left, 0.ToMatrix()};
@@ -65,7 +65,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMatrixDivMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {-1.1, -2, -4}});
@@ -76,7 +76,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMatrixDivNonSquareMatrix_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, 2, 3}, {2, 3, 4}});
@@ -86,7 +86,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMatrixDivSingularMatrix_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[1,3]{{1, 2, 3}});
             var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {-1, -2, -3}});
@@ -96,7 +96,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputShapeInconsistency_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var right = Matrix<double>.Build.DenseOfArray(new double[3,3]{{1, 2, 3}, {2, 3, 4}, {3, 4, 5}});
@@ -106,7 +106,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputLessThanTwo_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left};
@@ -115,7 +115,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Div_InputMoreThanTwo_CauseError()
         {
-            var model = ModelManager.Create("Div");
+            var model = ModelManager.Create("Div", null);
             var modelTester = new ModelTester();
             var left = Matrix<double>.Build.DenseOfArray(new double[3,2]{{1, 2}, {2, 3}, {3, 4}});
             var inputs = new List<Matrix<double>> {left, left, left};

@@ -17,7 +17,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputZero_OutputZero()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {0.ToMatrix()};
             var outputs = new List<Matrix<double>> {0.ToMatrix()};
@@ -26,7 +26,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputOne_OutputHalfPi()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.ToMatrix()};
             var outputs = new List<Matrix<double>> {Math.PI/2.ToMatrix()};
@@ -35,7 +35,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputNegativeScalar_OutputNegativeScalar()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {-0.56.ToMatrix()};
             var outputs = new List<Matrix<double>> {-Math.Asin(0.56).ToMatrix()};
@@ -44,7 +44,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputLargeScalar_CauseError()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {1.3.ToMatrix()};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
@@ -52,7 +52,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputMatrix_OutputMatrix()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -1, 0}, {0.707, -0.707, 0.56}})};
             Assert.True(modelTester.Test(model, inputs, inputs.ConvertAll(matrix => matrix.PointwiseAsin())));
@@ -60,7 +60,7 @@ namespace Ligral.Tests.ModelTester
         [Fact]
         public void Asin_InputMatrixWithLargeValue_CauseError()
         {
-            var model = ModelManager.Create("Asin");
+            var model = ModelManager.Create("Asin", null);
             var modelTester = new ModelTester();
             var inputs = new List<Matrix<double>> {Matrix<double>.Build.DenseOfArray(new double[2,3]{{1, -1, 0}, {0.707, -0.707, -1.3}})};
             Assert.Throws<ModelException>(() => modelTester.TestInput(model, inputs));
