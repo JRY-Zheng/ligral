@@ -52,7 +52,7 @@ namespace Ligral.Component.Models
                     {
                         throw logger.Error(new ModelException(this, "Interpolation table redefined"));
                     }
-                    table = new Storage((string)value, true);
+                    table = new Storage((string)value, false);
                     if (table.ColumnCount < 2)
                     {
                         throw logger.Error(new ModelException(this,"Invalid interpolation file"));

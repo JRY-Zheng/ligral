@@ -44,6 +44,15 @@ namespace Ligral.Tools
                 Data.Add(vector.ToList());
             }
         }
+        public Matrix<double> ToMatrix()
+        {
+            var mat = Matrix<double>.Build.Dense(Data.Count, ColumnCount);
+            for (int i=0; i<Data.Count; i++)
+            {
+                mat.SetRow(i, Data[i].ToArray());
+            }
+            return mat;
+        }
         public Storage(string fileName, bool hasHeader = false) : this()
         {
             LoadFile(fileName, hasHeader);

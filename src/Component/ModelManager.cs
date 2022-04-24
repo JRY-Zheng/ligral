@@ -101,7 +101,8 @@ namespace Ligral.Component
             {"Sec", ()=>new Sec()},
             {"Csc", ()=>new Csc()},
             {"Cot", ()=>new Tan()},
-            {"Interpolation2D", ()=>new Interpolation2D()}
+            {"Interpolation2D", ()=>new Interpolation2D()},
+            {"InterpolationHD", ()=>new InterpolationHD()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType, Token token)
