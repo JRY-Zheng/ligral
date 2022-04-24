@@ -26,15 +26,16 @@ namespace Ligral.Component.Models
         private Storage table;
         private int rowNo = 1;
         private int colNo = 1;
+        private int skip = 0;
         public override void Check()
         {
             if (table == null)
             {
                 throw logger.Error(new ModelException(this, $"Interpolation table undefined"));
             }
-            if (colNo * rowNo != table.ColumnCount - 1)
+            if (colNo * rowNo > table.ColumnCount - 1 - skip)
             {
-                throw logger.Error(new ModelException(this, $"Inconsistency of row, col and playback"));
+                throw logger.Error(new ModelException(this, $"Not enough data in playback"));
             }
             if (InPortList[0].RowNo != 1 || InPortList[0].ColNo != 1)
             {
@@ -85,15 +86,23 @@ namespace Ligral.Component.Models
                     {
                         throw logger.Error(new ModelException(this, $"row number should be at least one but {rowNo} received"));
                     }
+                }, ()=>{})},
+                {"skip", new Parameter(ParameterType.Signal , value=>
+                {
+                    skip = value.ToInt();
+                    if (skip<0)
+                    {
+                        throw logger.Error(new ModelException(this, $"skip number should be at least 0 but {skip} received"));
+                    }
                 }, ()=>{})}
             };
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             double inputVal = values[0].ToScalar();
-            List<double> interpolationVal = table.ColumnInterpolate(inputVal);
+            List<double> interpolationVal = table.ColumnInterpolate(inputVal, skip, colNo*rowNo);
             MatrixBuilder<double> m = Matrix<double>.Build;
-            Results[0] = m.Dense(colNo, rowNo, interpolationVal.Skip(1).ToArray()).Transpose();
+            Results[0] = m.Dense(colNo, rowNo, interpolationVal.ToArray()).Transpose();
             return Results;
         }
     }

@@ -62,7 +62,7 @@ namespace Ligral.Component.Models
             if (colNo * rowNo == playback.Count - 1)
             {
                 MatrixBuilder<double> m = Matrix<double>.Build;
-                Results[0] = m.Dense(colNo, rowNo, playback.Skip(1).ToArray()).Transpose();
+                Results[0] = m.Dense(colNo, rowNo, playback.ToArray()).Transpose();
             }
             else
             {
