@@ -243,11 +243,11 @@ namespace Ligral.Tools
             }
             else if (before == null && after != null)
             {
-                return after.ToList();
+                return after.Skip(skip+1).Take(take).ToList();
             }
             else if (before != null && after == null)
             {
-                return before.ToList();
+                return before.Skip(skip+1).Take(take).ToList();
             }
             else
             {
