@@ -239,7 +239,7 @@ namespace Ligral.Syntax
             case null:
                 return null;
             default:
-                throw logger.Error(new LigralException($"Unknown AST {ast.GetType().Name}"));
+                throw logger.Error(new SemanticException(ast.FindToken(), $"Unknown AST {ast.GetType().Name}"));
             }
         }
         private object Visit(ProgramAST programAST)
@@ -1005,7 +1005,7 @@ namespace Ligral.Syntax
             }
             else
             {
-                throw logger.Error(new LigralException($"Unknown type {linkable}"));
+                throw logger.Error(new SemanticException(chainAST.FindToken(), $"Unknown type {linkable}, Model or Group expected."));
             }
         }
         private RouteInherit Visit(InheritAST inheritAST)
