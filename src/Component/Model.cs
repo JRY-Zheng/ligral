@@ -315,7 +315,19 @@ namespace Ligral.Component
         public void Propagate()
         {
             List<Matrix<double>> inputs = InPortList.ConvertAll(inPort=>inPort.GetValue());
-            List<Matrix<double>> outputs = Calculate(inputs);
+            List<Matrix<double>> outputs;
+            try
+            {
+                outputs = Calculate(inputs);
+            }
+            catch (LigralException)
+            {
+                throw logger.Error(new ModelException(this));
+            }
+            catch (System.Exception e)
+            {
+                throw logger.Error(new ModelException(this, $"Error occurs while propogating: {e.Message}"));
+            }
             if(outputs.Count != OutPortList.Count)
             {
                 throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}."));

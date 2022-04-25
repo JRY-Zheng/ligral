@@ -126,6 +126,17 @@ namespace Ligral.Component.Models
         private double Interpolate(List<double> value)
         {
             var index = axes.Select((axis, i) => (axis.FindLastIndex(t => t < value[i]), axis.FindIndex(t => t >= value[i]))).ToList();
+            for (int i=0; i<index.Count; i++)
+            {
+                if (index[i].Item1 < 0)
+                {
+                    index[i] = (0, 1);
+                }
+                else if (index[i].Item2 < 0)
+                {
+                    index[i] = (axes[i].Count - 2, axes[i].Count - 1);
+                }
+            }
             var ratio = index.Select((idx, i) => {
                 double left = axes[i][idx.Item1];
                 double right = axes[i][idx.Item2];
