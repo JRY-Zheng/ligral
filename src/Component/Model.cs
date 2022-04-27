@@ -328,6 +328,11 @@ namespace Ligral.Component
             {
                 throw logger.Error(new ModelException(this, $"Error occurs while propogating: {e.Message}"));
             }
+            if (outputs.Any(m => m.HasNAN()))
+            {
+                int i = outputs.FindIndex(m => m.HasNAN());
+                throw logger.Error(new ModelException(this, $"NAN occurs while propogating in output {OutPortList[i]}"));
+            }
             if(outputs.Count != OutPortList.Count)
             {
                 throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}."));

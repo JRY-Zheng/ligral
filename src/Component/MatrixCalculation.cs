@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Ligral.Component 
@@ -286,6 +287,17 @@ namespace Ligral.Component
                 }
             }
             return m;
+        }
+        public static bool HasNAN(this Matrix<double> mat)
+        {
+            for (int i=0; i<mat.RowCount; i++)
+            {
+                if (mat.Row(i).Any(v=>double.IsNaN(v)))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
