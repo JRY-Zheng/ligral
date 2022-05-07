@@ -23,6 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private List<string> names;
+        private string address;
+        private int port;
         private bool useDefinedName = false;
         private List<ObservationHandle> handles;
         private Dictionary<string, JsonObject> data;
@@ -61,7 +63,21 @@ namespace Ligral.Component.Models
                     default:
                         throw new System.ArgumentException($"Unknown value {value} for format, simple or full expected.");
                     }
-                }, ()=>{})}
+                }, ()=>{})},
+                {"address", new Parameter(ParameterType.String , value=>
+                {
+                    address = value.ToString();
+                }, ()=>
+                {
+                    address = Settings.GetInstance().IPAddress;
+                })},
+                {"port", new Parameter(ParameterType.Signal , value=>
+                {
+                    port = value.ToInt();
+                }, ()=>
+                {
+                    port = Settings.GetInstance().SendingPort;
+                })}
             };
         }
         public override void Check()
@@ -88,7 +104,7 @@ namespace Ligral.Component.Models
             {
                 logger.Warn("UDP sender will not work in non-realtime simulation");
             }
-            publisher = new Publisher();
+            publisher = new Publisher(address, port);
             data = new Dictionary<string, JsonObject>();
         }
         public override void Refresh()

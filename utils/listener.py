@@ -6,14 +6,24 @@
 
 import socket
 import json
+from ssl import SOL_SOCKET
 from time import sleep
+import sys
 
 UDP_IP_ADDRESS = '127.0.0.1'
-UDP_PORT_NO = 8784
+if len(sys.argv)==2:
+    UDP_PORT_NO = int(sys.argv[1])
+else:
+    UDP_PORT_NO = 8784
 
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+serverSock.setsockopt(SOL_SOCKET, socket.SO_RCVTIMEO, 1)
 serverSock.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
 for i in range(10000):
-    buf = serverSock.recvfrom(1024)
-    print(buf)
+    try:
+        buf = serverSock.recvfrom(1024)
+    except:
+        continue
+    else:
+        print(buf)
     # sleep(0.1)

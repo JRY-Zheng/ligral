@@ -96,7 +96,7 @@ namespace Ligral.Tools
             foreach (var thread in threads) 
             {
                 thread.Start();
-                Console.WriteLine(thread.ThreadState);
+                // Console.WriteLine(thread.ThreadState);
             }
         }
         public static void Stop()
@@ -132,7 +132,7 @@ namespace Ligral.Tools
             running = true;
             var group = subscribers.First(group => group.Equal(endPoint));
             EndPoint senderRemote = (EndPoint)defaultEndPoint;
-            Console.WriteLine(group.CharEndPoint.Port);
+            // Console.WriteLine(group.CharEndPoint.Port);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
             try
             {
