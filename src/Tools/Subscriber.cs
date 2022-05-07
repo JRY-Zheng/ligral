@@ -22,19 +22,32 @@ namespace Ligral.Tools
         [JsonPropertyName("label")]
         public int Label {get; set;}
     }
+    public class EndPointGroup<T> : List<T>
+    {
+        public IPEndPoint CharEndPoint;
+        public EndPointGroup(IPEndPoint endPoint)
+        {
+            CharEndPoint = endPoint;
+        }
+        public bool Equal(IPEndPoint endPoint)
+        {
+            return CharEndPoint.Address == endPoint.Address &&
+                CharEndPoint.Port == endPoint.Port;
+        }
+    }
     public class Subscriber
     {
-        static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        static IPAddress address = IPAddress.Parse(Settings.GetInstance().IPAddress);
-        static IPEndPoint endPoint = new IPEndPoint(address, Settings.GetInstance().ListeningPort);
+        // static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        static IPAddress defaultAddress = IPAddress.Parse(Settings.GetInstance().IPAddress);
+        static IPEndPoint defaultEndPoint = new IPEndPoint(defaultAddress, Settings.GetInstance().ListeningPort);
         private static int count = 0;
         public int Id;
         private static bool running = false;
-        protected static List<Subscriber> subscribers = new List<Subscriber>();
+        protected static List<EndPointGroup<Subscriber>> subscribers = new List<EndPointGroup<Subscriber>>();
         protected Logger logger;
         private static Logger subscriberLogger = new Logger("Subscriber");
-        private static ThreadStart threadStart = new ThreadStart(Serve);
-        private static Thread thread = new Thread(threadStart);
+        // private static ThreadStart threadStart = new ThreadStart(Serve);
+        private static List<Thread> threads = new List<Thread>();// = new Thread(threadStart);
         private static bool started = false;
         private Dictionary<PacketLabel, Action<string>> labelAbilities = new Dictionary<PacketLabel, Action<string>>();
         private Dictionary<Type, object> typeAbilities = new Dictionary<Type, object>();
@@ -42,18 +55,49 @@ namespace Ligral.Tools
         {
             Id = count;
             count++;
-            subscribers.Add(this);
+            Register(defaultEndPoint, this);
             logger = new Logger(GetType().Name);
-            if (!started)
+            if (!started) 
             {
-                Start();
+                Solver.Starting += Start;
+                started = true;
             }
+        }
+        public Subscriber(string address, int port)
+        {
+            Id = count;
+            count++;
+            IPAddress ipAddress = IPAddress.Parse(address);
+            IPEndPoint endPoint = new IPEndPoint(ipAddress, port);
+            Register(endPoint, this);
+            logger = new Logger(GetType().Name);
+            if (!started) 
+            {
+                Solver.Starting += Start;
+                started = true;
+            }
+        }
+        public static void Register(IPEndPoint endPoint, Subscriber subscriber)
+        {
+            var endPointGroup = subscribers.FirstOrDefault(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            if (endPointGroup == null)
+            {
+                endPointGroup = new EndPointGroup<Subscriber>(endPoint);
+                subscribers.Add(endPointGroup);
+                var thread = new Thread(() => Serve(endPoint));
+                threads.Add(thread);
+            }
+            endPointGroup.Add(subscriber);
         }
         public static void Start()
         {
-            started = true;
-            Solver.Exited += Stop;
-            thread.Start();
+            // started = true;
+            Solver.Stopped += Stop;
+            foreach (var thread in threads) 
+            {
+                thread.Start();
+                Console.WriteLine(thread.ThreadState);
+            }
         }
         public static void Stop()
         {
@@ -67,20 +111,28 @@ namespace Ligral.Tools
         }
         public virtual void Unsubscribe()
         {
-            if (subscribers.Contains(this))
+            var group = subscribers.FirstOrDefault(group=>group.Contains(this));
+            if (group != null)
             {
-                subscribers.Remove(this);
+                group.Remove(this);
+                if (group.Count == 0)
+                {
+                    subscribers.Remove(group);
+                }
             }
             if (subscribers.Count == 0)
             {
                 Stop();
             }
         }
-        public static void Serve()
+        public static void Serve(IPEndPoint endPoint)
         {
-            if (running) return;
+            // if (running) return;
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             running = true;
-            EndPoint senderRemote = (EndPoint)endPoint;
+            var group = subscribers.First(group => group.Equal(endPoint));
+            EndPoint senderRemote = (EndPoint)defaultEndPoint;
+            Console.WriteLine(group.CharEndPoint.Port);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
             try
             {
@@ -88,7 +140,7 @@ namespace Ligral.Tools
             }
             catch(SocketException e)
             {
-                throw subscriberLogger.Error(new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}"));
+                throw subscriberLogger.Error(new LigralException($"Address: {defaultEndPoint.Address} port: {defaultEndPoint.Port}.\n{e.Message}"));
             }
             while (running)
             {
@@ -104,7 +156,7 @@ namespace Ligral.Tools
                 string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
                 if (packetString.Length == 0) continue;
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
-                foreach (var subscriber in subscribers)
+                foreach (var subscriber in group)
                 {
                     try
                     {

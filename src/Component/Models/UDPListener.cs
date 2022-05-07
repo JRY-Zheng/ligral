@@ -27,6 +27,8 @@ namespace Ligral.Component.Models
         private bool useDefinedName = false;
         private List<ControlInputHandle> handles;
         private List<Matrix<double>> inputs;
+        private string address = null;
+        private int port = 0;
         private Subscriber subscriber;
         private PacketLabel packetLabel;
         protected override void SetUpParameters()
@@ -68,6 +70,20 @@ namespace Ligral.Component.Models
                 {
                     packetLabel = new PacketLabel();
                     packetLabel.Label = 0xffb0;
+                })},
+                {"address", new Parameter(ParameterType.String , value=>
+                {
+                    address = value.ToString();
+                }, ()=>
+                {
+                    address = Settings.GetInstance().IPAddress;
+                })},
+                {"port", new Parameter(ParameterType.Signal , value=>
+                {
+                    port = value.ToInt();
+                }, ()=>
+                {
+                    port = Settings.GetInstance().ListeningPort;
                 })}
             };
         }
@@ -76,7 +92,7 @@ namespace Ligral.Component.Models
             handles = new List<ControlInputHandle>();
             if (names is null)
             {
-                names = OutPortsName;
+                names = OutPortsName.ConvertAll(n => Name+"."+n);
             }
             else if (names.Count != OutPortCount())
             {
@@ -108,7 +124,7 @@ namespace Ligral.Component.Models
         }
         public override void Prepare()
         {
-            subscriber = new Subscriber();
+            subscriber = new Subscriber(address, port);
             subscriber.AddAbility(packetLabel, packetString => 
             {
                 JsonDict dict;
@@ -146,7 +162,7 @@ namespace Ligral.Component.Models
                     }
                 }
             });
-            Solver.Stopped += subscriber.Unsubscribe;
+            Solver.Exited += subscriber.Unsubscribe;
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {

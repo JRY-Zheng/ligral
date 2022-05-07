@@ -7,9 +7,13 @@
 import socket
 import json
 from time import sleep
+import sys
 
 UDP_IP_ADDRESS = '127.0.0.1'
-UDP_PORT_NO = 8783
+if len(sys.argv)==2:
+    UDP_PORT_NO = int(sys.argv[1])
+else:
+    UDP_PORT_NO = 8783
 
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # serverSock.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
@@ -18,7 +22,7 @@ for i in range(10000):
         "label": 0xffb0,
         "data": {
             "abc": i,
-            "def": 100-i
+            "def": UDP_PORT_NO-i
         }
     }).encode('ascii')
     serverSock.sendto(jsonbytes, (UDP_IP_ADDRESS, UDP_PORT_NO))
