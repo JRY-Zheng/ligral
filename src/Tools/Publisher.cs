@@ -41,6 +41,7 @@ namespace Ligral.Tools
         {
             Id = count;
             count++;
+            endPoint = defaultEndPoint;
             InitThread(defaultEndPoint);
             if (!started) 
             {
@@ -105,7 +106,7 @@ namespace Ligral.Tools
         }
         public void Send<T>(int label, T data) where T:struct
         {
-            var endPointGroup = packets.First(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            var endPointGroup = packets.First(endPointGroup => endPointGroup.Equal(endPoint));
             Packet<T> packet = new Tools.Packet<T>(){Label = label, Data = data};
             string packetString = JsonSerializer.Serialize<Packet<T>>(packet);
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
