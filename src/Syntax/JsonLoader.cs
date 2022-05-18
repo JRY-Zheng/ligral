@@ -16,52 +16,6 @@ using Ligral.Component;
 
 namespace Ligral.Syntax
 {
-    struct JParameter
-    {
-        [JsonPropertyName("name")]
-        public string Name {get; set;}
-        [JsonPropertyName("value")]
-        public object Value {get; set;}
-    }
-    struct JOutPort
-    {
-        [JsonPropertyName("name")]
-        public string OutPortName {get; set;}
-        [JsonPropertyName("destination")]
-        public JInPort[] Destinations {get; set;}
-    }
-    struct JInPort
-    {
-        [JsonPropertyName("id")]
-        public string Id {get; set;}
-        [JsonPropertyName("in-port")]
-        public string InPortName {get; set;}
-    }
-    struct JModel
-    {
-        [JsonPropertyName("id")]
-        public string Id {get; set;}
-        [JsonPropertyName("type")]
-        public string Type {get; set;}
-        [JsonPropertyName("parameters")]
-        public JParameter[] Parameters {get; set;}
-        [JsonPropertyName("out-ports")]
-        public JOutPort[] OutPorts {get; set;}
-    }
-    struct JConfig
-    {
-        [JsonPropertyName("item")]
-        public string Item {get; set;}
-        [JsonPropertyName("value")]
-        public object Value {get; set;}
-    }
-    struct JProject
-    {
-        [JsonPropertyName("settings")]
-        public JConfig[] Settings {get; set;}
-        [JsonPropertyName("models")]
-        public JModel[] Models {get; set;}
-    }
     class JsonLoader
     {
         private Logger logger = new Logger("JsonCoder");
@@ -88,7 +42,7 @@ namespace Ligral.Syntax
             }
             if (project.Models == null)
             {
-                throw logger.Error(new NotFoundException("Property `settings`."));
+                throw logger.Error(new NotFoundException("Property `models`."));
             }
             logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
