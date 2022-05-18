@@ -1,8 +1,7 @@
-#include "config.h"
-#include "context.h"
+#include "step.h"
 
-Vector f(Vector x, context* ctx) {
-    Vector xdot;
+Vector<n> f(Vector<n> x) {
+    ctx.x = x;
 
     // models initialization
     constant_struct<2,1> constant1;
@@ -25,5 +24,5 @@ Vector f(Vector x, context* ctx) {
     // loop
     integrator1.input_update(constant1_value);
 
-    return xdot;
+    return ctx.xdot;
 }
