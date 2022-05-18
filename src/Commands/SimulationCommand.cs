@@ -59,10 +59,18 @@ namespace Ligral.Commands
                 settings.ApplySetting();
                 Inspector inspector = new Inspector();
                 List<Model> routine = inspector.Inspect(ModelManager.ModelPool);
-                string problemName = Path.GetFileNameWithoutExtension(FileName);
-                Problem problem = new Problem(problemName, routine);
-                Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
-                solver.Solve(problem);
+                if (ToCompile??false)
+                {
+                    Compiler compiler = new Compiler();
+                    compiler.Compile(routine);
+                }
+                else
+                {
+                    string problemName = Path.GetFileNameWithoutExtension(FileName);
+                    Problem problem = new Problem(problemName, routine);
+                    Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
+                    solver.Solve(problem);
+                }
             }
             catch (LigralException)
             {
