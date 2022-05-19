@@ -1,0 +1,93 @@
+{
+    "models": [
+        {
+            "id": "const1",
+            "type": "Constant",
+            "parameters": [
+                {
+                    "name": "value",
+                    "value": 4
+                }
+            ],
+            "out-ports": [
+                {
+                    "name": "value",
+                    "destination": [
+                        {
+                            "id": "group1",
+                            "in-port": "input"
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "id": "group1",
+            "type": "TestGroup",
+            "parameters": [],
+            "out-ports": [
+                {
+                    "name": "output",
+                    "destination": [
+                        {
+                            "id": "print1",
+                            "in-port": "input"
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "id": "print1",
+            "type": "Print",
+            "parameters": [],
+            "out-ports": []
+        }
+    ],
+    "settings": [],
+    "groups": [
+        {
+            "name": "TestGroup",
+            "in-ports": [
+                {
+                    "name": "input",
+                    "input-id": "sub1",
+                    "input-port": "right"
+                }
+            ],
+            "out-ports": [
+                {
+                    "name": "output",
+                    "output-id": "sub1",
+                    "output-port": "result"
+                }
+            ],
+            "models": [
+                {
+                    "id": "const1",
+                    "type": "Constant",
+                    "parameters": [
+                        {
+                            "name": "value",
+                            "value": 1
+                        }
+                    ],
+                    "out-ports": [
+                        {
+                            "name": "value",
+                            "destination": [
+                                {
+                                    "id": "sub1",
+                                    "in-port": "left"
+                                }
+                            ]
+                        }
+                    ]
+                }, {
+                    "id": "sub1",
+                    "type": "Sub",
+                    "parameters": [],
+                    "out-ports": []
+                }
+            ]
+        }
+    ]
+}
