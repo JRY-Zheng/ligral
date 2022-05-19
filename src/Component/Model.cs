@@ -239,7 +239,18 @@ namespace Ligral.Component
             }
             Connect(outPortNO, inPort);
         }
-        public virtual InPort Expose(int inPortNO)
+        public virtual OutPort ExposeOutPort(int outPortNO)
+        {
+            if (outPortNO>=OutPortCount())
+            {
+                throw logger.Error(new ModelException(this, $"Out port number {outPortNO} exceeds boundary."));
+            }
+            else
+            {
+                return OutPortList[outPortNO];
+            }
+        }
+        public virtual InPort ExposeInPort(int inPortNO)
         {
             if (inPortNO>=InPortCount())
             {

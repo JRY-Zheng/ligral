@@ -15,11 +15,12 @@ namespace Ligral.Component
         {
             for (int i=0; i<OutPortCount() || i<linkable.InPortCount(); i++)
             {
-                Connect(i, linkable.Expose(i));
+                Connect(i, linkable.ExposeInPort(i));
             }
         }
         void Connect(int outPortNO, InPort inPort);
-        InPort Expose(int inPortNO);
+        InPort ExposeInPort(int inPortNO);
+        OutPort ExposeOutPort(int outPortNO);
         int InPortCount();
         int OutPortCount();
         void Configure(Dict dictionary);

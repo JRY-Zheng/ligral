@@ -20,6 +20,7 @@ namespace Ligral.Syntax
     {
         private Logger logger = new Logger("JsonCoder");
         private ScopeSymbolTable symbolTable = new ScopeSymbolTable("<global>", 0);
+        private JProject project;
         public void Load(string fileName)
         {
             if (!File.Exists(fileName))
@@ -27,7 +28,6 @@ namespace Ligral.Syntax
                 throw logger.Error(new NotFoundException($"File {fileName}"));
             }
             string text = File.ReadAllText(fileName);
-            JProject project;
             try
             {
                 project = JsonSerializer.Deserialize<JProject>(text);
@@ -38,11 +38,15 @@ namespace Ligral.Syntax
             }
             if (project.Settings == null)
             {
-                throw logger.Error(new NotFoundException("Property `settings`"));
+                project.Settings = new JConfig[0];
             }
             if (project.Models == null)
             {
-                throw logger.Error(new NotFoundException("Property `models`."));
+                throw logger.Error(new NotFoundException("Property `models` is not found."));
+            }
+            if (project.Groups == null)
+            {
+                project.Groups = new JGroup[0];
             }
             logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
@@ -109,6 +113,14 @@ namespace Ligral.Syntax
                 throw logger.Error(new SettingException(name, jsonElement, "Unsupported type"));
             }
         }
+        private bool IsGroup(string groupName)
+        {
+            return project.Groups.Any(group => group.Name == groupName);
+        }
+        private JGroup Find(string groupName)
+        {
+            return project.Groups.First(group => group.Name == groupName);
+        }
         private void Declare(JModel[] models)
         {
             foreach (JModel model in models)
@@ -126,20 +138,91 @@ namespace Ligral.Syntax
             {
                 throw logger.Error(new NotFoundException("Property `type`"));
             }
-            Model model = ModelManager.Create(jModel.Type, null);
-            if (jModel.Id is null) 
+            if (IsGroup(jModel.Type))
             {
-                throw logger.Error(new ModelException(model, "Property `id` not found."));
+                JGroup jGroup = Find(jModel.Type);
+                var scopedSymbolTable = new ScopeSymbolTable(jGroup.Name, symbolTable.ScopeLevel+1, symbolTable);
+                var originSymbolTable = symbolTable;
+                symbolTable = scopedSymbolTable;
+                foreach (var jSubModel in jGroup.Models)
+                {
+                    Register(jSubModel);
+                }
+                foreach (var jSubModel in jGroup.Models)
+                {
+                    Construct(jSubModel);
+                }
+                Group group = new Group();
+                foreach (var jInPort in jGroup.InPorts)
+                {
+                    ModelSymbol modelSymbol = symbolTable.Lookup(jInPort.InputID) as ModelSymbol;
+                    if (modelSymbol is null)
+                    {
+                        throw logger.Error(new NotFoundException($"Reference {jInPort.InputID} not found"));
+                    }
+                    if (modelSymbol.GetValue() is ILinkable linkable)
+                    {
+                        if (linkable.Expose(jInPort.InputPort) is InPort inPort)
+                        {
+                            group.AddInputModel(inPort);
+                        }
+                        else
+                        {
+                            throw logger.Error(new LigralException($"No in port named {jInPort.InputPort} in {jInPort.InputID}"));
+                        }
+                        group.AddInPortName(jInPort.Name);
+                    }
+                    else
+                    {
+                        throw logger.Error(new LigralException($"{jInPort.InputPort} is not model or group"));
+                    }
+                }
+                foreach (var jOutPort in jGroup.OutPorts)
+                {
+                    ModelSymbol modelSymbol = symbolTable.Lookup(jOutPort.OutputID) as ModelSymbol;
+                    if (modelSymbol is null)
+                    {
+                        throw logger.Error(new NotFoundException($"Reference {jOutPort.OutputID} not found"));
+                    }
+                    if (modelSymbol.GetValue() is ILinkable linkable)
+                    {
+                        if (linkable.Expose(jOutPort.OutputPort) is OutPort outPort)
+                        {
+                            group.AddOutputModel(outPort);
+                        }
+                        else
+                        {
+                            throw logger.Error(new LigralException($"No out port named {jOutPort.OutputPort} in {jOutPort.OutputID}"));
+                        }
+                        group.AddOutPortName(jOutPort.Name);
+                    }
+                    else
+                    {
+                        throw logger.Error(new LigralException($"{jOutPort.OutputPort} is not model or group"));
+                    }
+                }
+                symbolTable = originSymbolTable;
+                TypeSymbol typeSymbol = symbolTable.Lookup("GROUP") as TypeSymbol;
+                ModelSymbol groupSymbol = new ModelSymbol(jModel.Id, typeSymbol, group);
+                symbolTable.Insert(groupSymbol);
             }
-            model.Name = jModel.Id;
-            TypeSymbol typeSymbol = symbolTable.Lookup("MODEL") as TypeSymbol;
-            ModelSymbol modelSymbol = new ModelSymbol(jModel.Id, typeSymbol, model);
-            symbolTable.Insert(modelSymbol);
-            if (jModel.Parameters is null) 
+            else
             {
-                throw logger.Error(new ModelException(model, "Property `parameters` not found."));
+                Model model = ModelManager.Create(jModel.Type, null);
+                if (jModel.Id is null) 
+                {
+                    throw logger.Error(new ModelException(model, "Property `id` not found."));
+                }
+                model.Name = jModel.Id;
+                TypeSymbol typeSymbol = symbolTable.Lookup("MODEL") as TypeSymbol;
+                ModelSymbol modelSymbol = new ModelSymbol(jModel.Id, typeSymbol, model);
+                symbolTable.Insert(modelSymbol);
+                if (jModel.Parameters is null) 
+                {
+                    throw logger.Error(new ModelException(model, "Property `parameters` not found."));
+                }
+                Config(jModel.Parameters, model);
             }
-            Config(jModel.Parameters, model);
         }
         private void Construct(JModel jModel)
         {
@@ -148,10 +231,10 @@ namespace Ligral.Syntax
             {
                 throw logger.Error(new NotFoundException($"Reference {jModel.Id}"));
             }
-            Model model = modelSymbol.GetValue() as Model;
+            ILinkable model = modelSymbol.GetValue() as ILinkable;
             if (jModel.OutPorts is null) 
             {
-                throw logger.Error(new ModelException(model, "Property `out-ports` not found."));
+                throw logger.Error(new LigralException("Property `out-ports` not found."));
             }
             foreach (JOutPort jOutPort in jModel.OutPorts)
             {
@@ -225,37 +308,43 @@ namespace Ligral.Syntax
             }
             model.Configure(dict);
         }
-        private void Connect(JOutPort jOutPort, Model model)
+        private void Connect(JOutPort jOutPort, ILinkable model)
         {
             if (jOutPort.OutPortName is null) 
             {
-                throw logger.Error(new ModelException(model, "Property `name` not found."));
+                throw logger.Error(new LigralException("Property `name` not found."));
             }
             if (jOutPort.Destinations is null) 
             {
-                throw logger.Error(new ModelException(model, "Property `destinations` not found."));
+                throw logger.Error(new LigralException("Property `destinations` not found."));
             }
             foreach (JInPort jInPort in jOutPort.Destinations)
             {
-                model.Connect(jOutPort.OutPortName, Find(jInPort, model));
+                // model.Connect(jOutPort.OutPortName, Find(jInPort, model));
+                var outPort = model.Expose(jOutPort.OutPortName) as OutPort;
+                if (outPort == null)
+                {
+                    throw logger.Error(new LigralException($"{jOutPort.OutPortName} is not out port"));
+                }
+                outPort.Bind(Find(jInPort, model));
             }
         }
-        private InPort Find(JInPort jInPort, Model sourceModel)
+        private InPort Find(JInPort jInPort, ILinkable sourceModel)
         {
             if (jInPort.Id is null) 
             {
-                throw logger.Error(new ModelException(sourceModel, "Property `id` not found."));
+                throw logger.Error(new LigralException("Property `id` not found."));
             }
             if (jInPort.InPortName is null) 
             {
-                throw logger.Error(new ModelException(sourceModel, "Property `in-port` not found."));
+                throw logger.Error(new LigralException("Property `in-port` not found."));
             }
             ModelSymbol modelSymbol = symbolTable.Lookup(jInPort.Id) as ModelSymbol;
             if (modelSymbol is null)
             {
                 throw logger.Error(new LigralException($"Reference {jInPort.Id} not exist"));
             }
-            Model destinationModel = modelSymbol.GetValue() as Model;
+            ILinkable destinationModel = modelSymbol.GetValue() as ILinkable;
             InPort inPort = destinationModel.Expose(jInPort.InPortName) as InPort;
             if (inPort is null)
             {

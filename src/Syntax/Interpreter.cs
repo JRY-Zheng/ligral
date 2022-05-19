@@ -362,7 +362,7 @@ namespace Ligral.Syntax
                     }
                     else
                     {
-                        linkable.Connect(0, hStack.Expose(i));
+                        linkable.Connect(0, hStack.ExposeInPort(i));
                     }
                     break;
                 default:
@@ -385,7 +385,7 @@ namespace Ligral.Syntax
                 }
                 else
                 {
-                    rowGroup.Connect(0, vStack.Expose(i));
+                    rowGroup.Connect(0, vStack.ExposeInPort(i));
                 }
             }
             Group group = new Group();
@@ -410,7 +410,7 @@ namespace Ligral.Syntax
                     else
                     {
                         canOutputMatrix = canOutputMatrix && linkable.OutPortCount() == 1;
-                        split.Connect(i, linkable.Expose(0));
+                        split.Connect(i, linkable.ExposeInPort(0));
                     }
                     break;
                 default:
@@ -425,7 +425,7 @@ namespace Ligral.Syntax
                 for (int i = 0; i < modelList.Count; i++)
                 {
                     ILinkable linkable = modelList[i];
-                    linkable.Connect(0, hStack.Expose(i));
+                    linkable.Connect(0, hStack.ExposeInPort(i));
                 }
                 group.AddOutputModel(hStack);
             }
@@ -447,7 +447,7 @@ namespace Ligral.Syntax
                 else
                 {
                     canOutputMatrix = canOutputMatrix && rowGroup.OutPortCount() == 1;
-                    vSplit.Connect(i, rowGroup.Expose(0));
+                    vSplit.Connect(i, rowGroup.ExposeInPort(0));
                 }
             }
             Group group = new Group();
@@ -458,7 +458,7 @@ namespace Ligral.Syntax
                 for (int i = 0; i < groupList.Count; i++)
                 {
                     Group rowGroup = groupList[i];
-                    rowGroup.Connect(0, vStack.Expose(i));
+                    rowGroup.Connect(0, vStack.ExposeInPort(i));
                 }
                 group.AddOutputModel(vStack);
             }
@@ -962,7 +962,7 @@ namespace Ligral.Syntax
                             Node node = ModelManager.Create("Node", selectAST.FindToken()) as Node;
                             outPort.SignalName = signalName;
                             node.Name = outPort.SignalName;
-                            outPort.Bind(node.Expose(0));
+                            outPort.Bind(node.ExposeInPort(0));
                             TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
                             ModelSymbol modelSymbol = new ModelSymbol(signalName, typeSymbol, node);
                             if (!currentScope.Insert(modelSymbol, false))
@@ -1133,7 +1133,7 @@ namespace Ligral.Syntax
             default:
                 throw logger.Error(new SemanticException(routeAST.Definition.FindToken(), "Invalid Definition"));
             }
-            routeConstructor.SetUp(currentScope.scopeLevel+1, currentScope);
+            routeConstructor.SetUp(currentScope.ScopeLevel+1, currentScope);
             List<RouteParam> parameters = Visit(routeAST.Parameters);
             if (routeAST.Parameters.Parameters.Find(parameter => inPortNameList.Contains(Visit(parameter).Name)) is RouteParamAST duplicatedParamInPort)
             {

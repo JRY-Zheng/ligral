@@ -30,8 +30,8 @@ namespace Ligral.Component
         public string Base;
         public ScopeSymbolTable RouteScope;
         private List<RouteParam> parameters;
-        private List<RouteInPort> inPortNameList;
-        private List<RoutePort> outPortNameList;
+        private List<RouteInPort> inPortList;
+        private List<RoutePort> outPortList;
         private StatementsAST statementsAST;
         private string routeFileName;
         protected Logger loggerInstance;
@@ -59,8 +59,8 @@ namespace Ligral.Component
             Type = type;
             Base = baseType;
             RouteScope = scope;
-            this.inPortNameList = inPortNameList;
-            this.outPortNameList = outPortNameList;
+            this.inPortList = inPortNameList;
+            this.outPortList = outPortNameList;
             this.parameters = parameters;
             this.statementsAST = statementsAST;
             this.routeFileName = routeFileName;
@@ -75,7 +75,7 @@ namespace Ligral.Component
             string lastFileName = interpreter.CurrentFileName;
             interpreter.CurrentFileName = routeFileName;
             ScopeSymbolTable scope = interpreter.SetScope(RouteScope);
-            foreach (var routeInPort in inPortNameList)
+            foreach (var routeInPort in inPortList)
             {
                 Input model = (Input) ModelManager.Create("<Input>", routeInPort.InputToken);
                 model.Name = routeInPort.Name;
@@ -88,7 +88,7 @@ namespace Ligral.Component
                 ModelSymbol modelSymbol = new ModelSymbol(routeInPort.Name, modelType, model);
                 RouteScope.Insert(modelSymbol);
             }
-            foreach (var routeOutPort in outPortNameList)
+            foreach (var routeOutPort in outPortList)
             {
                 Model model = ModelManager.Create("<Output>", routeOutPort.PortToken);
                 model.Name = routeOutPort.Name;

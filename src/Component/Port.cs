@@ -36,7 +36,11 @@ namespace Ligral.Component
             throw new System.NotImplementedException();
         }
 
-        public virtual InPort Expose(int inPortNO)
+        public virtual InPort ExposeInPort(int inPortNO)
+        {
+            throw new System.NotImplementedException();
+        }
+        public virtual OutPort ExposeOutPort(int outPortNO)
         {
             throw new System.NotImplementedException();
         }
@@ -88,7 +92,7 @@ namespace Ligral.Component
             throw logger.Error(new ModelException(FatherModel, "Cannot link in port to in port"));
         }
 
-        public override InPort Expose(int inPortNO)
+        public override InPort ExposeInPort(int inPortNO)
         {
             if (inPortNO == 0)
             {
@@ -196,6 +200,10 @@ namespace Ligral.Component
                 inPort.Source = this;
             }
         }
+        public override OutPort ExposeOutPort(int outPortNO)
+        {
+            return this;
+        }
         public void SetShape(int rowNo, int colNo)
         {
             ColNo = colNo;
@@ -245,7 +253,7 @@ namespace Ligral.Component
             }
         }
 
-        public override InPort Expose(int inPortNO)
+        public override InPort ExposeInPort(int inPortNO)
         {
             throw logger.Error(new ModelException(FatherModel, "Out port has no in port"));
         }

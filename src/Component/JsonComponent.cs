@@ -40,47 +40,34 @@ namespace Ligral.Component
         [JsonPropertyName("out-ports")]
         public JOutPort[] OutPorts {get; set;}
     }
-    struct JRoute
+    struct JGroup
     {
         [JsonPropertyName("name")]
         public string Name {get; set;}
-        [JsonPropertyName("inherit")]
-        public string Inherit {get; set;}
-        [JsonPropertyName("params")]
-        public List<JRouteParam> Params {get; set;}
         [JsonPropertyName("in-ports")]
-        public List<JRouteInPort> InPorts {get; set;}
+        public List<JGroupInPort> InPorts {get; set;}
         [JsonPropertyName("out-ports")]
-        public List<JRouteOutPort> OutPorts {get; set;}
+        public List<JGroupOutPort> OutPorts {get; set;}
         [JsonPropertyName("models")]
         public JModel[] Models {get; set;}
     }
-    struct JRouteParam
+    struct JGroupInPort
     {
         [JsonPropertyName("name")]
         public string Name {get; set;}
-        [JsonPropertyName("type")]
-        public string Type {get; set;}
-        [JsonPropertyName("default")]
-        public object DefaultValue {get; set;}
-    }
-    struct JRouteInPort
-    {
-        [JsonPropertyName("name")]
-        public string Name {get; set;}
-        [JsonPropertyName("nullable")]
-        public bool Nullable {get; set;}
-        [JsonPropertyName("default")]
-        public object Default {get; set;}
         [JsonPropertyName("input-id")]
         public string InputID {get; set;}
+        [JsonPropertyName("input-port")]
+        public string InputPort {get; set;}
     }
-    struct JRouteOutPort
+    struct JGroupOutPort
     {
         [JsonPropertyName("name")]
         public string Name {get; set;}
         [JsonPropertyName("output-id")]
         public string OutputID {get; set;}
+        [JsonPropertyName("output-port")]
+        public string OutputPort {get; set;}
     }
     struct JConfig
     {
@@ -95,7 +82,7 @@ namespace Ligral.Component
         public JConfig[] Settings {get; set;}
         [JsonPropertyName("models")]
         public JModel[] Models {get; set;}
-        [JsonPropertyName("routes")]
-        public JRoute[] Routes {get; set;}
+        [JsonPropertyName("groups")]
+        public JGroup[] Groups {get; set;}
     }
 }

@@ -82,9 +82,9 @@ namespace Ligral.Syntax
         {
             get
             {
-                if (enclosingScope != null && enclosingScope.ScopeName != "<global>")
+                if (EnclosingScope != null && EnclosingScope.ScopeName != "<global>")
                 {
-                    return enclosingScope.ScopeName + "." + name;
+                    return EnclosingScope.ScopeName + "." + name;
                 }
                 else
                 {
@@ -96,13 +96,13 @@ namespace Ligral.Syntax
                 name = value;
             }
         }
-        public int scopeLevel;
-        private ScopeSymbolTable enclosingScope;
+        public int ScopeLevel;
+        public ScopeSymbolTable EnclosingScope;
         public ScopeSymbolTable(string name, int level, ScopeSymbolTable enclosingScope=null)
         {
             this.ScopeName = name;
-            this.scopeLevel = level;
-            this.enclosingScope = enclosingScope;
+            this.ScopeLevel = level;
+            this.EnclosingScope = enclosingScope;
             InitBuiltins();
         }
 
@@ -113,6 +113,7 @@ namespace Ligral.Syntax
             Insert(new TypeSymbol("SCOPE", null, null));
             Insert(new TypeSymbol("MODEL", null, null));
             Insert(new TypeSymbol("ROUTE", null, null));
+            Insert(new TypeSymbol("GROUP", null, null));
             Insert(new TypeSymbol("SIGN", null, null));
             TypeSymbol modelType = Lookup("MODEL") as TypeSymbol;
             foreach (string modelName in ModelManager.ModelTypePool.Keys)
@@ -141,9 +142,9 @@ namespace Ligral.Syntax
             {
                 return Symbols[name];
             }
-            else if (recursively && enclosingScope!=null)
+            else if (recursively && EnclosingScope!=null)
             {
-                return enclosingScope.Lookup(name);
+                return EnclosingScope.Lookup(name);
             }
             else
             {
@@ -166,8 +167,8 @@ namespace Ligral.Syntax
                 "SCOPE SYMBOL TABLE",
                 "==================",
                 string.Format("{0,20} {1}", "Scope Name", ScopeName),
-                string.Format("{0,20} {1}", "Scope Level", scopeLevel),
-                string.Format("{0,20} {1}", "Enclosing Scope", enclosingScope==null?"None":enclosingScope.ScopeName),
+                string.Format("{0,20} {1}", "Scope Level", ScopeLevel),
+                string.Format("{0,20} {1}", "Enclosing Scope", EnclosingScope==null?"None":EnclosingScope.ScopeName),
                 "------------------"
             };
             foreach (Symbol symbol in Symbols.Values)

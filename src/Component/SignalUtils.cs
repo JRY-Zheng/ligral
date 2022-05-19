@@ -21,8 +21,8 @@ namespace Ligral.Component
             {
                 throw logger.Error(new LigralException("Out port number should be 1 when calculated"));
             }
-            left.Connect(0, calculator.Expose(0));
-            right.Connect(0, calculator.Expose(1));
+            left.Connect(0, calculator.ExposeInPort(0));
+            right.Connect(0, calculator.ExposeInPort(1));
             Group group = new Group();
             group.AddInputModel(left);
             group.AddInputModel(right);
@@ -81,7 +81,7 @@ namespace Ligral.Component
                 Gain gain = ModelManager.Create("Gain", token) as Gain;
                 Dict dictionary = new Dict(){{"value", -1}};
                 gain.Configure(dictionary);
-                linkable.Connect(i, gain.Expose(0));
+                linkable.Connect(i, gain.ExposeInPort(0));
                 group.AddOutputModel(gain);
             }
             return group;

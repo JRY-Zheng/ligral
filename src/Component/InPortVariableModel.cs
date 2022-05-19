@@ -8,7 +8,7 @@ namespace Ligral.Component
 {
     public class InPortVariableModel : Model
     {
-        public override InPort Expose(int inPortNO)
+        public override InPort ExposeInPort(int inPortNO)
         {
             if (inPortNO == InPortCount())
             {
@@ -18,7 +18,7 @@ namespace Ligral.Component
             }
             else
             {
-                return base.Expose(inPortNO);
+                return base.ExposeInPort(inPortNO);
             }
         }
         public override Port Expose(string portName)

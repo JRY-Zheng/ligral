@@ -15,6 +15,8 @@ namespace Ligral.Component
     {
         internal List<ILinkable> inputModels = new List<ILinkable>();
         internal List<ILinkable> outputModels = new List<ILinkable>();
+        internal List<string> inPortNameList = new List<string>();
+        internal List<string> outPortNameList = new List<string>();
         private static Logger logger = new Logger("Group");
         public bool IsConfigured {get; set;}
         public void AddInputModel(ILinkable linkable)
@@ -53,14 +55,38 @@ namespace Ligral.Component
                 throw logger.Error(new LigralException("Illegal type as output of a group"));
             }
         }
-        public InPort Expose(int inPortNO)
+        public void SetInPortName(List<string> inPortNames)
+        {
+            if (inPortNameList.Count > 0)
+            {
+                throw logger.Error(new LigralException("In port name has been set"));
+            }
+            inPortNameList.AddRange(inPortNames);
+        }
+        public void SetOutPortName(List<string> outPortNames)
+        {
+            if (outPortNameList.Count > 0)
+            {
+                throw logger.Error(new LigralException("Out port name has been set"));
+            }
+            outPortNameList.AddRange(outPortNames);
+        }
+        public void AddInPortName(string inPortName)
+        {
+            inPortNameList.Add(inPortName);
+        }
+        public void AddOutPortName(string outPortName)
+        {
+            outPortNameList.Add(outPortName);
+        }
+        public InPort ExposeInPort(int inPortNO)
         {
             int i = 0;
             var inPortVariableModels = inputModels.FindAll(model => model is InPortVariableModel)
                                                   .ConvertAll(model => (InPortVariableModel) model);
             if (inputModels.Count == 1 && inPortVariableModels.Count == 1)
             {
-                inputModels[0].Expose(inPortNO);
+                inputModels[0].ExposeInPort(inPortNO);
             }
             else if (inputModels.Count > 1 && inPortVariableModels.Count >= 1)
             {
@@ -73,7 +99,7 @@ namespace Ligral.Component
                     int inPortCount = linkable.InPortCount();
                     if (i+inPortCount>inPortNO)
                     {
-                        return linkable.Expose(inPortNO-i);
+                        return linkable.ExposeInPort(inPortNO-i);
                     }
                     else
                     {
@@ -85,16 +111,36 @@ namespace Ligral.Component
         }
         public virtual Port Expose(string portName)
         {
-            return null;
+            int index = inPortNameList.IndexOf(portName);
+            if (index >= 0)
+            {
+                return ExposeInPort(index);
+            }
+            else
+            {
+                index = outPortNameList.IndexOf(portName);
+                if (index >= 0)
+                {
+                    return ExposeOutPort(index);
+                }
+                else
+                {
+                    throw logger.Error(new LigralException($"Group has no port {portName}"));
+                }
+            }
         }
         public void Connect(int outPortNO, InPort inPort)
+        {
+            ExposeOutPort(outPortNO).Bind(inPort);
+        }
+        public OutPort ExposeOutPort(int outPortNO)
         {
             int i = 0;
             var outPortVariableModels = outputModels.FindAll(model => model is OutPortVariableModel)
                                                     .ConvertAll(model => (OutPortVariableModel) model);
             if (outputModels.Count == 1 && outPortVariableModels.Count == 1)
             {
-                outputModels[0].Connect(outPortNO, inPort);
+                return outputModels[0].ExposeOutPort(outPortNO);
             }
             else if (outputModels.Count > 1 && outPortVariableModels.Count >= 1)
             {
@@ -107,8 +153,7 @@ namespace Ligral.Component
                     int outPortCount = linkable.OutPortCount();
                     if (i+outPortCount>outPortNO)
                     {
-                        linkable.Connect(outPortNO-i, inPort);
-                        return;
+                        return linkable.ExposeOutPort(outPortNO-i);
                     }
                     else
                     {
@@ -130,6 +175,8 @@ namespace Ligral.Component
         {
             inputModels.AddRange(group.inputModels);
             outputModels.AddRange(group.outputModels);
+            inPortNameList.AddRange(group.inPortNameList);
+            outPortNameList.AddRange(group.outPortNameList);
         }
         public virtual void Configure(Dict dictionary)
         {

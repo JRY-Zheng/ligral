@@ -228,9 +228,9 @@ namespace Ligral.Tests.ModelTester
             var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
-            node.Connect(0, add.Expose(0));
-            model.Connect(0, add.Expose(1));
-            add.Connect(0, model.Expose(0));
+            node.Connect(0, add.ExposeInPort(0));
+            model.Connect(0, add.ExposeInPort(1));
+            add.Connect(0, model.ExposeInPort(0));
             var group = new Group();
             group.AddInputModel(node);
             group.AddOutputModel(model);
@@ -252,9 +252,9 @@ namespace Ligral.Tests.ModelTester
             var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> ();
             model.Configure(dict);
-            node.Connect(0, add.Expose(0));
-            model.Connect(0, add.Expose(1));
-            add.Connect(0, model.Expose(0));
+            node.Connect(0, add.ExposeInPort(0));
+            model.Connect(0, add.ExposeInPort(1));
+            add.Connect(0, model.ExposeInPort(0));
             var group = new Group();
             group.AddInputModel(node);
             group.AddOutputModel(model);
@@ -275,9 +275,9 @@ namespace Ligral.Tests.ModelTester
             var node = ModelManager.Create("Node", null);
             var dict = new Dictionary<string, object> {{"row", 2}, {"col", 3}};
             model.Configure(dict);
-            node.Connect(0, add.Expose(0));
-            model.Connect(0, add.Expose(1));
-            add.Connect(0, model.Expose(0));
+            node.Connect(0, add.ExposeInPort(0));
+            model.Connect(0, add.ExposeInPort(1));
+            add.Connect(0, model.ExposeInPort(0));
             var group = new Group();
             group.AddInputModel(node);
             group.AddOutputModel(model);
