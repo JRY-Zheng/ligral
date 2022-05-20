@@ -8,7 +8,7 @@
 #include <Eigen/Dense>
 using Eigen::Matrix;
 
-#include "config.h"
+#include "step.h"
 
 int main() {
     Matrix<double, n, 1> x;
