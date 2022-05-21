@@ -21,6 +21,8 @@ namespace Ligral.Syntax
         private Logger logger = new Logger("JsonCoder");
         private ScopeSymbolTable symbolTable = new ScopeSymbolTable("<global>", 0);
         private JProject project;
+        public delegate void CompletedHandler();
+        public static event CompletedHandler Completed;
         public void Load(string fileName)
         {
             if (!File.Exists(fileName))
@@ -51,6 +53,7 @@ namespace Ligral.Syntax
             logger.Info($"JsonLoader started at {fileName}");
             Apply(project.Settings);
             Declare(project.Models);
+            if (Completed != null) Completed();
         }
         private void Apply(JConfig[] configs)
         {

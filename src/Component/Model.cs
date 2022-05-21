@@ -106,6 +106,7 @@ namespace Ligral.Component
             InPortList = new List<InPort>();
             OutPortList = new List<OutPort>();
             Interpreter.Completed += Prepare;
+            JsonLoader.Completed += Prepare;
             Solver.Starting += Confirm;
             Observation.Stepped += Refresh;
             Observation.Stopped += Release;
