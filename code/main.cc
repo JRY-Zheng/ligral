@@ -8,16 +8,23 @@
 #include <Eigen/Dense>
 using Eigen::Matrix;
 
-#include "step.h"
+#include "project.h"
+
+project p;
+
+Vector(N) f(Vector(N) x) {
+    p.ctx.x = x;
+    p.step();
+    return p.ctx.xdot;
+}
 
 int main() {
-    Matrix<double, n, 1> x;
-    x << 0, 1;
-    for (int i=0; i<10; i++) {
-        double t = ((double)i)*h;
-        x = integral(f, x, h);
-        std::cout << "t = " << t << std::endl;
-        std::cout << x << std::endl;
+    p.init();
+    for (int i=0; i<STEPS; i++) {
+        p.ctx.t = ((double)i)*H;
+        p.ctx.x = integral(f, p.ctx.x, H);
+        std::cout << "t = " << p.ctx.t << std::endl;
+        std::cout << p.ctx.x << std::endl;
     }
     return 0;
 }
