@@ -62,6 +62,19 @@ namespace Ligral.Component
                 }
             }
         }
+        public string GlobalName
+        {get
+            {
+                if (Scope != null)
+                {
+                    return Scope.Replace('.', '_') + "_" + Name;
+                }
+                else
+                {
+                    return Name;
+                }
+            }
+        }
         public string GivenName;
         public Token ModelToken {get; set;}
         protected virtual bool HasConfiguration {get => false; }
@@ -338,12 +351,12 @@ namespace Ligral.Component
             }
             catch (System.Exception e)
             {
-                throw logger.Error(new ModelException(this, $"Error occurs while propogating: {e.Message}"));
+                throw logger.Error(new ModelException(this, $"Error occurs while propagating: {e.Message}"));
             }
             if (outputs.Any(m => m.HasNAN()))
             {
                 int i = outputs.FindIndex(m => m.HasNAN());
-                throw logger.Error(new ModelException(this, $"NAN occurs while propogating in output {OutPortList[i]}"));
+                throw logger.Error(new ModelException(this, $"NAN occurs while propagating in output {OutPortList[i]}"));
             }
             if(outputs.Count != OutPortList.Count)
             {
@@ -366,26 +379,10 @@ namespace Ligral.Component
         {
             ModelCodeAST modelCodeAST = new ModelCodeAST();
             FunctionCodeAST functionCodeAST = new FunctionCodeAST();
-            functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, GetTypeName());
-            functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{inPort.Name}"));
-            if (HasConfiguration)
-            {
-                functionCodeAST.Parameters.Add(new CodeToken(CodeTokenType.WORD, $"&{Name}"));
-            }
-            functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{Name}_{outPort.Name}"));
-            List<CopyCodeAST> copyCodeASTs = new List<CopyCodeAST>();
-            foreach (var outPort in OutPortList)
-            {
-                foreach (var destination in outPort.DestinationWordList)
-                {
-                    CopyCodeAST copyCodeAST = new CopyCodeAST();
-                    copyCodeAST.Source = new CodeToken(CodeTokenType.WORD, $"{Name}_{outPort.Name}");
-                    copyCodeAST.Destination = new CodeToken(CodeTokenType.WORD, destination);
-                    copyCodeASTs.Add(copyCodeAST);
-                }
-            }
+            functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.calculation");
+            functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
+            functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}"));
             modelCodeAST.functionCodeAST = functionCodeAST;
-            modelCodeAST.copyCodeASTs = copyCodeASTs;
             return modelCodeAST;
         }
         internal virtual ConfigurationCodeAST ConstructConfigurationAST()

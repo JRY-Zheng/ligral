@@ -11,7 +11,6 @@ namespace Ligral.Syntax.CodeASTs
     class ModelCodeAST : CodeAST 
     {
         public FunctionCodeAST functionCodeAST;
-        public List<CopyCodeAST> copyCodeASTs;
         public override CodeToken FindToken()
         {
             return functionCodeAST.FindToken();
