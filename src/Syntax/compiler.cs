@@ -47,11 +47,11 @@ namespace Ligral.Syntax
         }
         private string Visit(ModelCodeAST modelCodeAST)
         {
-            string functionStatement = Visit(modelCodeAST.functionCodeAST);
+            var functionsStatement = modelCodeAST.functionsCodeAST.ConvertAll(f => Visit(f));
             // var statements = modelCodeAST.copyCodeASTs.ConvertAll(copyCodeAST => Visit(copyCodeAST));
             // statements.Insert(0, functionStatement);
             // return string.Join('\n', statements);
-            return functionStatement;
+            return string.Join('\n', functionsStatement);
         }
         private string Visit(FunctionCodeAST functionCodeAST)
         {

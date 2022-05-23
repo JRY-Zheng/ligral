@@ -382,7 +382,16 @@ namespace Ligral.Component
             functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.calculation");
             functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
             functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}"));
-            modelCodeAST.functionCodeAST = functionCodeAST;
+            modelCodeAST.functionsCodeAST = new List<FunctionCodeAST>();
+            modelCodeAST.functionsCodeAST.Add(functionCodeAST);
+            if (this is InitializeableModel)
+            {
+                FunctionCodeAST inputUpdateCodeAST = new FunctionCodeAST();
+                inputUpdateCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.input_update");
+                inputUpdateCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
+                inputUpdateCodeAST.Results = new List<CodeToken>();                
+                modelCodeAST.functionsCodeAST.Add(inputUpdateCodeAST);
+            }
             return modelCodeAST;
         }
         internal virtual ConfigurationCodeAST ConstructConfigurationAST()
