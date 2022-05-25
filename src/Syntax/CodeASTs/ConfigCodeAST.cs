@@ -4,18 +4,17 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class ModelCodeAST : CodeAST 
+    class ConfigCodeAST : CodeAST 
     {
-        public List<DeclareCodeAST> declareCodeASTs;
-        public List<FunctionCodeAST> functionCodeASTs;
+        public DeclareCodeAST declareCodeAST;
+        public List<CopyCodeAST> copyCodeASTs;
         public override CodeToken FindToken()
         {
-            return functionCodeASTs.First().FindToken();
+            return declareCodeAST.FindToken();
         }
     }
 }

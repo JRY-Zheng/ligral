@@ -375,32 +375,25 @@ namespace Ligral.Component
         {
             return GetType().Name;
         }
-        internal ModelCodeAST ConstructConnectionAST()
+        internal List<DeclareCodeAST> ConstructTempVarDeclarationAST()
         {
-            ModelCodeAST modelCodeAST = new ModelCodeAST();
-            modelCodeAST.declareCodeASTs = new List<DeclareCodeAST>();
+            var declareCodeASTs = new List<DeclareCodeAST>();
             foreach (OutPort outPort in OutPortList)
             {
                 DeclareCodeAST declareCodeAST = new DeclareCodeAST();
                 declareCodeAST.Type = new CodeToken(CodeTokenType.WORD, $"Matrix<double, {outPort.RowNo}, {outPort.ColNo}>");
                 declareCodeAST.Instance = new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}");
-                modelCodeAST.declareCodeASTs.Add(declareCodeAST);
+                declareCodeASTs.Add(declareCodeAST);
             }
-            FunctionCodeAST functionCodeAST = new FunctionCodeAST();
-            functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.calculation");
-            functionCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
-            functionCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}"));
-            modelCodeAST.functionCodeASTs = new List<FunctionCodeAST>();
-            modelCodeAST.functionCodeASTs.Add(functionCodeAST);
-            if (this is InitializeableModel)
-            {
-                FunctionCodeAST inputUpdateCodeAST = new FunctionCodeAST();
-                inputUpdateCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.input_update");
-                inputUpdateCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
-                inputUpdateCodeAST.Results = new List<CodeToken>();                
-                modelCodeAST.functionCodeASTs.Add(inputUpdateCodeAST);
-            }
-            return modelCodeAST;
+            return declareCodeASTs;
+        }
+        internal CallCodeAST ConstructConnectionAST()
+        {
+            CallCodeAST callCodeAST = new CallCodeAST();
+            callCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.calculation");
+            callCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
+            callCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}"));
+            return callCodeAST;
         }
         internal virtual List<int> GetCharacterSize()
         {
@@ -412,7 +405,7 @@ namespace Ligral.Component
             }
             return characterSize;
         }
-        internal virtual ConfigurationCodeAST ConstructConfigurationAST()
+        internal virtual ConfigCodeAST ConstructConfigurationAST()
         {
             return null;
         }

@@ -21,8 +21,21 @@ namespace Ligral.Syntax
                 if (ast == null) continue;
                 System.Console.WriteLine(Visit(ast));
             }
-            var codeASTs = routine.ConvertAll(model => model.ConstructConnectionAST());
-            foreach (var ast in codeASTs)
+            var declarationASTs = routine.ConvertAll(model => model.ConstructTempVarDeclarationAST());
+            foreach (var asts in declarationASTs)
+            {
+                foreach (var ast in asts)
+                {
+                    System.Console.WriteLine(Visit(ast));
+                }
+            }
+            var connectionASTs = routine.ConvertAll(model => model.ConstructConnectionAST());
+            foreach (var ast in connectionASTs)
+            {
+                System.Console.WriteLine(Visit(ast));
+            }
+            var inputUpdateASTs = routine.FindAll(model => model is InitializeableModel).ConvertAll(model => ((InitializeableModel)model).ConstructInputUpdateAST());
+            foreach (var ast in inputUpdateASTs)
             {
                 System.Console.WriteLine(Visit(ast));
             }
@@ -31,51 +44,40 @@ namespace Ligral.Syntax
         {
             switch (codeAST)
             {
-            case ModelCodeAST modelCodeAST:
-                return Visit(modelCodeAST);
-            case FunctionCodeAST functionCodeAST:
-                return Visit(functionCodeAST);
+            case CallCodeAST callCodeAST:
+                return Visit(callCodeAST);
             case CopyCodeAST copyCodeAST:
                 return Visit(copyCodeAST);
-            case ConfigurationCodeAST configurationCodeAST:
-                return Visit(configurationCodeAST);
+            case ConfigCodeAST configCodeAST:
+                return Visit(configCodeAST);
             case DeclareCodeAST declareCodeAST:
                 return Visit(declareCodeAST);
             default:
                 throw logger.Error(new ComplieException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
             }
         }
-        private string Visit(ModelCodeAST modelCodeAST)
+        private string Visit(CallCodeAST callCodeAST)
         {
-            var declareStatements = modelCodeAST.declareCodeASTs.ConvertAll(f => Visit(f));
-            var functionStatements = modelCodeAST.functionCodeASTs.ConvertAll(f => Visit(f));
-            // var statements = modelCodeAST.copyCodeASTs.ConvertAll(copyCodeAST => Visit(copyCodeAST));
-            // statements.Insert(0, functionStatement);
-            // return string.Join('\n', statements);
-            return string.Join('\n', declareStatements)+'\n'+string.Join('\n', functionStatements);
-        }
-        private string Visit(FunctionCodeAST functionCodeAST)
-        {
-            string parameters = string.Join(", ", functionCodeAST.Parameters.ConvertAll(parameter => $"{parameter.Value}"));
-            string results = string.Join(", ", functionCodeAST.Results.ConvertAll(result => $"&{result.Value}"));
-            if (functionCodeAST.Results.Count == 0)
+            string parameters = string.Join(", ", callCodeAST.Parameters.ConvertAll(parameter => $"{parameter.Value}"));
+            string results = string.Join(", ", callCodeAST.Results.ConvertAll(result => $"&{result.Value}"));
+            if (callCodeAST.Results.Count == 0)
             {
-                return $"{functionCodeAST.FunctionName.Value}({parameters});";
+                return $"{callCodeAST.FunctionName.Value}({parameters});";
             }
-            else if (functionCodeAST.Parameters.Count == 0)
+            else if (callCodeAST.Parameters.Count == 0)
             {
-                return $"{functionCodeAST.FunctionName.Value}({results});";
+                return $"{callCodeAST.FunctionName.Value}({results});";
             }
             else
             {
-                return $"{functionCodeAST.FunctionName.Value}({parameters}, {results});";
+                return $"{callCodeAST.FunctionName.Value}({parameters}, {results});";
             }
         }
         private string Visit(CopyCodeAST copyCodeAST)
         {
             return $"{copyCodeAST.Destination.Value} = {copyCodeAST.Source.Value};";
         }
-        private string Visit(ConfigurationCodeAST configuarionCodeAST)
+        private string Visit(ConfigCodeAST configuarionCodeAST)
         {
             string functionStatement = Visit(configuarionCodeAST.declareCodeAST);
             var statements = configuarionCodeAST.copyCodeASTs.ConvertAll(copyCodeAST => Visit(copyCodeAST));

@@ -4,9 +4,11 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
-using System;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component
 {
@@ -134,6 +136,14 @@ namespace Ligral.Component
             {
                 throw logger.Error(new ModelException(this, $"Row number in consistent, got {inputRowNo}, but {rowNo} expected."));
             }
+        }
+        internal CallCodeAST ConstructInputUpdateAST()
+        {
+            CallCodeAST inputUpdateCodeAST = new CallCodeAST();
+            inputUpdateCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.input_update");
+            inputUpdateCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
+            inputUpdateCodeAST.Results = new List<CodeToken>();                
+            return inputUpdateCodeAST;
         }
     }
 }

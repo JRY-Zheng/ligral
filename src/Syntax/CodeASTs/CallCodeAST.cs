@@ -8,13 +8,14 @@ using System.Collections.Generic;
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class ConfigurationCodeAST : CodeAST 
+    class CallCodeAST : CodeAST 
     {
-        public DeclareCodeAST declareCodeAST;
-        public List<CopyCodeAST> copyCodeASTs;
+        public CodeToken FunctionName;
+        public List<CodeToken> Parameters;
+        public List<CodeToken> Results;
         public override CodeToken FindToken()
         {
-            return declareCodeAST.FindToken();
+            return FunctionName;
         }
     }
 }

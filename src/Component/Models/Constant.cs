@@ -45,20 +45,20 @@ namespace Ligral.Component.Models
         {
             return Results;
         }
-        internal override ConfigurationCodeAST ConstructConfigurationAST()
+        internal override ConfigCodeAST ConstructConfigurationAST()
         {
-            ConfigurationCodeAST configurationCodeAST = new ConfigurationCodeAST();
+            ConfigCodeAST configCodeAST = new ConfigCodeAST();
             DeclareCodeAST declareCodeAST = new DeclareCodeAST();
             declareCodeAST.Type = new CodeToken(CodeTokenType.WORD, GetTypeName());
             declareCodeAST.Instance= new CodeToken(CodeTokenType.WORD, Name);
-            configurationCodeAST.declareCodeAST = declareCodeAST;
+            configCodeAST.declareCodeAST = declareCodeAST;
             CopyCodeAST valueConfiguration = new CopyCodeAST();
             valueConfiguration.Destination = new CodeToken(CodeTokenType.WORD, $"{Name}.value");
             valueConfiguration.Source = new CodeToken(CodeTokenType.WORD, $"{Results[0].ToScalar()}");// matrix handle
             List<CopyCodeAST> copyCodeASTs = new List<CopyCodeAST>();
             copyCodeASTs.Add(valueConfiguration);
-            configurationCodeAST.copyCodeASTs = copyCodeASTs;
-            return configurationCodeAST;
+            configCodeAST.copyCodeASTs = copyCodeASTs;
+            return configCodeAST;
         }
     }
 }
