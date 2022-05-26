@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class FunctionCodeAST : CodeAST 
+    public class FunctionCodeAST : CodeAST 
     {
         public string ReturnType;
         public string FunctionName;

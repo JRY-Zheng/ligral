@@ -15,27 +15,31 @@ namespace Ligral.Syntax
         private Logger logger = new Logger("Compiler");
         public void Compile(List<Model> routine)
         {
+            var initCodeAST = new FunctionCodeAST();
             var configurationASTs = routine.ConvertAll(model => model.ConstructConfigurationAST());
-            foreach (var ast in configurationASTs)
+            initCodeAST.ReturnType = "void";
+            initCodeAST.FunctionName = "project::init";
+            initCodeAST.codeASTs = new List<CodeAST>();
+            foreach (var asts in configurationASTs)
             {
-                if (ast == null) continue;
-                System.Console.WriteLine(Visit(ast));
+                if (asts == null) continue;
+                initCodeAST.codeASTs.AddRange(asts);
             }
             var declarationASTs = routine.ConvertAll(model => model.ConstructTempVarDeclarationAST());
             var connectionASTs = routine.ConvertAll(model => model.ConstructConnectionAST());
             var inputUpdateASTs = routine.FindAll(model => model is InitializeableModel).ConvertAll(model => ((InitializeableModel)model).ConstructInputUpdateAST());
-            var functionCodeAST = new FunctionCodeAST();
-            functionCodeAST.ReturnType = "void";
-            functionCodeAST.FunctionName = "project::step";
-            functionCodeAST.Parameters = new List<string>();
-            functionCodeAST.codeASTs = new List<CodeAST>();
+            var stepCodeAST = new FunctionCodeAST();
+            stepCodeAST.ReturnType = "void";
+            stepCodeAST.FunctionName = "project::step";
+            stepCodeAST.codeASTs = new List<CodeAST>();
             foreach (var asts in declarationASTs)
             {
-                functionCodeAST.codeASTs.AddRange(asts);
+                stepCodeAST.codeASTs.AddRange(asts);
             }
-            functionCodeAST.codeASTs.AddRange(connectionASTs);
-            functionCodeAST.codeASTs.AddRange(inputUpdateASTs);
-            System.Console.WriteLine(Visit(functionCodeAST));
+            stepCodeAST.codeASTs.AddRange(connectionASTs);
+            stepCodeAST.codeASTs.AddRange(inputUpdateASTs);
+            System.Console.WriteLine(Visit(initCodeAST));
+            System.Console.WriteLine(Visit(stepCodeAST));
         }
         private string Visit(CodeAST codeAST)
         {
@@ -43,12 +47,14 @@ namespace Ligral.Syntax
             {
             case CallCodeAST callCodeAST:
                 return Visit(callCodeAST);
-            case CopyCodeAST copyCodeAST:
-                return Visit(copyCodeAST);
-            case ConfigCodeAST configCodeAST:
-                return Visit(configCodeAST);
+            case AssignCodeAST assignCodeAST:
+                return Visit(assignCodeAST);
+            case LShiftCodeAST lShiftCodeAST:
+                return Visit(lShiftCodeAST);
             case DeclareCodeAST declareCodeAST:
                 return Visit(declareCodeAST);
+            case FunctionCodeAST functionCodeAST:
+                return Visit(functionCodeAST);
             default:
                 throw logger.Error(new CompileException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
             }
@@ -56,20 +62,20 @@ namespace Ligral.Syntax
         private string Visit(FunctionCodeAST functionCodeAST)
         {
             string head = $"{functionCodeAST.ReturnType} {functionCodeAST.FunctionName}";
-            string parameter = "("+string.Join(", ", functionCodeAST.Parameters)+") {\n";
+            string parameter = "("+(functionCodeAST.Parameters == null ? "" : string.Join(", ", functionCodeAST.Parameters))+") {\n";
             string content = "\t"+string.Join("\n\t", functionCodeAST.codeASTs.ConvertAll(c => Visit(c)));
             string tail = "\n}";
             return head+parameter+content+tail;
         }
         private string Visit(CallCodeAST callCodeAST)
         {
-            string parameters = string.Join(", ", callCodeAST.Parameters.ConvertAll(parameter => $"{parameter}"));
-            string results = string.Join(", ", callCodeAST.Results.ConvertAll(result => $"&{result}"));
-            if (callCodeAST.Results.Count == 0)
+            string parameters = callCodeAST.Parameters == null ? "" : string.Join(", ", callCodeAST.Parameters.ConvertAll(parameter => $"{parameter}"));
+            string results = callCodeAST.Results == null ? "" :string.Join(", ", callCodeAST.Results.ConvertAll(result => $"&{result}"));
+            if (callCodeAST.Results == null || callCodeAST.Results.Count == 0)
             {
                 return $"{callCodeAST.FunctionName}({parameters});";
             }
-            else if (callCodeAST.Parameters.Count == 0)
+            else if (callCodeAST.Parameters == null || callCodeAST.Parameters.Count == 0)
             {
                 return $"{callCodeAST.FunctionName}({results});";
             }
@@ -78,16 +84,13 @@ namespace Ligral.Syntax
                 return $"{callCodeAST.FunctionName}({parameters}, {results});";
             }
         }
-        private string Visit(CopyCodeAST copyCodeAST)
+        private string Visit(AssignCodeAST assignCodeAST)
         {
-            return $"{copyCodeAST.Destination} = {copyCodeAST.Source};";
+            return $"{assignCodeAST.Destination} = {assignCodeAST.Source};";
         }
-        private string Visit(ConfigCodeAST configuarionCodeAST)
+        private string Visit(LShiftCodeAST lShiftCodeAST)
         {
-            string functionStatement = Visit(configuarionCodeAST.declareCodeAST);
-            var statements = configuarionCodeAST.copyCodeASTs.ConvertAll(copyCodeAST => Visit(copyCodeAST));
-            statements.Insert(0, functionStatement);
-            return string.Join('\n', statements);
+            return $"{lShiftCodeAST.Destination} << {lShiftCodeAST.Source};";
         }
         private string Visit(DeclareCodeAST declareCodeAST)
         {

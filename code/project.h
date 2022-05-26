@@ -15,7 +15,6 @@ public:
 
 // configuration
 void project::init() {
-    constant1.ctx = &ctx;
     constant1.value << 1, -2;
 
     integrator1.ctx = &ctx;

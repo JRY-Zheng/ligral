@@ -7,7 +7,7 @@
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class DeclareCodeAST : CodeAST 
+    public class DeclareCodeAST : CodeAST 
     {
         public string Type;
         public string Instance;

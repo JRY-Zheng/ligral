@@ -7,7 +7,7 @@
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class CopyCodeAST : CodeAST 
+    public class AssignCodeAST : CodeAST 
     {
         public string Source;
         public string Destination;

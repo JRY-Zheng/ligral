@@ -4,17 +4,16 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using System.Collections.Generic;
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class ConfigCodeAST : CodeAST 
+    public class LShiftCodeAST : CodeAST 
     {
-        public DeclareCodeAST declareCodeAST;
-        public List<CopyCodeAST> copyCodeASTs;
+        public string Source;
+        public string Destination;
         public override string FindToken()
         {
-            return declareCodeAST.FindToken();
+            return Source;
         }
     }
 }

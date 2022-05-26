@@ -375,7 +375,7 @@ namespace Ligral.Component
         {
             return GetType().Name;
         }
-        internal List<DeclareCodeAST> ConstructTempVarDeclarationAST()
+        public List<DeclareCodeAST> ConstructTempVarDeclarationAST()
         {
             var declareCodeASTs = new List<DeclareCodeAST>();
             foreach (OutPort outPort in OutPortList)
@@ -387,7 +387,7 @@ namespace Ligral.Component
             }
             return declareCodeASTs;
         }
-        internal CallCodeAST ConstructConnectionAST()
+        public CallCodeAST ConstructConnectionAST()
         {
             CallCodeAST callCodeAST = new CallCodeAST();
             callCodeAST.FunctionName =  $"{GlobalName}.calculation";
@@ -395,7 +395,7 @@ namespace Ligral.Component
             callCodeAST.Results = OutPortList.ConvertAll(outPort => $"{GlobalName}_{outPort.Name}");
             return callCodeAST;
         }
-        internal virtual List<int> GetCharacterSize()
+        public virtual List<int> GetCharacterSize()
         {
             List<int> characterSize =  new List<int>();
             foreach (var inPort in InPortList)
@@ -405,7 +405,14 @@ namespace Ligral.Component
             }
             return characterSize;
         }
-        internal virtual ConfigCodeAST ConstructConfigurationAST()
+        public DeclareCodeAST ConstructDeclarationAST()
+        {
+            DeclareCodeAST declareCodeAST = new DeclareCodeAST();
+            declareCodeAST.Type = GetTypeName();
+            declareCodeAST.Instance= GlobalName;
+            return declareCodeAST;
+        }
+        public virtual List<CodeAST> ConstructConfigurationAST()
         {
             return null;
         }

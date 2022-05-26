@@ -137,7 +137,7 @@ namespace Ligral.Component
                 throw logger.Error(new ModelException(this, $"Row number in consistent, got {inputRowNo}, but {rowNo} expected."));
             }
         }
-        internal CallCodeAST ConstructInputUpdateAST()
+        public CallCodeAST ConstructInputUpdateAST()
         {
             CallCodeAST inputUpdateCodeAST = new CallCodeAST();
             inputUpdateCodeAST.FunctionName = $"{GlobalName}.input_update";

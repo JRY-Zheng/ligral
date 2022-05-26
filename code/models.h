@@ -10,7 +10,6 @@ using Eigen::Matrix;
 template<int rows_cnt, int cols_cnt>
 struct constant {
     Matrix<double, rows_cnt, cols_cnt> value;
-    context* ctx;
     void calculate(Matrix<double, rows_cnt, cols_cnt>* output) {
         *output = value;
     }

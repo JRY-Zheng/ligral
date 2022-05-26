@@ -6,7 +6,7 @@
 
 namespace Ligral.Syntax.CodeASTs
 {
-    class CodeAST 
+    public class CodeAST 
     {
         public virtual string FindToken()
         {

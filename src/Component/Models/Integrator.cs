@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
 using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -62,6 +63,26 @@ namespace Ligral.Component.Models
             Matrix<double> outputSignal = Results[0];
             Results[0] = handle.GetState();
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            LShiftCodeAST initialAST = new LShiftCodeAST();
+            initialAST.Destination = $"{GlobalName}.initial";
+            initialAST.Source = string.Join(',', initial.ToColumnMajorArray());
+            codeASTs.Add(initialAST);
+            AssignCodeAST indexAST = new AssignCodeAST();
+            indexAST.Destination = $"{GlobalName}.index";
+            indexAST.Source = State.StatePool.IndexOf(handle.space[0]).ToString();
+            codeASTs.Add(indexAST);
+            CallCodeAST configAST = new CallCodeAST();
+            configAST.FunctionName = $"{GlobalName}.config";
+            codeASTs.Add(configAST);
+            return codeASTs;
         }
     }
 }
