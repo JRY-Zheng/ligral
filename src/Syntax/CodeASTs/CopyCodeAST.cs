@@ -9,9 +9,9 @@ namespace Ligral.Syntax.CodeASTs
 {
     class CopyCodeAST : CodeAST 
     {
-        public CodeToken Source;
-        public CodeToken Destination;
-        public override CodeToken FindToken()
+        public string Source;
+        public string Destination;
+        public override string FindToken()
         {
             return Source;
         }

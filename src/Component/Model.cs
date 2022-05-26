@@ -381,8 +381,8 @@ namespace Ligral.Component
             foreach (OutPort outPort in OutPortList)
             {
                 DeclareCodeAST declareCodeAST = new DeclareCodeAST();
-                declareCodeAST.Type = new CodeToken(CodeTokenType.WORD, $"Matrix<double, {outPort.RowNo}, {outPort.ColNo}>");
-                declareCodeAST.Instance = new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}");
+                declareCodeAST.Type = $"Matrix<double, {outPort.RowNo}, {outPort.ColNo}>";
+                declareCodeAST.Instance = $"{GlobalName}_{outPort.Name}";
                 declareCodeASTs.Add(declareCodeAST);
             }
             return declareCodeASTs;
@@ -390,9 +390,9 @@ namespace Ligral.Component
         internal CallCodeAST ConstructConnectionAST()
         {
             CallCodeAST callCodeAST = new CallCodeAST();
-            callCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.calculation");
-            callCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
-            callCodeAST.Results = OutPortList.ConvertAll(outPort => new CodeToken(CodeTokenType.WORD, $"{GlobalName}_{outPort.Name}"));
+            callCodeAST.FunctionName =  $"{GlobalName}.calculation";
+            callCodeAST.Parameters = InPortList.ConvertAll(inPort => $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}");
+            callCodeAST.Results = OutPortList.ConvertAll(outPort => $"{GlobalName}_{outPort.Name}");
             return callCodeAST;
         }
         internal virtual List<int> GetCharacterSize()

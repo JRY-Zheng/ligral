@@ -49,12 +49,12 @@ namespace Ligral.Component.Models
         {
             ConfigCodeAST configCodeAST = new ConfigCodeAST();
             DeclareCodeAST declareCodeAST = new DeclareCodeAST();
-            declareCodeAST.Type = new CodeToken(CodeTokenType.WORD, GetTypeName());
-            declareCodeAST.Instance= new CodeToken(CodeTokenType.WORD, Name);
+            declareCodeAST.Type = GetTypeName();
+            declareCodeAST.Instance= GlobalName;
             configCodeAST.declareCodeAST = declareCodeAST;
             CopyCodeAST valueConfiguration = new CopyCodeAST();
-            valueConfiguration.Destination = new CodeToken(CodeTokenType.WORD, $"{Name}.value");
-            valueConfiguration.Source = new CodeToken(CodeTokenType.WORD, $"{Results[0].ToScalar()}");// matrix handle
+            valueConfiguration.Destination = $"{GlobalName}.value";
+            valueConfiguration.Source = $"{Results[0].ToScalar()}";// matrix handle
             List<CopyCodeAST> copyCodeASTs = new List<CopyCodeAST>();
             copyCodeASTs.Add(valueConfiguration);
             configCodeAST.copyCodeASTs = copyCodeASTs;

@@ -9,9 +9,9 @@ namespace Ligral.Syntax.CodeASTs
 {
     class DeclareCodeAST : CodeAST 
     {
-        public CodeToken Type;
-        public CodeToken Instance;
-        public override CodeToken FindToken()
+        public string Type;
+        public string Instance;
+        public override string FindToken()
         {
             return Instance;
         }

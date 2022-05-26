@@ -140,9 +140,9 @@ namespace Ligral.Component
         internal CallCodeAST ConstructInputUpdateAST()
         {
             CallCodeAST inputUpdateCodeAST = new CallCodeAST();
-            inputUpdateCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, $"{GlobalName}.input_update");
-            inputUpdateCodeAST.Parameters = InPortList.ConvertAll(inPort => new CodeToken(CodeTokenType.WORD, $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}"));
-            inputUpdateCodeAST.Results = new List<CodeToken>();                
+            inputUpdateCodeAST.FunctionName = $"{GlobalName}.input_update";
+            inputUpdateCodeAST.Parameters = InPortList.ConvertAll(inPort => $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}");
+            inputUpdateCodeAST.Results = new List<string>();                
             return inputUpdateCodeAST;
         }
     }

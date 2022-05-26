@@ -81,17 +81,17 @@ namespace Ligral
         }
     }
     [System.Serializable]
-    public class ComplieException : LigralException
+    public class CompileException : LigralException
     {
-        private CodeToken ErrorToken;
+        private string ErrorToken;
         // private string errorMessage;
-        internal ComplieException(CodeToken token, string message="") : base(message)
+        internal CompileException(string token, string message="") : base(message)
         {
             ErrorToken = token;
         }
         public override string ToString()
         {
-            string errorMessage = $"Invalid code token ({ErrorToken.Value})";
+            string errorMessage = $"Invalid code token ({ErrorToken})";
             if (Message!="")
             {
                 return $"{errorMessage}\n{Message}";

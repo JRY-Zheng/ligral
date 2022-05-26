@@ -25,9 +25,9 @@ namespace Ligral.Syntax
             var connectionASTs = routine.ConvertAll(model => model.ConstructConnectionAST());
             var inputUpdateASTs = routine.FindAll(model => model is InitializeableModel).ConvertAll(model => ((InitializeableModel)model).ConstructInputUpdateAST());
             var functionCodeAST = new FunctionCodeAST();
-            functionCodeAST.ReturnType = new CodeToken(CodeTokenType.WORD, "void");
-            functionCodeAST.FunctionName = new CodeToken(CodeTokenType.WORD, "project::step");
-            functionCodeAST.Parameters = new List<CodeToken>();
+            functionCodeAST.ReturnType = "void";
+            functionCodeAST.FunctionName = "project::step";
+            functionCodeAST.Parameters = new List<string>();
             functionCodeAST.codeASTs = new List<CodeAST>();
             foreach (var asts in declarationASTs)
             {
@@ -50,37 +50,37 @@ namespace Ligral.Syntax
             case DeclareCodeAST declareCodeAST:
                 return Visit(declareCodeAST);
             default:
-                throw logger.Error(new ComplieException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
+                throw logger.Error(new CompileException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
             }
         }
         private string Visit(FunctionCodeAST functionCodeAST)
         {
-            string head = $"{functionCodeAST.ReturnType.Value} {functionCodeAST.FunctionName.Value}";
-            string parameter = "("+string.Join(", ", functionCodeAST.Parameters.ConvertAll(p => p.Value))+") {\n";
+            string head = $"{functionCodeAST.ReturnType} {functionCodeAST.FunctionName}";
+            string parameter = "("+string.Join(", ", functionCodeAST.Parameters)+") {\n";
             string content = "\t"+string.Join("\n\t", functionCodeAST.codeASTs.ConvertAll(c => Visit(c)));
             string tail = "\n}";
             return head+parameter+content+tail;
         }
         private string Visit(CallCodeAST callCodeAST)
         {
-            string parameters = string.Join(", ", callCodeAST.Parameters.ConvertAll(parameter => $"{parameter.Value}"));
-            string results = string.Join(", ", callCodeAST.Results.ConvertAll(result => $"&{result.Value}"));
+            string parameters = string.Join(", ", callCodeAST.Parameters.ConvertAll(parameter => $"{parameter}"));
+            string results = string.Join(", ", callCodeAST.Results.ConvertAll(result => $"&{result}"));
             if (callCodeAST.Results.Count == 0)
             {
-                return $"{callCodeAST.FunctionName.Value}({parameters});";
+                return $"{callCodeAST.FunctionName}({parameters});";
             }
             else if (callCodeAST.Parameters.Count == 0)
             {
-                return $"{callCodeAST.FunctionName.Value}({results});";
+                return $"{callCodeAST.FunctionName}({results});";
             }
             else
             {
-                return $"{callCodeAST.FunctionName.Value}({parameters}, {results});";
+                return $"{callCodeAST.FunctionName}({parameters}, {results});";
             }
         }
         private string Visit(CopyCodeAST copyCodeAST)
         {
-            return $"{copyCodeAST.Destination.Value} = {copyCodeAST.Source.Value};";
+            return $"{copyCodeAST.Destination} = {copyCodeAST.Source};";
         }
         private string Visit(ConfigCodeAST configuarionCodeAST)
         {
@@ -91,7 +91,7 @@ namespace Ligral.Syntax
         }
         private string Visit(DeclareCodeAST declareCodeAST)
         {
-            return $"{declareCodeAST.Type.Value} {declareCodeAST.Instance.Value};";
+            return $"{declareCodeAST.Type} {declareCodeAST.Instance};";
         }
     }
 }

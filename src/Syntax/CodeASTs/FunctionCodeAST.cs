@@ -10,11 +10,11 @@ namespace Ligral.Syntax.CodeASTs
 {
     class FunctionCodeAST : CodeAST 
     {
-        public CodeToken ReturnType;
-        public CodeToken FunctionName;
-        public List<CodeToken> Parameters;
+        public string ReturnType;
+        public string FunctionName;
+        public List<string> Parameters;
         public List<CodeAST> codeASTs;
-        public override CodeToken FindToken()
+        public override string FindToken()
         {
             return FunctionName;
         }
