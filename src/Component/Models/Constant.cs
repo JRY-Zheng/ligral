@@ -54,5 +54,9 @@ namespace Ligral.Component.Models
             codeASTs.Add(valueConfiguration);
             return codeASTs;
         }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int> () { Results[0].RowCount, Results[0].ColumnCount };
+        } 
     }
 }

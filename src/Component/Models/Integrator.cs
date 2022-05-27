@@ -84,5 +84,9 @@ namespace Ligral.Component.Models
             codeASTs.Add(configAST);
             return codeASTs;
         }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int> () { rowNo, colNo, State.StatePool.Count };
+        } 
     }
 }

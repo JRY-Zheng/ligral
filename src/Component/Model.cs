@@ -408,7 +408,7 @@ namespace Ligral.Component
         public DeclareCodeAST ConstructDeclarationAST()
         {
             DeclareCodeAST declareCodeAST = new DeclareCodeAST();
-            declareCodeAST.Type = GetTypeName();
+            declareCodeAST.Type = $"{GetTypeName()}<{string.Join(',', GetCharacterSize().ConvertAll(n => n.ToString()))}>";
             declareCodeAST.Instance= GlobalName;
             return declareCodeAST;
         }

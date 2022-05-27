@@ -22,6 +22,10 @@ namespace Ligral.Syntax
             ctx.Type = "context";
             ctx.Instance = "ctx";
             projectCodeAST.publicASTs.Add(ctx);
+            foreach (var model in routine)
+            {
+                projectCodeAST.publicASTs.Add(model.ConstructDeclarationAST());
+            }
             var init = new DeclareCodeAST();
             init.Type = "void";
             init.Instance = "init()";
