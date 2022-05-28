@@ -7,9 +7,9 @@
 
 namespace Ligral.Syntax.CodeASTs
 {
-    public class LShiftCodeAST : CodeAST 
+    public class MacroCodeAST : CodeAST 
     {
-        public string Source;
-        public string Destination;
+        public string Macro;
+        public string Definition;
     }
 }

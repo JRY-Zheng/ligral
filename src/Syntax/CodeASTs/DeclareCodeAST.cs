@@ -11,9 +11,5 @@ namespace Ligral.Syntax.CodeASTs
     {
         public string Type;
         public string Instance;
-        public override string FindToken()
-        {
-            return Instance;
-        }
     }
 }

@@ -12,9 +12,5 @@ namespace Ligral.Syntax.CodeASTs
     {
         public string ClassName;
         public List<DeclareCodeAST> publicASTs;
-        public override string FindToken()
-        {
-            return ClassName;
-        }
     }
 }

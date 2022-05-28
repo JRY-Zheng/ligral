@@ -15,6 +15,13 @@ namespace Ligral.Syntax
         private Logger logger = new Logger("Compiler");
         public void Compile(List<Model> routine)
         {
+            foreach (var ast in Project(routine))
+            {
+                System.Console.WriteLine(Visit(ast));
+            }
+        }
+        private List<CodeAST> Project(List<Model> routine)
+        {
             var projectCodeAST = new ClassCodeAST();
             projectCodeAST.ClassName = "project";
             projectCodeAST.publicASTs = new List<DeclareCodeAST>();
@@ -57,9 +64,15 @@ namespace Ligral.Syntax
             }
             stepCodeAST.codeASTs.AddRange(connectionASTs);
             stepCodeAST.codeASTs.AddRange(inputUpdateASTs);
-            System.Console.WriteLine(Visit(projectCodeAST));
-            System.Console.WriteLine(Visit(initCodeAST));
-            System.Console.WriteLine(Visit(stepCodeAST));
+            var fileContent = new List<CodeAST>() 
+            {
+                new MacroCodeAST() { Macro = "ifndef", Definition = "PROJECT_H"},
+                new MacroCodeAST() { Macro = "define", Definition = "PROJECT_H"},
+                new MacroCodeAST() { Macro = "include", Definition = "\"models.h\""},
+                projectCodeAST, initCodeAST, stepCodeAST,
+                new MacroCodeAST() { Macro = "endif"},
+            };
+            return fileContent;
         }
         private string Visit(CodeAST codeAST)
         {
@@ -73,12 +86,14 @@ namespace Ligral.Syntax
                 return Visit(lShiftCodeAST);
             case DeclareCodeAST declareCodeAST:
                 return Visit(declareCodeAST);
+            case MacroCodeAST macroCodeAST:
+                return Visit(macroCodeAST);
             case FunctionCodeAST functionCodeAST:
                 return Visit(functionCodeAST);
             case ClassCodeAST classCodeAST:
                 return Visit(classCodeAST);
             default:
-                throw logger.Error(new CompileException(codeAST.FindToken(), $"No CodeAST named {codeAST.GetType().Name}"));
+                throw logger.Error(new LigralException($"No CodeAST named {codeAST.GetType().Name}"));
             }
         }
         private string Visit(FunctionCodeAST functionCodeAST)
@@ -124,6 +139,10 @@ namespace Ligral.Syntax
         private string Visit(DeclareCodeAST declareCodeAST)
         {
             return $"{declareCodeAST.Type} {declareCodeAST.Instance};";
+        }
+        private string Visit(MacroCodeAST macroCodeAST)
+        {
+            return $"#{macroCodeAST.Macro} {macroCodeAST.Definition}";
         }
     }
 }

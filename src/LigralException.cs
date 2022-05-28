@@ -80,28 +80,6 @@ namespace Ligral
             }
         }
     }
-    [System.Serializable]
-    public class CompileException : LigralException
-    {
-        private string ErrorToken;
-        // private string errorMessage;
-        internal CompileException(string token, string message="") : base(message)
-        {
-            ErrorToken = token;
-        }
-        public override string ToString()
-        {
-            string errorMessage = $"Invalid code token ({ErrorToken})";
-            if (Message!="")
-            {
-                return $"{errorMessage}\n{Message}";
-            }
-            else
-            {
-                return errorMessage;
-            }
-        }
-    }
 
     [System.Serializable]
     public class NotFoundException : LigralException
