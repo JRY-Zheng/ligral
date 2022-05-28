@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using Ligral.Component;
 using Ligral.Syntax.CodeASTs;
+using Ligral.Simulation;
 
 namespace Ligral.Syntax
 {
@@ -17,10 +18,31 @@ namespace Ligral.Syntax
         public void Compile(List<Model> routine)
         {
             string folder = Settings.GetInstance().OutputFolder;
-            File.AppendAllLines(Path.Join(folder, "project.h"), 
-                Project(routine).ConvertAll(block => Visit(block)));
+            File.WriteAllLines(Path.Join(folder, "config.h"), 
+                GenerateConfig().ConvertAll(block => Visit(block)));
+            File.WriteAllLines(Path.Join(folder, "project.h"), 
+                GenerateProject(routine).ConvertAll(block => Visit(block)));
         }
-        private List<CodeAST> Project(List<Model> routine)
+        private List<CodeAST> GenerateConfig()
+        {
+            var settings = Settings.GetInstance();
+            return new List<CodeAST>() 
+            {
+                new MacroCodeAST() { Macro = "ifndef", Definition = "CONFIG_H"}, 
+                new MacroCodeAST() { Macro = "define", Definition = "CONFIG_H"}, 
+                new MacroCodeAST() { Macro = "include", Definition = "\"solvers.h\""}, 
+                new MacroCodeAST() { Macro = "include", Definition = "\"context.h\""}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"H {settings.StepSize}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"N {State.StatePool.Count}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"M {Observation.ObservationPool.Count}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"P {ControlInput.InputPool.Count}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"STEPS {settings.StopTime/settings.StepSize}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = "integral euler_integral<N>"}, 
+                new MacroCodeAST() { Macro = "define", Definition = "context struct context_struct<M, N, P>"}, 
+                new MacroCodeAST() { Macro = "endif"}
+            };
+        }
+        private List<CodeAST> GenerateProject(List<Model> routine)
         {
             var projectCodeAST = new ClassCodeAST();
             projectCodeAST.ClassName = "project";
