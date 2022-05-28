@@ -19,6 +19,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="../code/main.cc">
+      <LogicalName>main.cc</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../code/CMakeLists.txt">
+      <LogicalName>CMakeLists.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../code/context.h">
+      <LogicalName>context.h</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../code/models.h">
+      <LogicalName>models.h</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../code/solvers.h">
+      <LogicalName>solvers.h</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
   </ItemGroup>
 

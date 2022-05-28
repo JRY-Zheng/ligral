@@ -8,7 +8,7 @@ using Eigen::Matrix;
 #include "config.h"
 
 template<int rows_cnt, int cols_cnt>
-struct constant {
+struct Constant {
     Matrix<double, rows_cnt, cols_cnt> value;
     void calculate(Matrix<double, rows_cnt, cols_cnt>* output) {
         *output = value;
@@ -16,7 +16,7 @@ struct constant {
 };
 
 template<int rows_cnt, int cols_cnt, int n>
-struct integrator {
+struct Integrator {
     Matrix<double, rows_cnt, cols_cnt> initial;
     int index;
     context* ctx;

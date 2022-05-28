@@ -390,7 +390,7 @@ namespace Ligral.Component
         public CallCodeAST ConstructConnectionAST()
         {
             CallCodeAST callCodeAST = new CallCodeAST();
-            callCodeAST.FunctionName =  $"{GlobalName}.calculation";
+            callCodeAST.FunctionName =  $"{GlobalName}.calculate";
             callCodeAST.Parameters = InPortList.ConvertAll(inPort => $"{inPort.Source.FatherModel.GlobalName}_{inPort.Source.Name}");
             callCodeAST.Results = OutPortList.ConvertAll(outPort => $"{GlobalName}_{outPort.Name}");
             return callCodeAST;

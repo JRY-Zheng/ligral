@@ -9,15 +9,33 @@ using System.Collections.Generic;
 using Ligral.Component;
 using Ligral.Syntax.CodeASTs;
 using Ligral.Simulation;
+using System.Reflection;
 
 namespace Ligral.Syntax
 {
     class Compiler
     {
         private Logger logger = new Logger("Compiler");
+        private List<string> codeFiles = new List<string> 
+        {
+            "CMakeLists.txt", "context.h", "models.h",
+            "main.cc", "solvers.h"
+        };
         public void Compile(List<Model> routine)
         {
-            string folder = Settings.GetInstance().OutputFolder;
+            var settings = Settings.GetInstance();
+            string folder = settings.OutputFolder;
+            if (!Directory.Exists(settings.OutputFolder))
+            {
+                Directory.CreateDirectory(settings.OutputFolder);
+            }
+            Assembly assembly = Assembly.Load("Ligral");
+            foreach (var codeFile in codeFiles)
+            {
+                Stream stream = assembly.GetManifestResourceStream(codeFile);
+                StreamReader reader = new StreamReader(stream);
+                File.WriteAllText(Path.Join(folder, codeFile), reader.ReadToEnd());
+            }
             File.WriteAllLines(Path.Join(folder, "config.h"), 
                 GenerateConfig().ConvertAll(block => Visit(block)));
             File.WriteAllLines(Path.Join(folder, "project.h"), 
@@ -37,7 +55,7 @@ namespace Ligral.Syntax
                 new MacroCodeAST() { Macro = "define", Definition = $"M {Observation.ObservationPool.Count}"}, 
                 new MacroCodeAST() { Macro = "define", Definition = $"P {ControlInput.InputPool.Count}"}, 
                 new MacroCodeAST() { Macro = "define", Definition = $"STEPS {settings.StopTime/settings.StepSize}"}, 
-                new MacroCodeAST() { Macro = "define", Definition = "integral euler_integral<N>"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"integral {settings.SolverName}_integral<N>"}, 
                 new MacroCodeAST() { Macro = "define", Definition = "context struct context_struct<M, N, P>"}, 
                 new MacroCodeAST() { Macro = "endif"}
             };
@@ -130,7 +148,7 @@ namespace Ligral.Syntax
         {
             string head = $"class {classCodeAST.ClassName} {{\n";
             string content = "public:\n\t"+string.Join("\n\t", classCodeAST.publicASTs.ConvertAll(c => Visit(c)));
-            string tail = "\n}\n";
+            string tail = "\n};\n";
             return head+content+tail;
         }
         private string Visit(CallCodeAST callCodeAST)

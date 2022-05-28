@@ -7,8 +7,8 @@ class project {
 public:
     context ctx;
 // models initialization
-    constant<2,1> constant1;
-    integrator<2,1,2> integrator1;
+    Constant<2,1> constant1;
+    Integrator<2,1,2> integrator1;
     void init();
     void step();
 };
