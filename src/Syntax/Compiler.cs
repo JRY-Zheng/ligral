@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.IO;
 using System.Collections.Generic;
 using Ligral.Component;
 using Ligral.Syntax.CodeASTs;
@@ -15,10 +16,9 @@ namespace Ligral.Syntax
         private Logger logger = new Logger("Compiler");
         public void Compile(List<Model> routine)
         {
-            foreach (var ast in Project(routine))
-            {
-                System.Console.WriteLine(Visit(ast));
-            }
+            string folder = Settings.GetInstance().OutputFolder;
+            File.AppendAllLines(Path.Join(folder, "project.h"), 
+                Project(routine).ConvertAll(block => Visit(block)));
         }
         private List<CodeAST> Project(List<Model> routine)
         {
