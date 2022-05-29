@@ -4,11 +4,11 @@
 #include "solvers.h"
 #include "context.h"
 
-#define H 0.1
-#define N 2
-#define M 1
+#define H 1
+#define N 4
+#define M 0
 #define P 0
-#define STEPS 10
+#define STEPS 1
 #define integral euler_integral<N>
 #define context struct context_struct<M, N, P>
 
