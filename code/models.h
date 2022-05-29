@@ -206,8 +206,13 @@ struct Add<R, C, BROADCAST_1CRC> {
 // template<int R, int C>
 // struct Saturation {};
 
-// template<int R, int C>
-// struct Sin {};
+template<int R, int C>
+struct Sin {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().sin();
+    }
+};
 
 // template<int R, int C>
 // struct Cos {};
@@ -312,13 +317,7 @@ struct Add<R, C, BROADCAST_1CRC> {
 // struct Inverse {};
 
 // template<int R, int C>
-// struct Inverse {};
-
-// template<int R, int C>
 // struct Equal {};
-
-// template<int R, int C>
-// struct EqualToZero {};
 
 // template<int R, int C>
 // struct EqualToZero {};
@@ -337,12 +336,6 @@ struct Add<R, C, BROADCAST_1CRC> {
 
 // template<int R, int C>
 // struct Cross {};
-
-// template<int R, int C>
-// struct Transpose {};
-
-// template<int R, int C>
-// struct Transpose {};
 
 // template<int R, int C>
 // struct Transpose {};
