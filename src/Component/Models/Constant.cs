@@ -50,7 +50,7 @@ namespace Ligral.Component.Models
             var codeASTs = new List<CodeAST>();
             LShiftCodeAST valueConfiguration = new LShiftCodeAST();
             valueConfiguration.Destination = $"{GlobalName}.value";
-            valueConfiguration.Source = string.Join(',', Results[0].ToColumnMajorArray());
+            valueConfiguration.Source = string.Join(',', Results[0].ToRowMajorArray());
             codeASTs.Add(valueConfiguration);
             return codeASTs;
         }
