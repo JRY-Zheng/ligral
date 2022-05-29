@@ -58,6 +58,16 @@ namespace Ligral.Component
                 return outPort;
             }
         }
+        public override OutPort ExposeOutPort(int outPortNO)
+        {
+            if (outPortNO == OutPortCount())
+            {
+                OutPort outPort = new OutPort($"out{outPortNO}", this);
+                OutPortList.Add(outPort);
+                Results.Add(null);
+            }
+            return base.ExposeOutPort(outPortNO);
+        }
         public override void Check()
         {
             throw new System.NotImplementedException();
