@@ -299,8 +299,21 @@ struct Tan {
 // template<int R, int C>
 // struct Terminal {};
 
-// template<int R, int C>
-// struct VStack {};
+template<int R, int C, int ...iR>
+struct VStack {
+    void calculate(Matrix<double, iR, C>...input, 
+        Matrix<double, R, C>* output) {
+        int r=0;
+        setRows(output, &r, input...);
+    }
+    template<typename T0, typename ...T>
+    void setRows(Matrix<double, R, C>* output, int* r, T0 row0, T...rows) {
+        output->block(*r, 0, row0.rows(), C) = row0;
+        *r = *r+row0.rows();
+        setRows(output, r, rows...);
+    }
+    void setRows(Matrix<double, R, C>* output, int* r) {}
+};
 
 // template<int R, int C>
 // struct HStack {};
