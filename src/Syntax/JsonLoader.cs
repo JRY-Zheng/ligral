@@ -20,16 +20,17 @@ namespace Ligral.Syntax
     {
         private Logger logger = new Logger("JsonCoder");
         private ScopeSymbolTable symbolTable = new ScopeSymbolTable("<global>", 0);
-        private JProject project;
+        private JProject mainProject;
         public delegate void CompletedHandler();
         public static event CompletedHandler Completed;
-        public void Load(string fileName)
+        public JProject Load(string fileName, bool root = true)
         {
             if (!File.Exists(fileName))
             {
                 throw logger.Error(new NotFoundException($"File {fileName}"));
             }
             string text = File.ReadAllText(fileName);
+            JProject project;
             try
             {
                 project = JsonSerializer.Deserialize<JProject>(text);
@@ -51,9 +52,23 @@ namespace Ligral.Syntax
                 project.Groups = new JGroup[0];
             }
             logger.Info($"JsonLoader started at {fileName}");
+            if (project.Files != null)
+            {
+                string folder = Path.GetDirectoryName(Path.GetFullPath(fileName));
+                foreach (string file in project.Files)
+                {
+                    var libProject = Load(Path.Join(folder, file), false);
+                    project.Groups = project.Groups.Concat(libProject.Groups).ToArray();
+                }
+            }
+            if (root)
+            {
+                mainProject = project;
+            }
             Apply(project.Settings);
             Declare(project.Models);
             if (Completed != null) Completed();
+            return project;
         }
         private void Apply(JConfig[] configs)
         {
@@ -118,11 +133,11 @@ namespace Ligral.Syntax
         }
         private bool IsGroup(string groupName)
         {
-            return project.Groups.Any(group => group.Name == groupName);
+            return mainProject.Groups.Any(group => group.Name == groupName);
         }
         private JGroup Find(string groupName)
         {
-            return project.Groups.First(group => group.Name == groupName);
+            return mainProject.Groups.First(group => group.Name == groupName);
         }
         private void Declare(JModel[] models)
         {

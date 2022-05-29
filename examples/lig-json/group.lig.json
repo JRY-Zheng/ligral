@@ -1,47 +1,5 @@
 {
-    "models": [
-        {
-            "id": "const1",
-            "type": "Constant",
-            "parameters": [
-                {
-                    "name": "value",
-                    "value": 4
-                }
-            ],
-            "out-ports": [
-                {
-                    "name": "value",
-                    "destination": [
-                        {
-                            "id": "group1",
-                            "in-port": "input"
-                        }
-                    ]
-                }
-            ]
-        }, {
-            "id": "group1",
-            "type": "TestGroup",
-            "parameters": [],
-            "out-ports": [
-                {
-                    "name": "output",
-                    "destination": [
-                        {
-                            "id": "print1",
-                            "in-port": "input"
-                        }
-                    ]
-                }
-            ]
-        }, {
-            "id": "print1",
-            "type": "Print",
-            "parameters": [],
-            "out-ports": []
-        }
-    ],
+    "models": [],
     "settings": [],
     "groups": [
         {

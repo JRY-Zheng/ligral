@@ -84,5 +84,7 @@ namespace Ligral.Component
         public JModel[] Models {get; set;}
         [JsonPropertyName("groups")]
         public JGroup[] Groups {get; set;}
+        [JsonPropertyName("files")]
+        public string[] Files {get; set;}
     }
 }
