@@ -353,8 +353,22 @@ struct VSplit {
     void getRows(Matrix<double, R, C> input, int* r) {}
 };
 
-// template<int R, int C>
-// struct HSplit {};
+template<int R, int C>
+struct HSplit {
+    template<int ...iC>
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, iC>*...output) {
+        int c=0;
+        getCols(input, &c, output...);
+    }
+    template<typename T0, typename ...T>
+    void getCols(Matrix<double, R, C> input, int* c, T0* col0, T*...cols) {
+        *col0 = input.block(0, *c, R, col0->cols());
+        *c = *c+col0->cols();
+        getCols(input, c, cols...);
+    }
+    void getCols(Matrix<double, R, C> input, int* c) {}
+};
 
 // template<int R, int C>
 // struct InputMarker {};
