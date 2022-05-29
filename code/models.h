@@ -306,6 +306,7 @@ struct VStack {
         int r=0;
         setRows(output, &r, input...);
     }
+private:
     template<typename T0, typename ...T>
     void setRows(Matrix<double, R, C>* output, int* r, T0 row0, T...rows) {
         output->block(*r, 0, row0.rows(), C) = row0;
@@ -315,8 +316,22 @@ struct VStack {
     void setRows(Matrix<double, R, C>* output, int* r) {}
 };
 
-// template<int R, int C>
-// struct HStack {};
+template<int R, int C, int ...iC>
+struct HStack {
+    void calculate(Matrix<double, R, iC>...input, 
+        Matrix<double, R, C>* output) {
+        int c=0;
+        setCols(output, &c, input...);
+    }
+private:
+    template<typename T0, typename ...T>
+    void setCols(Matrix<double, R, C>* output, int* c, T0 col0, T...cols) {
+        output->block(0, *c, R, col0.cols()) = col0;
+        *c = *c+col0.cols();
+        setCols(output, c, cols...);
+    }
+    void setCols(Matrix<double, R, C>* output, int* c) {}
+};
 
 // template<int R, int C>
 // struct Split {};

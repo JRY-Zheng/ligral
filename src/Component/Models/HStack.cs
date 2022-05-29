@@ -68,5 +68,11 @@ namespace Ligral.Component.Models
             Results[0] = firstMatrix;
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            var characterSize = new List<int>() {OutPortList[0].RowNo, OutPortList[0].ColNo};
+            characterSize.AddRange(InPortList.ConvertAll(inPort => inPort.ColNo));
+            return characterSize;
+        }
     }
 }
