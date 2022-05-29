@@ -394,7 +394,7 @@ namespace Ligral.Syntax
         }
         private Group Visit(RowDeMuxAST rowDeMuxAST)
         {
-            Model split = ModelManager.Create("Split", rowDeMuxAST.FindToken());
+            Model split = ModelManager.Create("HSplit", rowDeMuxAST.FindToken());
             var modelList = new List<ILinkable>();
             bool canOutputMatrix = true;
             for (int i = 0; i < rowDeMuxAST.Items.Count; i++)
