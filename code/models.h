@@ -336,8 +336,22 @@ private:
 // template<int R, int C>
 // struct Split {};
 
-// template<int R, int C>
-// struct VSplit {};
+template<int R, int C>
+struct VSplit {
+    template<int ...iR>
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, iR, C>*...output) {
+        int r=0;
+        getRows(input, &r, output...);
+    }
+    template<typename T0, typename ...T>
+    void getRows(Matrix<double, R, C> input, int* r, T0* row0, T*...rows) {
+        *row0 = input.block(*r, 0, row0->rows(), C);
+        *r = *r+row0->rows();
+        getRows(input, r, rows...);
+    }
+    void getRows(Matrix<double, R, C> input, int* r) {}
+};
 
 // template<int R, int C>
 // struct HSplit {};
