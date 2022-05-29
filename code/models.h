@@ -214,11 +214,21 @@ struct Sin {
     }
 };
 
-// template<int R, int C>
-// struct Cos {};
+template<int R, int C>
+struct Cos {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().cos();
+    }
+};
 
-// template<int R, int C>
-// struct Tan {};
+template<int R, int C>
+struct Tan {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().tan();
+    }
+};
 
 // template<int R, int C>
 // struct Sinh {};
