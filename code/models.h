@@ -35,7 +35,7 @@ struct Node {
 // template<int R, int C>
 // struct Playback {};
 
-template<int R, int C, int n>
+template<int R, int C>
 struct Integrator {
     Matrix<double, R, C> initial;
     int index;
