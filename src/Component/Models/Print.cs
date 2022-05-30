@@ -10,6 +10,7 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -124,6 +125,10 @@ namespace Ligral.Component.Models
             if (Solver.Time > end || Solver.Time < start) return;
             Matrix<double> outputVariableSignal = handle.GetObservation();
             logger.Prompt(string.Format(format, Solver.Time, varName, outputVariableSignal.ToStringInLine()));
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return OutputSink.ConstructConfigurationAST(GlobalName, handle);
         }
     }
 }

@@ -10,6 +10,7 @@ using Ligral.Tools;
 using Ligral.Tools.Protocols;
 using Ligral.Simulation;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -24,6 +25,8 @@ namespace Ligral.Component.Models
         }
         private string varName;
         private ObservationHandle handle;
+        private int rowNo;
+        private int colNo;
         private Publisher publisher = new Publisher();
         protected override void SetUpPorts()
         {
@@ -56,8 +59,8 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            int rowNo = InPortList[0].RowNo;
-            int colNo = InPortList[0].ColNo;
+            rowNo = InPortList[0].RowNo;
+            colNo = InPortList[0].ColNo;
             FigureProtocol.FigureConfig figureConfig = new FigureProtocol.FigureConfig()
             {
                 FigureId = publisher.Id,
@@ -160,6 +163,10 @@ namespace Ligral.Component.Models
                 };
                 publisher.Send(FigureProtocol.DataFileLabel, dataFile);
             };
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return OutputSink.ConstructConfigurationAST(GlobalName, handle);
         }
     }
 }

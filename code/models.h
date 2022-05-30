@@ -67,14 +67,25 @@ struct Integrator {
 // template<int R, int C>
 // struct BoundedIntegrator {};
 
-// template<int R, int C>
-// struct Scope {};
+template<int R, int C>
+struct Scope {
+    int index;
+    context* ctx;
+    void calculate(Matrix<double, R, C> input) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                ctx->y(index+r*C+c) = input(r, c);
+            }
+        }
+    }
+};
 
 // template<int R, int C>
 // struct PhaseDiagram {};
 
 // template<int R, int C>
 // struct Print {};
+#define Print Scope
 
 template<int R, int C>
 struct Constant {
@@ -479,6 +490,7 @@ struct HSplit {
 
 // template<int R, int C>
 // struct OutputSink {};
+#define OutputSink Scope
 
 // template<int R, int C>
 // struct Sweep {};

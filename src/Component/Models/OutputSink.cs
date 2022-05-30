@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -78,6 +79,24 @@ namespace Ligral.Component.Models
             Matrix<double> inputSignal = values[0];
             handle.Cache(inputSignal);
             return Results;
+        }
+        
+        public static List<CodeAST> ConstructConfigurationAST(string GlobalName, ObservationHandle handle)
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            AssignCodeAST indexAST = new AssignCodeAST();
+            indexAST.Destination = $"{GlobalName}.index";
+            indexAST.Source = Observation.ObservationPool.IndexOf(handle.space[0]).ToString();
+            codeASTs.Add(indexAST);
+            return codeASTs;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return ConstructConfigurationAST(GlobalName, handle);
         }
     }
 }
