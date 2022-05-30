@@ -230,23 +230,53 @@ struct Tan {
     }
 };
 
-// template<int R, int C>
-// struct Sinh {};
+template<int R, int C>
+struct Sinh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().sinh();
+    }
+};
 
-// template<int R, int C>
-// struct Cosh {};
+template<int R, int C>
+struct Cosh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().cosh();
+    }
+};
 
-// template<int R, int C>
-// struct Tanh {};
+template<int R, int C>
+struct Tanh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().tanh();
+    }
+};
 
-// template<int R, int C>
-// struct Asin {};
+template<int R, int C>
+struct Asin {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().asin();
+    }
+};
 
-// template<int R, int C>
-// struct Acos {};
+template<int R, int C>
+struct Acos {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().acos();
+    }
+};
 
-// template<int R, int C>
-// struct Atan {};
+template<int R, int C>
+struct Atan {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().atan();
+    }
+};
 
 // template<int R, int C>
 // struct Atan2 {};

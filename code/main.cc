@@ -24,7 +24,8 @@ int main() {
         p.ctx.t = ((double)i)*H;
         p.ctx.x = integral(f, p.ctx.x, H);
         std::cout << "t = " << p.ctx.t << std::endl;
-        std::cout << p.ctx.x << std::endl;
+        std::cout << "x = " << p.ctx.x.transpose() << std::endl;
+        std::cout << "y = " << p.ctx.y.transpose() << std::endl;
     }
     return 0;
 }
