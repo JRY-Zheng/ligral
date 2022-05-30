@@ -162,8 +162,82 @@ struct Add<R, C, BROADCAST_1CRC> {
 };
 
 
-// template<int R, int C>
-// struct Sub {};
+template<int R, int C, int type>
+struct Sub {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left - right;
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_RC11> {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, C>* output) {
+        auto right_val = Matrix<double, R, C>::Ones()*right(0, 0);
+        *output = left - right_val;
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_11RC> {
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        auto left_val = Matrix<double, R, C>::Ones()*left(0, 0);
+        *output = left_val - right;
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_RCR1> {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, R, 1> right, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = left.row(r) - ones.row(r)*right(r, 0);
+        }
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_R1RC> {
+    void calculate(Matrix<double, R, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = ones.row(r)*left(r, 0) - right.row(r);
+        }
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_RC1C> {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, C> right, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = left.col(c) - ones.col(c)*right(0, c);
+        }
+    }
+};
+
+template<int R, int C>
+struct Sub<R, C, BROADCAST_1CRC> {
+    void calculate(Matrix<double, 1, C> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = ones.col(c)*left(0, c) - right.col(c);
+        }
+    }
+};
 
 // template<int R, int C>
 // struct Mul {};
