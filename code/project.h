@@ -2,21 +2,47 @@
 #define PROJECT_H
 
 #include "models.h"
+struct inputs {
+    
+};
+
+struct states {
+    double x1;
+    double x2;
+    double x3;
+    double x4;
+    double x5;
+    double x6;
+};
+
+struct outputs {
+    
+};
+
 
 class project {
 public:
     context ctx;
+    inputs* up;
+    states* xdotp;
+    states* xp;
+    outputs* yp;
 // models initialization
     Constant<2,2> constant1;
     Constant<1,2> constant2;
     VStack<3,2,2,1> vstack1;
-    Integrator<3,2,6> integrator1;
+    Integrator<3,2> integrator1;
     void init();
     void step();
 };
 
 // configuration
 void project::init() {
+    up = (inputs*) &(ctx.u);
+    xdotp = (states*) &(ctx.xdot);
+    xp = (states*) &(ctx.x);
+    yp = (outputs*) &(ctx.y);
+    
     constant1.value << 1, 2, 3, 4;
     constant2.value << -1, -2;
 

@@ -6,6 +6,7 @@
 
 using System.IO;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Ligral.Component;
 using Ligral.Syntax.CodeASTs;
 using Ligral.Simulation;
@@ -62,13 +63,57 @@ namespace Ligral.Syntax
         }
         private List<CodeAST> GenerateProject(List<Model> routine)
         {
+            var inputsCodeAST = new StructCodeAST();
+            inputsCodeAST.StructName = "inputs";
+            inputsCodeAST.contentASTs = new List<DeclareCodeAST>();
+            foreach (var input in ControlInput.InputPool)
+            {
+                var inputDeclare = new DeclareCodeAST();
+                inputDeclare.Type = "double";
+                string name = Regex.Replace(input.Name, "[^\\w\\d]+", "_");
+                inputDeclare.Instance = name;
+                inputsCodeAST.contentASTs.Add(inputDeclare);
+            }
+            var statesCodeAST = new StructCodeAST();
+            statesCodeAST.StructName = "states";
+            statesCodeAST.contentASTs = new List<DeclareCodeAST>();
+            foreach (var state in State.StatePool)
+            {
+                var stateDeclare = new DeclareCodeAST();
+                stateDeclare.Type = "double";
+                string name = Regex.Replace(state.Name, "[^\\w\\d]+", "_");
+                stateDeclare.Instance = name;
+                statesCodeAST.contentASTs.Add(stateDeclare);
+            }
+            var outputsCodeAST = new StructCodeAST();
+            outputsCodeAST.StructName = "outputs";
+            outputsCodeAST.contentASTs = new List<DeclareCodeAST>();
+            foreach (var output in Observation.ObservationPool)
+            {
+                var outputDeclare = new DeclareCodeAST();
+                outputDeclare.Type = "double";
+                string name = Regex.Replace(output.Name, "[^\\w\\d]+", "_");
+                outputDeclare.Instance = name;
+                outputsCodeAST.contentASTs.Add(outputDeclare);
+            }
             var projectCodeAST = new ClassCodeAST();
             projectCodeAST.ClassName = "project";
-            projectCodeAST.publicASTs = new List<DeclareCodeAST>();
             var ctx = new DeclareCodeAST();
             ctx.Type = "context";
             ctx.Instance = "ctx";
-            projectCodeAST.publicASTs.Add(ctx);
+            var up = new DeclareCodeAST();
+            up.Type = "inputs*";
+            up.Instance = "up";
+            var xp = new DeclareCodeAST();
+            xp.Type = "states*";
+            xp.Instance = "xp";
+            var xdotp = new DeclareCodeAST();
+            xdotp.Type = "states*";
+            xdotp.Instance = "xdotp";
+            var yp = new DeclareCodeAST();
+            yp.Type = "outputs*";
+            yp.Instance = "yp";
+            projectCodeAST.publicASTs = new List<DeclareCodeAST>(){ctx, up, xp, xdotp, yp};
             foreach (var model in routine)
             {
                 projectCodeAST.publicASTs.Add(model.ConstructDeclarationAST());
@@ -85,7 +130,19 @@ namespace Ligral.Syntax
             var configurationASTs = routine.ConvertAll(model => model.ConstructConfigurationAST());
             initCodeAST.ReturnType = "void";
             initCodeAST.FunctionName = "project::init";
-            initCodeAST.codeASTs = new List<CodeAST>();
+            var inputsAssign = new AssignCodeAST();
+            inputsAssign.Destination = "up";
+            inputsAssign.Source = "(inputs*) &(ctx.u)";
+            var statesAssign = new AssignCodeAST();
+            statesAssign.Destination = "xp";
+            statesAssign.Source = "(states*) &(ctx.x)";
+            var derivativesAssign = new AssignCodeAST();
+            derivativesAssign.Destination = "xdotp";
+            derivativesAssign.Source = "(states*) &(ctx.xdot)";
+            var outputsAssign = new AssignCodeAST();
+            outputsAssign.Destination = "yp";
+            outputsAssign.Source = "(outputs*) &(ctx.y)";
+            initCodeAST.codeASTs = new List<CodeAST>() {inputsAssign, statesAssign, derivativesAssign, outputsAssign};
             foreach (var asts in configurationASTs)
             {
                 if (asts == null) continue;
@@ -109,6 +166,7 @@ namespace Ligral.Syntax
                 new MacroCodeAST() { Macro = "ifndef", Definition = "PROJECT_H"},
                 new MacroCodeAST() { Macro = "define", Definition = "PROJECT_H"},
                 new MacroCodeAST() { Macro = "include", Definition = "\"models.h\""},
+                inputsCodeAST, statesCodeAST, outputsCodeAST,
                 projectCodeAST, initCodeAST, stepCodeAST,
                 new MacroCodeAST() { Macro = "endif"},
             };
@@ -132,6 +190,8 @@ namespace Ligral.Syntax
                 return Visit(functionCodeAST);
             case ClassCodeAST classCodeAST:
                 return Visit(classCodeAST);
+            case StructCodeAST structCodeAST:
+                return Visit(structCodeAST);
             default:
                 throw logger.Error(new LigralException($"No CodeAST named {codeAST.GetType().Name}"));
             }
@@ -148,6 +208,13 @@ namespace Ligral.Syntax
         {
             string head = $"class {classCodeAST.ClassName} {{\n";
             string content = "public:\n\t"+string.Join("\n\t", classCodeAST.publicASTs.ConvertAll(c => Visit(c)));
+            string tail = "\n};\n";
+            return head+content+tail;
+        }
+        private string Visit(StructCodeAST structCodeAST)
+        {
+            string head = $"struct {structCodeAST.StructName} {{\n";
+            string content = "\t"+string.Join("\n\t", structCodeAST.contentASTs.ConvertAll(c => Visit(c)));
             string tail = "\n};\n";
             return head+content+tail;
         }
