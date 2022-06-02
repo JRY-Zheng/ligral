@@ -100,7 +100,7 @@ namespace Ligral.Component
             {"'", ()=>new Transpose()},
             {"Sec", ()=>new Sec()},
             {"Csc", ()=>new Csc()},
-            {"Cot", ()=>new Tan()},
+            {"Cot", ()=>new Cot()},
             {"Interpolation2D", ()=>new Interpolation2D()},
             {"InterpolationHD", ()=>new InterpolationHD()}
         };
