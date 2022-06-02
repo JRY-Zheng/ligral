@@ -268,8 +268,13 @@ struct Sub<R, C, BROADCAST_1CRC> {
 // template<int R, int C>
 // struct DotPow {};
 
-// template<int R, int C>
-// struct Abs {};
+template<int R, int C>
+struct Abs {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().abs();
+    }
+};
 
 // template<int R, int C>
 // struct Input {};
@@ -375,8 +380,13 @@ struct Atan {
 // template<int R, int C>
 // struct Atanh {};
 
-// template<int R, int C>
-// struct Exp {};
+template<int R, int C>
+struct Exp {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().exp();
+    }
+};
 
 // template<int R, int C>
 // struct Pow {};
@@ -384,14 +394,24 @@ struct Atan {
 // template<int R, int C>
 // struct Pow2 {};
 
-// template<int R, int C>
-// struct Sqrt {};
+template<int R, int C>
+struct Sqrt {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().sqrt();
+    }
+};
 
 // template<int R, int C>
 // struct Sign {};
 
-// template<int R, int C>
-// struct Log {};
+template<int R, int C>
+struct Log {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().log();
+    }
+};
 
 // template<int R, int C>
 // struct Log2 {};
@@ -519,17 +539,37 @@ struct HSplit {
 // template<int R, int C>
 // struct Cross {};
 
-// template<int R, int C>
-// struct Transpose {};
+template<int R, int C>
+struct Transpose {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.transpose();
+    }
+};
 
-// template<int R, int C>
-// struct Sec {};
+template<int R, int C>
+struct Sec {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().cos().inverse();
+    }
+};
 
-// template<int R, int C>
-// struct Csc {};
+template<int R, int C>
+struct Csc {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().sin().inverse();
+    }
+};
 
-// template<int R, int C>
-// struct Tan {};
+template<int R, int C>
+struct Cot {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.array().tan().inverse();
+    }
+};
 
 // template<int R, int C>
 // struct Interpolation2D {};
