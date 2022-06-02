@@ -546,15 +546,30 @@ namespace Ligral.Syntax
             if (linkable==null)
             {
                 Model constant = ModelManager.Create("Constant", configureAST.FindToken());
-                string name = "";
-                while (modelAST is PointerAST pointerAST)
+                string name = null;
+                // while (modelAST is PointerAST pointerAST)
+                // {
+                //     name = "." + pointerAST.Member.Id + name;
+                //     modelAST = pointerAST.ScopeName;
+                // }
+                // if (modelAST is IdAST idAST)
+                // {
+                //     constant.Name = idAST.Id + name;
+                // }
+                if (modelAST is PointerAST pointerAST)
                 {
-                    name = "." + pointerAST.Member.Id + name;
-                    modelAST = pointerAST.ScopeName;
+                    name = pointerAST.Member.Id;
                 }
-                if (modelAST is IdAST idAST)
+                else if (modelAST is IdAST idAST)
                 {
-                    constant.Name = idAST.Id + name;
+                    name = idAST.Id;
+                }
+                if (name != null)
+                {
+                    constant.Name = name;
+                    TypeSymbol typeSymbol = currentScope.Lookup("Constant") as TypeSymbol;
+                    ModelSymbol modelSymbol = new ModelSymbol(name, typeSymbol, constant);
+                    currentScope.Insert(modelSymbol, true);
                 }
                 linkable = constant;
                 Dict dictionary = new Dict(){{"value", modelObject}};

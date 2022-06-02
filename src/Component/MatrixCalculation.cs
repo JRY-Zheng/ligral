@@ -7,6 +7,7 @@
 using System;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Component.Models;
 
 namespace Ligral.Component 
 {
@@ -65,6 +66,8 @@ namespace Ligral.Component
         {
             switch (o)
             {
+            case Constant constant:
+                return constant.Results[0];
             case Matrix<double> matrix:
                 return matrix;
             case int i:
