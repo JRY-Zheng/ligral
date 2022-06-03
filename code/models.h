@@ -35,8 +35,15 @@ struct SineWave {
         *output = (Matrix<double, 1, 1>::Ones().array()*omega*(ctx->t)+phi).sin()*ampl;
     }
 };
-// template<int R, int C>
-// struct Step {};
+
+struct Step {
+    double start;
+    double level;
+    context* ctx;
+    void calculate(Matrix<double, 1, 1>* output) {
+        *output = Matrix<double, 1, 1>::Ones()*level*((ctx->t)>start);
+    }
+};
 
 // template<int R, int C>
 // struct Playback {};
