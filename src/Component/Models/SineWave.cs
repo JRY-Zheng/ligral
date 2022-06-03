@@ -9,6 +9,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -63,6 +64,27 @@ namespace Ligral.Component.Models
         {
             Results[0] = (ampl * Math.Sin(omega * Solver.Time + phi)).ToMatrix();
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            AssignCodeAST amplAST = new AssignCodeAST();
+            amplAST.Destination = $"{GlobalName}.ampl";
+            amplAST.Source = ampl.ToString();
+            codeASTs.Add(amplAST);
+            AssignCodeAST omegaAST = new AssignCodeAST();
+            omegaAST.Destination = $"{GlobalName}.omega";
+            omegaAST.Source = omega.ToString();
+            codeASTs.Add(omegaAST);
+            AssignCodeAST phiAST = new AssignCodeAST();
+            phiAST.Destination = $"{GlobalName}.phi";
+            phiAST.Source = phi.ToString();
+            codeASTs.Add(phiAST);
+            return codeASTs;
         }
     }
 }
