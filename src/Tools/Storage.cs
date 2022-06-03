@@ -241,7 +241,7 @@ namespace Ligral.Tools
             List<double> current = Data.Find(row => row[0] == val);
             if (current != null)
             {
-                return current.Skip(1).ToList();
+                return current.Skip(skip+1).Take(take).ToList();
             }
             else if (before != null && after != null)
             {
