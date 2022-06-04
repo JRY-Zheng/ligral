@@ -24,8 +24,9 @@ namespace Ligral.Component.Models
         private int seed;
         private double upper;
         private double lower;
-        private int rowNo;
-        private int colNo;
+        private int rowNo = 1;
+        private int colNo = 1;
+        private Matrix<double> cache;
         protected override void SetUpPorts()
         {
             OutPortList.Add(new OutPort("output", this));
@@ -45,42 +46,41 @@ namespace Ligral.Component.Models
                 })},
                 {"upper", new Parameter(ParameterType.Signal , value=>
                 {
-                    upper = (double)value;
+                    upper = value.ToScalar();
                 }, ()=>
                 {
                     upper = 1;
                 })},
                 {"lower", new Parameter(ParameterType.Signal , value=>
                 {
-                    lower = (double)value;
+                    lower = value.ToScalar();
                 }, ()=>
                 {
                     lower = 0;
                 })},
                 {"col", new Parameter(ParameterType.Signal , value=>
                 {
-                    colNo = (int)value;
-                }, ()=>
-                {
-                    colNo = 0;
-                })},
+                    colNo = value.ToInt();
+                }, ()=>{})},
                 {"row", new Parameter(ParameterType.Signal , value=>
                 {
-                    rowNo = (int)value;
-                }, ()=>
-                {
-                    rowNo = 0;
-                })},
+                    rowNo = value.ToInt();
+                }, ()=>{})},
             };
         }
         public override void Check()
         {
             OutPortList[0].SetShape(rowNo, colNo);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
+            Refresh();
+        }
+        public override void Refresh()
+        {
+            cache = Results[0].Map(_=>random.NextDouble() * (upper - lower) + lower);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0] = Results[0].Map(_=>random.NextDouble() * (upper - lower) + lower);
+            Results[0] = cache;
             return Results;
         }
     }
