@@ -69,5 +69,32 @@ namespace Ligral.Component.Models
             }
             return Results;
         }
+        public override void Check()
+        {
+            if (InPortList[0].RowNo == 1 && InPortList[0].ColNo == 1)
+            {
+                OutPortList[0].SetShape(gain.RowCount, gain.ColumnCount);
+            }
+            else if (gain.RowCount == 1 && gain.ColumnCount == 1)
+            {
+                OutPortList[0].SetShape(InPortList[0].RowNo, InPortList[0].ColNo);
+            }
+            else if (leftProduct && gain.ColumnCount == InPortList[0].RowNo)
+            {
+                OutPortList[0].SetShape(gain.RowCount, InPortList[0].ColNo);
+            }
+            else if (!leftProduct && gain.RowCount == InPortList[0].ColNo)
+            {
+                OutPortList[0].SetShape(InPortList[0].RowNo, gain.ColumnCount);
+            }
+            else if (leftProduct)
+            {
+                throw logger.Error(new ModelException(this, $"Shape inconsistency ({gain.RowCount},{gain.ColumnCount})x({InPortList[0].RowNo},{InPortList[0].ColNo})"));
+            }
+            else
+            {
+                throw logger.Error(new ModelException(this, $"Shape inconsistency ({InPortList[0].RowNo},{InPortList[0].ColNo})x({gain.RowCount},{gain.ColumnCount})"));
+            }
+        }
     }
 }
