@@ -505,8 +505,10 @@ struct Log {
 // template<int R, int C>
 // struct Rand {};
 
-// template<int R, int C>
-// struct Terminal {};
+template<int R, int C>
+struct Terminal {
+    void calculate(Matrix<double, R, C> input) { }
+};
 
 template<int R, int C, int ...iR>
 struct VStack {
