@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -31,6 +32,15 @@ namespace Ligral.Component.Models
         {
             Results[0] = Solver.Time.ToMatrix();
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            return codeASTs;
         }
     }
 }

@@ -357,8 +357,12 @@ struct Abs {
 // template<int R, int C>
 // struct Memory {};
 
-// template<int R, int C>
-// struct Clock {};
+struct Clock {
+    context* ctx;
+    void calculate(Matrix<double, 1, 1>* output) {
+        *output = Matrix<double, 1, 1>::Ones()*(ctx->t);
+    }
+};
 
 // template<int R, int C>
 // struct Deadzone {};
