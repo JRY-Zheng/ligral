@@ -23,8 +23,54 @@ struct Node {
     }
 };
 
-// template<int R, int C>
-// struct Gain {};
+template<int R, int K, int C>
+struct Gain {
+    Matrix<double, K, C> value;
+    void calculate(Matrix<double, R, K> input,
+        Matrix<double, R, C>* output) {
+        *output = input*value;
+    } 
+    void calculate(Matrix<double, K, R> input,
+        Matrix<double, R, C>* output) {
+        *output = value.transpose()*input;
+    } 
+};
+
+template<int S>
+struct Gain<0, 0, S> {
+    Matrix<double, S, S> value;
+    void calculate(Matrix<double, S, S> input,
+        Matrix<double, S, S>* output) {
+        *output = input*value;
+    } 
+};
+
+template<int S>
+struct Gain<S, 0, 0> {
+    Matrix<double, S, S> value;
+    void calculate(Matrix<double, S, S> input,
+        Matrix<double, S, S>* output) {
+        *output = value*input;
+    } 
+};
+
+template<int R, int C>
+struct Gain<R, C, 0> {
+    Matrix<double, R, C> value;
+    void calculate(Matrix<double, 1, 1> input,
+        Matrix<double, R, C>* output) {
+        *output = value*input(0,0);
+    } 
+};
+
+template<int R, int C>
+struct Gain<0, R, C> {
+    Matrix<double, 1, 1> value;
+    void calculate(Matrix<double, R, R> input,
+        Matrix<double, R, C>* output) {
+        *output = value(0,0)*input;
+    } 
+};
 
 struct SineWave {
     double ampl;

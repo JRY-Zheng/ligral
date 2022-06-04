@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -95,6 +96,53 @@ namespace Ligral.Component.Models
             {
                 throw logger.Error(new ModelException(this, $"Shape inconsistency ({InPortList[0].RowNo},{InPortList[0].ColNo})x({gain.RowCount},{gain.ColumnCount})"));
             }
+        }
+        public override List<int> GetCharacterSize()
+        {
+            if (gain.ColumnCount == InPortList[0].RowNo &&
+                gain.RowCount == InPortList[0].ColNo &&
+                gain.ColumnCount == gain.RowCount)
+            {
+                if (leftProduct) return new List<int>() {gain.RowCount, 0, 0};
+                else return new List<int>() {0, 0, gain.RowCount};
+            }
+            else if (InPortList[0].RowNo == 1 && InPortList[0].ColNo == 1)
+            {
+                return new List<int>() {gain.RowCount, gain.ColumnCount, 0};
+            }
+            else if (gain.RowCount == 1 && gain.ColumnCount == 1)
+            {
+                return new List<int>() {0, InPortList[0].RowNo, InPortList[0].ColNo};
+            }
+            else if (leftProduct)
+            {
+                return new List<int>() {gain.RowCount, InPortList[0].RowNo, InPortList[0].ColNo};
+            }
+            else
+            {
+                return new List<int>() {InPortList[0].RowNo, InPortList[0].ColNo, gain.ColumnCount};
+            }
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            LShiftCodeAST valueConfiguration = new LShiftCodeAST();
+            valueConfiguration.Destination = $"{GlobalName}.value";
+            if (leftProduct && 
+                !(gain.ColumnCount == InPortList[0].RowNo &&
+                gain.RowCount == InPortList[0].ColNo &&
+                gain.ColumnCount == gain.RowCount) && 
+                !(InPortList[0].RowNo == 1 && InPortList[0].ColNo == 1) && 
+                !(gain.RowCount == 1 && gain.ColumnCount == 1))
+            {
+                valueConfiguration.Source = string.Join(',', gain.Transpose().ToRowMajorArray());
+            }
+            else
+            {
+                valueConfiguration.Source = string.Join(',', gain.ToRowMajorArray());
+            }
+            codeASTs.Add(valueConfiguration);
+            return codeASTs;
         }
     }
 }
