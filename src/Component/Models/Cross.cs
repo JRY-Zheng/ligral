@@ -47,5 +47,9 @@ namespace Ligral.Component.Models
             Results[0][0,2] = values[0][0,0]*values[1][0,1]-values[0][0,1]*values[1][0,0];
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>();
+        }
     }
 }

@@ -610,8 +610,13 @@ struct HSplit {
 // template<int R, int C>
 // struct UDPSender {};
 
-// template<int R, int C>
-// struct Cross {};
+struct Cross {
+    void calculate(Matrix<double, 1, 3> left, 
+        Matrix<double, 1, 3> right, 
+        Matrix<double, 1, 3>* output) {
+        *output = left.cross(right);
+    }
+};
 
 template<int R, int C>
 struct Transpose {
