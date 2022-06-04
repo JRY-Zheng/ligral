@@ -301,8 +301,27 @@ struct Sub<R, C, BROADCAST_1CRC> {
     }
 };
 
-// template<int R, int C>
-// struct Mul {};
+template<int R, int K, int C>
+struct Mul {
+    void calculate(Matrix<double, R, K> left, 
+        Matrix<double, K, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left*right;
+    }
+};
+template<int R, int C>
+struct Mul<R, 0, C> {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, C>* output) {
+        *output = left*right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left(0,0)*right;
+    }
+};
 
 // template<int R, int C>
 // struct Div {};

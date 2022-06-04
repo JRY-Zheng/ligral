@@ -62,5 +62,20 @@ namespace Ligral.Component.Models
             }
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            if (InPortList[0].ColNo == InPortList[1].RowNo)
+            {   
+                return new List<int>() {InPortList[0].RowNo, InPortList[0].ColNo, InPortList[1].ColNo};
+            }
+            else if (InPortList[1].RowNo == 1 && InPortList[1].ColNo == 1)
+            {
+                return new List<int>() {InPortList[0].RowNo, 0, InPortList[0].ColNo};
+            }
+            else// if (InPortList[0].RowNo == 1 && InPortList[0].ColNo == 1)
+            {
+                return new List<int>() {InPortList[1].RowNo, 0, InPortList[1].ColNo};
+            }
+        }
     }
 }
