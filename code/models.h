@@ -616,7 +616,7 @@ struct HSplit {
 template<int R, int C>
 struct Transpose {
     void calculate(Matrix<double, R, C> input,
-        Matrix<double, R, C>* output) {
+        Matrix<double, C, R>* output) {
         *output = input.transpose();
     }
 };
