@@ -116,8 +116,23 @@ struct Scope {
     }
 };
 
-// template<int R, int C>
-// struct PhaseDiagram {};
+template<int xR, int xC, int yR, int yC>
+struct PhaseDiagram {
+    int index;
+    context* ctx;
+    void calculate(Matrix<double, xR, xC> x, Matrix<double, yR, yC> y) {
+        for (int r=0; r<xR; ++r) {
+            for (int c=0; c<xC; ++c) {
+                ctx->y(index+r*xC+c) = x(r, c);
+            }
+        }
+        for (int r=0; r<yR; ++r) {
+            for (int c=0; c<yC; ++c) {
+                ctx->y(index+r*yC+c+xR*xC) = y(r, c);
+            }
+        }
+    }
+};
 
 // template<int R, int C>
 // struct Print {};

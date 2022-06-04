@@ -11,6 +11,7 @@ using Ligral.Tools;
 using Ligral.Simulation;
 using Ligral.Tools.Protocols;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -488,5 +489,9 @@ namespace Ligral.Component.Models
             }
         }
         #endregion
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return OutputSink.ConstructConfigurationAST(GlobalName, xHandle);
+        }
     }
 }
