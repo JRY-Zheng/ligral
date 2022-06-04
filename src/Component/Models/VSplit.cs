@@ -54,7 +54,7 @@ namespace Ligral.Component.Models
                 var m = Matrix<double>.Build;
                 for (int i = 0; i < matrix.RowCount; i++)
                 {
-                    Results[i] = m.Dense(matrix.ColumnCount, 1, matrix.Row(i).ToArray());
+                    Results[i] = m.Dense(1, matrix.ColumnCount, matrix.Row(i).ToArray());
                 }
             }
             return Results;
