@@ -9,7 +9,7 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
-
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -122,6 +122,19 @@ namespace Ligral.Component.Models
             }
             Results[0] = handle.GetInput();
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            AssignCodeAST indexAST = new AssignCodeAST();
+            indexAST.Destination = $"{GlobalName}.index";
+            indexAST.Source = ControlInput.InputPool.IndexOf(handle.space[0]).ToString();
+            codeASTs.Add(indexAST);
+            return codeASTs;
         }
     }
 }

@@ -581,8 +581,19 @@ struct HSplit {
     void getCols(Matrix<double, R, C> input, int* c) {}
 };
 
-// template<int R, int C>
-// struct InputMarker {};
+template<int R, int C>
+struct InputMarker {
+    int index;
+    context* ctx;
+    void calculate(Matrix<double, R, C> _,
+        Matrix<double, R, C>* u) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                (*u)(r, c) = ctx->u(index+r*C+c);
+            }
+        }
+    }
+};
 
 // template<int R, int C>
 // struct OutputSink {};
