@@ -589,8 +589,13 @@ struct HSplit {
 // template<int R, int C>
 // struct Sweep {};
 
-// template<int R, int C>
-// struct Inverse {};
+template<int S>
+struct Inverse {
+    void calculate(Matrix<double, S, S> input, 
+        Matrix<double, S, S>* output) {
+        *output = input.inverse();
+    }
+};
 
 // template<int R, int C>
 // struct Equal {};
