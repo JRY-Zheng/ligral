@@ -45,8 +45,31 @@ struct Step {
     }
 };
 
-// template<int R, int C>
-// struct Playback {};
+template<int R, int C, int L>
+struct Playback {
+    context* ctx;
+    Matrix<double, L, 1> time;
+    Matrix<double, L, R*C> table;
+    void calculate(Matrix<double, R, C>* output) {
+        int i=0;
+        if (time(i,0) >= ctx->t) {
+            *output = table.row(i);
+            return;
+        }
+        while (time(++i,0) <= ctx->t) {
+            if (time(i,0) == ctx->t) {
+                *output = table.row(i);
+                return;
+            }
+            if (i+1 >= L) {
+                *output = table.row(i);
+                return;
+            }
+        }
+        double ratio = ((ctx->t)-time(i-1,0))/(time(i,0)-time(i-1,0));
+        *output = table.row(i-1)*(1-ratio)+table.row(i)*ratio;
+    }
+};
 
 template<int R, int C>
 struct Integrator {

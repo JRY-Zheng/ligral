@@ -11,6 +11,7 @@ using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Tools;
 using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -103,6 +104,28 @@ namespace Ligral.Component.Models
             MatrixBuilder<double> m = Matrix<double>.Build;
             Results[0] = m.Dense(colNo, rowNo, playback.ToArray()).Transpose();
             return Results;
+        }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>() {rowNo, colNo, table.Data.Count};
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            LShiftCodeAST timeAST = new LShiftCodeAST();
+            timeAST.Destination = $"{GlobalName}.time";
+            timeAST.Source = string.Join(',', table.GetColumn(0));
+            codeASTs.Add(timeAST);
+            LShiftCodeAST tableAST = new LShiftCodeAST();
+            tableAST.Destination = $"{GlobalName}.table";
+            tableAST.Source = string.Join(",\n\t\t", table.Data.ConvertAll(line =>
+                string.Join(',', line.Skip(1+skip).Take(rowNo*colNo))));
+            codeASTs.Add(tableAST);
+            return codeASTs;
         }
     }
 }
