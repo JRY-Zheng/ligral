@@ -441,9 +441,47 @@ struct Div<1, 1> {
     }
 };
 
+template<int R, int C>
+struct RDiv {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, C>* output) {
+        *output = left.array().inverse()*right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = right/left(0,0);
+    }
+    void calculate(Matrix<double, R, R> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left.inverse()*right;
+    }
+};
 
-// template<int R, int C>
-// struct RDiv {};
+template<int C>
+struct RDiv<1, C> {
+    void calculate(Matrix<double, 1, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, 1, C>* output) {
+        *output = left.array().inverse()*right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, 1, C> right, 
+        Matrix<double, 1, C>* output) {
+        *output = right/left(0,0);
+    }
+};
+
+template<>
+struct RDiv<1, 1> {
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, 1, 1>* output) {
+        *output = right/left(0,0);
+    }
+};
 
 // template<int R, int C>
 // struct DotMul {};
