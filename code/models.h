@@ -985,8 +985,14 @@ struct InputMarker {
 
 #define OutputSink Scope
 
-// template<int R, int C>
-// struct Sweep {};
+struct Sweep {
+    double k;
+    double A;
+    context* ctx;
+    void calculate(Matrix<double, 1, 1>* output) {
+        *output = (((ctx->t*k+1)*Matrix<double, 1, 1>::Ones()).array().log()*A).sin();
+    }
+};
 
 template<int S>
 struct Inverse {
