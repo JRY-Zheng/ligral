@@ -483,8 +483,100 @@ struct RDiv<1, 1> {
     }
 };
 
-// template<int R, int C>
-// struct DotMul {};
+template<int R, int C>
+struct DotMul {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left.array()*right.array();
+    }
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, C>* output) {
+        *output = left*right(0,0);
+    }
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, R, 1> right, 
+        Matrix<double, R, C>* output) {
+        for (int r=0; r<R; r++) {
+            output->row(r) = left.row(r)*right(r, 0);
+        }
+    }
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, C> right, 
+        Matrix<double, R, C>* output) {
+        for (int c=0; c<C; c++) {
+            output->col(c) = left.col(c)*right(0, c);
+        }
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left(0,0)*right;
+    }
+    void calculate(Matrix<double, R, 1> left, 
+        Matrix<double, R, R> right, 
+        Matrix<double, R, C>* output) {
+        for (int r=0; r<R; r++) {
+            output->row(r) = left(r, 0)*right.row(r);
+        }
+    }
+    void calculate(Matrix<double, 1, C> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        for (int c=0; c<C; c++) {
+            output->col(c) = left(0, c)*right.col(c);
+        }
+    }
+};
+
+template<int R>
+struct DotMul<R, 1> {
+    void calculate(Matrix<double, R, 1> left, 
+        Matrix<double, R, 1> right, 
+        Matrix<double, R, 1>* output) {
+        *output = left.array()*right.array();
+    }
+    void calculate(Matrix<double, R, 1> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, 1>* output) {
+        *output = left*right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, 1> right, 
+        Matrix<double, R, 1>* output) {
+        *output = left(0,0)*right;
+    }
+};
+
+template<int C>
+struct DotMul<1, C> {
+    void calculate(Matrix<double, 1, C> left, 
+        Matrix<double, 1, C> right, 
+        Matrix<double, 1, C>* output) {
+        *output = left.array()*right.array();
+    }
+    void calculate(Matrix<double, 1, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, 1, C>* output) {
+        *output = left*right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, 1, C> right, 
+        Matrix<double, 1, C>* output) {
+        *output = left(0,0)*right;
+    }
+};
+
+template<>
+struct  DotMul<1, 1> {
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, 1, 1>* output) {
+        *output = left*right;
+    }
+};
+
 
 // template<int R, int C>
 // struct DotDiv {};
