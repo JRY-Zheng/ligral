@@ -87,7 +87,7 @@ struct Step {
     double level;
     context* ctx;
     void calculate(Matrix<double, 1, 1>* output) {
-        *output = Matrix<double, 1, 1>::Ones()*level*((ctx->t)>start);
+        *output = Matrix<double, 1, 1>::Ones()*level*((ctx->t)>=start);
     }
 };
 
