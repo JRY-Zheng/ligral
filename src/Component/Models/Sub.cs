@@ -57,12 +57,11 @@ namespace Ligral.Component.Models
         }
         public override List<int> GetCharacterSize()
         {
-            return MatrixIteration.BroadcastCharacter(
-                InPortList[0].RowNo,
-                InPortList[0].ColNo,
-                InPortList[1].RowNo,
-                InPortList[1].ColNo
-            );
+            return new List<int>() 
+            {
+                Math.Max(InPortList[0].RowNo, InPortList[1].RowNo),
+                Math.Max(InPortList[0].ColNo, InPortList[1].ColNo)
+            };
         }
     }
 }
