@@ -146,8 +146,40 @@ struct Integrator {
     }
 };
 
-// template<int R, int C>
-// struct BoundedIntegrator {};
+template<int R, int C>
+struct BoundedIntegrator {
+    Matrix<double, R, C> initial;
+    int index;
+    context* ctx;
+    double upper;
+    double lower;
+    void calculate(Matrix<double, R, C> xdot,
+        Matrix<double, R, C>* x) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                (*x)(r, c) = ctx->x(index+r*C+c);
+            }
+        }
+    }
+    void input_update(Matrix<double, R, C> xdot) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                if ((ctx->x(r, c) < upper && ctx->x(r, c) > lower) ||
+                (ctx->x(r, c) >= upper && xdot(r, c) < 0) ||
+                (ctx->x(r, c) <= lower && xdot(r, c) > 0))
+                ctx->xdot(index+r*C+c) = xdot(r, c);
+                else ctx->xdot(index+r*C+c) = 0;
+            }
+        }
+    }
+    void config() {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                ctx->x(index+r*C+c) = initial(r, c);
+            }
+        }
+    }
+};
 
 template<int R, int C>
 struct Scope {

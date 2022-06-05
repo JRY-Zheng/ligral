@@ -23,8 +23,8 @@ int main() {
     for (int i=0; i<STEPS; i++) {
         p.ctx.t = ((double)i)*H;
         p.ctx.x = integral(f, p.ctx.x, H);
-        std::cout << "t = " << p.ctx.t << std::endl;
-        std::cout << "x = " << p.ctx.x.transpose() << std::endl;
+        std::cout << "t = " << p.ctx.t << '\t';
+        std::cout << "x = " << p.ctx.x.transpose() << '\t';
         std::cout << "y = " << p.ctx.y.transpose() << std::endl;
     }
     return 0;

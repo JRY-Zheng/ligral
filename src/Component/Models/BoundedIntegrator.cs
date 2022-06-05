@@ -6,6 +6,8 @@
 
 using Ligral.Simulation;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
+using System.Collections.Generic;
 
 namespace Ligral.Component.Models
 {
@@ -56,6 +58,19 @@ namespace Ligral.Component.Models
             {
                 return 0;
             }
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = Integrator.ConstructConfigurationAST(GlobalName, handle, initial);
+            AssignCodeAST upperAST = new AssignCodeAST();
+            upperAST.Destination = $"{GlobalName}.upper";
+            upperAST.Source = upper.ToString();
+            codeASTs.Add(upperAST);
+            AssignCodeAST lowerAST = new AssignCodeAST();
+            lowerAST.Destination = $"{GlobalName}.lower";
+            lowerAST.Source = lower.ToString();
+            codeASTs.Add(lowerAST);
+            return codeASTs;
         }
     }
 }

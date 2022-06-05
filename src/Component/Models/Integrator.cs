@@ -64,7 +64,7 @@ namespace Ligral.Component.Models
             Results[0] = handle.GetState();
             return Results;
         }
-        public override List<CodeAST> ConstructConfigurationAST()
+        public static List<CodeAST> ConstructConfigurationAST(string GlobalName, StateHandle handle, Matrix<double> initial)
         {
             var codeASTs = new List<CodeAST>();
             AssignCodeAST ctxAST = new AssignCodeAST();
@@ -83,6 +83,10 @@ namespace Ligral.Component.Models
             configAST.FunctionName = $"{GlobalName}.config";
             codeASTs.Add(configAST);
             return codeASTs;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return ConstructConfigurationAST(GlobalName, handle, initial);
         }
     }
 }
