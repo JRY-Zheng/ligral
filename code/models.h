@@ -212,8 +212,6 @@ struct PhaseDiagram {
     }
 };
 
-// template<int R, int C>
-// struct Print {};
 #define Print Scope
 
 template<int R, int C>
@@ -401,8 +399,48 @@ struct Mul<R, 0, C> {
     }
 };
 
-// template<int R, int C>
-// struct Div {};
+template<int R, int C>
+struct Div {
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, C>* output) {
+        *output = left/right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left(0,0)*right.array().inverse();
+    }
+    void calculate(Matrix<double, R, C> left, 
+        Matrix<double, C, C> right, 
+        Matrix<double, R, C>* output) {
+        *output = left*right.inverse();
+    }
+};
+
+template<int R>
+struct Div<R, 1> {
+    void calculate(Matrix<double, R, 1> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, R, 1>* output) {
+        *output = left/right(0,0);
+    }
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, R, 1> right, 
+        Matrix<double, R, 1>* output) {
+        *output = left(0,0)*right.array().inverse();
+    }
+};
+
+template<>
+struct Div<1, 1> {
+    void calculate(Matrix<double, 1, 1> left, 
+        Matrix<double, 1, 1> right, 
+        Matrix<double, 1, 1>* output) {
+        *output = left/right(0,0);
+    }
+};
+
 
 // template<int R, int C>
 // struct RDiv {};
@@ -424,12 +462,8 @@ struct Abs {
     }
 };
 
-// template<int R, int C>
-// struct Input {};
 #define Input Node
 
-// template<int R, int C>
-// struct Output {};
 #define Output Node
 
 // template<int R, int C>
@@ -673,8 +707,6 @@ struct InputMarker {
     }
 };
 
-// template<int R, int C>
-// struct OutputSink {};
 #define OutputSink Scope
 
 // template<int R, int C>
