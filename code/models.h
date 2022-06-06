@@ -864,8 +864,17 @@ struct Sqrt {
     }
 };
 
-// template<int R, int C>
-// struct Sign {};
+template<int R, int C>
+struct Sign {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                (*output)(r, c) = input(r, c)>0?1:input(r, c)<0?-1:0;
+            }
+        }
+    }
+};
 
 template<int R, int C>
 struct Log {

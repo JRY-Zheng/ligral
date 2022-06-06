@@ -55,7 +55,7 @@ namespace Ligral.Syntax
                 new MacroCodeAST() { Macro = "define", Definition = $"N {State.StatePool.Count}"}, 
                 new MacroCodeAST() { Macro = "define", Definition = $"M {Observation.ObservationPool.Count}"}, 
                 new MacroCodeAST() { Macro = "define", Definition = $"P {ControlInput.InputPool.Count}"}, 
-                new MacroCodeAST() { Macro = "define", Definition = $"STEPS {settings.StopTime/settings.StepSize}"}, 
+                new MacroCodeAST() { Macro = "define", Definition = $"STEPS {settings.StopTime/settings.StepSize+1}"}, 
                 new MacroCodeAST() { Macro = "define", Definition = $"integral {settings.SolverName}_integral<N>"}, 
                 new MacroCodeAST() { Macro = "define", Definition = "context struct context_struct<M, N, P>"}, 
                 new MacroCodeAST() { Macro = "endif"}
