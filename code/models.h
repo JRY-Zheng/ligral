@@ -7,14 +7,6 @@ using Eigen::Matrix;
 #include <iostream>
 #include "config.h"
 
-#define BROADCAST_RCRC 0
-#define BROADCAST_RC11 1
-#define BROADCAST_11RC 2
-#define BROADCAST_RCR1 3
-#define BROADCAST_R1RC 4
-#define BROADCAST_RC1C 5
-#define BROADCAST_1CRC 6
-
 template<int R, int C>
 struct Node {
     void calculate(Matrix<double, R, C> input,
