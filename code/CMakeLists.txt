@@ -5,4 +5,8 @@ PROJECT(LigralCode)
 SET(SRC_LIST main.cc)
 ADD_EXECUTABLE(model ${SRC_LIST})
 
+if (CMAKE_HOST_WIN32)
+TARGET_INCLUDE_DIRECTORIES(model PUBLIC "C:\\eigen3")
+elseif (CMAKE_HOST_UNIX)
 TARGET_INCLUDE_DIRECTORIES(model PUBLIC "/usr/include/eigen3")
+endif()
