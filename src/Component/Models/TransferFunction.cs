@@ -43,11 +43,11 @@ namespace Ligral.Component.Models
                 {
                     varName=(string)value;
                 }, ()=>{})},
-                {"num", new Parameter(ParameterType.String , value=>
+                {"num", new Parameter(ParameterType.Signal , value=>
                 {
                     numerator = value.ToMatrix();
                 })},
-                {"den", new Parameter(ParameterType.String , value=>
+                {"den", new Parameter(ParameterType.Signal , value=>
                 {
                     denominator = value.ToMatrix();
                 })},
