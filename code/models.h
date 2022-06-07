@@ -926,14 +926,29 @@ struct Atan2<1, 1> {
     }
 };
 
-// template<int R, int C>
-// struct Asinh {};
+template<int R, int C>
+struct Asinh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.unaryExpr(std::ptr_fun(::asinh));
+    }
+};
 
-// template<int R, int C>
-// struct Acosh {};
+template<int R, int C>
+struct Acosh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.unaryExpr(std::ptr_fun(::acosh));
+    }
+};
 
-// template<int R, int C>
-// struct Atanh {};
+template<int R, int C>
+struct Atanh {
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.unaryExpr(std::ptr_fun(::atanh));
+    }
+};
 
 template<int R, int C>
 struct Exp {
