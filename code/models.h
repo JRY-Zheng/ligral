@@ -822,8 +822,109 @@ struct Atan {
     }
 };
 
-// template<int R, int C>
-// struct Atan2 {};
+template<int R, int C>
+struct Atan2 {
+    void calculate(Matrix<double, R, C> y,
+        Matrix<double, R, C> x,
+        Matrix<double, R, C>* output) {
+        *output = y.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, R, C> y, 
+        Matrix<double, 1, 1> x, 
+        Matrix<double, R, C>* output) {
+        auto x_val = Matrix<double, R, C>::Ones()*x(0, 0);
+        *output = y.binaryExpr(x_val, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, 1, 1> y, 
+        Matrix<double, R, C> x, 
+        Matrix<double, R, C>* output) {
+        auto y_val = Matrix<double, R, C>::Ones()*y(0, 0);
+        *output = y_val.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, R, C> y, 
+        Matrix<double, R, 1> x, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = y.row(r).binaryExpr(ones.row(r)*y(r, 0), std::ptr_fun(::atan2));
+        }
+    }
+    void calculate(Matrix<double, R, 1> y, 
+        Matrix<double, R, C> x, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = (ones.row(r)*x(r, 0)).binaryExpr(y.row(r), std::ptr_fun(::atan2));
+        }
+    }
+    void calculate(Matrix<double, R, C> y, 
+        Matrix<double, 1, C> x, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = y.col(c).binaryExpr(ones.col(c)*x(0, c), std::ptr_fun(::atan2));
+        }
+    }
+    void calculate(Matrix<double, 1, C> y, 
+        Matrix<double, R, C> x, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = (ones.col(c)*y(0, c)).binaryExpr(x.col(c), std::ptr_fun(::atan2));
+        }
+    }
+};
+
+template<int R>
+struct Atan2<R, 1> {
+    void calculate(Matrix<double, R, 1> y,
+        Matrix<double, R, 1> x,
+        Matrix<double, R, 1>* output) {
+        *output = y.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, R, 1> y, 
+        Matrix<double, 1, 1> x, 
+        Matrix<double, R, 1>* output) {
+        auto x_val = Matrix<double, R, 1>::Ones()*x(0, 0);
+        *output = y.binaryExpr(x_val, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, 1, 1> y, 
+        Matrix<double, R, 1> x, 
+        Matrix<double, R, 1>* output) {
+        auto y_val = Matrix<double, R, 1>::Ones()*y(0, 0);
+        *output = y_val.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+};
+
+template<int C>
+struct Atan2<1, C> {
+    void calculate(Matrix<double, 1, C> y,
+        Matrix<double, 1, C> x,
+        Matrix<double, 1, C>* output) {
+        *output = y.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, 1, C> y, 
+        Matrix<double, 1, 1> x, 
+        Matrix<double, 1, C>* output) {
+        auto x_val = Matrix<double, 1, C>::Ones()*x(0, 0);
+        *output = y.binaryExpr(x_val, std::ptr_fun(::atan2));
+    }
+    void calculate(Matrix<double, 1, 1> y, 
+        Matrix<double, 1, C> x, 
+        Matrix<double, 1, C>* output) {
+        auto y_val = Matrix<double, 1, C>::Ones()*y(0, 0);
+        *output = y_val.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+};
+
+template<>
+struct Atan2<1, 1> {
+    void calculate(Matrix<double, 1, 1> y,
+        Matrix<double, 1, 1> x,
+        Matrix<double, 1, 1>* output) {
+        *output = y.binaryExpr(x, std::ptr_fun(::atan2));
+    }
+};
 
 // template<int R, int C>
 // struct Asinh {};
