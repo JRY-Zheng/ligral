@@ -42,18 +42,15 @@ namespace Ligral.Component.Models
             {
                 throw logger.Error(new ModelException(this, $"Two inputs must have same row number but we got {firstRowNo} and {secondRowNo}"));
             }
-            if (conditionRowNo != 0 || conditionColNo != 0)
+            try
             {
-                if (conditionColNo != firstColNo)
-                {
-                    throw logger.Error(new ModelException(this, $"condition matrix must have same column number with inputs' but we got {conditionColNo} and {secondColNo}"));
-                }
-                else if (conditionRowNo != firstRowNo)
-                {
-                    throw logger.Error(new ModelException(this, $"condition matrix must have same row number with inputs' but we got {conditionRowNo} and {secondRowNo}"));
-                }
+                (int xRowNo, int xColNo) = MatrixIteration.BroadcastShape(InPortList[0].RowNo, InPortList[0].ColNo, InPortList[1].RowNo, InPortList[1].ColNo);
+                OutPortList[0].SetShape(xRowNo, xColNo);
             }
-            OutPortList[0].SetShape(firstRowNo, firstColNo);
+            catch (System.Exception e)
+            {
+                throw logger.Error(new ModelException(this, e.Message));
+            }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
