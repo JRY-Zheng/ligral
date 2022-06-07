@@ -29,6 +29,7 @@ namespace Ligral.Component.Models
         private Matrix<double> B;
         private Matrix<double> C;
         private Matrix<double> D;
+        private Matrix<double> x0;
         protected StateHandle handle;
         protected override void SetUpParameters()
         {
@@ -147,7 +148,7 @@ namespace Ligral.Component.Models
                 initial = Matrix<double>.Build.Dense(1, colNo, 0);
             }
             OutPortList[0].SetShape(1, colNo);
-            var x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, colNo, 0);
+            x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, colNo, 0);
             for (int i=0; i<colNo; i++)
             {
                 x0[x0.RowCount-1, i] = initial[0, i];
@@ -183,29 +184,26 @@ namespace Ligral.Component.Models
             Results[0] = C*handle.GetState()+D*values[0]    ;
             return Results;
         }
-        public static List<CodeAST> ConstructConfigurationAST(string GlobalName, StateHandle handle, Matrix<double> initial)
-        {
-            var codeASTs = new List<CodeAST>();
-            AssignCodeAST ctxAST = new AssignCodeAST();
-            ctxAST.Destination = $"{GlobalName}.ctx";
-            ctxAST.Source = "&ctx";
-            codeASTs.Add(ctxAST);
-            LShiftCodeAST initialAST = new LShiftCodeAST();
-            initialAST.Destination = $"{GlobalName}.initial";
-            initialAST.Source = string.Join(',', initial.ToColumnMajorArray());
-            codeASTs.Add(initialAST);
-            AssignCodeAST indexAST = new AssignCodeAST();
-            indexAST.Destination = $"{GlobalName}.index";
-            indexAST.Source = State.StatePool.IndexOf(handle.space[0]).ToString();
-            codeASTs.Add(indexAST);
-            CallCodeAST configAST = new CallCodeAST();
-            configAST.FunctionName = $"{GlobalName}.config";
-            codeASTs.Add(configAST);
-            return codeASTs;
-        }
         public override List<CodeAST> ConstructConfigurationAST()
         {
-            return ConstructConfigurationAST(GlobalName, handle, initial);
+            var codeASTs = Integrator.ConstructConfigurationAST(GlobalName, handle, x0);
+            LShiftCodeAST aAST = new LShiftCodeAST();
+            aAST.Destination = $"{GlobalName}.a";
+            aAST.Source = string.Join(',', A.ToColumnMajorArray());
+            codeASTs.Add(aAST);
+            LShiftCodeAST bAST = new LShiftCodeAST();
+            bAST.Destination = $"{GlobalName}.b";
+            bAST.Source = string.Join(',', B.ToColumnMajorArray());
+            codeASTs.Add(bAST);
+            LShiftCodeAST cAST = new LShiftCodeAST();
+            cAST.Destination = $"{GlobalName}.c";
+            cAST.Source = string.Join(',', C.ToColumnMajorArray());
+            codeASTs.Add(cAST);
+            LShiftCodeAST dAST = new LShiftCodeAST();
+            dAST.Destination = $"{GlobalName}.d";
+            dAST.Source = string.Join(',', D.ToColumnMajorArray());
+            codeASTs.Add(dAST);
+            return codeASTs;
         }
     }
 }

@@ -1067,5 +1067,41 @@ struct Cot {
 // template<int R, int C>
 // struct InterpolationHD {};
 
+template<int R, int C>
+struct TransferFunction {
+    Matrix<double, R, R> a;
+    Matrix<double, R, 1> b;
+    Matrix<double, 1, R> c;
+    Matrix<double, 1, 1> d;
+    Matrix<double, R, C> initial;
+    Matrix<double, R, C> x;
+    int index;
+    context* ctx;
+    void calculate(Matrix<double, 1, C> u,
+        Matrix<double, 1, C>* y) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                x(r, c) = ctx->x(index+r*C+c);
+            }
+        }
+        *y = c*x+d*u;
+    }
+    void input_update(Matrix<double, 1, C> u) {
+        auto xdot = a*x+b*u;
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                ctx->xdot(index+r*C+c) = xdot(r, c);
+            }
+        }
+    }
+    void config() {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                ctx->x(index+r*C+c) = initial(r, c);
+            }
+        }
+    }
+};
+
 
 #endif
