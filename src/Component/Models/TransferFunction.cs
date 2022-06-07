@@ -49,18 +49,35 @@ namespace Ligral.Component.Models
                 {"den", new Parameter(ParameterType.String , value=>
                 {
                     denominator = value.ToMatrix();
-                })}
+                })},
+                {"col", new Parameter(ParameterType.Signal , value=>
+                {
+                    colNo = value.ToInt();
+                    if (colNo <= 0)
+                    {
+                        throw logger.Error(new ModelException(this, $"column number should be positive but got {colNo}"));
+                    }
+                    InPortList[0].ColNo = colNo;
+                }, ()=>{})},
             };
         }
         protected override void AfterConfigured()
         {
             if (initial == null)
             {
-                initial = Matrix<double>.Build.Dense(1, 1, 0);
+                
             }
-            else if (initial.RowCount != 1 || initial.ColumnCount != 1)
+            else if (initial.RowCount != 1)
             {
-                throw logger.Error(new ModelException(this, "Initial of transfer function should be 1x1"));
+                throw logger.Error(new ModelException(this, "Initial of transfer function should be (1, n)"));
+            }
+            else if (colNo == 0)
+            {
+                colNo = initial.ColumnCount; 
+            }
+            else if (colNo != initial.ColumnCount)
+            {
+                throw logger.Error(new ModelException(this, $"Initial column number is {initial.ColumnCount}, expect {colNo}"));
             }
             if (numerator.RowCount !=1 )
             {
@@ -113,18 +130,41 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            if (InPortList[0].RowNo != 1 || InPortList[0].ColNo != 1)
+            if (InPortList[0].RowNo != 1)
             {
-                throw logger.Error(new ModelException(this, "Input of transfer function should be 1x1"));
+                throw logger.Error(new ModelException(this, "Input of transfer function should be (1, n)"));
             }
-            OutPortList[0].SetShape(1, 1);
-            var x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, 1, 0);
-            x0[x0.RowCount-1, 0] = initial[0, 0];
-            handle = State.CreateState(varName, denominator.ColumnCount-1, 1, x0);
+            if (colNo > 0 && InPortList[0].ColNo > 0 && colNo != InPortList[0].ColNo)
+            {
+                throw logger.Error(new ModelException(this, $"Input column number is {InPortList[0].ColNo}, expect {colNo}"));
+            }
+            else if (colNo == 0)
+            {
+                colNo = InPortList[0].ColNo;
+            }
+            if (initial == null)
+            {
+                initial = Matrix<double>.Build.Dense(1, colNo, 0);
+            }
+            OutPortList[0].SetShape(1, colNo);
+            var x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, colNo, 0);
+            for (int i=0; i<colNo; i++)
+            {
+                x0[x0.RowCount-1, i] = initial[0, i];
+            }
+            handle = State.CreateState(varName, denominator.ColumnCount-1, colNo, x0);
         }
         public override void Confirm()
         {
-            
+            int inputColNo = InPortList[0].ColNo;
+            if (inputColNo != colNo)
+            {
+                throw logger.Error(new ModelException(this, $"Column number in consistent, got {inputColNo}, but {colNo} expected."));
+            }
+            if (colNo == 0)
+            {
+                throw logger.Error(new ModelException(this, $"Column number cannot be determined."));
+            }
         }
         protected override void InputUpdate(Matrix<double> u)
         {
