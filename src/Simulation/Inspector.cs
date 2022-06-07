@@ -48,8 +48,13 @@ namespace Ligral.Simulation
                 // string.Join(", ", nodes.FindAll(node=>routine.FindAll(n=>n.Name==node.Name).Count==0).ConvertAll(node=>node.Name)));
             }
             // System.Console.WriteLine(string.Join(", ", allNodes.ConvertAll(node=>node.Name)));
+            foreach(Model node in nodes.FindAll(m => m.InPortCount() == 0))
+            {
+                Visit(node);
+            }
             foreach(Model node in nodes)
             {
+                if (routine.Contains(node)) continue;
                 Visit(node);
             }
             // System.Console.WriteLine(string.Join(", ", routine.ConvertAll(node=>node.Name)));

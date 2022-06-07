@@ -137,7 +137,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
-            if (InPortList[0].RowNo != 1)
+            if (InPortList[0].RowNo > 1)
             {
                 throw logger.Error(new ModelException(this, "Input of transfer function should be (1, n)"));
             }
