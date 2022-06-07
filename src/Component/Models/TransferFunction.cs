@@ -31,6 +31,12 @@ namespace Ligral.Component.Models
         private Matrix<double> D;
         private Matrix<double> x0;
         protected StateHandle handle;
+        protected override void SetUpPorts()
+        {
+            base.SetUpPorts();
+            InPortList[0].Name = "u";
+            OutPortList[0].Name = "y";
+        }
         protected override void SetUpParameters()
         {
             Parameters = new ParameterDictionary()
