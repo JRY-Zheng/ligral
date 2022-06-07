@@ -1073,7 +1073,6 @@ struct TransferFunction {
     Matrix<double, R, 1> b;
     Matrix<double, 1, R> c;
     Matrix<double, 1, 1> d;
-    Matrix<double, R, C> initial;
     Matrix<double, R, C> x;
     int index;
     context* ctx;
@@ -1097,7 +1096,7 @@ struct TransferFunction {
     void config() {
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
-                ctx->x(index+r*C+c) = initial(r, c);
+                ctx->x(index+r*C+c) = x(r, c);
             }
         }
     }

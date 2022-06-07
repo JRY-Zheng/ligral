@@ -192,7 +192,22 @@ namespace Ligral.Component.Models
         }
         public override List<CodeAST> ConstructConfigurationAST()
         {
-            var codeASTs = Integrator.ConstructConfigurationAST(GlobalName, handle, x0);
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST ctxAST = new AssignCodeAST();
+            ctxAST.Destination = $"{GlobalName}.ctx";
+            ctxAST.Source = "&ctx";
+            codeASTs.Add(ctxAST);
+            LShiftCodeAST initialAST = new LShiftCodeAST();
+            initialAST.Destination = $"{GlobalName}.x";
+            initialAST.Source = string.Join(',', x0.ToColumnMajorArray());
+            codeASTs.Add(initialAST);
+            AssignCodeAST indexAST = new AssignCodeAST();
+            indexAST.Destination = $"{GlobalName}.index";
+            indexAST.Source = State.StatePool.IndexOf(handle.space[0]).ToString();
+            codeASTs.Add(indexAST);
+            CallCodeAST configAST = new CallCodeAST();
+            configAST.FunctionName = $"{GlobalName}.config";
+            codeASTs.Add(configAST);
             LShiftCodeAST aAST = new LShiftCodeAST();
             aAST.Destination = $"{GlobalName}.a";
             aAST.Source = string.Join(',', A.ToColumnMajorArray());
