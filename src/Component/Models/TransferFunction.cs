@@ -160,12 +160,6 @@ namespace Ligral.Component.Models
                 initial = Matrix<double>.Build.Dense(1, colNo, 0);
             }
             OutPortList[0].SetShape(1, colNo);
-            x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, colNo, 0);
-            for (int i=0; i<colNo; i++)
-            {
-                x0[x0.RowCount-1, i] = initial[0, i];
-            }
-            handle = State.CreateState(varName, denominator.ColumnCount-1, colNo, x0);
         }
         public override void Confirm()
         {
@@ -178,6 +172,12 @@ namespace Ligral.Component.Models
             {
                 throw logger.Error(new ModelException(this, $"Column number cannot be determined."));
             }
+            x0 = Matrix<double>.Build.Dense(denominator.ColumnCount-1, colNo, 0);
+            for (int i=0; i<colNo; i++)
+            {
+                x0[x0.RowCount-1, i] = initial[0, i];
+            }
+            handle = State.CreateState(varName, denominator.ColumnCount-1, colNo, x0);
         }
         protected override void InputUpdate(Matrix<double> u)
         {

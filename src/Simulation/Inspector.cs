@@ -77,6 +77,10 @@ namespace Ligral.Simulation
                 {
                     i.ResetCheck();
                 }
+            }
+            foreach(Model node in nodes)
+            {
+                if (routine.Contains(node)) continue;
                 Visit(node, true);
             }
             // System.Console.WriteLine(string.Join(", ", routine.ConvertAll(node=>node.Name)));

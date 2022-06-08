@@ -41,9 +41,8 @@ namespace Ligral.Component.Models
             string inputSignalName = InPortList[0].Source.SignalName;
             varName = varName ?? GivenName ?? inputSignalName ?? Name;
         }
-        public override void Check()
+        public override void Confirm()
         {
-            base.Check();
             handle = State.CreateState(varName, rowNo, colNo, initial);
         }
         protected override void InputUpdate(Matrix<double> inputSignal)

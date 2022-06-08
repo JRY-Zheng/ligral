@@ -96,6 +96,7 @@ namespace Ligral.Component
         {
             colNo = 0;
             rowNo = 0;
+            OutPortList[0].SetShape(0, 0);
         }
         public override void Check()
         {

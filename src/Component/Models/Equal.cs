@@ -37,9 +37,8 @@ namespace Ligral.Component.Models
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += ActualValueUpdate;
         }
-        public override void Check()
+        public override void Confirm()
         {
-            base.Check();
             solutionHandle = Solution.CreateSolution(varName, rowNo, colNo, initial);
             functionHandle = Function.CreateFunction(varName, rowNo, colNo);
         }

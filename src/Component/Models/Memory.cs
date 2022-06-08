@@ -23,9 +23,8 @@ namespace Ligral.Component.Models
             }
         }
         private Matrix<double> stack;
-        public override void Check()
+        public override void Confirm()
         {
-            base.Check();
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
         }
