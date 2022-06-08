@@ -744,8 +744,19 @@ struct Clock {
     }
 };
 
-// template<int R, int C>
-// struct Deadzone {};
+template<int R, int C>
+struct Deadzone {
+    double left;
+    double right;
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.unaryExpr([this](double item) -> double {
+            if (item < this->left) return item - this->left;
+            else if (item > this->right) return item - this->right;
+            else return 0;
+        });
+    }
+};
 
 // template<int R, int C>
 // struct Saturation {};

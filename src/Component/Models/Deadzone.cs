@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -62,6 +63,19 @@ namespace Ligral.Component.Models
                 }
             });
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            AssignCodeAST leftConfiguration = new AssignCodeAST();
+            leftConfiguration.Destination = $"{GlobalName}.left";
+            leftConfiguration.Source = left.ToString();
+            codeASTs.Add(leftConfiguration);
+            AssignCodeAST rightConfiguration = new AssignCodeAST();
+            rightConfiguration.Destination = $"{GlobalName}.right";
+            rightConfiguration.Source = right.ToString();
+            codeASTs.Add(rightConfiguration);
+            return codeASTs;
         }
     }
 }
