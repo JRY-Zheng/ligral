@@ -758,8 +758,19 @@ struct Deadzone {
     }
 };
 
-// template<int R, int C>
-// struct Saturation {};
+template<int R, int C>
+struct Saturation {
+    double upper;
+    double lower;
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = input.unaryExpr([this](double item) -> double {
+            if (item < this->lower) return this->lower;
+            else if (item > this->upper) return this->upper;
+            else return item;
+        });
+    }
+};
 
 template<int R, int C>
 struct Sin {
