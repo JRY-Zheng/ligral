@@ -45,11 +45,6 @@ namespace Ligral.Simulation
         {
             Name = name;
             this.routine = routine;
-            if (Solution.SolutionPool.Count > 0)
-            {
-                x0 = Solution.SolutionPool.ConvertAll(solution => solution.InitialValue).ToColumnVector();
-                if (optimizer == null) optimizer = Optimizer.GetOptimizer(optimizerName);
-            }
         }
         public Matrix<double> InitialValues()
         {
@@ -96,6 +91,9 @@ namespace Ligral.Simulation
             }
             if (Solution.SolutionPool.Count > 0)
             {
+                x0 = Solution.SolutionPool.ConvertAll(solution => solution.InitialValue).ToColumnVector();
+                if (optimizer == null) optimizer = Optimizer.GetOptimizer(optimizerName);
+                logger.Debug($"Project has {Solution.SolutionPool.Count} equations to solve");
                 SolveAlgebraicLoops();
             }
             else foreach(Model node in routine)
