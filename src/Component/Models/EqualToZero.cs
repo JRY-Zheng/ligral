@@ -100,5 +100,9 @@ namespace Ligral.Component.Models
             handle.SetActualValue(inputSignal);
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            throw logger.Error(new ModelException(this, "This model does not support code generation"));
+        }
     }
 }

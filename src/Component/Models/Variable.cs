@@ -73,5 +73,9 @@ namespace Ligral.Component.Models
             Results[0] = handle.GetGuessedValue();
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            throw logger.Error(new ModelException(this, "This model does not support code generation"));
+        }
     }
 }

@@ -1141,14 +1141,16 @@ struct Inverse {
     }
 };
 
-// template<int R, int C>
-// struct Equal {};
+/* not implemented
+template<int R, int C>
+struct Equal {};
 
-// template<int R, int C>
-// struct EqualToZero {};
+template<int R, int C>
+struct EqualToZero {};
 
-// template<int R, int C>
-// struct Variable {};
+template<int R, int C>
+struct Variable {};
+*/
 
 // template<int R, int C>
 // struct Interpolation {};
