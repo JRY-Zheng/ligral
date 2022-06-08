@@ -14,7 +14,7 @@ namespace Ligral.Simulation
         private List<Model> routine = new List<Model>();
         private List<Model> allNodes = new List<Model>();
         private Logger logger = new Logger("Inspector");
-        private void Visit(Model node)
+        private void Visit(Model node, bool allowGuess)
         {
             if (!allNodes.Contains(node))
             {
@@ -24,15 +24,28 @@ namespace Ligral.Simulation
             {
                 if (!routine.Contains(node))
                 {
+                    try
+                    {
+                        node.Check();
+                    }
+                    catch (LigralException)
+                    {
+                        if (!allowGuess)
+                        {
+                            logger.Solve();
+                            return;
+                        }
+                        throw logger.Error(new LigralException("Ligral cannot guess the correct shape"));
+                    }
+                    if (node is InitializeableModel i && i.Guessing && !allowGuess) return;
                     routine.Add(node);
-                    node.Check();
-                    node.Inspect().ForEach(subNode=>Visit(subNode));
+                    node.Inspect().ForEach(subNode=>Visit(subNode, allowGuess));
                 }
             }
             else if (node is InitializeableModel initializeableModel)
             {
                 initializeableModel.Initialize();
-                Visit(initializeableModel);
+                Visit(initializeableModel, allowGuess);
             }
         }
         public List<Model> Inspect(List<Model> nodes)
@@ -50,12 +63,21 @@ namespace Ligral.Simulation
             // System.Console.WriteLine(string.Join(", ", allNodes.ConvertAll(node=>node.Name)));
             foreach(Model node in nodes.FindAll(m => m.InPortCount() == 0))
             {
-                Visit(node);
+                Visit(node, false);
             }
             foreach(Model node in nodes)
             {
                 if (routine.Contains(node)) continue;
-                Visit(node);
+                Visit(node, false);
+            }
+            foreach(Model node in nodes)
+            {
+                if (routine.Contains(node)) continue;
+                if (node is InitializeableModel i)
+                {
+                    i.ResetCheck();
+                }
+                Visit(node, true);
             }
             // System.Console.WriteLine(string.Join(", ", routine.ConvertAll(node=>node.Name)));
             if (routine.Count != nodes.Count)

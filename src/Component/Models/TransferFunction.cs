@@ -137,6 +137,7 @@ namespace Ligral.Component.Models
         }
         public override void Check()
         {
+            Guessing = false;
             if (InPortList[0].RowNo > 1)
             {
                 throw logger.Error(new ModelException(this, "Input of transfer function should be (1, n)"));
@@ -144,6 +145,11 @@ namespace Ligral.Component.Models
             if (colNo > 0 && InPortList[0].ColNo > 0 && colNo != InPortList[0].ColNo)
             {
                 throw logger.Error(new ModelException(this, $"Input column number is {InPortList[0].ColNo}, expect {colNo}"));
+            }
+            else if (colNo == 0 && InPortList[0].ColNo == 0)
+            {
+                colNo = 1;
+                Guessing = true;
             }
             else if (colNo == 0)
             {

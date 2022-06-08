@@ -18,6 +18,7 @@ namespace Ligral.Component
         protected int colNo = 0;
         protected int rowNo = 0;
         protected bool Initialized = false;
+        public bool Guessing = false;
         public virtual void Initialize()
         {
             Initialized = true;
@@ -91,11 +92,17 @@ namespace Ligral.Component
                 throw logger.Error(new ModelException(this, $"Matrix row and col should be positive non-zero\n but we get: {colNo}x{rowNo}"));
             }
         }
+        public virtual void ResetCheck()
+        {
+            colNo = 0;
+            rowNo = 0;
+        }
         public override void Check()
         {
             int inputRowNo = InPortList[0].RowNo;
             int inputColNo = InPortList[0].ColNo;
             var build = Matrix<double>.Build;
+            Guessing = false;
             if (rowNo == 0 && colNo == 0)
             {
                 if (inputRowNo == 0 && inputColNo == 0)
@@ -103,6 +110,7 @@ namespace Ligral.Component
                     initial = 0.ToMatrix();
                     rowNo = 1;
                     colNo = 1;
+                    Guessing = true;
                 }
                 else
                 {
