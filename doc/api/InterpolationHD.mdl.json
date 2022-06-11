@@ -1,0 +1,34 @@
+{
+  "type": "InterpolationHD",
+  "document": "This model generates an interpolation of the given n inputs.",
+  "parameters": [
+    {
+      "name": "file",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "table",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "axes",
+      "required": true,
+      "type": "signal"
+    },
+    {
+      "name": "dim",
+      "required": true,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [
+    "input"
+  ],
+  "out-ports": [
+    "output"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

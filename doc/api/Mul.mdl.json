@@ -1,0 +1,14 @@
+{
+  "type": "Mul",
+  "document": "This model outputs the matrix product of the two inputs",
+  "parameters": [],
+  "in-ports": [
+    "left",
+    "right"
+  ],
+  "out-ports": [
+    "result"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

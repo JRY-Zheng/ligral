@@ -1,5 +1,6 @@
 {
   "type": "Gain",
+  "document": "This model amplifies the input by a given constant.",
   "parameters": [
     {
       "name": "value",
@@ -17,5 +18,7 @@
   ],
   "out-ports": [
     "output"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

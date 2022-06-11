@@ -1,8 +1,11 @@
 {
   "type": "Clock",
+  "document": "This model outputs the simulation time.",
   "parameters": [],
   "in-ports": [],
   "out-ports": [
     "time"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

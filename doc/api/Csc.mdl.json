@@ -1,0 +1,13 @@
+{
+  "type": "Csc",
+  "document": "This model calculates y=csc(x).",
+  "parameters": [],
+  "in-ports": [
+    "x"
+  ],
+  "out-ports": [
+    "y"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

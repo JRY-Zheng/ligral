@@ -1,5 +1,6 @@
 {
   "type": "Step",
+  "document": "This model provides a step between 0 and a definable level at a specified time.",
   "parameters": [
     {
       "name": "start",
@@ -15,5 +16,7 @@
   "in-ports": [],
   "out-ports": [
     "source"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

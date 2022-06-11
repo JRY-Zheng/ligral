@@ -1,5 +1,6 @@
 {
   "type": "Min",
+  "document": "This model returns minimal value among inputs",
   "parameters": [],
   "in-ports": [
     "first",
@@ -7,5 +8,7 @@
   ],
   "out-ports": [
     "min"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

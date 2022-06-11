@@ -1,0 +1,14 @@
+{
+  "type": "Add",
+  "document": "This model outputs the sum of the two inputs",
+  "parameters": [],
+  "in-ports": [
+    "left",
+    "right"
+  ],
+  "out-ports": [
+    "result"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

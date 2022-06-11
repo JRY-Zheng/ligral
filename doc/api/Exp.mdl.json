@@ -1,10 +1,13 @@
 {
   "type": "Exp",
+  "document": "This model calculates y=exp(x).",
   "parameters": [],
   "in-ports": [
     "x"
   ],
   "out-ports": [
     "y"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

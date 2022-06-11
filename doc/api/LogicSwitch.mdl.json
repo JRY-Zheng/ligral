@@ -1,5 +1,6 @@
 {
   "type": "LogicSwitch",
+  "document": "This model accepts one condition and two values, returns first if the condition is met (non-zero) otherwise second.",
   "parameters": [],
   "in-ports": [
     "condition",
@@ -8,5 +9,7 @@
   ],
   "out-ports": [
     "result"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

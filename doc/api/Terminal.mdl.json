@@ -1,8 +1,11 @@
 {
   "type": "Terminal",
+  "document": "This model does not do anything but hide input.",
   "parameters": [],
   "in-ports": [
     "input"
   ],
-  "out-ports": []
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

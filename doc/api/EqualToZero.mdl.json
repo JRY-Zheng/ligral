@@ -1,0 +1,27 @@
+{
+  "type": "EqualToZero",
+  "document": "This model marks the input signal as the value of a function which should be zero.",
+  "parameters": [
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "col",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "row",
+      "required": false,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [
+    "input"
+  ],
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

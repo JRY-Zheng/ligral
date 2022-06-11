@@ -1,0 +1,39 @@
+{
+  "type": "TransferFunction",
+  "document": "This model generate state space system according to transfer function with observable canonical form.",
+  "parameters": [
+    {
+      "name": "initial",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "num",
+      "required": true,
+      "type": "signal"
+    },
+    {
+      "name": "den",
+      "required": true,
+      "type": "signal"
+    },
+    {
+      "name": "col",
+      "required": false,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [
+    "u"
+  ],
+  "out-ports": [
+    "y"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

@@ -1,10 +1,11 @@
 {
   "type": "VStack",
+  "document": "This model stacks inputs vertically to a matrix",
   "parameters": [],
-  "in-ports": [
-    "in0"
-  ],
+  "in-ports": [],
   "out-ports": [
     "matrix"
-  ]
+  ],
+  "in-port-variable": true,
+  "out-port-variable": false
 }

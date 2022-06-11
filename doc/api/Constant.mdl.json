@@ -1,5 +1,6 @@
 {
   "type": "Constant",
+  "document": "This model outputs the given constant.",
   "parameters": [
     {
       "name": "value",
@@ -10,5 +11,7 @@
   "in-ports": [],
   "out-ports": [
     "value"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

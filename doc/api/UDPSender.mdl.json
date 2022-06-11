@@ -1,0 +1,35 @@
+{
+  "type": "UDPSender",
+  "document": "This model sends udp data from output",
+  "parameters": [
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "label",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "format",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "address",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "port",
+      "required": false,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [],
+  "out-ports": [],
+  "in-port-variable": true,
+  "out-port-variable": false
+}

@@ -1,0 +1,14 @@
+{
+  "type": "DotMul",
+  "document": "This model outputs the broadcast product of the two inputs",
+  "parameters": [],
+  "in-ports": [
+    "left",
+    "right"
+  ],
+  "out-ports": [
+    "result"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

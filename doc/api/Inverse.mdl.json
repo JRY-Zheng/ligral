@@ -1,0 +1,13 @@
+{
+  "type": "Inverse",
+  "document": "This model calculates the inverse of a matrix.",
+  "parameters": [],
+  "in-ports": [
+    "x"
+  ],
+  "out-ports": [
+    "y"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

@@ -1,0 +1,13 @@
+{
+  "type": "Cot",
+  "document": "This model calculates y=cot(x).",
+  "parameters": [],
+  "in-ports": [
+    "x"
+  ],
+  "out-ports": [
+    "y"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

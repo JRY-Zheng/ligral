@@ -1,0 +1,35 @@
+{
+  "type": "UDPListener",
+  "document": "This model listens udp data as input",
+  "parameters": [
+    {
+      "name": "size",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "label",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "address",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "port",
+      "required": false,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [],
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": true
+}

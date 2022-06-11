@@ -1,5 +1,6 @@
 {
   "type": "Pow",
+  "document": "This model calculates y=x^power.",
   "parameters": [
     {
       "name": "power",
@@ -12,5 +13,7 @@
   ],
   "out-ports": [
     "y"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

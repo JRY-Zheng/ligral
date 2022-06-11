@@ -1,5 +1,6 @@
 {
   "type": "Log2",
+  "document": "This model calculates y=log(x)/log(base).",
   "parameters": [],
   "in-ports": [
     "x",
@@ -7,5 +8,7 @@
   ],
   "out-ports": [
     "y"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

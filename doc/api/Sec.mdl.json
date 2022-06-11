@@ -1,0 +1,13 @@
+{
+  "type": "Sec",
+  "document": "This model calculates y=sec(x).",
+  "parameters": [],
+  "in-ports": [
+    "x"
+  ],
+  "out-ports": [
+    "y"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

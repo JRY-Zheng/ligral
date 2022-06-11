@@ -1,5 +1,6 @@
 {
   "type": "PhaseDiagram",
+  "document": "This model displays phase diagram and stores data to the output folder.",
   "parameters": [
     {
       "name": "name",
@@ -11,5 +12,7 @@
     "x",
     "y"
   ],
-  "out-ports": []
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

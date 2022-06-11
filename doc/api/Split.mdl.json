@@ -1,10 +1,11 @@
 {
   "type": "Split",
+  "document": "This model splits inputs item-wise to doubles",
   "parameters": [],
   "in-ports": [
     "matrix"
   ],
-  "out-ports": [
-    "out0"
-  ]
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": true
 }

@@ -1,0 +1,32 @@
+{
+  "type": "Variable",
+  "document": "This model marks the variable in functions",
+  "parameters": [
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "col",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "row",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "initial",
+      "required": false,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [],
+  "out-ports": [
+    "value"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

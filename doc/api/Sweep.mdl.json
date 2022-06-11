@@ -1,0 +1,22 @@
+{
+  "type": "Sweep",
+  "document": "This model generates frequency-sweep signal with frequency from f1 to f2.",
+  "parameters": [
+    {
+      "name": "f1",
+      "required": true,
+      "type": "signal"
+    },
+    {
+      "name": "f2",
+      "required": true,
+      "type": "signal"
+    }
+  ],
+  "in-ports": [],
+  "out-ports": [
+    "source"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

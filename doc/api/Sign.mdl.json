@@ -1,10 +1,13 @@
 {
   "type": "Sign",
+  "document": "This model calculates y = 1 if x\u003E0;-1 if x\u003C0; 0 if x=0.",
   "parameters": [],
   "in-ports": [
     "x"
   ],
   "out-ports": [
     "y"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

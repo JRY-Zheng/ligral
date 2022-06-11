@@ -1,0 +1,17 @@
+{
+  "type": "OutputSink",
+  "document": "This model marks thee input signal as control output.",
+  "parameters": [
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "in-ports": [
+    "input"
+  ],
+  "out-ports": [],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

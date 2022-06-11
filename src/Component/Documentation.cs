@@ -21,6 +21,8 @@ namespace Ligral.Component
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }
+        [JsonPropertyName("document")]
+        public string Document { get; set; }
         [JsonPropertyName("parameters")]
         public ParameterDocument[] Parameters { get; set; }
         [JsonPropertyName("in-ports")]

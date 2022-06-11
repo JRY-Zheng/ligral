@@ -1,0 +1,13 @@
+{
+  "type": "Transpose",
+  "document": "This model outputs the transpose of the input",
+  "parameters": [],
+  "in-ports": [
+    "input"
+  ],
+  "out-ports": [
+    "output"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

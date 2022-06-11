@@ -1,0 +1,34 @@
+{
+  "type": "Equal",
+  "document": "This model marks an algebraic loop to be solved.",
+  "parameters": [
+    {
+      "name": "initial",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "col",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "row",
+      "required": false,
+      "type": "signal"
+    },
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    }
+  ],
+  "in-ports": [
+    "input"
+  ],
+  "out-ports": [
+    "output"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

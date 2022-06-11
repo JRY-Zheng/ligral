@@ -1,5 +1,6 @@
 {
   "type": "BoundedIntegrator",
+  "document": "This model outputs the value of the integral of its input signal with respect to time, which is limited by bounds.",
   "parameters": [
     {
       "name": "initial",
@@ -17,6 +18,11 @@
       "type": "signal"
     },
     {
+      "name": "name",
+      "required": false,
+      "type": "string"
+    },
+    {
       "name": "upper",
       "required": true,
       "type": "signal"
@@ -32,5 +38,7 @@
   ],
   "out-ports": [
     "output"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

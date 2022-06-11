@@ -1,5 +1,6 @@
 {
   "type": "Integrator",
+  "document": "This model outputs the value of the integral of its input signal with respect to time.",
   "parameters": [
     {
       "name": "initial",
@@ -15,6 +16,11 @@
       "name": "row",
       "required": false,
       "type": "signal"
+    },
+    {
+      "name": "name",
+      "required": false,
+      "type": "string"
     }
   ],
   "in-ports": [
@@ -22,5 +28,7 @@
   ],
   "out-ports": [
     "output"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

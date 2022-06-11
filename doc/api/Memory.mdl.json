@@ -1,5 +1,6 @@
 {
   "type": "Memory",
+  "document": "This model outputs the value from the previous input.",
   "parameters": [
     {
       "name": "initial",
@@ -15,11 +16,6 @@
       "name": "row",
       "required": false,
       "type": "signal"
-    },
-    {
-      "name": "delay",
-      "required": false,
-      "type": "signal"
     }
   ],
   "in-ports": [
@@ -27,5 +23,7 @@
   ],
   "out-ports": [
     "output"
-  ]
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
 }

@@ -1,0 +1,14 @@
+{
+  "type": "RDiv",
+  "document": "This model outputs the matrix product of the inverse of the first input and the second input",
+  "parameters": [],
+  "in-ports": [
+    "left",
+    "right"
+  ],
+  "out-ports": [
+    "result"
+  ],
+  "in-port-variable": false,
+  "out-port-variable": false
+}

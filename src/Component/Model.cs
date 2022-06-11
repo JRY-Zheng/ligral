@@ -163,6 +163,7 @@ namespace Ligral.Component
             return new ModelDocument() 
             {
                 Type = GetType().Name,
+                Document = DocString,
                 Parameters = Parameters.Keys.ToList().ConvertAll(key => new ParameterDocument()
                 {
                     Name = key,
