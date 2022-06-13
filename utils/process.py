@@ -6,6 +6,7 @@
 
 import sys
 from io import *
+from time import time
 
 class VirtualStream(TextIOBase):
     def __init__(self):
@@ -47,7 +48,9 @@ while True:
         continue
     cmd = buf.decode('utf8')
     try:
+        start = time()
         exec(cmd)
+        print('consumed:', time()-start)
     except Exception as e:
         message = {
             'success': False,

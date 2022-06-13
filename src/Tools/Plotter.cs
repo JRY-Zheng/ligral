@@ -73,7 +73,7 @@ namespace Ligral.Tools
     }
     public class Plotter : Subscriber, IConfigurable
     {
-        protected Process PythonProcess;
+        protected Python PythonProcess;
         protected Dictionary<int, Figure> Figures = new Dictionary<int, Figure>();
         protected Dictionary<string, int> Files = new Dictionary<string, int>();
         protected bool OutputScript = false;
@@ -82,18 +82,7 @@ namespace Ligral.Tools
         public Plotter()
         {
             Settings settings = Settings.GetInstance();
-            PythonProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = settings.PythonExecutable,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
+            PythonProcess = new Python();
             try
             {
                 PythonProcess.Start();
@@ -106,7 +95,7 @@ namespace Ligral.Tools
         protected virtual void Execute(string command)
         {
             if (OutputScript) ScriptsStream.Write(command);
-            PythonProcess.StandardInput.Write(command);
+            PythonProcess.Execute(command);
         }
         public override void Unsubscribe()
         {

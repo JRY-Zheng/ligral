@@ -183,7 +183,9 @@ namespace Ligral
                         plotter = new Tools.Plotter();
                     }
                 }
+                logger.Debug("Plotter is instantiated");
                 plotter.Configure(InnerPlotterConfiguration);
+                logger.Debug("Plotter is configured");
             }
             if (HasSettings(LoggerConfiguration))
             {
