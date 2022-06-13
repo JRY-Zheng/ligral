@@ -1,3 +1,9 @@
+# Copyright (C) 2019-2022 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+
 import sys
 from io import *
 
@@ -14,10 +20,7 @@ class VirtualStream(TextIOBase):
 
 sys.stdout = VirtualStream()
 
-if len(sys.argv) != 2:
-    sys.exit(-1)
-
-recv_port = int(sys.argv[1])
+# recv_port = // get recv port via writing this line before writing this script
 send_port = recv_port+1
 address = '127.0.0.1'
 
@@ -30,9 +33,16 @@ s.bind((address, recv_port))
 
 import json
 
+message = {
+    'success': True,
+    'message': 'server started'
+}
+buf = json.dumps(message).encode('utf8')
+s.sendto(buf, (address, send_port))
+
 while True:
     try:
-        buf, port = s.recvfrom(1024)
+        buf, port = s.recvfrom(65536)
     except:
         continue
     cmd = buf.decode('utf8')
