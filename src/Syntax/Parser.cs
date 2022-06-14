@@ -83,6 +83,8 @@ namespace Ligral.Syntax
                 return Signature();
             case TokenType.ROUTE:
                 return Route();
+            case TokenType.SCRIPT:
+                return Script();
             default:
                 ChainAST chainAST = Chain();
                 Eat(TokenType.SEMIC);
@@ -676,6 +678,73 @@ namespace Ligral.Syntax
                 }
             }
             return new RoutePortAST(ports);
+        }
+        private AST Script()
+        {
+            Eat(TokenType.SCRIPT);
+            if (currentToken.Type == TokenType.DOT || currentToken.Type == TokenType.ID)
+            {
+                return ScriptFile();
+            }
+            List<WordAST> parameters = null;
+            if (currentToken.Type == TokenType.LPAR)
+            {
+                Eat(TokenType.LPAR);
+                parameters = new List<WordAST>();
+                while (true)
+                {
+                    StringToken paramNameToken = Eat(TokenType.ID) as StringToken;
+                    parameters.Add(new WordAST(paramNameToken));
+                    if (currentToken.Type!=TokenType.COMMA)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Eat(TokenType.COMMA);
+                    }
+                }
+                Eat(TokenType.RPAR);
+            }
+            var start = (OperatorToken) Eat(TokenType.COLON);
+            while (currentToken.Type != TokenType.END)
+            {
+                Eat(currentToken.Type);
+            }
+            var end = (StringToken) Eat(TokenType.END);
+            return new ScriptAST(parameters, start, end);
+        }
+        private ScriptFileAST ScriptFile()
+        {
+            // Eat(TokenType.SCRIPT);
+            List<WordAST> fileName = new List<WordAST>();
+            bool relative = false;
+            if (currentToken.Type == TokenType.DOT)
+            {
+                relative = true;
+                Eat(TokenType.DOT);
+                while (currentToken.Type == TokenType.DOT)
+                {
+                    StringToken token = new StringToken(TokenType.ID, "..", currentToken.Line, currentToken.Column, file);
+                    Eat(TokenType.DOT);
+                    fileName.Add(new WordAST(token));
+                }
+            }
+            while (true)
+            {
+                StringToken moduleToken = Eat(TokenType.ID) as StringToken;
+                fileName.Add(new WordAST(moduleToken));
+                if (currentToken.Type!=TokenType.DOT)
+                {
+                    break;
+                }
+                else
+                {
+                    Eat(TokenType.DOT);
+                }
+            }
+            Eat(TokenType.SEMIC);
+            return new ScriptFileAST(fileName, relative);
         }
         private UsingAST Using()
         {

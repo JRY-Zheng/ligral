@@ -244,6 +244,8 @@ namespace Ligral.Syntax
                     return new StringToken(TokenType.USING, word, lineNO, columnNO, file);
                 case "conf":
                     return new StringToken(TokenType.CONF, word, lineNO, columnNO, file);
+                case "script":
+                    return new StringToken(TokenType.SCRIPT, word, lineNO, columnNO, file);
                 case "true":
                     return new BoolToken(TokenType.TRUE, true, lineNO, columnNO, file);
                 case "false":

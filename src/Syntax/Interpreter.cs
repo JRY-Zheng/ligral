@@ -42,6 +42,7 @@ namespace Ligral.Syntax
         private ScopeSymbolTable currentScope;
         private Dictionary<string, ScopeSymbolTable> modules = new Dictionary<string, ScopeSymbolTable>();
         private List<string> files = new List<string>();
+        private string text;
         private Logger logger = new Logger("Interpreter");
         private static Interpreter instance;
         public delegate void CompletedHandler();
@@ -116,7 +117,7 @@ namespace Ligral.Syntax
             }
             string lastFileName = CurrentFileName;
             CurrentFileName = nextFileName;
-            string text;
+            // string text;
             try
             {
                 text = File.ReadAllText(fullFileName);
@@ -236,6 +237,10 @@ namespace Ligral.Syntax
                 return Visit(routeAST);
             case SignatureAST signatureAST:
                 return Visit(signatureAST);
+            case ScriptAST scriptAST:
+                return Visit(scriptAST);
+            case ScriptFileAST scriptFileAST:
+                return Visit(scriptFileAST);
             case null:
                 return null;
             default:
@@ -940,6 +945,69 @@ namespace Ligral.Syntax
                 throw logger.Error(new SemanticException((usingAST.ModuleName??usingAST.FileName.Last()).FindToken(), $"Cannot using {module} since it has already exists."));
             }
             currentScope = mainScope;
+        }
+        private object Visit(ScriptFileAST scriptFileAST)
+        {
+            string fileName = string.Join('/', scriptFileAST.FileName.ConvertAll(file=>Visit(file)))+".py";
+            logger.Info($"Execute script file {fileName}");
+            return null;
+        }
+        private object Visit(ScriptAST scriptAST)
+        {
+            int startPos = 0;
+            for (int i = 0; i < scriptAST.StartToken.Line - 1; i++) 
+            {
+                startPos = text.IndexOf('\n', startPos+1);
+            }
+            startPos += scriptAST.StartToken.Column;
+            int endPos = startPos - 1;
+            for (int i = 0; i < scriptAST.EndToken.Line - scriptAST.StartToken.Line; i++) 
+            {
+                endPos = text.IndexOf('\n', endPos+1);
+            }
+            endPos += scriptAST.EndToken.Column;
+            string script = text.Substring(startPos+1, endPos-startPos-3);
+            logger.Debug($"Script starts at {startPos}, line {scriptAST.StartToken.Line}, column {scriptAST.StartToken.Column}");
+            logger.Debug($"Script ends at {endPos}, line {scriptAST.EndToken.Line}, column {scriptAST.EndToken.Column}");
+            var commands = script.Split('\n').ToList();
+            while (commands.Count > 0 && string.IsNullOrWhiteSpace(commands[0]))
+            {
+                commands.RemoveAt(0);
+            }
+            if (commands.Count == 0)
+            {
+                script = "";
+            }
+            else
+            {
+                int whiteSpaceCount = 0;
+                while (char.IsWhiteSpace(commands[0][whiteSpaceCount]))
+                {
+                    whiteSpaceCount++;
+                }
+                for (int i = 0; i < commands.Count; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(commands[i]))
+                    {
+                        continue;
+                    }
+                    else if (commands[i].Length < whiteSpaceCount)
+                    {
+                        throw logger.Error(new SemanticException(scriptAST.FindToken(), $"Unexpected indent in python script in line {commands[i]}"));
+                    }
+                    else if (string.IsNullOrWhiteSpace(commands[i].Substring(0, whiteSpaceCount)))
+                    {
+                        commands[i] = commands[i].Substring(whiteSpaceCount);
+                    }
+                    else
+                    {
+                        throw logger.Error(new SemanticException(scriptAST.FindToken(), $"Unexpected indent in python script in line {commands[i]}"));
+                    }
+                }
+                script = string.Join('\n', commands);
+            }
+            logger.Info($"Execute script:\n{script}");
+            return null;
         }
         private object Visit(PointerAST pointerAST)
         {
