@@ -13,54 +13,58 @@ class VirtualStream(TextIOBase):
         super().__init__()
         self.buffer = ''
     def write(self, text):
-        self.buffer += text
+        self.buffer += str(text)
     def read(self):
         ret = self.buffer
         self.buffer = ''
         return ret
 
 sys.stdout = VirtualStream()
+sys.stderr = VirtualStream()
 
-# recv_port = // get recv port via writing this line before writing this script
-send_port = recv_port+1
-address = '127.0.0.1'
+import builtins
+builtins.old_exec = builtins.exec
+
+def try_exec(source, globals=None, locals=None):
+    try:
+        builtins.old_exec(source, globals, locals)
+    except Exception as e:
+        sys.stderr.write('error occurred when executing '+source+': '+str(e))
+
+# builtins.exec = try_exec
 
 import socket
-from ssl import SOL_SOCKET
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.setsockopt(SOL_SOCKET, socket.SO_RCVTIMEO, 1)
-s.bind((address, recv_port))
-
 import json
 
-message = {
-    'success': True,
-    'message': 'server started'
-}
-buf = json.dumps(message).encode('utf8')
-s.sendto(buf, (address, send_port))
-
-while True:
-    try:
-        buf, port = s.recvfrom(65536)
-    except:
-        continue
-    cmd = buf.decode('utf8')
-    try:
-        start = time()
-        exec(cmd)
-        print('consumed:', time()-start)
-    except Exception as e:
-        message = {
-            'success': False,
-            'message': str(e)
-        }
-    else:
+class Status:
+    def __init__(self) -> None:
+        self.port = 8781
+        self.address = '127.0.0.1'
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         message = {
             'success': True,
-            'message': sys.stdout.read()
+            'message': 'server started'
         }
-    finally:
         buf = json.dumps(message).encode('utf8')
-        s.sendto(buf, (address, send_port))
+        self.s.sendto(buf, (self.address, self.port))
+
+    def debug(self, msg):
+        with open('process.log', 'a') as f:
+            f.write(msg+'\n')
+
+    def __call__(self):
+        out = sys.stdout.read()
+        self.debug('out: '+out)
+        err = sys.stderr.read()
+        self.debug('err: '+err)
+        message = {
+            'success': err == '',
+            'message': out + err
+        }
+        self.debug('msg: '+str(message))
+        buf = json.dumps(message).encode('utf8')
+        self.debug('buf: '+str(buf))
+        self.s.sendto(buf, (self.address, self.port))
+        self.debug('sent')
+
+__status__ = Status()

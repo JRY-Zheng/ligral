@@ -28,50 +28,48 @@ namespace Ligral.Tools
     public class Python
     {
         private Process pythonProcess;
-        private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        private IPAddress address = IPAddress.Parse("127.0.0.1");
-        private static int nextPort = 18589;
-        private Thread thread;
-        static int GetPort()
-        {
-            int port = nextPort;
-            nextPort += 2;
-            return port;
-        }
-        private int sendingPort;
-        private int receivingPort;
-        private IPEndPoint sendingEndPoint;
-        private IPEndPoint receivingEndPoint;
+        static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        static IPAddress address = IPAddress.Parse("127.0.0.1");
+        static int port = 8781;
+        static Thread thread;
+        static IPEndPoint endPoint;
         private Logger logger = new Logger("Python");
+        static Logger staticLogger = new Logger("PythonBackend");
+        static int waitingSeconds = 0;
+        static bool received = false;
+        static bool running = true;
         private bool started = false;
-        private bool running = false;
         private string waitingCommand = "";
-        public void Start()
+        static Python()
         {
-            Settings settings = Settings.GetInstance();
-            sendingPort = GetPort();
-            receivingPort = sendingPort + 1;
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1000);
-            sendingEndPoint = new IPEndPoint(address, sendingPort);
-            receivingEndPoint = new IPEndPoint(address, receivingPort);
+            endPoint = new IPEndPoint(address, port);
             try
             {
-                socket.Bind(receivingEndPoint);
+                socket.Bind(endPoint);
             }
             catch(SocketException e)
             {
-                throw logger.Error(new LigralException($"Address: {receivingEndPoint.Address} port: {receivingEndPoint.Port}.\n{e.Message}"));
+                throw staticLogger.Error(new LigralException($"Socket binding error:\n{e.Message}"));
             }
+            Solver.Stopped += StopListening;
+            thread = new Thread(() => Listen());
+            thread.Start();
+        }
+        public void Start()
+        {
+            Settings settings = Settings.GetInstance();
             pythonProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = settings.PythonExecutable,
+                    Arguments = "-m impython",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = false,
-                    RedirectStandardError = false
+                    RedirectStandardError = false,
                 }
             };
             try
@@ -80,31 +78,30 @@ namespace Ligral.Tools
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                throw logger.Error(new LigralException($"{settings.PythonExecutable} is not installed or not callable."));
+                throw logger.Error(new LigralException($"{settings.PythonExecutable} is not installed or not callable, or impython is not installed."));
             }
             Assembly assembly = Assembly.Load("Ligral");
             Stream stream = assembly.GetManifestResourceStream("process.py");
             StreamReader reader = new StreamReader(stream);
             string script = reader.ReadToEnd();
-            pythonProcess.StandardInput.WriteLine($"recv_port = {sendingPort}");
             pythonProcess.StandardInput.Write(script);
-            pythonProcess.StandardInput.Close();
-            running = true;
-            try
+            pythonProcess.StandardInput.Write("\n$exec\n");
+            int currentWaitingSeconds = waitingSeconds;
+            received = false;
+            while (waitingSeconds<currentWaitingSeconds+10)
             {
-                GetResponse(allowWaitSecond:10);
+                if (received)
+                {
+                    logger.Debug("python process started");
+                    started = true;
+                    pythonProcess.StandardInput.Write("\n$exec\n__status__()\n$exec\n");
+                    Execute("open('text','w').write('hello')\n");
+                    return;
+                }
             }
-            catch (LigralException)
-            {
-                throw logger.Error(new LigralException($"Error occurred when starting python process"));
-            }
-            started = true;
-            logger.Debug("python process started");
-            Solver.Stopped += Stop;
-            thread = new Thread(() => GetResponse());
-            thread.Start();
+            throw logger.Error(new LigralException($"Error occurred when starting python process"));
         }
-        public void Stop() 
+        static void StopListening() 
         {
             running = false;
         }
@@ -120,38 +117,31 @@ namespace Ligral.Tools
                 command = waitingCommand + command;
                 waitingCommand = "";
             }
-            byte[] buffer = Encoding.UTF8.GetBytes(command);
-            socket.SendTo(buffer, sendingEndPoint);
+            pythonProcess.StandardInput.Write(command);
+            pythonProcess.StandardInput.Write("\n$exec\n__status__()\n$exec\n");
+            pythonProcess.StandardInput.Flush();
+            logger.Debug("Command executed");
         }
-        private void GetResponse(int allowWaitSecond = 0)
+        static void Listen()
         {
-            int waitSecond = 0;
             while (running)
             {
                 byte[] buffer = new byte[65536];
-                EndPoint senderRemote = (EndPoint) receivingEndPoint;
+                EndPoint senderRemote = (EndPoint) endPoint;
                 try
                 {
                     socket.ReceiveFrom(buffer, ref senderRemote);
-                    waitSecond = 0;
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
-                    if (allowWaitSecond == 0)
-                    {
-                        continue;
-                    }
-                    waitSecond++;
-                    if (allowWaitSecond > waitSecond)
-                    {
-                        continue;
-                    }
-                    throw logger.Error(new LigralException($"Cannot get response from python: {e.Message}"));
+                    waitingSeconds++;
+                    received = false;
+                    continue;
                 }
                 string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
                 if (packetString.Length == 0) 
                 {
-                    throw logger.Error(new LigralException("Cannot get response from python: response is empty"));
+                    throw staticLogger.Error(new LigralException("Cannot get response from python: response is empty"));
                 }
                 Response response;
                 try
@@ -160,17 +150,22 @@ namespace Ligral.Tools
                 }
                 catch (System.Exception e)
                 {
-                    throw logger.Error(new LigralException($"Invalid response: {packetString}\n{e.Message}"));
+                    throw staticLogger.Error(new LigralException($"Invalid response: {packetString}\n{e.Message}"));
                 }
                 if (!response.Success)
                 {
-                    throw logger.Error(new LigralException($"Error occurred when executing python: {response.Message}"));
+                    throw staticLogger.Error(new LigralException($"Error occurred when executing python: {response.Message}"));
                 }
                 else if (response.Message != null && response.Message.Length > 0)
                 {
-                    logger.Prompt(response.Message);
+                    staticLogger.Prompt(response.Message);
                 }
-                if (allowWaitSecond > 0) return;
+                else
+                {
+                    staticLogger.Debug("Response received, but no message is contained.");
+                }
+                waitingSeconds = 0;
+                received = true;
             }
         }
     }
