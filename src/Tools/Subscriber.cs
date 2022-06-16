@@ -31,7 +31,7 @@ namespace Ligral.Tools
         }
         public bool Equal(IPEndPoint endPoint)
         {
-            return CharEndPoint.Address == endPoint.Address &&
+            return CharEndPoint.Address.Equals(endPoint.Address) &&
                 CharEndPoint.Port == endPoint.Port;
         }
     }
@@ -79,7 +79,7 @@ namespace Ligral.Tools
         }
         public static void Register(IPEndPoint endPoint, Subscriber subscriber)
         {
-            var endPointGroup = subscribers.FirstOrDefault(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            var endPointGroup = subscribers.FirstOrDefault(endPointGroup => endPointGroup.Equal(endPoint));
             if (endPointGroup == null)
             {
                 endPointGroup = new EndPointGroup<Subscriber>(endPoint);
@@ -131,7 +131,7 @@ namespace Ligral.Tools
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             running = true;
             var group = subscribers.First(group => group.Equal(endPoint));
-            EndPoint senderRemote = (EndPoint)defaultEndPoint;
+            EndPoint senderRemote = (EndPoint)endPoint;
             // Console.WriteLine(group.CharEndPoint.Port);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 1);
             try
@@ -140,7 +140,7 @@ namespace Ligral.Tools
             }
             catch(SocketException e)
             {
-                throw subscriberLogger.Error(new LigralException($"Address: {defaultEndPoint.Address} port: {defaultEndPoint.Port}.\n{e.Message}"));
+                throw subscriberLogger.Error(new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}"));
             }
             while (running)
             {

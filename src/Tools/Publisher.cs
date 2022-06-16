@@ -64,7 +64,7 @@ namespace Ligral.Tools
         }
         private void InitThread(IPEndPoint endPoint)
         {
-            var endPointGroup = packets.FirstOrDefault(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            var endPointGroup = packets.FirstOrDefault(endPointGroup => endPointGroup.Equal(endPoint));
             if (endPointGroup == null)
             {
                 endPointGroup = new EndPointGroup<byte[]>(endPoint);
@@ -90,7 +90,7 @@ namespace Ligral.Tools
         public static void Serve(IPEndPoint endPoint)
         {
             // if (running) return;
-            var endPointGroup = packets.First(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            var endPointGroup = packets.First(endPointGroup => endPointGroup.Equal(endPoint));
             running = true;
             while (running)
             {
@@ -118,7 +118,7 @@ namespace Ligral.Tools
         }
         public void Send(int label, Dictionary<string, JsonObject> data)
         {
-            var endPointGroup = packets.First(endPointGroup => endPointGroup.CharEndPoint==endPoint);
+            var endPointGroup = packets.First(endPointGroup => endPointGroup.Equal(endPoint));
             Dictionary<string, JsonObject> packet = new Dictionary<string, JsonObject>();
             packet["label"] = new JsonNumber() { Value = label };
             packet["data"] = new JsonDict() { Value = data };
