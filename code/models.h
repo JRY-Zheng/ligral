@@ -1082,8 +1082,14 @@ struct Pow {
     }
 };
 
-// template<int R, int C>
-// struct Pow2 {};
+template<int S>
+struct Pow2 {
+    void calculate(Matrix<double, S, S> input,
+        Matrix<double, 1, 1> power,
+        Matrix<double, S, S>* output) {
+        *output = input.pow(power(0, 0));
+    }
+};
 
 template<int R, int C>
 struct Sqrt {
