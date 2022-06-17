@@ -2,6 +2,7 @@
 #define MODELS_H
 
 #include <Eigen/Dense>
+#include <Eigen/MatrixFunctions>
 using Eigen::Matrix;
 
 #include <iostream>
@@ -1072,8 +1073,14 @@ struct Exp {
     }
 };
 
-// template<int R, int C>
-// struct Pow {};
+template<int S>
+struct Pow {
+    int power;
+    void calculate(Matrix<double, S, S> input,
+        Matrix<double, S, S>* output) {
+        *output = input.pow(power);
+    }
+};
 
 // template<int R, int C>
 // struct Pow2 {};
