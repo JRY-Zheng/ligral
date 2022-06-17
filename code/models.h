@@ -1257,8 +1257,31 @@ template<int R, int C>
 struct Variable {};
 */
 
-// template<int R, int C>
-// struct Interpolation {};
+template<int R, int C, int L>
+struct Interpolation {
+    Matrix<double, L, 1> points;
+    Matrix<double, L, R*C> table;
+    void calculate(Matrix<double, 1, 1> input,
+        Matrix<double, R, C>* output) {
+        int i=0;
+        if (points(i,0) >= input(0, 0)) {
+            *output = table.row(i).reshaped(R, C);
+            return;
+        }
+        while (points(++i,0) <= input(0, 0)) {
+            if (points(i,0) == input(0, 0)) {
+                *output = table.row(i).reshaped(R, C);
+                return;
+            }
+            if (i+1 >= L) {
+                *output = table.row(i).reshaped(R, C);
+                return;
+            }
+        }
+        double ratio = (input(0, 0)-points(i-1,0))/(points(i,0)-points(i-1,0));
+        *output = (table.row(i-1)*(1-ratio)+table.row(i)*ratio).reshaped(R, C);
+    }
+};
 
 // template<int R, int C>
 // struct UDPListener {};
