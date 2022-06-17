@@ -148,7 +148,7 @@ namespace Ligral.Component.Models
                 var dataName = useDefinedName ? names : OutPortsName;
                 if (dataName.Any(n => !data.Value.ContainsKey(n)))
                 {
-                    throw logger.Error(new ModelException(this, "Invalid message: Key lost in data"));
+                    throw logger.Error(new ModelException(this, $"Invalid message: Key {dataName.First(n => !data.Value.ContainsKey(n))} lost in data: {string.Join(',', data.Value.Keys)}"));
                 }
                 for (int i=0; i<OutPortCount(); i++)
                 {
