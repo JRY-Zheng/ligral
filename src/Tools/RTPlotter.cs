@@ -21,8 +21,9 @@ namespace Ligral.Tools
         }
         protected override void Execute(string command)
         {
-            PythonProcess.StandardInput.Write(command);
+            PythonProcess.Execute(command);
             // Console.WriteLine(command);
+            logger.Debug($"Executing command: {command}");
         }
         protected override bool Receive(FigureProtocol.Curve curve)
         {

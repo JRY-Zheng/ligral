@@ -34,6 +34,9 @@
     <EmbeddedResource Include="../code/solvers.h">
       <LogicalName>solvers.h</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="../utils/process.py">
+      <LogicalName>process.py</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
