@@ -193,7 +193,7 @@ namespace Ligral.Component.Models
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            Results[0] = C*handle.GetState()+D*values[0]??Matrix<double>.Build.Dense(1, colNo, 0);
+            Results[0] = C*handle.GetState()+D*(values[0]??Matrix<double>.Build.Dense(1, colNo, 0));
             return Results;
         }
         public override List<CodeAST> ConstructConfigurationAST()
