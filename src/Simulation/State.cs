@@ -138,5 +138,9 @@ namespace Ligral.Simulation
         {
             return GetSignal(state => state.StateVariable);
         }
+        public Matrix<double> GetDerivative()
+        {
+            return GetSignal(state => state.Derivative);
+        }
     }
 }
