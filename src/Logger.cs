@@ -63,6 +63,29 @@ namespace Ligral
         {
             this.source = source;
         }
+        public static void OnExit()
+        {
+            if (LogFile is string logFile)
+            {
+                foreach (var message in Logs)
+                {
+                    if (message.Level >= MinLogFileLevel)
+                    {
+                        try
+                        {
+                            File.AppendAllText(logFile, message+"\n");
+                        }
+                        catch (Exception e)
+                        {
+                            Logger logger = new Logger("Logger");
+                            LogFile = null;
+                            PrintOut = true;
+                            throw logger.Error(new LigralException($"Cannot log to file {logFile}: {e.Message??"No message avalable"}"));
+                        }
+                    }
+                }
+            }
+        }
         private void Log(LogMessage message, bool cache = true)
         {
             if (cache) Logs.Add(message);
@@ -78,20 +101,20 @@ namespace Ligral
                     textWriter.WriteLine(message);
                 }
             }
-            if (LogFile is string logFile && message.Level >= MinLogFileLevel)
-            {
-                try
-                {
-                    File.AppendAllText(logFile, message+"\n");
-                }
-                catch (Exception e)
-                {
-                    Logger logger = new Logger("Logger");
-                    LogFile = null;
-                    PrintOut = true;
-                    throw logger.Error(new LigralException($"Cannot log to file {logFile}: {e.Message??"No message avalable"}"));
-                }
-            }
+            // if (LogFile is string logFile && message.Level >= MinLogFileLevel)
+            // {
+            //     try
+            //     {
+            //         File.AppendAllText(logFile, message+"\n");
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Logger logger = new Logger("Logger");
+            //         LogFile = null;
+            //         PrintOut = true;
+            //         throw logger.Error(new LigralException($"Cannot log to file {logFile}: {e.Message??"No message avalable"}"));
+            //     }
+            // }
         }
         public void Debug(string message)
         {

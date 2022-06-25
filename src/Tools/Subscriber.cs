@@ -56,7 +56,7 @@ namespace Ligral.Tools
             Id = count;
             count++;
             Register(defaultEndPoint, this);
-            logger = new Logger(GetType().Name);
+            logger = new Logger(GetType().Name+Id);
             if (!started) 
             {
                 Solver.Starting += Start;
@@ -70,7 +70,7 @@ namespace Ligral.Tools
             IPAddress ipAddress = IPAddress.Parse(address);
             IPEndPoint endPoint = new IPEndPoint(ipAddress, port);
             Register(endPoint, this);
-            logger = new Logger(GetType().Name);
+            logger = new Logger(GetType().Name+Id);
             if (!started) 
             {
                 Solver.Starting += Start;
@@ -86,8 +86,10 @@ namespace Ligral.Tools
                 subscribers.Add(endPointGroup);
                 var thread = new Thread(() => Serve(endPoint));
                 threads.Add(thread);
+                subscriberLogger.Debug($"Subscribe on {endPoint.Address}:{endPoint.Port}");
             }
             endPointGroup.Add(subscriber);
+            subscriberLogger.Debug($"Subscriber{subscriber.Id} registered");
         }
         public static void Start()
         {
@@ -115,9 +117,11 @@ namespace Ligral.Tools
             if (group != null)
             {
                 group.Remove(this);
+                logger.Debug($"Subscriber{Id} left");
                 if (group.Count == 0)
                 {
                     subscribers.Remove(group);
+                    subscriberLogger.Debug($"Unsubscribe on {group.CharEndPoint.Address}:{group.CharEndPoint.Port}");
                 }
             }
             if (subscribers.Count == 0)
@@ -142,6 +146,7 @@ namespace Ligral.Tools
             {
                 throw subscriberLogger.Error(new LigralException($"Address: {endPoint.Address} port: {endPoint.Port}.\n{e.Message}"));
             }
+            subscriberLogger.Debug($"End point {endPoint.Address}:{endPoint.Port} is bound");
             while (running)
             {
                 byte[] buffer = new byte[1024];
@@ -156,6 +161,7 @@ namespace Ligral.Tools
                 string packetString = Encoding.UTF8.GetString(buffer.TakeWhile(x => x != 0).ToArray());
                 if (packetString.Length == 0) continue;
                 PacketLabel packetLabel = JsonSerializer.Deserialize<PacketLabel>(packetString);
+                subscriberLogger.Debug($"Packet: {packetLabel.Label:X} received");
                 foreach (var subscriber in group)
                 {
                     try
@@ -180,6 +186,7 @@ namespace Ligral.Tools
             if (labelAbilities.ContainsKey(packetLabel))
             {
                 labelAbilities[packetLabel](packetString);
+                logger.Debug($"Packet: {packetLabel} is handled");
                 return true;
             }
             return false;
@@ -191,6 +198,7 @@ namespace Ligral.Tools
             {
                 Action<T> action = typeAbilities[type] as Action<T>;
                 action(datastruct);
+                logger.Debug($"Packet ({type.Name}) is handled");
             }
             return false;
         }

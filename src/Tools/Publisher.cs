@@ -29,6 +29,7 @@ namespace Ligral.Tools
         static IPAddress defaultAddress = IPAddress.Parse(Settings.GetInstance().IPAddress);
         static IPEndPoint defaultEndPoint = new IPEndPoint(defaultAddress, Settings.GetInstance().SendingPort);
         private IPEndPoint endPoint;
+        private Logger logger;
         private static int count = 0;
         private static List<Subscriber> hooks = new List<Subscriber>();
         public int Id;
@@ -36,11 +37,13 @@ namespace Ligral.Tools
         private static List<Thread> threads = new List<Thread>();// new Thread(threadStart);
         private static bool started = false;
         private static bool running = false;
+        private static Logger staticLogger = new Logger("Publisher");
         private static List<EndPointGroup<byte[]>> packets = new List<EndPointGroup<byte[]>>();
         public Publisher()
         {
             Id = count;
             count++;
+            logger = new Logger($"Publisher{Id}");
             endPoint = defaultEndPoint;
             InitThread(defaultEndPoint);
             if (!started) 
@@ -53,6 +56,7 @@ namespace Ligral.Tools
         {
             Id = count;
             count++;
+            logger = new Logger($"Publisher{Id}");
             IPAddress ipAddress = IPAddress.Parse(address);
             endPoint = new IPEndPoint(ipAddress, port);
             InitThread(endPoint);
@@ -100,6 +104,7 @@ namespace Ligral.Tools
                     if (packetBytes is null) continue;
                     endPointGroup.RemoveAt(0);
                     socket.SendTo(packetBytes, endPoint);
+                    staticLogger.Debug($"Packet ({packetBytes.Length}) is sent.");
                 }
                 catch (System.InvalidOperationException){}
             }
@@ -112,9 +117,14 @@ namespace Ligral.Tools
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
             foreach (var hook in hooks)
             {
-                if (hook.Receive<T>(data)) return;
+                if (hook.Receive<T>(data)) 
+                {
+                    logger.Debug($"Packet: {label:X} transmitted via hook.");
+                    return;
+                }
             }
             endPointGroup.Add(packetBytes);
+            logger.Debug($"Packet: {label:X} in queue.");
         }
         public void Send(int label, Dictionary<string, JsonObject> data)
         {
@@ -126,6 +136,7 @@ namespace Ligral.Tools
             string packetString = dict.ToString();
             byte[] packetBytes = Encoding.UTF8.GetBytes(packetString);
             endPointGroup.Add(packetBytes);
+            logger.Debug($"Packet: {label:X} in queue.");
         }
         public static void AddHooks(Subscriber subscriber)
         {
