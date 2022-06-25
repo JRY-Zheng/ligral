@@ -10,7 +10,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Tools;
-using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -80,6 +80,28 @@ namespace Ligral.Component.Models
             MatrixBuilder<double> m = Matrix<double>.Build;
             Results[0] = m.Dense(1, 1, interpolationVal);
             return Results;
+        }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>() {table.Data.Count - 1, table.ColumnCount - 1};
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            LShiftCodeAST rowsAST = new LShiftCodeAST();
+            rowsAST.Destination = $"{GlobalName}.rows";
+            rowsAST.Source = string.Join(',', table.GetColumn(0).Skip(1));
+            codeASTs.Add(rowsAST);
+            LShiftCodeAST colsAST = new LShiftCodeAST();
+            colsAST.Destination = $"{GlobalName}.cols";
+            colsAST.Source = string.Join(',', table.Data[0].Skip(1));
+            codeASTs.Add(colsAST);
+            LShiftCodeAST tableAST = new LShiftCodeAST();
+            tableAST.Destination = $"{GlobalName}.table";
+            tableAST.Source = string.Join(",\n\t\t", table.Data.Skip(1).Select(line =>
+                string.Join(',', line.Skip(1))));
+            codeASTs.Add(tableAST);
+            return codeASTs;
         }
     }
 }

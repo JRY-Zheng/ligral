@@ -1269,11 +1269,7 @@ struct Interpolation {
             return;
         }
         while (points(++i,0) <= input(0, 0)) {
-            if (points(i,0) == input(0, 0)) {
-                *output = table.row(i).reshaped(R, C);
-                return;
-            }
-            if (i+1 >= L) {
+            if (points(i,0) == input(0, 0) || i+1 >= L) {
                 *output = table.row(i).reshaped(R, C);
                 return;
             }
@@ -1329,8 +1325,47 @@ struct Cot {
     }
 };
 
-// template<int R, int C>
-// struct Interpolation2D {};
+template<int R, int C>
+struct Interpolation2D {
+    Matrix<double, R, 1> rows;
+    Matrix<double, 1, C> cols;
+    Matrix<double, R, C> table;
+    void calculate(Matrix<double, 1, 1> row,
+        Matrix<double, 1, 1> col,
+        Matrix<double, 1, 1>* output) {
+        double rowRatio = 0;
+        int r = 0;
+        if (rows(r,0) >= row(0, 0)) {
+            rowRatio = 1;
+        }
+        else while (rows(++r,0) <= row(0, 0)) {
+            if (rows(r,0) == row(0, 0) || r+1 >= R) {
+                rowRatio = 1;
+                break;
+            }
+        }
+        if (rowRatio == 0) {
+            rowRatio = (row(0, 0)-rows(r-1,0))/(rows(r,0)-rows(r-1,0));
+        }
+        double colRatio = 0;
+        int c = 0;
+        if (cols(0,c) >= col(0, 0)) {
+            colRatio = 1;
+        }
+        else while (cols(0,++c) <= col(0, 0)) {
+            if (cols(0,c) == col(0, 0) || c+1 >= C) {
+                colRatio = 1;
+                break;
+            }
+        }
+        if (colRatio == 0) {
+            colRatio = (col(0, 0)-cols(0,c-1))/(cols(0,c)-cols(0,c-1));
+        }
+        double left = table(r-1, c-1)*(1-rowRatio)+table(r, c-1)*rowRatio;
+        double right = table(r-1, c)*(1-rowRatio)+table(r, c)*rowRatio;
+        *output << left*(1-colRatio)+right*colRatio;
+    }
+};
 
 // template<int R, int C>
 // struct InterpolationHD {};
