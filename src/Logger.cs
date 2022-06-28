@@ -67,8 +67,11 @@ namespace Ligral
         {
             if (LogFile is string logFile)
             {
-                foreach (var message in Logs)
+                int i = 0;
+                while (i < Logs.Count)
+                // foreach (var message in Logs)
                 {
+                    var message = Logs[i];
                     if (message.Level >= MinLogFileLevel)
                     {
                         try
