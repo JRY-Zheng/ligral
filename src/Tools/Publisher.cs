@@ -96,7 +96,7 @@ namespace Ligral.Tools
             // if (running) return;
             var endPointGroup = packets.First(endPointGroup => endPointGroup.Equal(endPoint));
             running = true;
-            while (running)
+            while (running || endPointGroup.Count != 0)
             {
                 try
                 {
