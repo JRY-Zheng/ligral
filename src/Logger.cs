@@ -71,7 +71,6 @@ namespace Ligral
                 while (i < Logs.Count)
                 // foreach (var message in Logs)
                 {
-                    i++;
                     var message = Logs[i];
                     if (message.Level >= MinLogFileLevel)
                     {
@@ -87,6 +86,7 @@ namespace Ligral
                             throw logger.Error(new LigralException($"Cannot log to file {logFile}: {e.Message??"No message avalable"}"));
                         }
                     }
+                    i++;
                 }
             }
         }
