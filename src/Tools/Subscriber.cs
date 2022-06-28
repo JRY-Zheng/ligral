@@ -104,6 +104,10 @@ namespace Ligral.Tools
         public static void Stop()
         {
             running = false;
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
             // if (socket.IsBound)
             // {
             //     socket.Shutdown(SocketShutdown.Receive);

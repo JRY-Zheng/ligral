@@ -69,7 +69,15 @@ namespace Ligral.Commands
                     string problemName = Path.GetFileNameWithoutExtension(FileName);
                     Problem problem = new Problem(problemName, routine);
                     Solver solver = Solver.GetSolver(settings.SolverName.ToLower());
-                    solver.Solve(problem);
+                    try
+                    {
+                        solver.Solve(problem);
+                    }
+                    catch (LigralException e)
+                    {
+                        Solver.OnStopped();
+                        throw logger.Error(new LigralException("Solving problem failed, solver exited."));
+                    }
                 }
             }
             catch (LigralException)

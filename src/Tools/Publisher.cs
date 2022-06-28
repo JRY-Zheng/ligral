@@ -90,6 +90,10 @@ namespace Ligral.Tools
         public static void Stop()
         {
             running = false;
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
         }
         public static void Serve(IPEndPoint endPoint)
         {
