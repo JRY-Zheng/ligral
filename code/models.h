@@ -1379,40 +1379,28 @@ struct InterpolationHD {
         Matrix<double, 1, D> ratio;
         for (int i=0; i<D; i++) {
             int j=0;
-            if (axes(i, 0) >= value(0, i))
-            std::cout << i << ": " << axes(i, 0) << ">" << value(0, i) << std::endl;
+            if (axes(i, 0) >= value(0, i));
             else while (true) {
-                std::cout << "in for-loop, j=" << j << "axis=" << axes(i, j) << std::endl;
-                if (j>=dim(0, i)-2) {
-                    break;
-                } else if (axes(i, j+1) > value(0, i)) {
-                    std::cout << "j=" << j << std::endl;
-                    break;
-                } else j++;
+                if (j>=dim(0, i)-2) break;
+                else if (axes(i, j+1) > value(0, i)) break;
+                else j++;
             }
-            std::cout << "j: " << j << std::endl;
             leftIndex(0, i) = j;
             ratio(0, i) = (value(0, i) - axes(i, j))/(axes(i, j+1) - axes(i, j));
-            std::cout << "single ratio: " << ratio(0, i) << std::endl;
         }
-        std::cout << "left index: " << leftIndex << std::endl;
-        std::cout << "ratio: " << ratio << std::endl;
         double val = 0;
         for (int k=0; k<(1<<D); k++) {
             double c = 1;
             Matrix<int, 1, D> ind;
             for (int x=0; x<D; x++) {
                 if (((k>>x)&1) == 0) {
-                    std::cout << k << " " << x << " 0" << std::endl;
                     c *= ratio(0, x);
                     ind(0, x) = leftIndex(0, x)+1;
                 } else {
-                    std::cout << k << " " << x << " 1" << std::endl;
                     c *= 1-ratio(0, x);
                     ind(0, x) = leftIndex(0, x);
                 }
             }
-            std::cout << "ind: " << ind << " ratio: " << c << std::endl;
             val += c*_table(ind);
         }
         *output << val;
@@ -1423,7 +1411,6 @@ private:
         for (int i=0; i<D-1; i++) {
             c += ind(0, i)*indices(0, i);
         }
-        std::cout << "item at: " << ind(0, D-1) << "," << c << "=" << table(c, ind(0, D-1)) << std::endl;
         return table(c, ind(0, D-1));
     }
 };
