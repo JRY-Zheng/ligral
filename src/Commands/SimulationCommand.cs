@@ -73,7 +73,7 @@ namespace Ligral.Commands
                     {
                         solver.Solve(problem);
                     }
-                    catch (LigralException e)
+                    catch (LigralException)
                     {
                         Solver.OnStopped();
                         throw logger.Error(new LigralException("Solving problem failed, solver exited."));
