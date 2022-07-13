@@ -961,7 +961,7 @@ struct Atan2 {
         Matrix<double, R, C>* output) {
         auto ones = Matrix<double, R, C>::Ones();
         for (int r=0; r<R; r++) {
-            output->row(r) = y.row(r).binaryExpr(ones.row(r)*y(r, 0), std::ptr_fun(::atan2));
+            output->row(r) = y.row(r).binaryExpr(ones.row(r)*x(r, 0), std::ptr_fun(::atan2));
         }
     }
     void calculate(Matrix<double, R, 1> y, 
@@ -969,7 +969,7 @@ struct Atan2 {
         Matrix<double, R, C>* output) {
         auto ones = Matrix<double, R, C>::Ones();
         for (int r=0; r<R; r++) {
-            output->row(r) = (ones.row(r)*x(r, 0)).binaryExpr(y.row(r), std::ptr_fun(::atan2));
+            output->row(r) = (ones.row(r)*y(r, 0)).binaryExpr(x.row(r), std::ptr_fun(::atan2));
         }
     }
     void calculate(Matrix<double, R, C> y, 
@@ -1119,8 +1119,139 @@ struct Log {
     }
 };
 
-// template<int R, int C>
-// struct Log2 {};
+template<int R, int C>
+struct Log2 {
+    void calculate(Matrix<double, R, C> x,
+        Matrix<double, R, C> base,
+        Matrix<double, R, C>* output) {
+        *output = x.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, 1, 1> base, 
+        Matrix<double, R, C>* output) {
+        auto b_val = Matrix<double, R, C>::Ones()*base(0, 0);
+        *output = x.binaryExpr(b_val, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, R, C> base, 
+        Matrix<double, R, C>* output) {
+        auto x_val = Matrix<double, R, C>::Ones()*x(0, 0);
+        *output = x_val.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, R, 1> base, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = x.row(r).binaryExpr(ones.row(r)*base(r, 0), [](double xi, double bi) {
+                return std::log(xi)/std::log(bi);
+            });
+        }
+    }
+    void calculate(Matrix<double, R, 1> x, 
+        Matrix<double, R, C> base, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int r=0; r<R; r++) {
+            output->row(r) = (ones.row(r)*x(r, 0)).binaryExpr(base.row(r), [](double xi, double bi) {
+                return std::log(xi)/std::log(bi);
+            });
+        }
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, 1, C> base, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = x.col(c).binaryExpr(ones.col(c)*base(0, c), [](double xi, double bi) {
+                return std::log(xi)/std::log(bi);
+            });
+        }
+    }
+    void calculate(Matrix<double, 1, C> x, 
+        Matrix<double, R, C> base, 
+        Matrix<double, R, C>* output) {
+        auto ones = Matrix<double, R, C>::Ones();
+        for (int c=0; c<C; c++) {
+            output->col(c) = (ones.col(c)*x(0, c)).binaryExpr(base.col(c), [](double xi, double bi) {
+                return std::log(xi)/std::log(bi);
+            });
+        }
+    }
+};
+
+
+template<int R>
+struct Log2<R, 1> {
+    void calculate(Matrix<double, R, 1> x,
+        Matrix<double, R, 1> base,
+        Matrix<double, R, 1>* output) {
+        *output = x.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, R, 1> x, 
+        Matrix<double, 1, 1> base, 
+        Matrix<double, R, 1>* output) {
+        auto b_val = Matrix<double, R, 1>::Ones()*base(0, 0);
+        *output = x.binaryExpr(b_val, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, R, 1> base, 
+        Matrix<double, R, 1>* output) {
+        auto x_val = Matrix<double, R, 1>::Ones()*x(0, 0);
+        *output = x_val.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+};
+
+
+template<int C>
+struct Log2<1, C> {
+    void calculate(Matrix<double, 1, C> x,
+        Matrix<double, 1, C> base,
+        Matrix<double, 1, C>* output) {
+        *output = x.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, 1, C> x, 
+        Matrix<double, 1, 1> base, 
+        Matrix<double, 1, C>* output) {
+        auto b_val = Matrix<double, 1, C>::Ones()*base(0, 0);
+        *output = x.binaryExpr(b_val, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, 1, C> base, 
+        Matrix<double, 1, C>* output) {
+        auto x_val = Matrix<double, 1, C>::Ones()*x(0, 0);
+        *output = x_val.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+};
+
+template<>
+struct Log2<1, 1> {
+    void calculate(Matrix<double, 1, 1> x,
+        Matrix<double, 1, 1> base,
+        Matrix<double, 1, 1>* output) {
+        *output = x.binaryExpr(base, [](double xi, double bi) {
+            return std::log(xi)/std::log(bi);
+        });
+    }
+};
 
 // template<int R, int C>
 // struct LogicSwitch {};
