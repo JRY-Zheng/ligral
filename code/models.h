@@ -1379,8 +1379,125 @@ struct Max<1, 1> {
     }
 };
 
-// template<int R, int C>
-// struct Min {};
+template<int R, int C>
+struct Min {
+    void calculate(Matrix<double, R, C> x,
+        Matrix<double, R, C> y,
+        Matrix<double, R, C>* output) {
+        *output = x.binaryExpr(y, [](double xi, double yi) {
+            return xi<yi?xi:yi;
+        });
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, 1, 1> y, 
+        Matrix<double, R, C>* output) {
+        *output = x.unaryExpr([y](double xi) {
+            return xi<y(0,0)?xi:y(0,0);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, R, C> y, 
+        Matrix<double, R, C>* output) {
+        *output = y.unaryExpr([x](double yi) {
+            return x(0,0)<yi?x(0,0):yi;
+        });
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, R, 1> y, 
+        Matrix<double, R, C>* output) {
+        for (int r=0; r<R; r++) {
+            output->row(r) = x.row(r).unaryExpr([y, r](double xi) {
+                return xi<y(r,0)?xi:y(r,0);
+            });
+        }
+    }
+    void calculate(Matrix<double, R, 1> x, 
+        Matrix<double, R, C> y, 
+        Matrix<double, R, C>* output) {
+        for (int r=0; r<R; r++) {
+            output->row(r) = y.row(r).unaryExpr([x, r](double yi) {
+                return x(r,0)<yi?x(r,0):yi;
+            });
+        }
+    }
+    void calculate(Matrix<double, R, C> x, 
+        Matrix<double, 1, C> y, 
+        Matrix<double, R, C>* output) {
+        for (int c=0; c<C; c++) {
+            output->col(c) = x.col(c).unaryExpr([y, c](double xi) {
+                return xi<y(0,c)?xi:y(0,c);
+            });
+        }
+    }
+    void calculate(Matrix<double, 1, C> x, 
+        Matrix<double, R, C> y, 
+        Matrix<double, R, C>* output) {
+        for (int c=0; c<C; c++) {
+            output->col(c) = y.col(c).unaryExpr([x, c](double yi) {
+                return x(0,c)<yi?x(0,c):yi;
+            });
+        }
+    }
+};
+
+template<int R>
+struct Min<R, 1> {
+    void calculate(Matrix<double, R, 1> x,
+        Matrix<double, R, 1> y,
+        Matrix<double, R, 1>* output) {
+        *output = x.binaryExpr(y, [](double xi, double yi) {
+            return xi>yi?xi:yi;
+        });
+    }
+    void calculate(Matrix<double, R, 1> x, 
+        Matrix<double, 1, 1> y, 
+        Matrix<double, R, 1>* output) {
+        *output = x.unaryExpr([y](double xi) {
+            return xi<y(0,0)?xi:y(0,0);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, R, 1> y, 
+        Matrix<double, R, 1>* output) {
+        *output = y.unaryExpr([x](double yi) {
+            return x(0,0)<yi?x(0,0):yi;
+        });
+    }
+};
+
+template<int C>
+struct Min<1, C> {
+    void calculate(Matrix<double, 1, C> x,
+        Matrix<double, 1, C> y,
+        Matrix<double, 1, C>* output) {
+        *output = x.binaryExpr(y, [](double xi, double yi) {
+            return xi<yi?xi:yi;
+        });
+    }
+    void calculate(Matrix<double, 1, C> x, 
+        Matrix<double, 1, 1> y, 
+        Matrix<double, 1, C>* output) {
+        *output = x.unaryExpr([y](double xi) {
+            return xi<y(0,0)?xi:y(0,0);
+        });
+    }
+    void calculate(Matrix<double, 1, 1> x, 
+        Matrix<double, 1, C> y, 
+        Matrix<double, 1, C>* output) {
+        *output = y.unaryExpr([x](double yi) {
+            return x(0,0)<yi?x(0,0):yi;
+        });
+    }
+};
+
+template<>
+struct Min<1, 1> {
+    void calculate(Matrix<double, 1, 1> x,
+        Matrix<double, 1, 1> y,
+        Matrix<double, 1, 1>* output) {
+        *output << (x(0,0)<y(0,0)?x(0,0):y(0,0));
+    }
+};
 
 // template<int R, int C>
 // struct Rand {};
