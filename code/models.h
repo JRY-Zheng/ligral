@@ -1256,8 +1256,153 @@ struct Log2<1, 1> {
 // template<int R, int C>
 // struct LogicSwitch {};
 
-// template<int R, int C>
-// struct ThresholdSwitch {};
+template<int R, int C>
+struct Switch {
+    double threshold;
+    void calculate(Matrix<double, R, C> condition,
+        Matrix<double, R, C> input1,
+        Matrix<double, R, C> input2,
+        Matrix<double, R, C>* output) {
+        Matrix<double, R, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1.array()*distribution.array()+input2.array()*(1-distribution.array());
+    }
+    void calculate(Matrix<double, R, C> condition, 
+        Matrix<double, 1, 1> input1,  
+        Matrix<double, 1, 1> input2, 
+        Matrix<double, R, C>* output) {
+        Matrix<double, R, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1(0,0)*distribution.array()+input2(0,0)*(1-distribution.array());
+    }
+    void calculate(Matrix<double, 1, 1> condition, 
+        Matrix<double, R, C> input1, 
+        Matrix<double, R, C> input2, 
+        Matrix<double, R, C>* output) {
+        double distribution = condition(0,0)>=threshold ? 1 : 0;
+        *output = input1.array()*distribution+input2.array()*(1-distribution);
+    }
+    void calculate(Matrix<double, R, C> condition, 
+        Matrix<double, R, 1> input1, 
+        Matrix<double, R, 1> input2, 
+        Matrix<double, R, C>* output) {
+        Matrix<double, R, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        for (int r=0; r<R; r++) {
+            output->row(r) = input1(r,0)*distribution.row(r)+input2(r,0)*(Matrix<double, 1, C>::Ones()-distribution.row(r));
+        }
+    }
+    void calculate(Matrix<double, R, 1> condition, 
+        Matrix<double, R, C> input1, 
+        Matrix<double, R, C> input2, 
+        Matrix<double, R, C>* output) {
+        Matrix<double, R, 1> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        for (int r=0; r<R; r++) {
+            output->row(r) = input1.row(r)*distribution(r,0)+input2.row(r)*(1-distribution(r,0));
+        }
+    }
+    void calculate(Matrix<double, R, C> condition, 
+        Matrix<double, 1, C> input1, 
+        Matrix<double, 1, C> input2, 
+        Matrix<double, R, C>* output) {
+        Matrix<double, R, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        for (int c=0; c<C; c++) {
+            output->col(c) = input1(0,c)*distribution.col(c)+input2(0,c)*(Matrix<double, R, 1>::Ones()-distribution.col(c));
+        }
+    }
+    void calculate(Matrix<double, 1, C> condition, 
+        Matrix<double, R, C> input1, 
+        Matrix<double, R, C> input2, 
+        Matrix<double, R, C>* output) {
+        Matrix<double, 1, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        for (int c=0; c<C; c++) {
+            output->col(c) = input1.col(c)*distribution(0,c)+input2.col(c)*(1-distribution(0,c));
+        }
+    }
+};
+
+template<int R>
+struct Switch<R, 1> {
+    double threshold;
+    void calculate(Matrix<double, R, 1> condition,
+        Matrix<double, R, 1> input1,
+        Matrix<double, R, 1> input2,
+        Matrix<double, R, 1>* output) {
+        Matrix<double, R, 1> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1.array()*distribution.array()+input2.array()*(1-distribution.array());
+    }
+    void calculate(Matrix<double, R, 1> condition, 
+        Matrix<double, 1, 1> input1,  
+        Matrix<double, 1, 1> input2, 
+        Matrix<double, R, 1>* output) {
+        Matrix<double, R, 1> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1(0,0)*distribution.array()+input2(0,0)*(1-distribution.array());
+    }
+    void calculate(Matrix<double, 1, 1> condition, 
+        Matrix<double, R, 1> input1, 
+        Matrix<double, R, 1> input2, 
+        Matrix<double, R, 1>* output) {
+        double distribution = condition(0,0)>=threshold ? 1 : 0;
+        *output = input1.array()*distribution+input2.array()*(1-distribution);
+    }
+};
+
+template<int C>
+struct Switch<1, C> {
+    double threshold;
+    void calculate(Matrix<double, 1, C> condition,
+        Matrix<double, 1, C> input1,
+        Matrix<double, 1, C> input2,
+        Matrix<double, 1, C>* output) {
+        Matrix<double, 1, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1.array()*distribution.array()+input2.array()*(1-distribution.array());
+    }
+    void calculate(Matrix<double, 1, C> condition, 
+        Matrix<double, 1, 1> input1,  
+        Matrix<double, 1, 1> input2, 
+        Matrix<double, 1, C>* output) {
+        Matrix<double, 1, C> distribution = condition.unaryExpr([this](double c) -> double {
+            return c >= this->threshold ? 1 : 0;
+        });
+        *output = input1(0,0)*distribution.array()+input2(0,0)*(1-distribution.array());
+    }
+    void calculate(Matrix<double, 1, 1> condition, 
+        Matrix<double, 1, C> input1, 
+        Matrix<double, 1, C> input2, 
+        Matrix<double, 1, C>* output) {
+        double distribution = condition(0,0)>=threshold ? 1 : 0;
+        *output = input1.array()*distribution+input2.array()*(1-distribution);
+    }
+};
+
+template<>
+struct Switch<1, 1> {
+    double threshold;
+    void calculate(Matrix<double, 1, 1> condition, 
+        Matrix<double, 1, 1> input1, 
+        Matrix<double, 1, 1> input2, 
+        Matrix<double, 1, 1>* output) {
+        double distribution = condition(0,0)>=threshold ? 1 : 0;
+        *output << input1(0,0)*distribution+input2(0,0)*(1-distribution);
+    }
+};
+
+
 
 template<int R, int C>
 struct Max {
