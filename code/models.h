@@ -1683,8 +1683,23 @@ private:
     void setCols(Matrix<double, R, C>* output, int* c) {}
 };
 
-// template<int R, int C>
-// struct Split {};
+template<int R, int C>
+struct Split {
+    template<typename ...T>
+    void calculate(Matrix<double, R, C> input,
+        Matrix<T, 1, 1>*... output) {
+        int i=0;
+        getItem(input, &i, output...);
+    }
+private:
+    template<typename T0, typename ...T>
+    void getItem(Matrix<double, R, C> input, int*i, T0* item0, T*...items) {
+        *item0 << input((*i)/input.rows(), (*i)%input.rows());
+        *i = *i+1;
+        getItem(input, i, items...);
+    }
+    void getItem(Matrix<double, R, C>input, int*i) {}
+};
 
 template<int R, int C>
 struct VSplit {
@@ -1694,6 +1709,7 @@ struct VSplit {
         int r=0;
         getRows(input, &r, output...);
     }
+private:
     template<typename T0, typename ...T>
     void getRows(Matrix<double, R, C> input, int* r, T0* row0, T*...rows) {
         *row0 = input.block(*r, 0, row0->rows(), C);
@@ -1711,6 +1727,7 @@ struct HSplit {
         int c=0;
         getCols(input, &c, output...);
     }
+private:
     template<typename T0, typename ...T>
     void getCols(Matrix<double, R, C> input, int* c, T0* col0, T*...cols) {
         *col0 = input.block(0, *c, R, col0->cols());
