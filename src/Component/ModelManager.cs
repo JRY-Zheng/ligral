@@ -70,7 +70,6 @@ namespace Ligral.Component
             {"Sign", ()=>new Sign()},
             {"Log", ()=>new Log()},
             {"Log2", ()=>new Log2()},
-            {"LogicSwitch", ()=>new LogicSwitch()},
             {"ThresholdSwitch", ()=>new Switch()},
             {"Switch", ()=>new Switch()},
             {"Max", ()=>new Max()},

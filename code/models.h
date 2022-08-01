@@ -1253,9 +1253,6 @@ struct Log2<1, 1> {
     }
 };
 
-// template<int R, int C>
-// struct LogicSwitch {};
-
 template<int R, int C>
 struct Switch {
     double threshold;
