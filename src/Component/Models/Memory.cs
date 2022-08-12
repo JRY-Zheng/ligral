@@ -23,19 +23,25 @@ namespace Ligral.Component.Models
             }
         }
         private Matrix<double> stack;
+        private Matrix<double> current;
         public override void Confirm()
         {
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
+            current = Matrix<double>.Build.DenseOfMatrix(initial);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
         }
         protected override void InputUpdate(Matrix<double> inputSignal)
         {
-            inputSignal.CopyTo(stack);
+            inputSignal.CopyTo(current);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             stack.CopyTo(Results[0]);
             return Results;
+        }
+        public override void Refresh()
+        {
+            current.CopyTo(stack);
         }
         public override List<CodeAST> ConstructConfigurationAST()
         {
