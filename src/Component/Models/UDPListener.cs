@@ -10,6 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
 using Ligral.Tools;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -179,6 +180,10 @@ namespace Ligral.Component.Models
                 Results[i] = handles[i].GetInput();
             }
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return InputMarker.ConstructConfigurationAST(GlobalName, handles.First());
         }
     }
 }

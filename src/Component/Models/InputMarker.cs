@@ -123,7 +123,7 @@ namespace Ligral.Component.Models
             Results[0] = handle.GetInput();
             return Results;
         }
-        public override List<CodeAST> ConstructConfigurationAST()
+        public static List<CodeAST> ConstructConfigurationAST(string GlobalName, ControlInputHandle handle)
         {
             var codeASTs = new List<CodeAST>();
             AssignCodeAST ctxAST = new AssignCodeAST();
@@ -135,6 +135,10 @@ namespace Ligral.Component.Models
             indexAST.Source = ControlInput.InputPool.IndexOf(handle.space[0]).ToString();
             codeASTs.Add(indexAST);
             return codeASTs;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return ConstructConfigurationAST(GlobalName, handle);
         }
     }
 }
