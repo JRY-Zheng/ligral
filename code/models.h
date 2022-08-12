@@ -1806,8 +1806,29 @@ struct Interpolation {
 // template<int R, int C>
 // struct UDPListener {};
 
-// template<int R, int C>
-// struct UDPSender {};
+// template<int...S>
+struct UDPSender {
+    int index;
+    context* ctx;
+    template<typename ...T>
+    void calculate(T... input) {
+        i = index;
+        setOutput(input...);
+    }
+private:
+    int i;
+    template<int R, int C, typename...T>
+    void setOutput(Matrix<double, R, C> output0, T...outputs) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                ctx->y(i+r*C+c) = output0(r, c);
+            }
+        }
+        i += R*C;
+        setOutput(outputs...);
+    }
+    void setOutput(){}
+};
 
 struct Cross {
     void calculate(Matrix<double, 1, 3> left, 

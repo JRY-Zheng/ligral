@@ -10,6 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
 using Ligral.Tools;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -150,6 +151,14 @@ namespace Ligral.Component.Models
                 }
             }
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return OutputSink.ConstructConfigurationAST(GlobalName, handles.First());
+        }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>();
         }
     }
 }
