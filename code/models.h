@@ -827,8 +827,22 @@ struct Abs {
 
 #define Output Node
 
-// template<int R, int C>
-// struct Memory {};
+template<int R, int C>
+struct Memory {
+    Matrix<double, R, C> stack;
+    void calculate(Matrix<double, R, C> input,
+        Matrix<double, R, C>* output) {
+        *output = stack;
+    }
+    void refresh() {
+        stack = current;
+    }
+    void input_update(Matrix<double, R, C> input) {
+        current = input;
+    }
+private:
+    Matrix<double, R, C> current;
+};
 
 struct Clock {
     context* ctx;
@@ -1803,7 +1817,6 @@ struct Interpolation {
     }
 };
 
-// template<int R, int C>
 struct UDPListener {
     int index;
     context* ctx;
@@ -1827,7 +1840,6 @@ private:
     void setInput(){}
 };
 
-// template<int...S>
 struct UDPSender {
     int index;
     context* ctx;

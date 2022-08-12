@@ -9,7 +9,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
-using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -36,6 +36,23 @@ namespace Ligral.Component.Models
         {
             stack.CopyTo(Results[0]);
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            LShiftCodeAST stackAST = new LShiftCodeAST();
+            stackAST.Destination = $"{GlobalName}.stack";
+            stackAST.Source = string.Join(',', initial.ToColumnMajorArray());
+            codeASTs.Add(stackAST);
+            return codeASTs;
+        }
+        public override List<CodeAST> ConstructRefreshAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            CallCodeAST refreshAST = new CallCodeAST();
+            refreshAST.FunctionName = $"{GlobalName}.refresh";
+            codeASTs.Add(refreshAST);
+            return codeASTs;
         }
     }
 }
