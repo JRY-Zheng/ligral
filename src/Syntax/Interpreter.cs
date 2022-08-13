@@ -259,8 +259,9 @@ namespace Ligral.Syntax
         private object Visit(IdAST idAST)
         {
             Symbol symbol = currentScope.Lookup(idAST.Id);
-            if (symbol==null)
+            if (symbol==null && currentScope.ScopeLevel == 0)
             {
+                logger.Info($"{idAST.Id} is regarded as node");
                 TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
                 Node node = typeSymbol.GetValue() as Node;
                 node.Name = idAST.Id;
@@ -268,7 +269,10 @@ namespace Ligral.Syntax
                 ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
                 currentScope.Insert(modelSymbol);
                 return node;
-                // throw logger.Error(new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}"));
+            }
+            else if (symbol==null)
+            {
+                throw logger.Error(new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}"));
             }
             else
             {
