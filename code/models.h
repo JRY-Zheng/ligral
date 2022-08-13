@@ -1655,8 +1655,17 @@ struct Min<1, 1> {
     }
 };
 
-// template<int R, int C>
-// struct Rand {};
+template<int R, int C>
+struct Rand {
+    void calculate(Matrix<double, R, C>* output) {
+        *output = value;
+    }
+    void refresh() {
+        value = Matrix<double, R, C>::Random().array().abs();
+    }
+private:
+    Matrix<double, R, C> value;
+};
 
 template<int R, int C>
 struct Terminal {

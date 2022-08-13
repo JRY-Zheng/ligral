@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -82,6 +83,22 @@ namespace Ligral.Component.Models
         {
             Results[0] = cache;
             return Results;
+        }
+        public override List<CodeAST> ConstructRefreshAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            CallCodeAST refreshAST = new CallCodeAST();
+            refreshAST.FunctionName = $"{GlobalName}.refresh";
+            codeASTs.Add(refreshAST);
+            return codeASTs;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return ConstructRefreshAST();
+        }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>() {rowNo, colNo};
         }
     }
 }
