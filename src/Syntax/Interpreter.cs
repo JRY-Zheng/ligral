@@ -301,7 +301,7 @@ namespace Ligral.Syntax
                 matrix = obj as Matrix<double>;
                 if (matrix==null)
                 {
-                    matrix = DenseMatrix.Create(1, 1, (double)obj);
+                    matrix = DenseMatrix.Create(1, 1, obj.ToScalar());
                 }
             }
             else
@@ -315,7 +315,7 @@ namespace Ligral.Syntax
                 _matrix = obj as Matrix<double>;
                 if (_matrix==null)
                 {
-                    _matrix = DenseMatrix.Create(1, 1, (double)obj);
+                    _matrix = DenseMatrix.Create(1, 1, obj.ToScalar());
                 }
                 try
                 {
@@ -475,7 +475,7 @@ namespace Ligral.Syntax
         private Model Visit(DigitBlockAST digitBlockAST)
         {
             Model constant = ModelManager.Create("Constant", digitBlockAST.FindToken());
-            Dict dictionary = new Dict() {{"value", (double)digitBlockAST.Digit}};
+            Dict dictionary = new Dict() {{"value", digitBlockAST.Digit.ToScalar()}};
             constant.Configure(dictionary);
             return constant;
         }
