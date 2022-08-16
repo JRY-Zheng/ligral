@@ -19,7 +19,7 @@ namespace LigralPlugins.Control
     {
         public Dictionary<string, Func<Model>> ModelTypePool {get; private set;} = new Dictionary<string, Func<Model>>()
         {
-            {"TestModel", ()=>new TestModel()}
+            {"PIDController", ()=>new PIDController()}
         };
 
         public string ReferenceName => "control";
