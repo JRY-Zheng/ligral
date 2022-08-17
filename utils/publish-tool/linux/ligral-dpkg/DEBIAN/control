@@ -1,0 +1,5 @@
+package: ligral
+version: 0.2.2
+architecture: amd64
+maintainer: J. Zheng
+description: A textual simulation language interpreter and solver.

@@ -1,0 +1,1 @@
+sudo dpkg -b ligral-dpkg/ ligral-v0.2.2-beta-linux-x64.deb
