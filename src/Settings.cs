@@ -140,6 +140,7 @@ namespace Ligral
                 case "license":
                 case "email":
                 case "home_page":
+                case "homepage":
                     break;
                 default:
                     throw logger.Error(new SettingException(item, val, "Unsupported setting."));
