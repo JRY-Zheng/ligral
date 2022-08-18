@@ -12,6 +12,7 @@ bin
 obj
 build*
 !utils/publish-tool/linux/ligral-dpkg/usr/bin
+*.vsix
 
 # plugins
 plugins/**/*.md
@@ -32,6 +33,7 @@ debug/
 
 # soft link 
 ligral
+!plugins/vscode/ligral
 
 # backup
 *.bak
