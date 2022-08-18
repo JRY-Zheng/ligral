@@ -970,7 +970,7 @@ namespace Ligral.Syntax
                 endPos = text.IndexOf('\n', endPos+1);
             }
             endPos += scriptAST.EndToken.Column;
-            string script = text.Substring(startPos+1, endPos-startPos-3);
+            string script = text.Substring(startPos+1, endPos-startPos-4);
             logger.Debug($"Script starts at {startPos}, line {scriptAST.StartToken.Line}, column {scriptAST.StartToken.Column}");
             logger.Debug($"Script ends at {endPos}, line {scriptAST.EndToken.Line}, column {scriptAST.EndToken.Column}");
             var commands = script.Split('\n').ToList();
