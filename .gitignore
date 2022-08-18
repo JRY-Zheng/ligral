@@ -7,20 +7,23 @@
 # .vscode
 .vscode
 
-# plugins
-plugins/**/*.md
-!README.md
-
 # output
 bin
 obj
 build*
+!utils/publish-tool/linux/ligral-dpkg/usr/bin
+*.vsix
+
+# plugins
+plugins/**/*.md
+!README.md
 
 #test
 debug/
 
 #build
 *.bat
+!utils/publish-tool/**/*.bat
 
 #log
 *.log
@@ -30,6 +33,7 @@ debug/
 
 # soft link 
 ligral
+!plugins/vscode/ligral
 
 # backup
 *.bak

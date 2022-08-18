@@ -264,8 +264,9 @@ namespace Ligral.Syntax
         private object Visit(IdAST idAST)
         {
             Symbol symbol = currentScope.Lookup(idAST.Id);
-            if (symbol==null)
+            if (symbol==null && currentScope.ScopeLevel == 0)
             {
+                logger.Info($"{idAST.Id} is regarded as node");
                 TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;
                 Node node = typeSymbol.GetValue() as Node;
                 node.Name = idAST.Id;
@@ -273,7 +274,10 @@ namespace Ligral.Syntax
                 ModelSymbol modelSymbol = new ModelSymbol(idAST.Id, typeSymbol, node);
                 currentScope.Insert(modelSymbol);
                 return node;
-                // throw logger.Error(new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}"));
+            }
+            else if (symbol==null)
+            {
+                throw logger.Error(new SemanticException(idAST.FindToken(), $"Undefined variable {idAST.Id}"));
             }
             else
             {
@@ -302,7 +306,7 @@ namespace Ligral.Syntax
                 matrix = obj as Matrix<double>;
                 if (matrix==null)
                 {
-                    matrix = DenseMatrix.Create(1, 1, (double)obj);
+                    matrix = DenseMatrix.Create(1, 1, obj.ToScalar());
                 }
             }
             else
@@ -316,7 +320,7 @@ namespace Ligral.Syntax
                 _matrix = obj as Matrix<double>;
                 if (_matrix==null)
                 {
-                    _matrix = DenseMatrix.Create(1, 1, (double)obj);
+                    _matrix = DenseMatrix.Create(1, 1, obj.ToScalar());
                 }
                 try
                 {
@@ -476,7 +480,7 @@ namespace Ligral.Syntax
         private Model Visit(DigitBlockAST digitBlockAST)
         {
             Model constant = ModelManager.Create("Constant", digitBlockAST.FindToken());
-            Dict dictionary = new Dict() {{"value", (double)digitBlockAST.Digit}};
+            Dict dictionary = new Dict() {{"value", digitBlockAST.Digit.ToScalar()}};
             constant.Configure(dictionary);
             return constant;
         }

@@ -58,5 +58,9 @@ namespace Ligral.Component.Models
             }
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>() { InPortList[0].RowNo };
+        }
     }
 }

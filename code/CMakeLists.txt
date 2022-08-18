@@ -7,6 +7,8 @@ ADD_EXECUTABLE(model ${SRC_LIST})
 
 if (CMAKE_HOST_WIN32)
 TARGET_INCLUDE_DIRECTORIES(model PUBLIC "C:\\eigen3")
+TARGET_INCLUDE_DIRECTORIES(model PUBLIC "C:\\eigen3\\unsupported")
 elseif (CMAKE_HOST_UNIX)
 TARGET_INCLUDE_DIRECTORIES(model PUBLIC "/usr/include/eigen3")
+TARGET_INCLUDE_DIRECTORIES(model PUBLIC "/usr/include/eigen3/unsupported")
 endif()

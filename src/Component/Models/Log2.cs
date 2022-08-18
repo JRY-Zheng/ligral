@@ -51,5 +51,13 @@ namespace Ligral.Component.Models
             }
             return Results;
         }
+        public override List<int> GetCharacterSize()
+        {
+            return new List<int>() 
+            {
+                Math.Max(InPortList[0].RowNo, InPortList[1].RowNo),
+                Math.Max(InPortList[0].ColNo, InPortList[1].ColNo)
+            };
+        }
     }
 }

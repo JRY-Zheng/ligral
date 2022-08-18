@@ -1,0 +1,14 @@
+let m = 1;
+let k = 10;
+let c = 0.5;
+let g = 9.8;
+
+(-k*x-c*v)/m+g -> Integrator -> v ->Integrator -> x -> Scope{name:'position'};
+
+conf step_size = 0.01;
+conf stop_time = 10;
+conf output_folder = 'simple_out';
+conf inner_plotter:
+    enable = true;
+    save_figures = true;
+end
