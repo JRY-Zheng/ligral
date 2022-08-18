@@ -1,7 +1,7 @@
 @echo off
 cd /d %~dp0/../..
-@REM dotnet publish src -p:PublishSingleFile=true -p:UseAppHost=true -o bin/Publish/win10 -c Release --self-contained true -r win10-x64
-@REM dotnet publish src -p:PublishSingleFile=true -p:UseAppHost=true -o bin/Publish/linux -c Release --self-contained true -r linux-x64
+dotnet publish src -p:PublishSingleFile=true -p:UseAppHost=true -o bin/Publish/win10 -c Release --self-contained true -r win10-x64
+dotnet publish src -p:PublishSingleFile=true -p:UseAppHost=true -o bin/Publish/linux -c Release --self-contained true -r linux-x64
 @REM dotnet publish -p:PublishSingleFile=true -o bin/Publish/win10 -c Release --self-contained true --version-suffix beta -r win10-x64
 @REM dotnet publish -p:PublishSingleFile=true -o bin/Publish/linux -c Release --self-contained true --version-suffix beta -r linux-x64
 
