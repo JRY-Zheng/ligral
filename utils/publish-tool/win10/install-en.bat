@@ -4,7 +4,7 @@ echo Auto installing ligral...
 cd /d %~dp0
 set LIGRAL=ligral
 set INSTALLPATH=%LOCALAPPDATA%\%LIGRAL%
-set EXECUTABLE=ligral-v0.2.2-beta-win10-x64.exe
+set EXECUTABLE=ligral-v0.2.3-win10-x64.exe
 set DEFAULTSETTINGS=default.lig
 set PLUGINS=plugins\
 echo Install ligral into the default directory at

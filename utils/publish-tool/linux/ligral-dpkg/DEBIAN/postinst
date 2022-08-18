@@ -2,6 +2,6 @@ cd /usr/bin/
 if [ -f "ligral" ];then
     sudo rm ligral
 fi
-ln ligral-v0.2.2/ligral-v0.2.2-beta-linux-x64 ligral
-echo "made link ligral to ligral-v0.2.2-beta-linux-x64"
-sudo chmod +x ligral-v0.2.2/ligral-v0.2.2-beta-linux-x64
+ln ligral-v0.2.3/ligral-v0.2.3-linux-x64 ligral
+echo "made link ligral to ligral-v0.2.3-linux-x64"
+sudo chmod +x ligral-v0.2.3/ligral-v0.2.3-linux-x64
