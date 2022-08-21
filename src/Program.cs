@@ -40,6 +40,7 @@ namespace Ligral
                 }
                 logger.Fatal(e);
             }
+            Logger.OnExit();
         }
     }
 }

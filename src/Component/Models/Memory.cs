@@ -9,7 +9,7 @@ using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral
 using System;
 using MathNet.Numerics.LinearAlgebra;
 using Ligral.Component;
-using Ligral.Simulation;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -23,19 +23,42 @@ namespace Ligral.Component.Models
             }
         }
         private Matrix<double> stack;
+        private Matrix<double> current;
         public override void Confirm()
         {
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
+            current = Matrix<double>.Build.DenseOfMatrix(initial);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
         }
         protected override void InputUpdate(Matrix<double> inputSignal)
         {
-            inputSignal.CopyTo(stack);
+            inputSignal.CopyTo(current);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
             stack.CopyTo(Results[0]);
             return Results;
+        }
+        public override void Refresh()
+        {
+            current.CopyTo(stack);
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            LShiftCodeAST stackAST = new LShiftCodeAST();
+            stackAST.Destination = $"{GlobalName}.stack";
+            stackAST.Source = string.Join(',', initial.ToColumnMajorArray());
+            codeASTs.Add(stackAST);
+            return codeASTs;
+        }
+        public override List<CodeAST> ConstructRefreshAST()
+        {
+            var codeASTs = new List<CodeAST>();
+            CallCodeAST refreshAST = new CallCodeAST();
+            refreshAST.FunctionName = $"{GlobalName}.refresh";
+            codeASTs.Add(refreshAST);
+            return codeASTs;
         }
     }
 }

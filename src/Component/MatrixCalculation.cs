@@ -108,6 +108,8 @@ namespace Ligral.Component
                 return i;
             case double d:
                 return d;
+            case Constant c:
+                return c.Results[0][0,0];
             default:
                 throw new ArgumentException($"Cannot convert type {o.GetType().Name} to matrix");
             }

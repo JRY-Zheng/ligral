@@ -54,7 +54,7 @@ namespace Ligral.Component.Models
                 {
                     for (int c=0; c < values[0].ColumnCount; c++)
                     {
-                        Results[r*values[0].ColumnCount] = values[0][r,c].ToMatrix();
+                        Results[r*values[0].ColumnCount+c] = values[0][r,c].ToMatrix();
                     }
                 }
             }

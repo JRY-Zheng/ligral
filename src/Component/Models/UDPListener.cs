@@ -10,6 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using Ligral.Simulation;
 using Ligral.Tools;
+using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
@@ -148,7 +149,7 @@ namespace Ligral.Component.Models
                 var dataName = useDefinedName ? names : OutPortsName;
                 if (dataName.Any(n => !data.Value.ContainsKey(n)))
                 {
-                    throw logger.Error(new ModelException(this, "Invalid message: Key lost in data"));
+                    throw logger.Error(new ModelException(this, $"Invalid message: Key {dataName.First(n => !data.Value.ContainsKey(n))} lost in data: {string.Join(',', data.Value.Keys)}"));
                 }
                 for (int i=0; i<OutPortCount(); i++)
                 {
@@ -179,6 +180,10 @@ namespace Ligral.Component.Models
                 Results[i] = handles[i].GetInput();
             }
             return Results;
+        }
+        public override List<CodeAST> ConstructConfigurationAST()
+        {
+            return InputMarker.ConstructConfigurationAST(GlobalName, handles.First());
         }
     }
 }

@@ -2,7 +2,12 @@
     "name": "ligral",
     "displayName": "Ligral",
     "description": "A language support for Ligral, a literal graphic language.",
-    "version": "0.0.1",
+    "version": "0.1.0",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://gitee.com/junruoyu-zheng/ligral/"
+	},
     "engines": {
         "vscode": "^1.41.0"
     },

@@ -1,0 +1,37 @@
+import component;
+
+# 仿真模拟了三个物体：弹簧、阻尼器、质量块
+# 它们被以机械的方式依次连接在一起，其中弹
+# 簧和阻尼器连接在地面上。
+# 本例子仅有一个自由度，因此每个物体最多有
+# 一个受控输入连接点，其余连接点均由此连接
+# 点确定。连接点传递的信息包括该点的加速度
+# 和力。
+#                     ───► 正，重力
+# /|a1s      a2s  a1m┌──────┐
+# /├─[spring]────────┤      │
+# /|F1s      F2s  F1m│      │
+# /|                 | Mass |
+# /|a2d      a1d  a2m|      │
+# /├─[damper]────────┤      │
+# /|F2d      F1d  F2m└──────┘
+# 本例还提供了一个简单的例子，见simple.lig
+# 里面包含了和本例等效的常规写法，仿真结果是
+# 一样的。
+
+
+Mass[mass]{m:1};
+Spring[spring]{k:10};
+Damper[damper]{c:0.5};
+
+# 物体连接关系
+Ground[ground] -> spring -> mass -> damper -> ground;
+mass:a2 -> `1/s` -> `1/s` -> Scope{name:'position'};
+
+conf step_size = 0.01;
+conf stop_time = 10;
+conf output_folder = 'mech_out';
+conf inner_plotter:
+    enable = true;
+    save_figures = true;
+end

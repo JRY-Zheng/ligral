@@ -126,6 +126,10 @@ namespace Ligral.Syntax
             step.Type = "void";
             step.Instance = "step()";
             projectCodeAST.publicASTs.Add(step);
+            var refresh = new DeclareCodeAST();
+            refresh.Type = "void";
+            refresh.Instance = "refresh()";
+            projectCodeAST.publicASTs.Add(refresh);
             var initCodeAST = new FunctionCodeAST();
             var configurationASTs = routine.ConvertAll(model => model.ConstructConfigurationAST());
             initCodeAST.ReturnType = "void";
@@ -161,13 +165,23 @@ namespace Ligral.Syntax
             }
             stepCodeAST.codeASTs.AddRange(connectionASTs);
             stepCodeAST.codeASTs.AddRange(inputUpdateASTs);
+            var refreshCodeAST = new FunctionCodeAST();
+            refreshCodeAST.ReturnType = "void";
+            refreshCodeAST.FunctionName = "project::refresh";
+            refreshCodeAST.codeASTs = new List<CodeAST>();
+            var refreshASTs = routine.ConvertAll(model => model.ConstructRefreshAST());
+            foreach (var asts in refreshASTs)
+            {
+                if (asts == null) continue;
+                refreshCodeAST.codeASTs.AddRange(asts);
+            }
             var fileContent = new List<CodeAST>() 
             {
                 new MacroCodeAST() { Macro = "ifndef", Definition = "PROJECT_H"},
                 new MacroCodeAST() { Macro = "define", Definition = "PROJECT_H"},
                 new MacroCodeAST() { Macro = "include", Definition = "\"models.h\""},
                 inputsCodeAST, statesCodeAST, outputsCodeAST,
-                projectCodeAST, initCodeAST, stepCodeAST,
+                projectCodeAST, initCodeAST, stepCodeAST, refreshCodeAST,
                 new MacroCodeAST() { Macro = "endif"},
             };
             return fileContent;

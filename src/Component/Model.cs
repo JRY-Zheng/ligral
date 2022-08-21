@@ -425,6 +425,10 @@ namespace Ligral.Component
         {
             return null;
         }
+        public virtual List<CodeAST> ConstructRefreshAST()
+        {
+            return null;
+        }
         public override string ToString()
         {
             return $"{GetType().Name}({Name})";
