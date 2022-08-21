@@ -58,7 +58,7 @@ namespace Ligral
                 Interpreter interpreter = Interpreter.GetInstance(defaultSetting);
                 interpreter.Interpret(p);
             }
-            ApplySetting();
+            // ApplySetting();
         }
         
         #region Settings
