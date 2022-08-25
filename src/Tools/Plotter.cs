@@ -281,6 +281,7 @@ fig{dataFile.FigureId}.savefig(r'{Path.GetDirectoryName(fileName)}\{figName}.png
             Execute($@"
 plt.show()
 ");
+            logger.Info("Figure showed, plotter unsubscribed");
             Unsubscribe();
             return true;
         }

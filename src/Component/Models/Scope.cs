@@ -163,6 +163,7 @@ namespace Ligral.Component.Models
                 };
                 publisher.Send(FigureProtocol.DataFileLabel, dataFile);
             };
+            logger.Debug("Figure show command sent");
         }
         public override List<CodeAST> ConstructConfigurationAST()
         {

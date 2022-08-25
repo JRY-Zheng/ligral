@@ -120,7 +120,7 @@ namespace Ligral.Tools
             pythonProcess.StandardInput.Write(command);
             pythonProcess.StandardInput.Write("\n$exec\n__status__()\n$exec\n");
             pythonProcess.StandardInput.Flush();
-            logger.Debug("Command executed");
+            logger.Debug("Command executed: " + command);
         }
         static void Listen()
         {

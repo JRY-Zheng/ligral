@@ -134,6 +134,7 @@ Make sure you did not log two different signals under the same name.");
                 DataFile = Path.Join(currentDirectory, settings.OutputFolder, "Data.csv");
                 table.DumpFile(DataFile, true);
             }
+            logger.Info("Observation is to stop");
             if (Stopped != null) Stopped();
         }
     }
