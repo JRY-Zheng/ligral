@@ -1,0 +1,34 @@
+# Copyright (C) 2019-2022 Junruoyu Zheng. Home page: https://junruoyu-zheng.gitee.io/ligral
+
+# Distributed under MIT license.
+# See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+
+route When(threshold; signal; triggered)
+    # triggered = 1 when the first time signal >= threshold
+    # otherwise triggered = 0
+    (signal, 1, 0) -> Switch[T_cur] -> Memory[T_pre];
+    (T_cur - T_pre, 0) -> Max -> triggered;
+end
+
+route ResetIntegrator(initial; derivative, reset, re_init; integral)
+    derivative -> Integrator[int];
+    ((reset, re_init-integral, 0) -> Switch{method:'>'}) + delta -> Memory -> delta;
+    int+delta -> integral;
+end
+
+route BouncingBall(h0, e; ; h, v)
+    v -> Integrator{initial:h0} -> h;
+    let g = 9.81;
+    -h -> When[event]{threshold:0};
+    (-g, event, -v*e) -> ResetIntegrator{initial:0} -> v;
+end
+
+BouncingBall[ball]{h0:10, e:0.8};
+[ball:h; ball:v] -> Scope{name:'state'};
+
+
+conf output_folder = 'out';
+conf step_size = 0.01;
+conf stop_time = 40;
+conf solver = 'ode4';
+conf inner_plotter.save_figures = true;
