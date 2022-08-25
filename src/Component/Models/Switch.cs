@@ -23,6 +23,14 @@ namespace Ligral.Component.Models
             }
         }
         private double threshold;
+        private string method;
+        private Dictionary<string, Func<double, double, double>> methods = new Dictionary<string, Func<double, double, double>>() 
+        {
+            {">=", (x, y) => x>=y?1:0},
+            {"<=", (x, y) => x<=y?1:0},
+            {">", (x, y) => x>y?1:0},
+            {"<", (x, y) => x<y?1:0},
+        };
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("condition", this));
@@ -62,16 +70,23 @@ namespace Ligral.Component.Models
             {
                 {"threshold", new Parameter(ParameterType.Signal , value=>
                 {
-                    threshold = (double)value;
+                    threshold = value.ToScalar();
                 }, ()=>
                 {
                     threshold = 0;
+                })},
+                {"method", new Parameter(ParameterType.String , value=>
+                {
+                    method = (string)value;
+                }, ()=>
+                {
+                    method = ">=";
                 })}
             };
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
-            var condition = values[0].Map<double>(item => item >= threshold ? 1 : 0);
+            var condition = values[0].Map<double>(item => methods[method](item, threshold));
             Results[0] = condition.DotMul(values[1]) + (1 - condition).DotMul(values[2]);
             return Results;
         }
