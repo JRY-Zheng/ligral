@@ -39,7 +39,20 @@ namespace Ligral.Component.Models
         public override void Prepare()
         {
             string inputSignalName = InPortList[0].Source.SignalName;
-            varName = varName ?? GivenName ?? inputSignalName ?? Name;
+            varName = varName ?? GivenName;
+            if (varName != null && Scope != null)
+            {
+                varName = Scope +"." + varName;
+            }
+            else if (varName == null && inputSignalName!= null) 
+            {
+                varName = inputSignalName;
+            }
+            else if (varName == null)
+            {
+                varName = Name;
+                if (Scope != null) varName = Scope+"."+varName;
+            }
         }
         public override void Confirm()
         {
