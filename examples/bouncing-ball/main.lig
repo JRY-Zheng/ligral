@@ -29,6 +29,6 @@ BouncingBall[ball]{h0:10, e:0.8};
 
 conf output_folder = 'out';
 conf step_size = 0.01;
-conf stop_time = 40;
+conf stop_time = 15;
 conf solver = 'ode4';
 conf inner_plotter.save_figures = true;
