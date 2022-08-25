@@ -264,7 +264,7 @@ namespace Ligral.Syntax
         private object Visit(IdAST idAST)
         {
             Symbol symbol = currentScope.Lookup(idAST.Id);
-            if (symbol==null && currentScope.ScopeLevel == 0)
+            if (symbol==null && (currentScope.ScopeLevel != 0 || currentScope.ScopeName=="<global>"))
             {
                 logger.Info($"{idAST.Id} is regarded as node");
                 TypeSymbol typeSymbol = currentScope.Lookup("Node") as TypeSymbol;

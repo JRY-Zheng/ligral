@@ -61,7 +61,7 @@ namespace Ligral.Extension
                 {
                     ModelManager.ExtendedModelTypePool.Add(moduleName, plugin.ModelTypePool);
                 }
-                ScopeSymbolTable pluginScope = new ScopeSymbolTable(plugin.ReferenceName, currentScope.ScopeLevel+1, currentScope);
+                ScopeSymbolTable pluginScope = new ScopeSymbolTable(plugin.ReferenceName, 0);
                 TypeSymbol scopeType = currentScope.Lookup("SCOPE") as TypeSymbol;
                 TypeSymbol modelType = currentScope.Lookup("MODEL") as TypeSymbol;
                 foreach (string modelName in plugin.ModelTypePool.Keys)
