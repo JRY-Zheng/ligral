@@ -75,10 +75,10 @@ namespace Ligral.Component
             this.statementsAST = statementsAST;
             this.routeFileName = routeFileName;
         }
-        public Route Construct()
+        public Route Construct(ScopeSymbolTable currentScope)
         {
             Route route = new Route();
-            ScopeSymbolTable routeScope = new ScopeSymbolTable(Name, scopeLevel, enclosingScope);
+            ScopeSymbolTable routeScope = new ScopeSymbolTable(Name, currentScope.ScopeLevel+1, currentScope);
             route.SetUp(Name, Type, routeScope, parameters, inPortNameList, outPortNameList, statementsAST, routeFileName);
             route.Name = Name + id.ToString();
             id++;

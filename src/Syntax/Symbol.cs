@@ -16,6 +16,7 @@ namespace Ligral.Syntax
         public string Name;
         public TypeSymbol Type;
         protected object Value;
+        public ScopeSymbolTable table;
         protected Logger logger = new Logger("Inspector");
         public Symbol(string name, TypeSymbol type, object value)
         {
@@ -60,7 +61,7 @@ namespace Ligral.Syntax
             case ScopedModelType scopedModelType:
                 return ModelManager.Create(scopedModelType, null);
             case RouteConstructor routeConstructor:
-                return routeConstructor.Construct();
+                return routeConstructor.Construct(table);
             case Signature signature:
                 return signature;
             default:
@@ -133,6 +134,7 @@ namespace Ligral.Syntax
             else
             {
                 Symbols[symbol.Name] = symbol;
+                symbol.table = this;
                 return true;
             }
         }
