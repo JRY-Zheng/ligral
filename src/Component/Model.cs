@@ -120,7 +120,7 @@ namespace Ligral.Component
             OutPortList = new List<OutPort>();
             Interpreter.Completed += Prepare;
             JsonLoader.Completed += Prepare;
-            Solver.Starting += Confirm;
+            Inspector.Confirmed += Confirm;
             Observation.Stepped += Refresh;
             Observation.Stopped += Release;
             SetUpPorts();

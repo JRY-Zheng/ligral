@@ -15,6 +15,8 @@ namespace Ligral.Simulation
         private List<Model> routine = new List<Model>();
         private List<Model> allNodes = new List<Model>();
         private Logger logger = new Logger("Inspector");
+        public delegate void ConfirmingHandler();
+        public static event ConfirmingHandler Confirmed;
         private void Visit(Model node, bool allowGuess)
         {
             logger.Debug($"Visiting {node.ScopedName}, allow guess: {allowGuess}");
@@ -119,6 +121,7 @@ namespace Ligral.Simulation
                 throw logger.Error(new LigralException("Algebraic Loop:" + string.Join(" -> ", algebraicLoop.ConvertAll(node=>node.ScopedName))+"\n"+
                                             "schematic Error: Algebraic loop exists."));
             }
+            if (Confirmed != null) Confirmed();
             logger.Info("Inspection passed.");
             return routine;
         }
