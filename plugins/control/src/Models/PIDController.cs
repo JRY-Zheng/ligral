@@ -109,7 +109,7 @@ namespace LigralPlugins.Control.Models
         }
         public override void Prepare()
         {
-            varName = varName ?? Name;
+            varName = PIDController.GetVarName(varName, this);
         }
         public override void Check()
         {

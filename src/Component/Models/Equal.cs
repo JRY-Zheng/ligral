@@ -37,6 +37,10 @@ namespace Ligral.Component.Models
             InPort inPort = InPortList[0];
             inPort.InPortValueReceived += ActualValueUpdate;
         }
+        public override void Prepare()
+        {
+            varName = Model.GetVarName(varName, this);
+        }
         public override void Confirm()
         {
             solutionHandle = Solution.CreateSolution(varName, rowNo, colNo, initial);

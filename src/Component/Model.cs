@@ -376,6 +376,25 @@ namespace Ligral.Component
         {
             return GetType().Name;
         }
+        public static string GetVarName(string varName, Model model)
+        {
+            string inputSignalName = model.InPortList[0].Source is null ? null : model.InPortList[0].Source.SignalName;
+            varName = varName ?? model.GivenName;
+            if (varName != null && model.Scope != null)
+            {
+                varName = model.Scope +"_" + varName;
+            }
+            else if (varName == null && inputSignalName!= null) 
+            {
+                varName = inputSignalName;
+            }
+            else if (varName == null)
+            {
+                varName = model.Name;
+                if (model.Scope != null) varName = model.Scope+"_"+varName;
+            }
+            return varName;
+        }
         public List<DeclareCodeAST> ConstructTempVarDeclarationAST()
         {
             var declareCodeASTs = new List<DeclareCodeAST>();

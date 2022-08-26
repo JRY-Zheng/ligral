@@ -57,7 +57,7 @@ namespace Ligral.Component.Models
         }
         public override void Prepare()
         {
-            varName = varName ?? GivenName ?? Name;
+            varName = Model.GetVarName(varName, this);
         }
         public override void Check()
         {

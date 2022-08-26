@@ -58,7 +58,7 @@ namespace Ligral.Component.Models
                 {
                     if (Scope != null)
                     {
-                        varName = Scope + "." + GivenName;
+                        varName = Scope + "_" + GivenName;
                     }
                     else
                     {
@@ -75,7 +75,7 @@ namespace Ligral.Component.Models
                 {
                     if (Scope != null)
                     {
-                        varName = Scope + "." + Name;
+                        varName = Scope + "_" + Name;
                     }
                     else
                     {
@@ -83,8 +83,12 @@ namespace Ligral.Component.Models
                     }
                 }
             }
-            xName = xName ?? $"{varName}:x";
-            yName = yName ?? $"{varName}:y";
+            else if (Scope != null)
+            {
+                varName = Scope + "_" + varName;
+            }
+            xName = xName ?? $"{varName}_x";
+            yName = yName ?? $"{varName}_y";
         }
         public override void Check()
         {
