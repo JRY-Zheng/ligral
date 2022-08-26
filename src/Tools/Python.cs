@@ -95,7 +95,6 @@ namespace Ligral.Tools
                     logger.Debug("python process started");
                     started = true;
                     pythonProcess.StandardInput.Write("\n$exec\n__status__()\n$exec\n");
-                    Execute("open('text','w').write('hello')\n");
                     return;
                 }
             }

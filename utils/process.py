@@ -48,23 +48,14 @@ class Status:
         buf = json.dumps(message).encode('utf8')
         self.s.sendto(buf, (self.address, self.port))
 
-    def debug(self, msg):
-        with open('process.log', 'a') as f:
-            f.write(msg+'\n')
-
     def __call__(self):
         out = sys.stdout.read()
-        self.debug('out: '+out)
         err = sys.stderr.read()
-        self.debug('err: '+err)
         message = {
             'success': err == '',
             'message': out + err
         }
-        self.debug('msg: '+str(message))
         buf = json.dumps(message).encode('utf8')
-        self.debug('buf: '+str(buf))
         self.s.sendto(buf, (self.address, self.port))
-        self.debug('sent')
 
 __status__ = Status()
