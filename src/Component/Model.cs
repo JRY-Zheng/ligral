@@ -378,7 +378,8 @@ namespace Ligral.Component
         }
         public static string GetVarName(string varName, Model model)
         {
-            string inputSignalName = model.InPortList[0].Source is null ? null : model.InPortList[0].Source.SignalName;
+            string inputSignalName = model.InPortCount() == 0 ? null :
+                model.InPortList[0].Source is null ? null : model.InPortList[0].Source.SignalName;
             varName = varName ?? model.GivenName;
             if (varName != null && model.Scope != null)
             {
