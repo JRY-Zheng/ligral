@@ -59,7 +59,7 @@ namespace Ligral.Simulation.Optimizers
                 {
                     Ae = Ae.Transpose();
                     (Ae, Be) = Filter(Ae, Be);
-                    if (Be.ColumnCount != 1)
+                    if (Be != null && Be.ColumnCount != 1)
                     {
                         throw logger.Error(new LigralException($"Only h(x) with shape mx1 is supported, but we got {Be.RowCount}x{Be.ColumnCount}"));
                     }
@@ -85,6 +85,11 @@ namespace Ligral.Simulation.Optimizers
                 logger.Debug(SignalUtils.SPrint(Ab, "Ab"));
                 logger.Debug(SignalUtils.SPrint(Bb, "Bb"));
                 (var A, var B) = Filter(Ab, Bb, Ae, Be);
+                if (A == null || A.RowCount == 0 || A.TolerantRank() == 0) 
+                {
+                    logger.Debug("Constrain is loosed, optimizer quit");
+                    return x;
+                }
                 logger.Debug(SignalUtils.SPrint(A, "A"));
                 logger.Debug(SignalUtils.SPrint(B, "B"));
                 if (B != null && B.ColumnCount != 1)
@@ -132,9 +137,20 @@ namespace Ligral.Simulation.Optimizers
         }
         private (Matrix<double>, Matrix<double>) Filter(Matrix<double> A, Matrix<double> B)
         {
-            var Ap = A.SubMatrix(0, 1, 0, A.ColumnCount);
-            var Bp = B.SubMatrix(0, 1, 0, B.ColumnCount);
-            for (int i = 1; i < A.RowCount; i++)
+            if (A.RowCount == 0) return (A, B);
+            int i = 0;
+            Matrix<double> Ap;
+            Matrix<double> Bp;
+            while (true)
+            {
+                Ap = A.SubMatrix(i, 1, 0, A.ColumnCount);
+                Bp = B.SubMatrix(i, 1, 0, B.ColumnCount);
+                i++;
+                if (Ap.TolerantRank() == 1) break;
+                else if (i == A.RowCount) return (null, null);
+                logger.Debug($"Loosed constrained found at row {i-1}");
+            }
+            for (; i < A.RowCount; i++)
             {
                 var At = SignalUtils.Stack(Ap, A.SubMatrix(i, 1, 0, A.ColumnCount));
                 var Bt = SignalUtils.Stack(Bp, B.SubMatrix(i, 1, 0, B.ColumnCount));
