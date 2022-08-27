@@ -1,0 +1,30 @@
+route Population(initial=10; p_in, r_in; p_out, r_out)
+    p_in -> Equal -> p_out;
+    r_in-r_out -> Integrator[population]{initial:initial, col:1, row:1} -> p;
+    p_in - p -> `=0`;
+    Variable -> r_out;
+end
+
+route Reproduction(alpha=0.1; p_in, r_in; p_out, r_out)
+    p_in -> p_out;
+    r_in + alpha*p_in -> r_out;
+end
+
+route Starvation(gamma=0.4; p_in, r_in; p_out, r_out)
+    p_in -> p_out;
+    r_in - gamma*p_in -> r_out;
+end
+
+route Predation(beta=0.02, delta=0.02; 
+    p_prey_in, r_prey_in, p_predator_in, r_predator_in;
+    p_prey_out, r_prey_out, p_predator_out, r_predator_out)
+    p_prey_in -> p_prey_out;
+    p_predator_in -> p_predator_out;
+    r_prey_in - beta*p_prey_in*p_predator_in -> r_prey_out;
+    r_predator_in + delta*p_prey_in*p_predator_in -> r_predator_out;
+end
+
+route Species(; p_in, r_in; p_out, r_out)
+    p_in -> p_out;
+    r_in -> r_out;
+end

@@ -1,0 +1,51 @@
+import components;
+
+Population[rabbit]{initial:25} -> Reproduction[rabbit_reproduction];
+Population[fox]{initial:2} -> Starvation[fox_starvation];
+Population[wolf]{initial:4} -> Starvation[wolf_starvation];
+
+(rabbit_reproduction, fox_starvation)
+    -> Predation[fox_predate_rabbit]{beta:0.02, delta:0.02}
+    -> (Species[rabbit_species], Species[fox_species]);
+
+(rabbit_species, wolf_starvation)
+    -> Predation[wolf_predate_rabbit]{beta:0.02, delta:0.01}
+    -> (rabbit, Species[wolf_species]);
+
+(fox_species, wolf_species)
+    -> Predation[wolf_predate_fox]{beta:0.04, delta:0.08}
+    -> (fox, wolf);
+
+[rabbit:p_out; fox:p_out; wolf:p_out] -> Scope{name:'Population'};
+
+# wolf_predate_fox:r_prey_out - fox_species:r_out -> Scope{name:'wolf predates fox'};
+# fox_species:r_out - fox_starvation:r_out -> Scope{name:'fox predates rabbit'};
+# fox_starvation:r_out - fox:r_out -> Scope{name:'fox starves'};
+
+# wolf_predate_rabbit:r_prey_out - rabbit_species:r_out -> Scope{name:'wolf predates rabbit'};
+# fox_predate_rabbit:r_prey_out - rabbit_reproduction:r_out -> Scope{name:'fox predates rabbit'};
+# rabbit_reproduction:r_out - rabbit:r_out -> Scope{name:'rabbit reproduction'};
+
+conf output_folder = 'three-species';
+conf step_size = 0.1;
+conf stop_time = 140;
+conf solver = 'ode4';
+conf inner_plotter.save_figures = true;
+
+
+conf trimmer:
+    derivative:
+        rabbit_population:
+            val = 0;
+            constrain = 1;
+        end
+        fox_population:
+            val = 0;
+            constrain = 1; 
+        end
+        wolf_population:
+            val = 0;
+            constrain = 1; 
+        end
+    end
+end

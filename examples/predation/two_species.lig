@@ -1,0 +1,25 @@
+import components;
+
+(Population[rabbit] -> Reproduction,
+Population[fox] -> Starvation) -> Predation -> (rabbit, fox);
+
+[rabbit:p_out; fox:p_out] -> Scope{name:'Population'};
+
+conf output_folder = 'two-species';
+conf step_size = 0.1;
+conf stop_time = 140;
+conf solver = 'ode4';
+conf inner_plotter.save_figures = true;
+
+conf trimmer:
+    derivative:
+        rabbit_population:
+            val = 0;
+            constrain = 1;
+        end
+        fox_population:
+            val = 0;
+            constrain = 1; 
+        end
+    end
+end
