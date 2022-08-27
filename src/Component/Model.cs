@@ -352,16 +352,16 @@ namespace Ligral.Component
             }
             catch (System.Exception e)
             {
-                throw logger.Error(new ModelException(this, $"Error occurs while propagating: {e.Message}"));
+                throw logger.Error(new ModelException(this, $"Error occurs while propagating (time={Solver.Time}): {e.Message}"));
             }
             if (outputs.Any(m => m.HasNAN()))
             {
                 int i = outputs.FindIndex(m => m.HasNAN());
-                throw logger.Error(new ModelException(this, $"NAN occurs while propagating in output {OutPortList[i]}"));
+                throw logger.Error(new ModelException(this, $"NAN occurs while propagating (time={Solver.Time}) in output {OutPortList[i]}"));
             }
             if(outputs.Count != OutPortList.Count)
             {
-                throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count}."));
+                throw logger.Error(new ModelException(this, $"The number of outputs {outputs.Count} doesn't match that of the ports {OutPortList.Count} (time={Solver.Time})."));
             }
             else
             {
