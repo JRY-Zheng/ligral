@@ -88,7 +88,7 @@ namespace Ligral.Simulation
                     Time = time;
                     States = Step(problem, settings.StepSize, States);
                     Solver.OnStepped(time);
-                    logger.Debug($"Calculation comsumed {(DateTime.Now - LastTime).TotalSeconds} seconds.");
+                    logger.Debug($"Calculation consumed {(DateTime.Now - LastTime).TotalSeconds} seconds.");
                     LastTime = DateTime.Now;
                 }
             }
