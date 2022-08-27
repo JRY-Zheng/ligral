@@ -1,0 +1,17 @@
+route InitialDerivativeIntegrator(initial=0, init_der=0; derivative; state)
+    derivative -> Integrator[inner_state]{initial:initial};
+    0 -> Memory[init_cond]{initial:1};
+    (init_cond, Variable[trim_offset_var], trim_offset_memory) 
+        -> Switch[trim_offset]{method:'>'} -> Memory -> trim_offset_memory;
+    inner_state + trim_offset -> state;
+    (derivative - init_der) * init_cond -> `=0`;
+end
+
+1 - x1 -> Integrator -> x1 -> Scope;
+1 - x2 -> InitialDerivativeIntegrator{init_der:-1} -> x2 -> Scope;
+
+conf output_folder = 'out';
+conf step_size = 0.01;
+conf stop_time = 10;
+conf solver = 'ode3';
+conf inner_plotter.save_figures = true;
