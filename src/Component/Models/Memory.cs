@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using ParameterDictionary = System.Collections.Generic.Dictionary<string, Ligral.Component.Parameter>;
 using System;
 using MathNet.Numerics.LinearAlgebra;
-using Ligral.Component;
+using Ligral.Simulation;
 using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
@@ -23,16 +23,34 @@ namespace Ligral.Component.Models
             }
         }
         private Matrix<double> stack;
-        private Matrix<double> current;
+        private ObservationHandle handle;
+        private string varName;
+        protected override void SetUpParameters()
+        {
+            base.SetUpParameters();
+            Parameters["name"] = new Parameter(ParameterType.String , value=>
+            {
+                varName=(string)value;
+            }, ()=>{});
+        }
         public override void Confirm()
         {
             stack = Matrix<double>.Build.DenseOfMatrix(initial);
-            current = Matrix<double>.Build.DenseOfMatrix(initial);
             Results[0] = Matrix<double>.Build.Dense(rowNo, colNo);
+        }
+        public override void Prepare()
+        {
+            varName = Model.GetVarName(varName, this);
+        }
+        public override void Check()
+        {
+            base.Check();
+            if (handle == null)
+            handle = Observation.CreateObservation(varName, rowNo, colNo);
         }
         protected override void InputUpdate(Matrix<double> inputSignal)
         {
-            inputSignal.CopyTo(current);
+            handle.Cache(inputSignal);
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
@@ -41,7 +59,7 @@ namespace Ligral.Component.Models
         }
         public override void Refresh()
         {
-            current.CopyTo(stack);
+            handle.GetObservation().CopyTo(stack);
         }
         public override List<CodeAST> ConstructConfigurationAST()
         {
