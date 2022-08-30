@@ -96,7 +96,6 @@ namespace Ligral.Component
             {"UDPSender", ()=>new UDPSender()},
             {"Cross", ()=>new Cross()},
             {"Transpose", ()=>new Transpose()},
-            {"T", ()=>new Transpose()},
             {"'", ()=>new Transpose()},
             {"Sec", ()=>new Sec()},
             {"Csc", ()=>new Csc()},
