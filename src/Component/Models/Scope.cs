@@ -14,6 +14,10 @@ using Ligral.Syntax.CodeASTs;
 
 namespace Ligral.Component.Models
 {
+    enum MergeOption
+    {
+        None, Column, Row
+    }
     class Scope : Model
     {
         protected override string DocString
@@ -27,6 +31,7 @@ namespace Ligral.Component.Models
         private ObservationHandle handle;
         private int rowNo;
         private int colNo;
+        private MergeOption mergeOption = MergeOption.None;
         private Publisher publisher = new Publisher();
         protected override void SetUpPorts()
         {
@@ -39,6 +44,23 @@ namespace Ligral.Component.Models
                 {"name", new Parameter(ParameterType.String , value=>
                 {
                     varName = (string)value;
+                }, ()=> {})},
+                {"merge", new Parameter(ParameterType.String , value=>
+                {
+                    switch ((string)value)
+                    {
+                    case "column":
+                        mergeOption = MergeOption.Column;
+                        break;
+                    case "row":
+                        mergeOption = MergeOption.Row;
+                        break;
+                    case "none":
+                        mergeOption = MergeOption.None;
+                        break;
+                    default:
+                        throw logger.Error(new ModelException(this, $"Merge option must be column, row or none, but got {value}"));
+                    }
                 }, ()=> {})}
             };
         }
@@ -54,37 +76,16 @@ namespace Ligral.Component.Models
             {
                 FigureId = publisher.Id,
                 Title = varName,
-                RowsCount = rowNo==0 ? 1 : rowNo,
-                ColumnsCount = colNo==0 ? 1 : colNo
+                RowsCount = mergeOption == MergeOption.Column ? 1 : rowNo==0 ? 1 : rowNo,
+                ColumnsCount = mergeOption == MergeOption.Row ? 1 : colNo==0 ? 1 : colNo
             };
             publisher.Send(FigureProtocol.FigureConfigLabel, figureConfig);
             handle = Observation.CreateObservation(varName, rowNo, colNo);
             if (rowNo > 0 && colNo > 0)
             {
-                for(int i = 0; i < rowNo; i++)
-                {
-                    for (int j = 0; j < colNo; j++)
-                    {
-                        string observationName = $"{varName}({i}-{j})";
-                        FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
-                        {
-                            FigureId = publisher.Id,
-                            RowNO = i,
-                            ColumnNO = j,
-                            XLabel = "time/s",
-                            YLabel = observationName
-                        };
-                        publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
-                        FigureProtocol.Curve curve = new FigureProtocol.Curve()
-                        {
-                            FigureId = publisher.Id,
-                            CurveHandle = i*colNo+j,
-                            RowNO = i,
-                            ColumnNO = j
-                        };
-                        publisher.Send(FigureProtocol.CurveLabel, curve);
-                    }
-                }
+                if (mergeOption == MergeOption.Column) ColumnMerge();
+                else if (mergeOption == MergeOption.Row) RowMerge();
+                else NoneMerge();
             }
             else
             {
@@ -111,6 +112,90 @@ namespace Ligral.Component.Models
                 FigureId = publisher.Id
             };
             publisher.Send(FigureProtocol.ShowCommandLabel, showCommand);
+        }
+        private void NoneMerge()
+        {
+            for(int i = 0; i < rowNo; i++)
+            {
+                for (int j = 0; j < colNo; j++)
+                {
+                    string observationName = $"{varName}({i}-{j})";
+                    FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
+                    {
+                        FigureId = publisher.Id,
+                        RowNO = i,
+                        ColumnNO = j,
+                        XLabel = "time/s",
+                        YLabel = observationName
+                    };
+                    publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
+                    FigureProtocol.Curve curve = new FigureProtocol.Curve()
+                    {
+                        FigureId = publisher.Id,
+                        CurveHandle = i*colNo+j,
+                        RowNO = i,
+                        ColumnNO = j
+                    };
+                    publisher.Send(FigureProtocol.CurveLabel, curve);
+                }
+            }
+        }
+        private void RowMerge()
+        {
+            for(int i = 0; i < rowNo; i++)
+            {
+                string observationName = $"{varName}({i})";
+                FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
+                {
+                    FigureId = publisher.Id,
+                    RowNO = i,
+                    ColumnNO = 0,
+                    XLabel = "time/s",
+                    YLabel = observationName
+                };
+                publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
+                for (int j = 0; j < colNo; j++)
+                {
+                    FigureProtocol.Curve curve = new FigureProtocol.Curve()
+                    {
+                        FigureId = publisher.Id,
+                        CurveHandle = i*colNo+j,
+                        RowNO = i,
+                        ColumnNO = 0
+                    };
+                    publisher.Send(FigureProtocol.CurveLabel, curve);
+                }
+            }
+        }
+        private void ColumnMerge()
+        {
+            for(int i = 0; i < rowNo; i++)
+            {
+                for (int j = 0; j < colNo; j++)
+                {
+                    if ( i == 0 )
+                    {
+                        string observationName = $"{varName}({j})";
+                        FigureProtocol.PlotConfig plotConfig = new FigureProtocol.PlotConfig()
+                        {
+                            FigureId = publisher.Id,
+                            RowNO = 0,
+                            ColumnNO = j,
+                            XLabel = "time/s",
+                            YLabel = observationName
+                        };
+                        publisher.Send(FigureProtocol.PlotConfigLabel, plotConfig);
+                    }
+                    FigureProtocol.Curve curve = new FigureProtocol.Curve()
+                    {
+                        FigureId = publisher.Id,
+                        CurveHandle = i*colNo+j,
+                        RowNO = 0,
+                        ColumnNO = j
+                    };
+                    publisher.Send(FigureProtocol.CurveLabel, curve);
+                }
+            }
         }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
