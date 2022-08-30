@@ -105,7 +105,8 @@ namespace Ligral.Component
             {"TransferFunction", ()=>new TransferFunction()},
             {"TF", ()=>new TransferFunction()},
             {"Slice", ()=>new Slice()},
-            {"Fill", ()=>new Fill()}
+            {"Fill", ()=>new Fill()},
+            {"Linspace", ()=>new Linspace()}
         };
         public static Dictionary<string, Dictionary<string,System.Func<Model>>> ExtendedModelTypePool = new Dictionary<string, Dictionary<string, System.Func<Model>>>();
         public static Model Create(string modelType, Token token)
