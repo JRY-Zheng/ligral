@@ -18,6 +18,6 @@ Pendulum[pendulum]{m:m, g:g, l:l, I:I};
 # 的点，默认会在原点进行，但 ligral 会抛出一个
 # 警告。你也可以试试在其他点进行线性化。
 conf lin:
-    state.x = [0; 0];
+    state.pendulum_x = [0; 0];
     input.u = 0;
 end

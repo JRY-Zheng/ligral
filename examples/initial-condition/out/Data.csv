@@ -1,4 +1,4 @@
-Time, InitialDerivativeIntegrator1_init_cond, InitialDerivativeIntegrator1_t_o, x1, x2
+Time, InitialDerivativeIntegrator1_init_cond, InitialDerivativeIntegrator1.trim_offset, x1, x2
 0, 0, 2, 0, 2
 0.01, 0, 2, 0.009950166666666666, 1.99
 0.02, 0, 2, 0.01980132751663889, 1.980149335

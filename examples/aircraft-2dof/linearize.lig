@@ -5,9 +5,9 @@
 
 import model;
 
-@[u] -> Aircraft:y -> $[y];
+@[u] -> Aircraft[aircraft]:y -> $[y];
 
 conf lin:
-    state.x = [0;0;0;0];
+    state.aircraft_x = [0;0;0;0];
     input.u = 0;
 end

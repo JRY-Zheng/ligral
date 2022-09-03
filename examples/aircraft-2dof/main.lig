@@ -6,12 +6,12 @@
 import model;
 
 # 针对这个非线性、不稳定的模型设计了一个全状态
-# 线性反馈控制器，K 为控制器增益。
-let K = [0.929, 0.2313, -1.7447, -1.0382];
+# 线性反馈控制器，Kc 为控制器增益。
+let Kc = [0.929, 0.2313, -1.7447, -1.0382];
 
 # 将控制器应用到模型上，并观测输出。
 Aircraft[aircraft]{x0:[0.1; 0; 0; 0]};
--K*aircraft:x -> aircraft:y -> Scope;
+-Kc*aircraft:x -> aircraft:y -> Scope;
 
 conf inner_plotter:
     enable = true;
