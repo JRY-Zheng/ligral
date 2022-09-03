@@ -90,7 +90,7 @@ namespace Ligral.Tools
                     throw logger.Error(new CSVFormatError($"Data format error in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
                 List<double> row = doubleRegex.Matches(line).OfType<Match>().Select(m => double.Parse(m.Value)).ToList();
-                if (row.Count != ColumnCount)
+                if (ColumnCount != -1 && row.Count != ColumnCount)
                 {
                     throw logger.Error(new CSVFormatError($"Column number inconsistency in line {Data.Count + (hasHeader ? 2 : 1)}: {line}"));
                 }
