@@ -4,22 +4,24 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Linq;
+
 namespace Ligral.Component 
 {
     public class InPortVariableModel : Model
     {
         public override InPort ExposeInPort(int inPortNO)
         {
-            if (inPortNO == InPortCount())
-            {
-                InPort inPort = new InPort($"in{inPortNO}", this);
-                InPortList.Add(inPort);
-                return inPort;
-            }
-            else
+            if (inPortNO < InPortCount())
             {
                 return base.ExposeInPort(inPortNO);
             }
+            else while (inPortNO >= InPortCount())
+            {
+                InPort inPort = new InPort($"in{InPortCount()}", this);
+                InPortList.Add(inPort);
+            }
+            return InPortList.Last();
         }
         public override Port Expose(string portName)
         {
