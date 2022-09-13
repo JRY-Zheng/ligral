@@ -31,9 +31,15 @@ namespace Ligral.Component.Models
             {
                 throw logger.Error(new ModelException(this, $"The input should be a matrix"));
             }
-            else if (colNo != OutPortList.Count)
+            if (colNo < OutPortList.Count)
             {
                 throw logger.Error(new ModelException(this, $"The input matrix has {colNo} columns, but there are {OutPortList.Count} out ports."));
+            }
+            while (colNo > OutPortList.Count)
+            {
+                OutPort outPort = new OutPort($"out{OutPortCount()}", this);
+                OutPortList.Add(outPort);
+                Results.Add(null);
             }
             foreach (OutPort outPort in OutPortList)
             {

@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-using MathNet.Numerics.LinearAlgebra;
+using System.Linq;
 
 namespace Ligral.Component
 {
@@ -17,17 +17,17 @@ namespace Ligral.Component
         }
         public override void Connect(int outPortNO, InPort inPort)
         {
-            if (outPortNO == OutPortCount())
-            {
-                OutPort outPort = new OutPort($"out{outPortNO}", this);
-                OutPortList.Add(outPort);
-                outPort.Bind(inPort);
-                Results.Add(null);
-            }
-            else
+            if (outPortNO < OutPortCount())
             {
                 base.Connect(outPortNO, inPort);
             }
+            else while (outPortNO >= OutPortCount())
+            {
+                OutPort outPort = new OutPort($"out{OutPortCount()}", this);
+                OutPortList.Add(outPort);
+                Results.Add(null);
+            }
+            OutPortList.Last().Bind(inPort);
         }
         public override void Connect(string outPortName, InPort inPort)
         {
