@@ -219,6 +219,8 @@ namespace Ligral.Syntax
                 return Visit(pointerAST);
             case SelectAST selectAST:
                 return Visit(selectAST);
+            case EquationAST equationAST:
+                return Visit(equationAST);
             case ChainAST chainAST:
                 return Visit(chainAST);
             case InheritAST inheritAST:
@@ -1098,6 +1100,23 @@ namespace Ligral.Syntax
             {
                 throw logger.Error(new SemanticException(selectAST.ModelObject.FindToken(), "Non model object"));
             }
+        }
+        private object Visit(EquationAST equationAST)
+        {
+            Group leftChain = Visit(equationAST.LeftChain);
+            Group rightChain = Visit(equationAST.RightChain);
+            if (leftChain.OutPortCount() != 1)
+            {
+                throw logger.Error(new SemanticException(equationAST.LeftChain.FindToken(), "Left part of equation must have and only have one out port"));
+            }
+            if (rightChain.OutPortCount() != 1)
+            {
+                throw logger.Error(new SemanticException(equationAST.RightChain.FindToken(), "Right part of equation must have and only have one out port"));
+            }
+            Group function = SignalUtils.Subtract(leftChain, rightChain, equationAST.FindToken());
+            var equalToZero = ModelManager.Create("EqualToZero", equationAST.FindToken());
+            ((ILinkable)function).Connect(equalToZero);
+            return null;
         }
         private Group Visit(ChainAST chainAST)
         {

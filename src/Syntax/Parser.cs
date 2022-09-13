@@ -86,9 +86,10 @@ namespace Ligral.Syntax
             case TokenType.SCRIPT:
                 return Script();
             default:
-                ChainAST chainAST = Chain();
-                Eat(TokenType.SEMIC);
-                return chainAST;
+                return Equation();
+                // ChainAST chainAST = Chain();
+                // Eat(TokenType.SEMIC);
+                // return chainAST;
             }
         }
         private ConfAST ProgramConfig(bool nested=false)
@@ -258,6 +259,19 @@ namespace Ligral.Syntax
                 pointerAST = new PointerAST(pointerAST, new IdAST(idToken));
             }
             return pointerAST;
+        }
+        private AST Equation()
+        {
+            ChainAST leftChain = Chain();
+            AST ast = leftChain;
+            if (currentToken.Type == TokenType.EQUAL)
+            {
+                OperatorToken equalToOperator = (OperatorToken)currentToken;
+                Eat(currentToken.Type);
+                ast = new EquationAST(leftChain, equalToOperator, Chain());
+            }
+            Eat(TokenType.SEMIC);
+            return ast;
         }
         private ChainAST Chain()
         {
