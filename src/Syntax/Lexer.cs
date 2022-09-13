@@ -269,6 +269,16 @@ namespace Ligral.Syntax
                 Advance(2);
                 return new OperatorToken(TokenType.FROM, "<-", lineNO, columnNO, file);
             }
+            else if (currentChar==':'&&Peek()=='>')
+            {
+                Advance(2);
+                return new OperatorToken(TokenType.OUTPORT, ":>", lineNO, columnNO, file);
+            }
+            else if (currentChar==':'&&Peek()=='<')
+            {
+                Advance(2);
+                return new OperatorToken(TokenType.INPORT, ":<", lineNO, columnNO, file);
+            }
             else if (currentChar=='=')
             {
                 Advance();

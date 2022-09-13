@@ -13,10 +13,22 @@ namespace Ligral.Syntax.ASTs
     {
         public AST ModelObject;
         public PortAST Port;
+        public enum PortTypes
+        {
+            IN, OUT, EITHER
+        }
+        public PortTypes PortType; 
         public SelectAST(AST model, PortAST port)
         {
             ModelObject = model;
             Port = port;
+            PortType = PortTypes.EITHER;
+        }
+        public SelectAST(AST model, PortAST port, PortTypes portType)
+        {
+            ModelObject = model;
+            Port = port;
+            PortType = portType;
         }
         public override Token FindToken()
         {

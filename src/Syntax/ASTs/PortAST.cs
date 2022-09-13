@@ -9,10 +9,16 @@ namespace Ligral.Syntax.ASTs
     class PortAST : AST
     {
         public WordAST PortId;
+        public NumberAST PortNo;
         public WordAST PortName;
         public PortAST(WordAST portID, WordAST portName)
         {
             PortId = portID;
+            PortName = portName;
+        }
+        public PortAST(NumberAST portNo, WordAST portName)
+        {
+            PortNo = portNo;
             PortName = portName;
         }
         public override Token FindToken()

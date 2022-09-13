@@ -411,6 +411,18 @@ namespace Ligral.Syntax
                 PortAST portAST = Port();
                 blockAST = new SelectAST(blockAST, portAST);
             }
+            else if (currentToken.Type==TokenType.INPORT)
+            {
+                Eat(TokenType.INPORT);
+                PortAST portAST = NumberedPort();
+                blockAST = new SelectAST(blockAST, portAST, SelectAST.PortTypes.IN);
+            }
+            else if (currentToken.Type==TokenType.OUTPORT)
+            {
+                Eat(TokenType.OUTPORT);
+                PortAST portAST = NumberedPort();
+                blockAST = new SelectAST(blockAST, portAST, SelectAST.PortTypes.OUT);
+            }
             return blockAST;
         }
         private PortAST Port()
@@ -426,6 +438,20 @@ namespace Ligral.Syntax
                 Eat(TokenType.RBRK);
             }
             return new PortAST(portIdAST, portNameAST);
+        }
+        private PortAST NumberedPort()
+        {
+            DigitToken portNoToken = Eat(TokenType.DIGIT) as DigitToken;
+            NumberAST portNoAST = new NumberAST(portNoToken);
+            WordAST portNameAST = null;
+            if (currentToken.Type == TokenType.LBRK)
+            {
+                Eat(TokenType.LBRK);
+                StringToken portNameToken = Eat(TokenType.ID) as StringToken;
+                portNameAST = new WordAST(portNameToken);
+                Eat(TokenType.RBRK);
+            }
+            return new PortAST(portNoAST, portNameAST);
         }
         private ConfigureAST Block()
         {

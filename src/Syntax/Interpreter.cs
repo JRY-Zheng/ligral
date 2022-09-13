@@ -477,6 +477,10 @@ namespace Ligral.Syntax
         {
             return digitAST.Digit;
         }
+        private int Visit(NumberAST numberAST)
+        {
+            return numberAST.Number;
+        }
         private Model Visit(DigitBlockAST digitBlockAST)
         {
             Model constant = ModelManager.Create("Constant", digitBlockAST.FindToken());
@@ -1034,10 +1038,30 @@ namespace Ligral.Syntax
             ILinkable linkable = Visit(selectAST.ModelObject) as ILinkable;
             if (linkable!=null)
             {
-                string portId = Visit(selectAST.Port.PortId);
                 try
                 {
-                    Port port = linkable.Expose(portId);
+                    Port port;
+                    if (selectAST.Port.PortId != null)
+                    {
+                        string portId = Visit(selectAST.Port.PortId);
+                        port = linkable.Expose(portId);
+                    }
+                    else if (selectAST.Port.PortNo != null)
+                    {
+                        int index = Visit(selectAST.Port.PortNo);
+                        if (selectAST.PortType == SelectAST.PortTypes.IN)
+                        {
+                            port = linkable.ExposeInPort(index);
+                        }
+                        else
+                        {
+                            port = linkable.ExposeOutPort(index);
+                        }
+                    }
+                    else
+                    {
+                        throw logger.Error(new SemanticException(selectAST.Port.FindToken(), "No info to determine ports"));
+                    }
                     switch (port)
                     {
                     case InPort inPort:
