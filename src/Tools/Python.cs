@@ -58,6 +58,7 @@ namespace Ligral.Tools
         }
         public void Start()
         {
+            Solver.Stopped += Stop;
             Settings settings = Settings.GetInstance();
             pythonProcess = new Process
             {
@@ -99,6 +100,10 @@ namespace Ligral.Tools
                 }
             }
             throw logger.Error(new LigralException($"Error occurred when starting python process"));
+        }
+        public void Stop()
+        {
+            pythonProcess.StandardInput.Write("\n$exit\n");
         }
         static void StopListening() 
         {
