@@ -57,6 +57,7 @@ namespace Ligral.Simulation
         private Matrix<double> Equal(Matrix<double> x)
         {
             var solutionArray = x.AsColumnMajorArray();
+            logger.Debug(SignalUtils.SPrint(x, "solution"));
             for (int i = 0; i < solutionArray.Length; i++)
             {
                 Solution.SolutionPool[i].GuessedValue = solutionArray[i];
@@ -65,6 +66,7 @@ namespace Ligral.Simulation
             {
                 node.Propagate();
             }
+            logger.Debug(SignalUtils.SPrint(Function.FunctionPool.ConvertAll(function => function.Value).ToColumnVector(), "function"));
             return Function.FunctionPool.ConvertAll(function => function.Value).ToColumnVector();
         }
         private Matrix<double> Bound(Matrix<double> x)

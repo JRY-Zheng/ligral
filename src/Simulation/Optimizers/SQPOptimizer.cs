@@ -55,6 +55,8 @@ namespace Ligral.Simulation.Optimizers
                 }
                 var Ae = Algorithm.RoughPartial(equal, x);
                 var Be = equal(x);
+                logger.Debug(SignalUtils.SPrint(Ae, "Ae"));
+                logger.Debug(SignalUtils.SPrint(Be, "Be"));
                 if (Ae != null)
                 {
                     Ae = Ae.Transpose();
