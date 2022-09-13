@@ -261,14 +261,6 @@ namespace Ligral.Syntax
                 Advance(2);
                 return new OperatorToken(TokenType.GOTO, "->", lineNO, columnNO, file);
             }
-            else if (currentChar=='<'&&Peek()=='-')
-            {
-                // supported in v0.2.0, unsupported in higher version
-                // replaced by `=`
-                // in v0.3.0 or higher logic expression will be supported
-                Advance(2);
-                return new OperatorToken(TokenType.FROM, "<-", lineNO, columnNO, file);
-            }
             else if (currentChar==':'&&Peek()=='>')
             {
                 Advance(2);
@@ -282,7 +274,7 @@ namespace Ligral.Syntax
             else if (currentChar=='=')
             {
                 Advance();
-                return new OperatorToken(TokenType.FROM, "=", lineNO, columnNO, file);
+                return new OperatorToken(TokenType.EQUAL, "=", lineNO, columnNO, file);
             }
             else if (currentChar=='(')
             {

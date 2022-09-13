@@ -97,9 +97,9 @@ namespace Ligral.Syntax
             StringToken idToken = Eat(TokenType.ID) as StringToken;
             WordAST wordAST = new WordAST(idToken);
             AST valueAST;
-            if (currentToken.Type == TokenType.FROM)
+            if (currentToken.Type == TokenType.EQUAL)
             {
-                Eat(TokenType.FROM);
+                Eat(TokenType.EQUAL);
                 if (currentToken.Type == TokenType.TRUE || currentToken.Type == TokenType.FALSE)
                 {
                     BoolToken valueToken = Eat(currentToken.Type) as BoolToken;
@@ -143,7 +143,7 @@ namespace Ligral.Syntax
             Eat(TokenType.ASSIGN);
             StringToken idToken = Eat(TokenType.ID) as StringToken;
             WordAST wordAST = new WordAST(idToken);
-            Eat(TokenType.FROM);
+            Eat(TokenType.EQUAL);
             AST valueExprAST = ValueExpr();
             Eat(TokenType.SEMIC);
             return new FromOpAST(wordAST, valueExprAST);
@@ -642,9 +642,9 @@ namespace Ligral.Syntax
             }
             WordAST nameAST = new WordAST(nameToken);
             WordAST typeAST = new WordAST(typeToken);
-            if (currentToken.Type==TokenType.FROM)
+            if (currentToken.Type==TokenType.EQUAL)
             {
-                Eat(TokenType.FROM);
+                Eat(TokenType.EQUAL);
                 return new RouteParamAST(nameAST, typeAST, ValueExpr());
             }
             else
