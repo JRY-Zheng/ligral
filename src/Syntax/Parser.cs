@@ -437,6 +437,13 @@ namespace Ligral.Syntax
                 PortAST portAST = NumberedPort();
                 blockAST = new SelectAST(blockAST, portAST, SelectAST.PortTypes.OUT);
             }
+            else if (currentToken.Type==TokenType.LPAR)
+            {
+                Eat(TokenType.LPAR);
+                var busAST = Bus();
+                Eat(TokenType.RPAR);
+                blockAST = new GotoOpAST(busAST, blockAST, blockAST.FindToken());
+            }
             return blockAST;
         }
         private PortAST Port()
