@@ -4,6 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
@@ -105,6 +106,12 @@ namespace Ligral.Simulation
                     xNew = StepStates(h, States, f);
                     double tNew = Solver.Time = stopTimeReached ? stopTime : tOld + h;
                     fp = problem.SystemDynamicFunction(xNew);
+                    if (Event.EventHandles.Count > 0 && Event.EventPool.Any(ev => ev.Unhandled))
+                    {
+                        h = h * Event.EventPool.Min(ev => ev.ScalingValue);
+                        continue;
+                    }
+                    Event.EventPool.ForEach(ev => ev.PreviousValue = ev.CurrentValue);
                     var fe = CalculateError(f.Append(fp));
                     xNewNorm = xNew.L2Norm();
                     err = hAbs * fe.L2Norm() / xNorm.LowerBound(xNewNorm, xNormMin);

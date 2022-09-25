@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
+using Ligral.Simulation;
 
 namespace Ligral.Component.Models
 {
@@ -18,13 +19,19 @@ namespace Ligral.Component.Models
                 return "This model calculates the absolute value.";
             }
         }
+        private EventHandle handle;
         protected override void SetUpPorts()
         {
             InPortList.Add(new InPort("x", this));
             OutPortList.Add(new OutPort("y", this));
         }
+        public override void Confirm()
+        {
+            handle = Event.CreateEvent(ScopedName, InPortList[0].RowNo, InPortList[0].ColNo);
+        }
         protected override List<Matrix<double>> Calculate(List<Matrix<double>> values)
         {
+            handle.SetCurrentValue(values[0]);
             Results[0] = values[0].PointwiseAbs();
             return Results;
         }

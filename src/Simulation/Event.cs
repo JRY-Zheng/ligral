@@ -18,7 +18,7 @@ namespace Ligral.Simulation
         public bool Detected
         {
             // from non-zero to zero or cross zero line
-            get =>(PreviousValue!=0 && CurrentValue==0) || PreviousValue*CurrentValue<0;
+            get => (PreviousValue!=0 && CurrentValue==0) || PreviousValue*CurrentValue<0;
         }
         public bool Hitted
         {
@@ -29,11 +29,15 @@ namespace Ligral.Simulation
                 return hitted;
             }
         }
+        public bool Unhandled
+        {
+            get => Detected && !Hitted;
+        }
         public double ScalingValue
         {
             // if not active then no scaling
             // if actual zero then hit the event, thus no scaling
-            get => ((!Detected)||CurrentValue==0) ? 1 : 1+PreviousValue/(CurrentValue-PreviousValue);
+            get => ((!Detected)||CurrentValue==0) ? 1 : -PreviousValue/(CurrentValue-PreviousValue);
         }
         private static Logger logger = new Logger("Event");
         public static List<Event> EventPool = new List<Event>();
