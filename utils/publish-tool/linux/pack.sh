@@ -8,7 +8,7 @@ mkdir ligral
 cd ligral
 
 cp -r $CURRENT_DIR/ligral-dpkg/ $TEMP_DIR/ligral-dpkg/
-INSTALLER=ligral-v0.2.3-linux-x64.deb
+INSTALLER=ligral-v0.2.4-linux-x64.deb
 pwd
 ls -l
 sudo dpkg -b ligral-dpkg $INSTALLER

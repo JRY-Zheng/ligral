@@ -10,7 +10,7 @@
     <OutputType>Exe</OutputType>
     <BaseOutputPath>..\bin\</BaseOutputPath>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.2.3</Version>
+    <Version>0.2.4</Version>
   </PropertyGroup> 
   <PropertyGroup>
     <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>

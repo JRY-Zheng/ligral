@@ -1,5 +1,5 @@
 Ligral Tech. (c) Copyright 2019-2022
-Ligral (v0.2.3) installer for Windows 10
+Ligral (v0.2.4) installer for Windows 10
 
 It's recommended to run this with admin's privilege.
 

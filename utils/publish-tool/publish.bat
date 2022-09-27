@@ -7,12 +7,12 @@ dotnet publish src -p:PublishSingleFile=true -p:UseAppHost=true -o bin/Publish/l
 
 xcopy /s /i /y utils\publish-tool\linux\ligral-dpkg\ bin\Publish\linux\ligral-dpkg\
 copy /Y utils\publish-tool\linux\pack.sh bin\Publish\linux\pack.sh
-copy /Y bin\Publish\linux\ligral bin\Publish\linux\ligral-v0.2.3-linux-x64
-copy /Y bin\Publish\linux\ligral bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.3\ligral-v0.2.3-linux-x64
-copy /Y bin\Debug\netcoreapp3.1\default.lig bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.3\default.lig
-xcopy /s /i /y bin\Debug\netcoreapp3.1\plugins bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.3\plugins
+copy /Y bin\Publish\linux\ligral bin\Publish\linux\ligral-v0.2.4-linux-x64
+copy /Y bin\Publish\linux\ligral bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.4\ligral-v0.2.4-linux-x64
+copy /Y bin\Debug\netcoreapp3.1\default.lig bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.4\default.lig
+xcopy /s /i /y bin\Debug\netcoreapp3.1\plugins bin\Publish\linux\ligral-dpkg\usr\bin\ligral-v0.2.4\plugins
 
-copy /Y bin\Publish\win10\ligral.exe bin\Publish\win10\ligral-v0.2.3-win10-x64.exe
+copy /Y bin\Publish\win10\ligral.exe bin\Publish\win10\ligral-v0.2.4-win10-x64.exe
 copy /Y bin\Debug\netcoreapp3.1\default.lig bin\Publish\win10\default.lig
 xcopy /s /i /y bin\Debug\netcoreapp3.1\plugins bin\Publish\win10\plugins
 copy /Y utils\publish-tool\win10\install.bat bin\Publish\win10\install.bat

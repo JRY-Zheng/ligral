@@ -4,7 +4,7 @@ echo 正在自动安装 ligral...
 cd /d %~dp0
 set LIGRAL=ligral
 set INSTALLPATH=%LOCALAPPDATA%\%LIGRAL%
-set EXECUTABLE=ligral-v0.2.3-win10-x64.exe
+set EXECUTABLE=ligral-v0.2.4-win10-x64.exe
 set DEFAULTSETTINGS=default.lig
 set PLUGINS=plugins\
 echo 是否将 ligral 安装到默认安装路径？
