@@ -1,0 +1,10 @@
+Variable[x]{initial:1};
+Variable[y];
+
+x^2 = y - 1;
+Sin(y) = 1/x;
+
+[x, y] -> Print{name:'solution'};
+
+conf step_size = 1;
+conf stop_time = 1;
